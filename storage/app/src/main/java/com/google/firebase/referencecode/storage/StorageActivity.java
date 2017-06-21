@@ -415,31 +415,39 @@ public class StorageActivity extends AppCompatActivity {
                     }
                 });
         // [END update_file_metadata]
+    }
+
+    private void includesForMetadata_delete() {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference forestRef = storageRef.child("images/forest.jpg");
 
         // [START delete_file_metadata]
         // Create file metadata with property to delete
         StorageMetadata metadata = new StorageMetadata.Builder()
-        .setContentType(null)
-        .build();
+                .setContentType(null)
+                .build();
 
         // Delete the metadata property
         forestRef.updateMetadata(metadata)
-        .addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
-            @Override
-            public void onSuccess(StorageMetadata storageMetadata) {
-                // metadata.contentType should be null
-            }
-        })
-        .addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Uh-oh, an error occurred!
-            }
-        });
+                .addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
+                    @Override
+                    public void onSuccess(StorageMetadata storageMetadata) {
+                        // metadata.contentType should be null
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Uh-oh, an error occurred!
+                    }
+                });
         // [END delete_file_metadata]
+    }
 
+    private void includesForMetadata_custom() {
         // [START custom_metadata]
-        metadata = new StorageMetadata.Builder()
+        StorageMetadata metadata = new StorageMetadata.Builder()
                 .setCustomMetadata("location", "Yosemite, CA, USA")
                 .setCustomMetadata("activity", "Hiking")
                 .build();

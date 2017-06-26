@@ -6,8 +6,10 @@ import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
 
 import java.util.ArrayList;
@@ -85,5 +87,23 @@ public class SolutionCounters {
         });
     }
     // [END increment_counter]
+
+    // [START get_count]
+    public Task<Integer> getCount(final DocumentReference ref) {
+        // Sum the count of each shard in the subcollection
+        return ref.collection("shards").get()
+                .continueWith(new Continuation<QuerySnapshot, Integer>() {
+                    @Override
+                    public Integer then(@NonNull Task<QuerySnapshot> task) throws Exception {
+                        int count = 0;
+                        for (DocumentSnapshot snap : task.getResult()) {
+                            Shard shard = snap.toObject(Shard.class);
+                            count += shard.count;
+                        }
+                        return count;
+                    }
+                });
+    }
+    // [END get_count]
 
 }

@@ -28,6 +28,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.ServerTimestamp;
 import com.google.firebase.firestore.Transaction;
 import com.google.firebase.firestore.UpdateOptions;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -503,6 +504,33 @@ public class DocSnippets {
             }
         });
         // [END transaction_with_result]
+    }
+
+    private void writeBatch() {
+        // [START write_batch]
+        // Get a new write batch
+        WriteBatch batch = db.batch();
+
+        // Set the value of 'NYC'
+        DocumentReference nycRef = db.collection("cities").document("NYC");
+        batch.set(nycRef, new City());
+
+        // Update the population of 'SF'
+        DocumentReference sfRef = db.collection("cities").document("SF");
+        batch.update(sfRef, "population", 1000000L);
+
+        // Delete the city 'LA'
+        DocumentReference laRef = db.collection("cities").document("LA");
+        batch.delete(laRef);
+
+        // Commit the batch
+        batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                // ...
+            }
+        });
+        // [END write_batch]
     }
 
 

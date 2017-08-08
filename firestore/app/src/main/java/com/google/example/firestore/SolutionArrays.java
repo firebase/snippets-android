@@ -42,6 +42,18 @@ public class SolutionArrays {
     }
     // [END map_post_class]
 
+    // [START map_post_class_advanced]
+    public class MapPostAdvanced {
+        String title;
+        Map<String,Long> categories;
+
+        public MapPostAdvanced(String title, Map<String,Long> categories) {
+            this.title = title;
+            this.categories = categories;
+        }
+    }
+    // [END map_post_class_advanced]
+
 
     public void examplePosts() {
         // [START example_array_post]
@@ -59,6 +71,16 @@ public class SolutionArrays {
         // [END example_map_post]
     }
 
+    public void examplePosts_Advanced() {
+        // [START example_map_post_advanced]
+        Map<String, Long> categories = new HashMap<>();
+        categories.put("technology", 1502144665L);
+        categories.put("opinion", 1502144665L);
+        categories.put("cats", 1502144665L);
+        MapPostAdvanced myMapPostAdvanced = new MapPostAdvanced("My great post", categories);
+        // [END example_map_post_advanced]
+    }
+
     public void queryForCats() {
         // [START query_for_cats]
         db.collection("posts")
@@ -73,4 +95,17 @@ public class SolutionArrays {
         // [END query_for_cats]
     }
 
+    public void queryForCatsTimestamp() {
+        // [START query_for_cats_timestamp_invalid]
+        db.collection("posts")
+                .whereEqualTo("categories.cats", true)
+                .orderBy("timestamp")
+        // [END query_for_cats_timestamp_invalid]
+
+        // [START query_for_cats_timestamp]
+        db.collection("posts")
+                .whereGreaterThan("categories.cats", 0)
+                .orderBy("categories.cats");
+        // [END query_for_cats_timestamp]
+    }
 }

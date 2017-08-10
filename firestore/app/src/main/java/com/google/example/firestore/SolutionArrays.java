@@ -99,7 +99,7 @@ public class SolutionArrays {
         // [START query_for_cats_timestamp_invalid]
         db.collection("posts")
                 .whereEqualTo("categories.cats", true)
-                .orderBy("timestamp")
+                .orderBy("timestamp");
         // [END query_for_cats_timestamp_invalid]
 
         // [START query_for_cats_timestamp]

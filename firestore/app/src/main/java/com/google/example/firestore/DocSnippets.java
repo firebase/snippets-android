@@ -3,9 +3,9 @@ package com.google.example.firestore;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 import android.util.Log;
 
-import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -36,6 +36,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executor;
 
 /**
  * Snippets for inclusion in documentation.
@@ -1042,52 +1044,59 @@ public class DocSnippets {
     }
 
     // [START delete_collection]
-    public static Task<Void> deleteCollection(final CollectionReference collection,
-                                              final int batchSize) {
-        if (batchSize == 0) {
-            return Tasks.forResult(null);
+    /**
+     * Delete all documents in a collection. Uses an Executor to perform work on a background
+     * thread. This does *not* automatically discover and delete subcollections.
+     */
+    private Task<Void> deleteCollection(final CollectionReference collection,
+                                        final int batchSize,
+                                        Executor executor) throws Exception {
+
+        // Perform the delete operation on the provided Executor, which allows us to use
+        // simpler synchronous logic without blocking the main thread.
+        return Tasks.call(executor, new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                // Get the first batch of documents in the collection
+                Query query = collection.orderBy("__name__").limit(batchSize);
+
+                // Get a list of deleted documents
+                List<DocumentSnapshot> deleted = deleteQueryBatch(query);
+
+                // While the deleted documents in the last batch indicate that there
+                // may still be more documents in the collection, page down to the
+                // next batch and delete again
+                while (deleted.size() >= batchSize) {
+                    // Move the query cursor to start after the last doc in the batch
+                    DocumentSnapshot last = deleted.get(deleted.size() - 1);
+                    query = collection.orderBy("__name__")
+                            .startAfter(last.getId())
+                            .limit(batchSize);
+
+                    deleted = deleteQueryBatch(query);
+                }
+
+                return null;
+            }
+        });
+
+    }
+
+    /**
+     * Delete all results from a query in a single WriteBatch. Must be run on a worker thread
+     * to avoid blocking/crashing the main thread.
+     */
+    @WorkerThread
+    private List<DocumentSnapshot> deleteQueryBatch(final Query query) throws Exception {
+        QuerySnapshot querySnapshot = Tasks.await(query.get());
+
+        WriteBatch batch = query.getFirestore().batch();
+        for (DocumentSnapshot snapshot : querySnapshot) {
+            batch.delete(snapshot.getReference());
         }
+        Tasks.await(batch.commit());
 
-        return collection
-                .limit(batchSize)
-                .get()
-                .continueWithTask(
-                        new Continuation<QuerySnapshot, Task<Void>>() {
-                            @Override
-                            public Task<Void> then(@NonNull Task<QuerySnapshot> task) throws Exception {
-                                // Get the documents (throwing exception if the get failed)
-                                QuerySnapshot documents = task.getResult(Exception.class);
-
-                                // If there are no documents, we are done, return a successful task
-                                if (documents.size() == 0) {
-                                    return deleteCollection(collection, 0);
-                                }
-
-                                // Create a list of tasks, one for each delete in the collection
-                                ArrayList<Task<Void>> deleteTasks = new ArrayList<>();
-
-                                // For each document in the collection, kick off a delete
-                                for (DocumentSnapshot d : documents) {
-                                    deleteTasks.add(d.getReference().delete());
-                                }
-
-                                // Return a single task for all deletes
-                                return Tasks.whenAll(deleteTasks);
-                            }
-                        })
-                .continueWithTask(
-                        new Continuation<Void, Task<Void>>() {
-                            @Override
-                            public Task<Void> then(@NonNull Task<Void> task) throws Exception {
-                                // If the deletes failed, return a failed task
-                                if (!task.isSuccessful()) {
-                                    return Tasks.forException(task.getException());
-                                }
-
-                                // Recursively delete the next batch
-                                return deleteCollection(collection, batchSize);
-                            }
-                        });
+        return querySnapshot.getDocuments();
     }
     // [END delete_collection]
 

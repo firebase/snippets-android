@@ -38,6 +38,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Snippets for inclusion in documentation.
@@ -46,6 +49,9 @@ import java.util.concurrent.Executor;
 public class DocSnippets {
 
     private static final String TAG = "DocSnippets";
+
+    private static final ThreadPoolExecutor EXECUTOR = new ThreadPoolExecutor(2, 4,
+            60, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
 
     private final FirebaseFirestore db;
 
@@ -112,27 +118,8 @@ public class DocSnippets {
         deleteCollection("users");
     }
 
-    // TODO: Should be a way to batch these tasks
     private void deleteCollection(final String path) {
-        db.collection(path).get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot documents) {
-                        Log.d(TAG, "collectionGet:success:" + path);
-                        for (DocumentSnapshot d : documents) {
-                            if (d != null) {
-                                Log.d(TAG, "deleting:" + d.getId());
-                                d.getReference().delete();
-                            }
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "collectionGet:failure:" + path, e);
-                    }
-                });
+        deleteCollection(db.collection(path), 50, EXECUTOR);
     }
 
     // =============================================================================================
@@ -276,6 +263,12 @@ public class DocSnippets {
                 .collection("rooms").document("roomA")
                 .collection("messages").document("message1");
         // [END subcollection_reference]
+    }
+
+    private void docReferenceAlternate() {
+        // [START doc_reference_alternate]
+        DocumentReference alovelaceDocumentRef = db.document("users/alovelace");
+        // [END doc_reference_alternate]
     }
 
     // =============================================================================================
@@ -1050,7 +1043,7 @@ public class DocSnippets {
      */
     private Task<Void> deleteCollection(final CollectionReference collection,
                                         final int batchSize,
-                                        Executor executor) throws Exception {
+                                        Executor executor) {
 
         // Perform the delete operation on the provided Executor, which allows us to use
         // simpler synchronous logic without blocking the main thread.

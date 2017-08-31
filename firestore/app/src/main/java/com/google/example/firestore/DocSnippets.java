@@ -275,6 +275,45 @@ public class DocSnippets {
     // https://firebase-dot-devsite.googleplex.com/preview/firestore/client/save-data
     // =============================================================================================
 
+    // [START city_class]
+    public class City {
+
+
+        private String name;
+        private String country;
+        private boolean capital;
+        private long population;
+
+        public City() {}
+
+        public City(String name, String country, boolean capital, long population) {
+            // [START_EXCLUDE]
+            this.name = name;
+            this.country = country;
+            this.capital = capital;
+            this.population = population;
+            // [END_EXCLUDE]
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getCountry() {
+            return country;
+        }
+
+        public boolean isCapital() {
+            return capital;
+        }
+
+        public long getPopulation() {
+            return population;
+        }
+
+    }
+    // [END city_class]
+
     private void setDocument() {
         // [START set_document]
         Map<String, Object> city = new HashMap<>();
@@ -302,6 +341,7 @@ public class DocSnippets {
         db.collection("cities").document("new_city_id").set(data);
         // [END set_with_id]
     }
+
     private void dataTypes() {
         // [START data_types]
         Map<String, Object> docData = new HashMap<>();
@@ -333,6 +373,13 @@ public class DocSnippets {
                     }
                 });
         // [END data_types]
+    }
+
+    private void addCustomClass() {
+        // [START add_custom_class]
+        City city = new City("Los Angeles", "USA", false, 5000000L);
+        db.collection("cities").document("LA").set(city);
+        // [END add_custom_class]
     }
 
     private void addDocument() {
@@ -896,6 +943,10 @@ public class DocSnippets {
         // Create a query against the collection.
         Query query = citiesRef.whereEqualTo("state", "CA");
         // [END simple_queries]
+
+        // [START simple_query_capital]
+        Query capitalCities = db.collection("cities").whereEqualTo("capital", true);
+        // [END simple_query_capital]
 
         // [START example_filters]
         citiesRef.whereEqualTo("state", "CA");

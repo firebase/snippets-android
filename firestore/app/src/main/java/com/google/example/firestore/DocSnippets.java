@@ -17,6 +17,7 @@ import com.google.firebase.firestore.DocumentChange.Type;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -26,8 +27,8 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.Query.Direction;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.ServerTimestamp;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.Transaction;
-import com.google.firebase.firestore.UpdateOptions;
 import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
@@ -79,7 +80,7 @@ public class DocSnippets {
         newDocument();
         updateDocument();
         updateDocumentNested();
-        updateWithOptions();
+        setFieldWithMerge();
         deleteDocument();
         transactions();
         transactionPromise();
@@ -457,15 +458,16 @@ public class DocSnippets {
         // [END update_document_nested]
     }
 
-    private void updateWithOptions() {
-        // [START update_with_options]
+    private void setFieldWithMerge() {
+        // [START set_field_with_merge]
         // Update the population, creating the document if it
         // does not already exist.
-        db.collection("cities").document("Beijing").update(
-                new UpdateOptions().createIfMissing(),
-                "population",
-                21500000);
-        // [END update_with_options]
+        Map<String, Object> data = new HashMap<>();
+        data.put("population", 21500000);
+
+        db.collection("cities").document("Beijing")
+                .set(data, SetOptions.merge());
+        // [END set_field_with_merge]
     }
 
     private void deleteDocument() {
@@ -1102,7 +1104,7 @@ public class DocSnippets {
             @Override
             public Void call() throws Exception {
                 // Get the first batch of documents in the collection
-                Query query = collection.orderBy("__name__").limit(batchSize);
+                Query query = collection.orderBy(FieldPath.documentId()).limit(batchSize);
 
                 // Get a list of deleted documents
                 List<DocumentSnapshot> deleted = deleteQueryBatch(query);
@@ -1113,7 +1115,7 @@ public class DocSnippets {
                 while (deleted.size() >= batchSize) {
                     // Move the query cursor to start after the last doc in the batch
                     DocumentSnapshot last = deleted.get(deleted.size() - 1);
-                    query = collection.orderBy("__name__")
+                    query = collection.orderBy(FieldPath.documentId())
                             .startAfter(last.getId())
                             .limit(batchSize);
 

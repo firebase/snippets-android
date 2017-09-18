@@ -29,11 +29,11 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
     // Firestore
-    compile 'com.google.firebase:firebase-firestore:11.0.8'
+    compile 'com.google.firebase:firebase-firestore:11.3.0'
 
     // Firebase / Play Services
-    compile 'com.google.firebase:firebase-auth:11.0.8'
-    compile 'com.google.android.gms:play-services-auth:11.0.8'
+    compile 'com.google.firebase:firebase-auth:11.3.0'
+    compile 'com.google.android.gms:play-services-auth:11.3.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

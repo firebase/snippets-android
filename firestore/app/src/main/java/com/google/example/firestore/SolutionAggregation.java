@@ -4,8 +4,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.Transaction;
-import com.google.firebase.firestore.UpdateOptions;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * https://firebase.google.com/docs/firestore/solutions/aggregation
@@ -65,10 +68,13 @@ public class SolutionAggregation {
                 restaurant.numRatings = newNumRatings;
                 restaurant.avgRating = newAvgRating;
 
-                // Commit to Firestore
+                // Update restaurant
                 transaction.set(restaurantRef, restaurant);
-                transaction.update(ratingRef, new UpdateOptions().createIfMissing(),
-                        "rating", rating);
+
+                // Update rating
+                Map<String, Object> data = new HashMap<>();
+                data.put("rating", rating);
+                transaction.set(ratingRef, data, SetOptions.merge());
 
                 return null;
             }

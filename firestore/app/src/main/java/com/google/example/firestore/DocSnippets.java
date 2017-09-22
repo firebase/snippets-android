@@ -1,6 +1,5 @@
 package com.google.example.firestore;
 
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
@@ -281,15 +280,17 @@ public class DocSnippets {
 
 
         private String name;
+        private String state;
         private String country;
         private boolean capital;
         private long population;
 
         public City() {}
 
-        public City(String name, String country, boolean capital, long population) {
+        public City(String name, String state, String country, boolean capital, long population) {
             // [START_EXCLUDE]
             this.name = name;
+            this.state = state;
             this.country = country;
             this.capital = capital;
             this.population = population;
@@ -298,6 +299,10 @@ public class DocSnippets {
 
         public String getName() {
             return name;
+        }
+
+        public String getState() {
+            return state;
         }
 
         public String getCountry() {
@@ -318,10 +323,11 @@ public class DocSnippets {
     private void setDocument() {
         // [START set_document]
         Map<String, Object> city = new HashMap<>();
-        city.put("name", "Washington D.C.");
-        city.put("weather", "politically stormy");
+        city.put("name", "Los Angeles");
+        city.put("state", "CA");
+        city.put("country", "USA");
 
-        db.collection("cities").document("DC")
+        db.collection("cities").document("LA")
                 .set(city)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -338,8 +344,9 @@ public class DocSnippets {
         // [END set_document]
 
         Map<String, Object> data = new HashMap<>();
+
         // [START set_with_id]
-        db.collection("cities").document("new_city_id").set(data);
+        db.collection("cities").document("new-city-id").set(data);
         // [END set_with_id]
     }
 
@@ -378,7 +385,7 @@ public class DocSnippets {
 
     private void addCustomClass() {
         // [START add_custom_class]
-        City city = new City("Los Angeles", "USA", false, 5000000L);
+        City city = new City("Los Angeles", "CA", "USA", false, 5000000L);
         db.collection("cities").document("LA").set(city);
         // [END add_custom_class]
     }
@@ -387,8 +394,8 @@ public class DocSnippets {
         // [START add_document]
         // Add a new document with a generated id.
         Map<String, Object> data = new HashMap<>();
-        data.put("name", "Denver");
-        data.put("weather", "rocky");
+        data.put("name", "Tokyo");
+        data.put("country", "Japan");
 
         db.collection("cities")
                 .add(data)
@@ -424,7 +431,7 @@ public class DocSnippets {
 
         // Set the "isCapital" field of the city 'DC'
         washingtonRef
-                .update("isCapital", true)
+                .update("capital", true)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -460,12 +467,11 @@ public class DocSnippets {
 
     private void setFieldWithMerge() {
         // [START set_field_with_merge]
-        // Update the population, creating the document if it
-        // does not already exist.
+        // Update one field, creating the document if it does not already exist.
         Map<String, Object> data = new HashMap<>();
-        data.put("population", 21500000);
+        data.put("capital", true);
 
-        db.collection("cities").document("Beijing")
+        db.collection("cities").document("BJ")
                 .set(data, SetOptions.merge());
         // [END set_field_with_merge]
     }
@@ -605,7 +611,7 @@ public class DocSnippets {
 
     private void customObjects() {
         // [START custom_objects]
-        DocumentReference docRef = db.collection("cities").document("Beijing");
+        DocumentReference docRef = db.collection("cities").document("BJ");
         docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -634,21 +640,6 @@ public class DocSnippets {
                 }
             }
         });
-
-        // After 2 seconds, make an update so our listener will fire again.
-        (new Handler()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Map<String, Object> data = new HashMap<>();
-                data.put("population", 99999);
-                docRef.update(data);
-            }
-        }, 2000);
-
-        // RESULT:
-        // Current data: {name=San Francisco, state=CA, population=864816.0}
-        // Current data: {name=San Francisco, state=CA, population=99999.0}
-        // Current data: {name=San Francisco, state=CA, population=99999.0}
         // [END listen_document]
     }
 
@@ -674,27 +665,13 @@ public class DocSnippets {
                 }
             }
         });
-
-        (new Handler()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Map<String, Object> data = new HashMap<>();
-                data.put("population", 100000);
-                docRef.update(data);
-            }
-        }, 2000);
-
-        // RESULT:
-        // Server data: {name=San Francisco, state=CA, population=99999.0}
-        // Local data: {name=San Francisco, state=CA, population=100000.0}
-        // Server data: {name=San Francisco, state=CA, population=100000.0}
         // [END listen_document_local]
     }
 
     private void getMultipleDocs() {
         // [START get_multiple]
         db.collection("cities")
-                .whereEqualTo("state", "CA")
+                .whereEqualTo("capital", true)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -708,10 +685,6 @@ public class DocSnippets {
                         }
                     }
                 });
-
-        // RESULT:
-        // MTV => {name=Mountain View, state=CA, population=74066.0}
-        // SF => {name=San Francisco, state=CA, population=864816.0}
         // [END get_multiple]
     }
 
@@ -731,12 +704,6 @@ public class DocSnippets {
                         }
                     }
                 });
-
-        // RESULT:
-        // DC => {name=Washington D.C., state=null, population=672228.0}
-        // DEN => {name=Denver, state=CO, population=600158.0}
-        // MTV => {name=Mountain View, state=CA, population=74066.0}
-        // SF => {name=San Francisco, state=CA, population=864816.0}
         // [END get_multiple_all]
     }
 
@@ -762,22 +729,6 @@ public class DocSnippets {
                         Log.d(TAG, "Current cites in CA: " + cities);
                     }
                 });
-
-        // After 2 seconds, make an update so our listener will fire again.
-        (new Handler()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Map<String, Object> data = new HashMap<>();
-                data.put("name", "Los Angeles");
-                data.put("state", "CA");
-                data.put("population", 4030904);
-                db.collection("cities").document("LA").set(data);
-            }
-        }, 2000);
-
-        // RESULT:
-        // Current cites in CA: [Mountain View, San Francisco]
-        // Current cites in CA: [Los Angeles, Mountain View, San Francisco]
         // [END listen_multiple]
     }
 
@@ -810,20 +761,6 @@ public class DocSnippets {
 
                     }
                 });
-
-        // After 2 seconds, let's delete LA
-        (new Handler()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                db.collection("cities").document("LA").delete();
-            }
-        }, 2000);
-
-        // RESULT:
-        // New city: {name=Los Angeles, state=CA, population=4030904.0}
-        // New city: {name=Mountain View, state=CA, population=74066.0}
-        // New city: {name=San Francisco, state=CA, population=864816.0}
-        // Removed city: {name=Los Angeles, state=CA, population=4030904.0}
         // [END listen_diffs]
     }
 
@@ -852,11 +789,6 @@ public class DocSnippets {
                         }
                     }
                 });
-
-        // RESULT:
-        // New city: {name=Mountain View, state=CA, population=74066.0}
-        // New city: {name=San Francisco, state=CA, population=864816.0}
-        // Got initial state.
         // [END listen_state]
     }
 
@@ -911,29 +843,46 @@ public class DocSnippets {
     private void exampleData() {
         // [START example_data]
         CollectionReference cities = db.collection("cities");
+
         Map<String, Object> data1 = new HashMap<>();
         data1.put("name", "San Francisco");
         data1.put("state", "CA");
-        data1.put("population", 864816);
+        data1.put("country", "USA");
+        data1.put("capital", false);
+        data1.put("population", 860000);
         cities.document("SF").set(data1);
 
         Map<String, Object> data2 = new HashMap<>();
-        data2.put("name", "Mountain View");
+        data2.put("name", "Los Angeles");
         data2.put("state", "CA");
-        data2.put("population", 74066);
-        cities.document("MTV").set(data2);
+        data2.put("country", "USA");
+        data2.put("capital", false);
+        data2.put("population", 3900000);
+        cities.document("LA").set(data2);
 
         Map<String, Object> data3 = new HashMap<>();
-        data3.put("name", "Denver");
-        data3.put("state", "CO");
-        data3.put("population", 600158);
-        cities.document("DEN").set(data3);
+        data3.put("name", "Washington D.C.");
+        data3.put("state", null);
+        data3.put("country", "USA");
+        data3.put("capital", true);
+        data3.put("population", 680000);
+        cities.document("DC").set(data3);
 
         Map<String, Object> data4 = new HashMap<>();
-        data4.put("name", "Washington D.C.");
+        data4.put("name", "Tokyo");
         data4.put("state", null);
-        data4.put("population", 672228);
-        cities.document("DC").set(data4);
+        data4.put("country", "Japan");
+        data4.put("capital", true);
+        data4.put("population", 9000000);
+        cities.document("TOK").set(data4);
+
+        Map<String, Object> data5 = new HashMap<>();
+        data5.put("name", "Beijing");
+        data5.put("state", null);
+        data5.put("country", "China");
+        data5.put("capital", true);
+        data5.put("population", 21500000);
+        cities.document("BJ").set(data5);
         // [END example_data]
     }
 
@@ -1009,7 +958,7 @@ public class DocSnippets {
         CollectionReference citiesRef = db.collection("cities");
 
         // [START invalid_filter_and_order]
-        citiesRef.whereGreaterThan("population", 100000).orderBy("state");
+        citiesRef.whereGreaterThan("population", 100000).orderBy("country");
         // [END invalid_filter_and_order]
     }
 
@@ -1207,7 +1156,7 @@ public class DocSnippets {
 
     private void updateDeleteField() {
         // [START update_delete_field]
-        DocumentReference docRef = db.collection("cities").document("Beijing");
+        DocumentReference docRef = db.collection("cities").document("BJ");
 
         // Remove the 'capital' field from the document
         Map<String,Object> updates = new HashMap<>();

@@ -1008,7 +1008,7 @@ public class DocSnippets {
 
                     // Get the last visible document
                     DocumentSnapshot lastVisible = documentSnapshots.getDocuments()
-                            .get(documentSnapshots.size());
+                            .get(documentSnapshots.size() -1);
 
                     // Construct a new query starting at this document,
                     // get the next 25 cities.

@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.1"
     defaultConfig {
         applicationId "com.google.example.firestore"
         minSdkVersion 14
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -20,20 +20,21 @@ android {
 }
 
 repositories {
-    mavenLocal()
     jcenter()
+    maven { url 'https://maven.google.com' }
+    mavenLocal()
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:appcompat-v7:26.0.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
     // Firestore
-    compile 'com.google.firebase:firebase-firestore:11.3.0'
+    compile 'com.google.firebase:firebase-firestore:11.4.2'
 
     // Firebase / Play Services
-    compile 'com.google.firebase:firebase-auth:11.3.0'
-    compile 'com.google.android.gms:play-services-auth:11.3.0'
+    compile 'com.google.firebase:firebase-auth:11.4.2'
+    compile 'com.google.android.gms:play-services-auth:11.4.2'
 }
 
 apply plugin: 'com.google.gms.google-services'

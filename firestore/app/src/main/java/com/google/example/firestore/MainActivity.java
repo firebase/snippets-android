@@ -40,6 +40,8 @@ public class MainActivity extends Activity implements OnClickListener {
         findViewById(R.id.button_delete_all).setOnClickListener(this);
 
         mFirestore = FirebaseFirestore.getInstance();
+
+        new SolutionRateLimiting().startUpdates();
     }
 
     private void onWriteClicked() {

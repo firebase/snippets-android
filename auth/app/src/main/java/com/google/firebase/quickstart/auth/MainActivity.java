@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
@@ -146,6 +147,54 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
         // [END update_password]
+    }
+
+    public void sendEmailVerification() {
+        // [START send_email_verification]
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+
+        user.sendEmailVerification()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "Email sent.");
+                        }
+                    }
+                });
+        // [END send_email_verification]
+    }
+
+    public void sendEmailVerificationWithContinueUrl() {
+        // [START send_email_verification_with_continue_url]
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+
+        String url = "http://www.example.com/verify?uid=" + user.getUid();
+        ActionCodeSettings actionCodeSettings = ActionCodeSettings.newBuilder()
+                .setUrl(url)
+                .setIOSBundleId("com.example.ios")
+                // The default for this is populated with the current android package name.
+                .setAndroidPackageName("com.example.android", false, null)
+                .build();
+
+        user.sendEmailVerification(actionCodeSettings)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "Email sent.");
+                        }
+                    }
+                });
+
+        // [END send_email_verification_with_continue_url]
+        // [START localize_verification_email]
+        auth.setLanguageCode("fr");
+        // To apply the default app language instead of explicitly setting it.
+        // auth.useAppLanguage();
+        // [END localize_verification_email]
     }
 
     private void sendPasswordReset() {

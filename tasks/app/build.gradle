@@ -22,7 +22,6 @@ android {
 
 dependencies {
     compile "com.android.support:appcompat-v7:$supportVersion"
-    compile "com.android.support.constraint:constraint-layout:1.0.0"
 
     compile "com.google.firebase:firebase-auth:$firebaseVersion"
     compile "com.google.firebase:firebase-storage:$firebaseVersion"

@@ -2,13 +2,13 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.2"
+    compileSdkVersion compileSdk
+    buildToolsVersion buildTools
 
     defaultConfig {
         applicationId "com.google.example.firestore"
-        minSdkVersion 14
-        targetSdkVersion 26
+        minSdkVersion minSdk
+        targetSdkVersion targetSdk
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -28,15 +28,15 @@ repositories {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:26.0.0'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile "com.android.support:appcompat-v7:$supportVersion"
+    compile "com.android.support.constraint:constraint-layout:1.0.2"
 
     // Firestore
-    compile 'com.google.firebase:firebase-firestore:11.6.2'
+    compile "com.google.firebase:firebase-firestore:$firebaseVersion"
 
     // Firebase / Play Services
-    compile 'com.google.firebase:firebase-auth:11.6.2'
-    compile 'com.google.android.gms:play-services-auth:11.6.2'
+    compile "com.google.firebase:firebase-auth:$firebaseVersion"
+    compile "com.google.android.gms:play-services-auth:$firebaseVersion"
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
 

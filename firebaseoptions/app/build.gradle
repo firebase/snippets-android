@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.2"
+    compileSdkVersion compileSdk
+    buildToolsVersion buildTools
 
     defaultConfig {
         applicationId "devrel.firebase.google.com.firebaseoptions"
-        minSdkVersion 14
-        targetSdkVersion 26
+        minSdkVersion minSdk
+        targetSdkVersion targetSdk
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -21,8 +21,8 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:26.0.0'
-    compile 'com.google.firebase:firebase-database:11.6.2'
+    compile "com.android.support:appcompat-v7:$supportVersion"
+    compile "com.google.firebase:firebase-database:$firebaseVersion"
 }
 
 apply plugin: 'com.google.gms.google-services'

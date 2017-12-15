@@ -9,6 +9,14 @@ allprojects {
 
 buildscript {
 
+    ext.compileSdk = 26
+    ext.minSdk = 16
+    ext.targetSdk = 16
+
+    ext.buildTools = '26.0.2'
+    ext.firebaseVersion = '11.6.2'
+    ext.supportVersion = '26.0.2'
+
     ext.kotlin_version = '1.2.10'
 
     repositories {

@@ -122,10 +122,6 @@ public class DocSnippets {
         deleteCollection(db.collection(path), 50, EXECUTOR);
     }
 
-    // =============================================================================================
-    // https://firebase-dot-devsite.googleplex.com/preview/firestore/client/setup-android
-    // =============================================================================================
-
     private void setup() {
         // [START get_firestore_instance]
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -138,10 +134,6 @@ public class DocSnippets {
         db.setFirestoreSettings(settings);
         // [END set_firestore_settings]
     }
-
-    // =============================================================================================
-    // https://firebase-dot-devsite.googleplex.com/preview/firestore/client/quickstart
-    // =============================================================================================
 
     private void addAdaLovelace() {
         // [START add_ada_lovelace]
@@ -240,11 +232,6 @@ public class DocSnippets {
         // [END listen_for_users]
     }
 
-    // =============================================================================================
-    // https://firebase-dot-devsite.googleplex.com/preview/firestore/client/structure-data
-    // =============================================================================================
-
-
     private void docReference() {
         // [START doc_reference]
         DocumentReference alovelaceDocumentRef = db.collection("users").document("alovelace");
@@ -270,10 +257,6 @@ public class DocSnippets {
         DocumentReference alovelaceDocumentRef = db.document("users/alovelace");
         // [END doc_reference_alternate]
     }
-
-    // =============================================================================================
-    // https://firebase-dot-devsite.googleplex.com/preview/firestore/client/save-data
-    // =============================================================================================
 
     // [START city_class]
     public class City {
@@ -583,11 +566,6 @@ public class DocSnippets {
         // [END write_batch]
     }
 
-
-    // =============================================================================================
-    // https://firebase-dot-devsite.googleplex.com/preview/firestore/client/retrieve-data
-    // =============================================================================================
-
     private void getDocument() {
         // [START get_document]
         DocumentReference docRef = db.collection("cities").document("SF");
@@ -835,10 +813,6 @@ public class DocSnippets {
                 });
         // [END handle_listen_errors]
     }
-
-    // =============================================================================================
-    // https://firebase-dot-devsite.googleplex.com/preview/firestore/client/query-data
-    // =============================================================================================
 
     private void exampleData() {
         // [START example_data]
@@ -1094,10 +1068,6 @@ public class DocSnippets {
         return querySnapshot.getDocuments();
     }
     // [END delete_collection]
-
-    // =============================================================================================
-    // https://firebase.google.com/docs/firestore/enable-offline
-    // =============================================================================================
 
     private void offlineListen(FirebaseFirestore db) {
         // [START offline_listen]

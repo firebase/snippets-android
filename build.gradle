@@ -2,9 +2,30 @@
 allprojects {
     repositories {
         jcenter()
-        maven {
-            url 'https://maven.google.com'
-        }
+        google()
         mavenLocal()
+    }
+}
+
+buildscript {
+
+    ext.compileSdk = 26
+    ext.minSdk = 16
+    ext.targetSdk = 16
+
+    ext.buildTools = '26.0.2'
+    ext.firebaseVersion = '11.6.2'
+    ext.supportVersion = '26.0.2'
+
+    ext.kotlin_version = '1.2.10'
+
+    repositories {
+        jcenter()
+        google()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.google.gms:google-services:3.1.1'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }

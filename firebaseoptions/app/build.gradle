@@ -2,7 +2,8 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    buildToolsVersion "26.0.2"
+
     defaultConfig {
         applicationId "devrel.firebase.google.com.firebaseoptions"
         minSdkVersion 14
@@ -21,7 +22,7 @@ android {
 
 dependencies {
     compile 'com.android.support:appcompat-v7:26.0.0'
-    compile 'com.google.firebase:firebase-database:11.0.1'
+    compile 'com.google.firebase:firebase-database:11.6.2'
 }
 
 apply plugin: 'com.google.gms.google-services'

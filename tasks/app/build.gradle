@@ -2,7 +2,8 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    buildToolsVersion "26.0.2"
+
     defaultConfig {
         applicationId "com.google.firebase.quickstart.tasks"
         minSdkVersion 16
@@ -23,6 +24,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:26.0.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.0'
 
-    compile 'com.google.firebase:firebase-auth:11.0.1'
-    compile 'com.google.firebase:firebase-storage:11.0.1'
+    compile 'com.google.firebase:firebase-auth:11.6.2'
+    compile 'com.google.firebase:firebase-storage:11.6.2'
 }

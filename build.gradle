@@ -14,7 +14,7 @@ buildscript {
     ext.targetSdk = 16
 
     ext.buildTools = '26.0.2'
-    ext.firebaseVersion = '11.6.2'
+    ext.firebaseVersion = '11.8.0'
     ext.supportVersion = '26.0.2'
 
     ext.kotlin_version = '1.2.10'

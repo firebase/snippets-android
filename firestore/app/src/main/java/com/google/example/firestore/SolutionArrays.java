@@ -57,7 +57,7 @@ public class SolutionArrays {
 
     public void examplePosts() {
         // [START example_array_post]
-        ArrayPost myArrayPost = new ArrayPost("My great post.", new String[]{
+        ArrayPost myArrayPost = new ArrayPost("My great post", new String[]{
                 "technology", "opinion", "cats"
         });
         // [END example_array_post]

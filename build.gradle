@@ -1,26 +1,4 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-allprojects {
-    repositories {
-        jcenter()
-        google()
-        mavenLocal()
-    }
-
-    // See: https://github.com/ben-manes/gradle-versions-plugin
-    dependencyUpdates.resolutionStrategy = {
-        componentSelection { rules ->
-            rules.all { selection ->
-                boolean rejected = ['alpha', 'beta', 'rc', 'cr', 'm'].any { qualifier ->
-                    selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*/
-                }
-                if (rejected) {
-                    selection.reject('Release candidate')
-                }
-            }
-        }
-    }
-}
-
 buildscript {
 
     ext.compileSdk = 26
@@ -46,4 +24,26 @@ buildscript {
 
 plugins {
     id 'com.github.ben-manes.versions' version '0.17.0'
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        google()
+        mavenLocal()
+    }
+
+    // See: https://github.com/ben-manes/gradle-versions-plugin
+    dependencyUpdates.resolutionStrategy = {
+        componentSelection { rules ->
+            rules.all { selection ->
+                boolean rejected = ['alpha', 'beta', 'rc', 'cr', 'm'].any { qualifier ->
+                    selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*/
+                }
+                if (rejected) {
+                    selection.reject('Release candidate')
+                }
+            }
+        }
+    }
 }

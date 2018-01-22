@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion compileSdk
-    buildToolsVersion buildTools
+    compileSdkVersion 26
+    buildToolsVersion '26.0.2'
 
     defaultConfig {
         applicationId "com.google.firebase.quickstart.auth"
-        minSdkVersion minSdk
-        targetSdkVersion targetSdk
+        minSdkVersion 16
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
     }
@@ -20,6 +20,6 @@ android {
 }
 
 dependencies {
-    compile "com.android.support:appcompat-v7:$supportVersion"
-    compile "com.google.firebase:firebase-auth:$firebaseVersion"
+    compile "com.android.support:appcompat-v7:26.0.2"
+    compile "com.google.firebase:firebase-auth:11.8.0"
 }

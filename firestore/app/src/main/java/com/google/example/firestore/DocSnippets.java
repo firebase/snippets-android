@@ -168,7 +168,7 @@ public class DocSnippets {
         Map<String, Object> user = new HashMap<>();
         user.put("first", "Alan");
         user.put("middle", "Mathison");
-        user.put("last", "Turring");
+        user.put("last", "Turing");
         user.put("born", 1912);
 
         // Add a new document with a generated ID

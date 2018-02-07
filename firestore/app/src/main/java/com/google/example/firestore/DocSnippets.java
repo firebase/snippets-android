@@ -13,6 +13,7 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentChange.Type;
+import com.google.firebase.firestore.DocumentListenOptions;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -644,6 +645,23 @@ public class DocSnippets {
             }
         });
         // [END listen_document_local]
+    }
+
+    private void listenWithMetadata() {
+        // [START listen_with_metadata]
+        // Listen for metadata changes to the document.
+        DocumentListenOptions options = new DocumentListenOptions()
+                .includeMetadataChanges();
+
+        DocumentReference docRef = db.collection("cities").document("SF");
+        docRef.addSnapshotListener(options, new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot snapshot,
+                                @Nullable FirebaseFirestoreException e) {
+                // ...
+            }
+        });
+        // [END listen_with_metadata]
     }
 
     private void getMultipleDocs() {

@@ -11,7 +11,9 @@ import com.google.firebase.referencecode.database.interfaces.ActivityInterface
 
 class KotlinActivity : AppCompatActivity(), ActivityInterface {
 
-    private val TAG = "KotlinActivity"
+    companion object {
+        private val TAG = "KotlinActivity"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

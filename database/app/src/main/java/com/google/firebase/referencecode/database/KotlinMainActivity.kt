@@ -7,9 +7,9 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.referencecode.database.interfaces.ActivityInterface
+import com.google.firebase.referencecode.database.interfaces.MainActivityInterface
 
-class KotlinActivity : AppCompatActivity(), ActivityInterface {
+class KotlinMainActivity : AppCompatActivity(), MainActivityInterface {
 
     companion object {
         private val TAG = "KotlinActivity"

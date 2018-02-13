@@ -6,5 +6,9 @@ package com.google.firebase.referencecode.database.interfaces;
  */
 
 public interface MainActivityInterface {
-    void basicReadWrite();
+    void valueRead();
+
+    void childRead();
+
+    void basicWrite();
 }

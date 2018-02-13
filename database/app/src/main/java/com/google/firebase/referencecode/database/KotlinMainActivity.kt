@@ -37,7 +37,7 @@ class KotlinMainActivity : AppCompatActivity(), MainActivityInterface {
                 val snapshotIterable = dataSnapshot.children
                 snapshotIterable
                         .map { it.getValue(String::class.java) }
-                        .forEach { Log.d(TAG, "Value is: " + it!!) }
+                        .forEach { Log.d(TAG, "Value is: " + it) }
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -59,25 +59,25 @@ class KotlinMainActivity : AppCompatActivity(), MainActivityInterface {
             override fun onChildAdded(dataSnapshot: DataSnapshot, s: String) {
                 // This method is called when a new child is added to myRef
                 val value = dataSnapshot.getValue(String::class.java)
-                Log.d(TAG, "Value is: " + value!!)
+                Log.d(TAG, "Value is: " + value)
             }
 
             override fun onChildChanged(dataSnapshot: DataSnapshot, s: String) {
                 // This method is called when data of a particular child in myRef was changed
                 val value = dataSnapshot.getValue(String::class.java)
-                Log.d(TAG, "Value is: " + value!!)
+                Log.d(TAG, "Value is: " + value)
             }
 
             override fun onChildRemoved(dataSnapshot: DataSnapshot) {
                 // This method is called when a child is removed from myRef
                 val value = dataSnapshot.getValue(String::class.java)
-                Log.d(TAG, "Value is: " + value!!)
+                Log.d(TAG, "Value is: " + value)
             }
 
             override fun onChildMoved(dataSnapshot: DataSnapshot, s: String) {
                 // This method is triggered when a child location's priority changes
                 val value = dataSnapshot.getValue(String::class.java)
-                Log.d(TAG, "Value is: " + value!!)
+                Log.d(TAG, "Value is: " + value)
             }
 
             override fun onCancelled(databaseError: DatabaseError) {

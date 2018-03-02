@@ -26,6 +26,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.referencecode.database.interfaces.QueryActivityInterface;
 import com.google.firebase.referencecode.database.models.Message;
 
 /**
@@ -34,7 +35,7 @@ import com.google.firebase.referencecode.database.models.Message;
  *
  * Use {@link MainActivity} to populate the Message data.
  */
-public class QueryActivity extends AppCompatActivity {
+public class QueryActivity extends AppCompatActivity implements QueryActivityInterface {
 
     private static final String TAG = "QueryActivity";
 
@@ -54,14 +55,13 @@ public class QueryActivity extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance().getReference();
     }
 
-    private String getUid() {
+    @Override
+    public String getUid() {
         return "42";
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-
+    public void basicListen() {
         // [START basic_listen]
         // Get a reference to Messages and attach a listener
         mMessagesRef = databaseReference.child("messages");
@@ -93,8 +93,10 @@ public class QueryActivity extends AppCompatActivity {
         };
         mMessagesRef.addValueEventListener(mMessagesListener);
         // [END basic_listen]
+    }
 
-
+    @Override
+    public void basicQuery() {
         // [START basic_query]
         // My top posts by number of stars
         String myUserId = getUid();
@@ -111,6 +113,13 @@ public class QueryActivity extends AppCompatActivity {
             // [END_EXCLUDE]
         });
         // [END basic_query]
+    }
+
+    @Override
+    public void basicQueryValueListener() {
+        String myUserId = getUid();
+        Query myTopPostsQuery = databaseReference.child("user-posts").child(myUserId)
+                .orderByChild("starCount");
 
         // [START basic_query_value_listener]
         // My top posts by number of stars
@@ -130,22 +139,37 @@ public class QueryActivity extends AppCompatActivity {
             }
         });
         // [END basic_query_value_listener]
+    }
 
+    @Override
+    public void cleanBasicListener() {
+        // Clean up value listener
+        // [START clean_basic_listen]
+        mMessagesRef.removeEventListener(mMessagesListener);
+        // [END clean_basic_listen]
+    }
+
+    @Override
+    public void cleanBasicQuery() {
+        // Clean up query listener
+        // [START clean_basic_query]
+        mMessagesQuery.removeEventListener(mMessagesQueryListener);
+        // [END clean_basic_query]
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        basicListen();
+        basicQuery();
+        basicQueryValueListener();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-
-        // Clean up value listener
-        // [START clean_basic_listen]
-        mMessagesRef.removeEventListener(mMessagesListener);
-        // [END clean_basic_listen]
-
-        // Clean up query listener
-        // [START clean_basic_query]
-        mMessagesQuery.removeEventListener(mMessagesQueryListener);
-        // [END clean_basic_query]
+        cleanBasicListener();
+        cleanBasicQuery();
     }
 }
 

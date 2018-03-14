@@ -33,8 +33,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GithubAuthProvider;
 import com.google.firebase.auth.UserInfo;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.quickstart.auth.interfaces.MainActivityInterface;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainActivityInterface{
 
     private static final String TAG = "MainActivity";
 
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    private void checkCurrentUser() {
+    public void checkCurrentUser() {
         // [START check_current_user]
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         // [END check_current_user]
     }
 
-    private void getUserProfile() {
+    public void getUserProfile() {
         // [START get_user_profile]
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         // [END get_user_profile]
     }
 
-    private void getProviderData() {
+    public void getProviderData() {
         // [START get_provider_data]
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
@@ -95,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
         // [END get_provider_data]
     }
 
-    private void updateProfile() {
+    public void updateProfile() {
         // [START update_profile]
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -116,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
         // [END update_profile]
     }
 
-    private void updateEmail() {
+    public void updateEmail() {
         // [START update_email]
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -132,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
         // [END update_email]
     }
 
-    private void updatePassword() {
+    public void updatePassword() {
         // [START update_password]
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String newPassword = "SOME-SECURE-PASSWORD";
@@ -197,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
         // [END localize_verification_email]
     }
 
-    private void sendPasswordReset() {
+    public void sendPasswordReset() {
         // [START send_password_reset]
         FirebaseAuth auth = FirebaseAuth.getInstance();
         String emailAddress = "user@example.com";
@@ -214,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
         // [END send_password_reset]
     }
 
-    private void deleteUser() {
+    public void deleteUser() {
         // [START delete_user]
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -230,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
         // [END delete_user]
     }
 
-    private void reauthenticate() {
+    public void reauthenticate() {
         // [START reauthenticate]
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -251,7 +252,7 @@ public class MainActivity extends AppCompatActivity {
         // [END reauthenticate]
     }
 
-    private void authWithGithub() {
+    public void authWithGithub() {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
         // [START auth_with_github]

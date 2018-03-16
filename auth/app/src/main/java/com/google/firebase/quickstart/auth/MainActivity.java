@@ -35,7 +35,7 @@ import com.google.firebase.auth.UserInfo;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.quickstart.auth.interfaces.MainActivityInterface;
 
-public class MainActivity extends AppCompatActivity implements MainActivityInterface{
+public class MainActivity extends AppCompatActivity implements MainActivityInterface {
 
     private static final String TAG = "MainActivity";
 
@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         setContentView(R.layout.activity_main);
     }
 
+    @Override
     public void checkCurrentUser() {
         // [START check_current_user]
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         // [END check_current_user]
     }
 
+    @Override
     public void getUserProfile() {
         // [START get_user_profile]
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -76,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         // [END get_user_profile]
     }
 
+    @Override
     public void getProviderData() {
         // [START get_provider_data]
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -91,11 +94,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
                 String name = profile.getDisplayName();
                 String email = profile.getEmail();
                 Uri photoUrl = profile.getPhotoUrl();
-            };
+            }
+            ;
         }
         // [END get_provider_data]
     }
 
+    @Override
     public void updateProfile() {
         // [START update_profile]
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -117,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         // [END update_profile]
     }
 
+    @Override
     public void updateEmail() {
         // [START update_email]
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -133,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         // [END update_email]
     }
 
+    @Override
     public void updatePassword() {
         // [START update_password]
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -150,6 +157,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         // [END update_password]
     }
 
+    @Override
     public void sendEmailVerification() {
         // [START send_email_verification]
         FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -167,6 +175,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         // [END send_email_verification]
     }
 
+    @Override
     public void sendEmailVerificationWithContinueUrl() {
         // [START send_email_verification_with_continue_url]
         FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -198,6 +207,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         // [END localize_verification_email]
     }
 
+    @Override
     public void sendPasswordReset() {
         // [START send_password_reset]
         FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -215,6 +225,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         // [END send_password_reset]
     }
 
+    @Override
     public void deleteUser() {
         // [START delete_user]
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -231,6 +242,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         // [END delete_user]
     }
 
+    @Override
     public void reauthenticate() {
         // [START reauthenticate]
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -252,6 +264,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         // [END reauthenticate]
     }
 
+    @Override
     public void authWithGithub() {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
 

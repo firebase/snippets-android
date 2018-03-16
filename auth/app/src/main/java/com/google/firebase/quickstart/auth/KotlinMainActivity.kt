@@ -137,7 +137,7 @@ class KotlinMainActivity : AppCompatActivity(), MainActivityInterface {
         val auth = FirebaseAuth.getInstance()
         val user = auth.currentUser
 
-        val url = "http://www.example.com/verify?uid=" + user!!.uid
+        val url = "http://www.example.com/verify?uid=" + user?.uid
         val actionCodeSettings = ActionCodeSettings.newBuilder()
                 .setUrl(url)
                 .setIOSBundleId("com.example.ios")
@@ -145,8 +145,8 @@ class KotlinMainActivity : AppCompatActivity(), MainActivityInterface {
                 .setAndroidPackageName("com.example.android", false, null)
                 .build()
 
-        user.sendEmailVerification(actionCodeSettings)
-                .addOnCompleteListener { task ->
+        user?.sendEmailVerification(actionCodeSettings)
+                ?.addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         Log.d(TAG, "Email sent.")
                     }

@@ -25,6 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.Query.Direction;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.ServerTimestamp;
 import com.google.firebase.firestore.SetOptions;
@@ -47,7 +48,7 @@ import java.util.concurrent.TimeUnit;
  * Snippets for inclusion in documentation.
  */
 @SuppressWarnings({"unused", "Convert2Lambda"})
-public class DocSnippets {
+public class DocSnippets implements DocSnippetsInterface {
 
     private static final String TAG = "DocSnippets";
 
@@ -123,7 +124,8 @@ public class DocSnippets {
         deleteCollection(db.collection(path), 50, EXECUTOR);
     }
 
-    private void setup() {
+    @Override
+    public void setup() {
         // [START get_firestore_instance]
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         // [END get_firestore_instance]
@@ -136,7 +138,8 @@ public class DocSnippets {
         // [END set_firestore_settings]
     }
 
-    private void addAdaLovelace() {
+    @Override
+    public void addAdaLovelace() {
         // [START add_ada_lovelace]
         // Create a new user with a first and last name
         Map<String, Object> user = new HashMap<>();
@@ -163,7 +166,8 @@ public class DocSnippets {
     }
 
 
-    private void addAlanTuring() {
+    @Override
+    public void addAlanTuring() {
         // [START add_alan_turing]
         // Create a new user with a first, middle, and last name
         Map<String, Object> user = new HashMap<>();
@@ -190,7 +194,8 @@ public class DocSnippets {
         // [END add_alan_turing]
     }
 
-    private void getAllUsers() {
+    @Override
+    public void getAllUsers() {
         // [START get_all_users]
         db.collection("users")
                 .get()
@@ -198,7 +203,7 @@ public class DocSnippets {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            for (DocumentSnapshot document : task.getResult()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                             }
                         } else {
@@ -209,7 +214,8 @@ public class DocSnippets {
         // [END get_all_users]
     }
 
-    private void listenForUsers() {
+    @Override
+    public void listenForUsers() {
         // [START listen_for_users]
         // Listen for users born before 1900.
         //
@@ -233,19 +239,22 @@ public class DocSnippets {
         // [END listen_for_users]
     }
 
-    private void docReference() {
+    @Override
+    public void docReference() {
         // [START doc_reference]
         DocumentReference alovelaceDocumentRef = db.collection("users").document("alovelace");
         // [END doc_reference]
     }
 
-    private void collectionReference() {
+    @Override
+    public void collectionReference() {
         // [START collection_reference]
         CollectionReference usersCollectionRef = db.collection("users");
         // [END collection_reference]
     }
 
-    private void subcollectionReference() {
+    @Override
+    public void subcollectionReference() {
         // [START subcollection_reference]
         DocumentReference messageRef = db
                 .collection("rooms").document("roomA")
@@ -253,7 +262,8 @@ public class DocSnippets {
         // [END subcollection_reference]
     }
 
-    private void docReferenceAlternate() {
+    @Override
+    public void docReferenceAlternate() {
         // [START doc_reference_alternate]
         DocumentReference alovelaceDocumentRef = db.document("users/alovelace");
         // [END doc_reference_alternate]
@@ -304,7 +314,8 @@ public class DocSnippets {
     }
     // [END city_class]
 
-    private void setDocument() {
+    @Override
+    public void setDocument() {
         // [START set_document]
         Map<String, Object> city = new HashMap<>();
         city.put("name", "Los Angeles");
@@ -334,7 +345,8 @@ public class DocSnippets {
         // [END set_with_id]
     }
 
-    private void dataTypes() {
+    @Override
+    public void dataTypes() {
         // [START data_types]
         Map<String, Object> docData = new HashMap<>();
         docData.put("stringExample", "Hello world!");
@@ -367,14 +379,16 @@ public class DocSnippets {
         // [END data_types]
     }
 
-    private void addCustomClass() {
+    @Override
+    public void addCustomClass() {
         // [START add_custom_class]
         City city = new City("Los Angeles", "CA", "USA", false, 5000000L);
         db.collection("cities").document("LA").set(city);
         // [END add_custom_class]
     }
 
-    private void addDocument() {
+    @Override
+    public void addDocument() {
         // [START add_document]
         // Add a new document with a generated id.
         Map<String, Object> data = new HashMap<>();
@@ -398,7 +412,8 @@ public class DocSnippets {
         // [END add_document]
     }
 
-    private void newDocument() {
+    @Override
+    public void newDocument() {
         // [START new_document]
         Map<String, Object> data = new HashMap<>();
 
@@ -409,7 +424,8 @@ public class DocSnippets {
         // [END new_document]
     }
 
-    private void updateDocument() {
+    @Override
+    public void updateDocument() {
         // [START update_document]
         DocumentReference washingtonRef = db.collection("cities").document("DC");
 
@@ -431,7 +447,8 @@ public class DocSnippets {
         // [END update_document]
     }
 
-    private void updateDocumentNested() {
+    @Override
+    public void updateDocumentNested() {
         // [START update_document_nested]
         // Assume the document contains:
         // {
@@ -449,7 +466,8 @@ public class DocSnippets {
         // [END update_document_nested]
     }
 
-    private void setFieldWithMerge() {
+    @Override
+    public void setFieldWithMerge() {
         // [START set_field_with_merge]
         // Update one field, creating the document if it does not already exist.
         Map<String, Object> data = new HashMap<>();
@@ -460,7 +478,8 @@ public class DocSnippets {
         // [END set_field_with_merge]
     }
 
-    private void deleteDocument() {
+    @Override
+    public void deleteDocument() {
         // [START delete_document]
         db.collection("cities").document("DC")
                 .delete()
@@ -479,7 +498,8 @@ public class DocSnippets {
         // [END delete_document]
     }
 
-    private void transactions() {
+    @Override
+    public void transactions() {
         // [START transactions]
         final DocumentReference sfDocRef = db.collection("cities").document("SF");
 
@@ -508,7 +528,8 @@ public class DocSnippets {
         // [END transactions]
     }
 
-    private void transactionPromise() {
+    @Override
+    public void transactionPromise() {
         // [START transaction_with_result]
         final DocumentReference sfDocRef = db.collection("cities").document("SF");
 
@@ -540,7 +561,8 @@ public class DocSnippets {
         // [END transaction_with_result]
     }
 
-    private void writeBatch() {
+    @Override
+    public void writeBatch() {
         // [START write_batch]
         // Get a new write batch
         WriteBatch batch = db.batch();
@@ -567,7 +589,8 @@ public class DocSnippets {
         // [END write_batch]
     }
 
-    private void getDocument() {
+    @Override
+    public void getDocument() {
         // [START get_document]
         DocumentReference docRef = db.collection("cities").document("SF");
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -588,7 +611,8 @@ public class DocSnippets {
         // [END get_document]
     }
 
-    private void customObjects() {
+    @Override
+    public void customObjects() {
         // [START custom_objects]
         DocumentReference docRef = db.collection("cities").document("BJ");
         docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -600,7 +624,8 @@ public class DocSnippets {
         // [END custom_objects]
     }
 
-    private void listenToDocument() {
+    @Override
+    public void listenToDocument() {
         // [START listen_document]
         final DocumentReference docRef = db.collection("cities").document("SF");
         docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -622,7 +647,8 @@ public class DocSnippets {
         // [END listen_document]
     }
 
-    private void listenToDocumentLocal() {
+    @Override
+    public void listenToDocumentLocal() {
         // [START listen_document_local]
         final DocumentReference docRef = db.collection("cities").document("SF");
         docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -647,7 +673,8 @@ public class DocSnippets {
         // [END listen_document_local]
     }
 
-    private void listenWithMetadata() {
+    @Override
+    public void listenWithMetadata() {
         // [START listen_with_metadata]
         // Listen for metadata changes to the document.
         DocumentListenOptions options = new DocumentListenOptions()
@@ -664,7 +691,8 @@ public class DocSnippets {
         // [END listen_with_metadata]
     }
 
-    private void getMultipleDocs() {
+    @Override
+    public void getMultipleDocs() {
         // [START get_multiple]
         db.collection("cities")
                 .whereEqualTo("capital", true)
@@ -673,7 +701,7 @@ public class DocSnippets {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            for (DocumentSnapshot document : task.getResult()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                             }
                         } else {
@@ -684,7 +712,8 @@ public class DocSnippets {
         // [END get_multiple]
     }
 
-    private void getAllDocs() {
+    @Override
+    public void getAllDocs() {
         // [START get_multiple_all]
         db.collection("cities")
                 .get()
@@ -692,7 +721,7 @@ public class DocSnippets {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            for (DocumentSnapshot document : task.getResult()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                             }
                         } else {
@@ -703,7 +732,8 @@ public class DocSnippets {
         // [END get_multiple_all]
     }
 
-    private void listenToMultiple() {
+    @Override
+    public void listenToMultiple() {
         // [START listen_multiple]
         db.collection("cities")
                 .whereEqualTo("state", "CA")
@@ -717,7 +747,7 @@ public class DocSnippets {
                         }
 
                         List<String> cities = new ArrayList<>();
-                        for (DocumentSnapshot doc : value) {
+                        for (QueryDocumentSnapshot doc : value) {
                             if (doc.get("name") != null) {
                                 cities.add(doc.getString("name"));
                             }
@@ -728,7 +758,8 @@ public class DocSnippets {
         // [END listen_multiple]
     }
 
-    private void listenToDiffs() {
+    @Override
+    public void listenToDiffs() {
         // [START listen_diffs]
         db.collection("cities")
                 .whereEqualTo("state", "CA")
@@ -760,7 +791,8 @@ public class DocSnippets {
         // [END listen_diffs]
     }
 
-    private void listenState() {
+    @Override
+    public void listenState() {
         // [START listen_state]
         db.collection("cities")
                 .whereEqualTo("state", "CA")
@@ -788,7 +820,8 @@ public class DocSnippets {
         // [END listen_state]
     }
 
-    private void detachListener() {
+    @Override
+    public void detachListener() {
         // [START detach_listener]
         Query query = db.collection("cities");
         ListenerRegistration registration = query.addSnapshotListener(
@@ -809,7 +842,8 @@ public class DocSnippets {
         // [END detach_listener]
     }
 
-    private void handleListenErrors() {
+    @Override
+    public void handleListenErrors() {
         // [START handle_listen_errors]
         db.collection("cities")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -832,7 +866,8 @@ public class DocSnippets {
         // [END handle_listen_errors]
     }
 
-    private void exampleData() {
+    @Override
+    public void exampleData() {
         // [START example_data]
         CollectionReference cities = db.collection("cities");
 
@@ -878,7 +913,8 @@ public class DocSnippets {
         // [END example_data]
     }
 
-    private void simpleQueries() {
+    @Override
+    public void simpleQueries() {
         // [START simple_queries]
         // Create a reference to the cities collection
         CollectionReference citiesRef = db.collection("cities");
@@ -898,7 +934,8 @@ public class DocSnippets {
         // [END example_filters]
     }
 
-    private void compoundQueries() {
+    @Override
+    public void compoundQueries() {
         CollectionReference citiesRef = db.collection("cities");
 
         // [START chain_filters]
@@ -914,7 +951,8 @@ public class DocSnippets {
         // [END valid_range_filters]
     }
 
-    private void compoundQueriesInvalid() {
+    @Override
+    public void compoundQueriesInvalid() {
         CollectionReference citiesRef = db.collection("cities");
 
         // [START invalid_range_filters]
@@ -922,7 +960,8 @@ public class DocSnippets {
         // [END invalid_range_filters]
     }
 
-    private void orderAndLimit() {
+    @Override
+    public void orderAndLimit() {
         CollectionReference citiesRef = db.collection("cities");
 
         // [START order_and_limit]
@@ -946,7 +985,8 @@ public class DocSnippets {
         // [END valid_filter_and_order]
     }
 
-    private void orderAndLimitInvalid() {
+    @Override
+    public void orderAndLimitInvalid() {
         CollectionReference citiesRef = db.collection("cities");
 
         // [START invalid_filter_and_order]
@@ -954,7 +994,8 @@ public class DocSnippets {
         // [END invalid_filter_and_order]
     }
 
-    private void queryStartAtEndAt() {
+    @Override
+    public void queryStartAtEndAt() {
         // [START query_start_at_single]
         // Get all cities with a population >= 1,000,000, ordered by population,
         db.collection("cities")
@@ -1078,7 +1119,7 @@ public class DocSnippets {
         QuerySnapshot querySnapshot = Tasks.await(query.get());
 
         WriteBatch batch = query.getFirestore().batch();
-        for (DocumentSnapshot snapshot : querySnapshot) {
+        for (QueryDocumentSnapshot snapshot : querySnapshot) {
             batch.delete(snapshot.getReference());
         }
         Tasks.await(batch.commit());
@@ -1087,7 +1128,33 @@ public class DocSnippets {
     }
     // [END delete_collection]
 
-    private void offlineListen(FirebaseFirestore db) {
+    @Override
+    public void toggleOffline() {
+        // [START disable_network]
+        db.disableNetwork()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        // Do offline things
+                        // ...
+                    }
+                });
+        // [END disable_network]
+
+        // [START enable_network]
+        db.enableNetwork()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        // Do online things
+                        // ...
+                    }
+                });
+        // [END enable_network]
+    }
+
+    @Override
+    public void offlineListen(FirebaseFirestore db) {
         // [START offline_listen]
         db.collection("cities").whereEqualTo("state", "CA")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -1125,7 +1192,8 @@ public class DocSnippets {
     }
     // [END server_timestamp_annotation]
 
-    private void updateWithServerTimestamp() {
+    @Override
+    public void updateWithServerTimestamp() {
         // [START update_with_server_timestamp]
         DocumentReference docRef = db.collection("objects").document("some-id");
 
@@ -1142,7 +1210,8 @@ public class DocSnippets {
         // [END update_with_server_timestamp]
     }
 
-    private void updateDeleteField() {
+    @Override
+    public void updateDeleteField() {
         // [START update_delete_field]
         DocumentReference docRef = db.collection("cities").document("BJ");
 

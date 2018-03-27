@@ -38,7 +38,7 @@ dependencies {
     // Firebase / Play Services
     compile "com.google.firebase:firebase-auth:12.0.0"
     compile "com.google.android.gms:play-services-auth:12.0.0"
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:1.2.30"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:1.2.31"
 }
 
 apply plugin: 'com.google.gms.google-services'

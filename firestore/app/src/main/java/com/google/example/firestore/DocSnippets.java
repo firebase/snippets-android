@@ -598,7 +598,7 @@ public class DocSnippets implements DocSnippetsInterface {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
-                    if (document != null && document.exists()) {
+                    if (document.exists()) {
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                     } else {
                         Log.d(TAG, "No such document");

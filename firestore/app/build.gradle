@@ -3,7 +3,6 @@ apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.2'
 
     defaultConfig {
         applicationId "com.google.example.firestore"
@@ -28,17 +27,17 @@ repositories {
 }
 
 dependencies {
-    compile "com.android.support:support-v4:27.1.0"
-    compile "com.android.support:appcompat-v7:27.1.0"
-    compile "com.android.support.constraint:constraint-layout:1.0.2"
+    implementation "com.android.support:support-v4:27.1.1"
+    implementation "com.android.support:appcompat-v7:27.1.1"
+    implementation "com.android.support.constraint:constraint-layout:1.1.0"
 
     // Firestore
-    compile "com.google.firebase:firebase-firestore:12.0.1"
+    implementation "com.google.firebase:firebase-firestore:15.0.0"
 
     // Firebase / Play Services
-    compile "com.google.firebase:firebase-auth:12.0.1"
-    compile "com.google.android.gms:play-services-auth:12.0.1"
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:1.2.31"
+    implementation "com.google.firebase:firebase-auth:15.0.0"
+    implementation "com.google.android.gms:play-services-auth:15.0.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:1.2.31"
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -525,7 +525,7 @@ class DocSnippets(val db: FirebaseFirestore) : DocSnippetsInterface {
                 val cities = ArrayList<String>()
                 for (doc in value!!) {
                     if (doc.get("name") != null) {
-                        cities.add(doc.getString("name"))
+                        cities.add(doc.getString("name")!!)
                     }
                 }
                 Log.d(TAG, "Current cites in CA: " + cities)

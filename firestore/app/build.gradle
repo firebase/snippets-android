@@ -10,6 +10,7 @@ android {
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -30,12 +31,13 @@ dependencies {
     implementation "com.android.support:support-v4:27.1.1"
     implementation "com.android.support:appcompat-v7:27.1.1"
     implementation "com.android.support.constraint:constraint-layout:1.1.0"
+    implementation "com.android.support:multidex:1.0.3"
 
     // Firestore
-    implementation "com.google.firebase:firebase-firestore:15.0.0"
+    implementation "com.google.firebase:firebase-firestore:16.0.0"
 
     // Firebase / Play Services
-    implementation "com.google.firebase:firebase-auth:15.0.0"
+    implementation "com.google.firebase:firebase-auth:15.1.0"
     implementation "com.google.android.gms:play-services-auth:15.0.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:1.2.31"
 }

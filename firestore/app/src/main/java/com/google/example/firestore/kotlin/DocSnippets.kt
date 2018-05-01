@@ -470,10 +470,8 @@ class DocSnippets(val db: FirebaseFirestore) : DocSnippetsInterface {
     override fun listenWithMetadata() {
         // [START listen_with_metadata]
         // Listen for metadata changes to the document.
-        val options = DocumentListenOptions().includeMetadataChanges()
-
         val docRef = db.collection("cities").document("SF")
-        docRef.addSnapshotListener(options) { snapshot, e ->
+        docRef.addSnapshotListener(MetadataChanges.INCLUDE) { snapshot, e ->
             // ...
         }
         // [END listen_with_metadata]

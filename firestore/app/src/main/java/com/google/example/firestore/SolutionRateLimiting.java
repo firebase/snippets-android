@@ -4,7 +4,6 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.google.firebase.firestore.DocumentListenOptions;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -12,6 +11,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.MetadataChanges;
 import com.google.firebase.firestore.SetOptions;
 
 import java.util.HashMap;
@@ -44,8 +44,7 @@ public class SolutionRateLimiting {
 
         // Listen to the document, including metadata changes so we get notified
         // when writes have propagated to the server.
-        DocumentListenOptions options = new DocumentListenOptions().includeMetadataChanges();
-        mRegistration = reference.addSnapshotListener(options, new EventListener<DocumentSnapshot>() {
+        mRegistration = reference.addSnapshotListener(MetadataChanges.INCLUDE, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot,
                                 @Nullable FirebaseFirestoreException e) {

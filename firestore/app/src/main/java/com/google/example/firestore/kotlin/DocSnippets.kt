@@ -1,3 +1,5 @@
+@file:Suppress("UNUSED_VARIABLE", "UNUSED_ANONYMOUS_PARAMETER")
+
 package com.google.example.firestore.kotlin
 
 import android.support.annotation.WorkerThread
@@ -80,16 +82,6 @@ class DocSnippets(val db: FirebaseFirestore) : DocSnippetsInterface {
 
     }
 
-
-    internal fun deleteAll() {
-        deleteCollection("cities")
-        deleteCollection("users")
-    }
-
-    private fun deleteCollection(path: String) {
-        deleteCollection(db.collection(path), 50, EXECUTOR)
-    }
-
     override fun setup() {
         // [START get_firestore_instance]
         val db = FirebaseFirestore.getInstance()
@@ -107,9 +99,9 @@ class DocSnippets(val db: FirebaseFirestore) : DocSnippetsInterface {
         // [START add_ada_lovelace]
         // Create a new user with a first and last name
         val user = HashMap<String, Any>()
-        user.put("first", "Ada")
-        user.put("last", "Lovelace")
-        user.put("born", 1815)
+        user["first"] = "Ada"
+        user["last"] = "Lovelace"
+        user["born"] = 1815
 
         // Add a new document with a generated ID
         db.collection("users")
@@ -124,10 +116,10 @@ class DocSnippets(val db: FirebaseFirestore) : DocSnippetsInterface {
         // [START add_alan_turing]
         // Create a new user with a first, middle, and last name
         val user = HashMap<String, Any>()
-        user.put("first", "Alan")
-        user.put("middle", "Mathison")
-        user.put("last", "Turring")
-        user.put("born", 1912)
+        user["first"] = "Alan"
+        user["middle"] = "Mathison"
+        user["last"] = "Turring"
+        user["born"] = 1912
 
         // Add a new document with a generated ID
         db.collection("users")
@@ -214,9 +206,9 @@ class DocSnippets(val db: FirebaseFirestore) : DocSnippetsInterface {
     override fun setDocument() {
         // [START set_document]
         val city = HashMap<String, Any>()
-        city.put("name", "Los Angeles")
-        city.put("state", "CA")
-        city.put("country", "USA")
+        city["name"] = "Los Angeles"
+        city["state"] = "CA"
+        city["country"] = "USA"
 
         db.collection("cities").document("LA")
             .set(city)
@@ -234,18 +226,18 @@ class DocSnippets(val db: FirebaseFirestore) : DocSnippetsInterface {
     override fun dataTypes() {
         // [START data_types]
         val docData = HashMap<String, Any?>()
-        docData.put("stringExample", "Hello world!")
-        docData.put("booleanExample", true)
-        docData.put("numberExample", 3.14159265)
-        docData.put("dateExample", Date())
-        docData.put("listExample", Arrays.asList(1, 2, 3))
-        docData.put("nullExample", null)
+        docData["stringExample"] = "Hello world!"
+        docData["booleanExample"] = true
+        docData["numberExample"] = 3.14159265
+        docData["dateExample"] = Date()
+        docData["listExample"] = Arrays.asList(1, 2, 3)
+        docData["nullExample"] = null
 
         val nestedData = HashMap<String, Any>()
-        nestedData.put("a", 5)
-        nestedData.put("b", true)
+        nestedData["a"] = 5
+        nestedData["b"] = true
 
-        docData.put("objectExample", nestedData)
+        docData["objectExample"] = nestedData
 
         db.collection("data").document("one")
             .set(docData)
@@ -265,8 +257,8 @@ class DocSnippets(val db: FirebaseFirestore) : DocSnippetsInterface {
         // [START add_document]
         // Add a new document with a generated id.
         val data = HashMap<String, Any>()
-        data.put("name", "Tokyo")
-        data.put("country", "Japan")
+        data["name"] = "Tokyo"
+        data["country"] = "Japan"
 
         db.collection("cities")
             .add(data)
@@ -320,7 +312,7 @@ class DocSnippets(val db: FirebaseFirestore) : DocSnippetsInterface {
         // [START set_field_with_merge]
         // Update one field, creating the document if it does not already exist.
         val data = HashMap<String, Any>()
-        data.put("capital", true)
+        data["capital"] = true
 
         db.collection("cities").document("BJ")
             .set(data, SetOptions.merge())
@@ -433,8 +425,8 @@ class DocSnippets(val db: FirebaseFirestore) : DocSnippetsInterface {
                 return@EventListener
             }
 
-            if (snapshot != null && snapshot!!.exists()) {
-                Log.d(TAG, "Current data: " + snapshot!!.data)
+            if (snapshot != null && snapshot.exists()) {
+                Log.d(TAG, "Current data: " + snapshot.data)
             } else {
                 Log.d(TAG, "Current data: null")
             }
@@ -452,13 +444,13 @@ class DocSnippets(val db: FirebaseFirestore) : DocSnippetsInterface {
                 return@EventListener
             }
 
-            val source = if (snapshot != null && snapshot!!.metadata.hasPendingWrites())
+            val source = if (snapshot != null && snapshot.metadata.hasPendingWrites())
                 "Local"
             else
                 "Server"
 
-            if (snapshot != null && snapshot!!.exists()) {
-                Log.d(TAG, source + " data: " + snapshot!!.data)
+            if (snapshot != null && snapshot.exists()) {
+                Log.d(TAG, source + " data: " + snapshot.data)
             } else {
                 Log.d(TAG, source + " data: null")
             }
@@ -570,7 +562,7 @@ class DocSnippets(val db: FirebaseFirestore) : DocSnippetsInterface {
                     }
                 }
 
-                if (!snapshots!!.metadata.isFromCache) {
+                if (!snapshots.metadata.isFromCache) {
                     Log.d(TAG, "Got initial state.")
                 }
             }
@@ -621,43 +613,43 @@ class DocSnippets(val db: FirebaseFirestore) : DocSnippetsInterface {
         val cities = db.collection("cities")
 
         val data1 = HashMap<String, Any>()
-        data1.put("name", "San Francisco")
-        data1.put("state", "CA")
-        data1.put("country", "USA")
-        data1.put("capital", false)
-        data1.put("population", 860000)
+        data1["name"] = "San Francisco"
+        data1["state"] = "CA"
+        data1["country"] = "USA"
+        data1["capital"] = false
+        data1["population"] = 860000
         cities.document("SF").set(data1)
 
         val data2 = HashMap<String, Any>()
-        data2.put("name", "Los Angeles")
-        data2.put("state", "CA")
-        data2.put("country", "USA")
-        data2.put("capital", false)
-        data2.put("population", 3900000)
+        data2["name"] = "Los Angeles"
+        data2["state"] = "CA"
+        data2["country"] = "USA"
+        data2["capital"] = false
+        data2["population"] = 3900000
         cities.document("LA").set(data2)
 
         val data3 = HashMap<String, Any?>()
-        data3.put("name", "Washington D.C.")
-        data3.put("state", null)
-        data3.put("country", "USA")
-        data3.put("capital", true)
-        data3.put("population", 680000)
+        data3["name"] = "Washington D.C."
+        data3["state"] = null
+        data3["country"] = "USA"
+        data3["capital"] = true
+        data3["population"] = 680000
         cities.document("DC").set(data3)
 
         val data4 = HashMap<String, Any?>()
-        data4.put("name", "Tokyo")
-        data4.put("state", null)
-        data4.put("country", "Japan")
-        data4.put("capital", true)
-        data4.put("population", 9000000)
+        data4["name"] = "Tokyo"
+        data4["state"] = null
+        data4["country"] = "Japan"
+        data4["capital"] = true
+        data4["population"] = 9000000
         cities.document("TOK").set(data4)
 
         val data5 = HashMap<String, Any?>()
-        data5.put("name", "Beijing")
-        data5.put("state", null)
-        data5.put("country", "China")
-        data5.put("capital", true)
-        data5.put("population", 21500000)
+        data5["name"] = "Beijing"
+        data5["state"] = null
+        data5["country"] = "China"
+        data5["capital"] = true
+        data5["population"] = 21500000
         cities.document("BJ").set(data5)
         // [END example_data]
     }
@@ -904,7 +896,7 @@ class DocSnippets(val db: FirebaseFirestore) : DocSnippetsInterface {
                             Log.d(TAG, "New city:" + change.document.data)
                         }
 
-                        val source = if (querySnapshot!!.metadata.isFromCache)
+                        val source = if (querySnapshot.metadata.isFromCache)
                             "local cache"
                         else
                             "server"
@@ -924,6 +916,7 @@ class DocSnippets(val db: FirebaseFirestore) : DocSnippetsInterface {
         var name: String? = null
         @ServerTimestamp
         var timestamp: Date? = null
+
     }
     // [END server_timestamp_annotation]
 
@@ -933,7 +926,7 @@ class DocSnippets(val db: FirebaseFirestore) : DocSnippetsInterface {
 
         // Update the timestamp field with the value from the server
         val updates = HashMap<String, Any>()
-        updates.put("timestamp", FieldValue.serverTimestamp())
+        updates["timestamp"] = FieldValue.serverTimestamp()
 
         docRef.update(updates).addOnCompleteListener(object : OnCompleteListener<Void> {
             // [START_EXCLUDE]
@@ -950,7 +943,7 @@ class DocSnippets(val db: FirebaseFirestore) : DocSnippetsInterface {
 
         // Remove the 'capital' field from the document
         val updates = HashMap<String, Any>()
-        updates.put("capital", FieldValue.delete())
+        updates["capital"] = FieldValue.delete()
 
         docRef.update(updates).addOnCompleteListener(object : OnCompleteListener<Void> {
             // [START_EXCLUDE]

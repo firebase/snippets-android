@@ -13,6 +13,11 @@ android {
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+    lintOptions {
+        warning 'InvalidPackage'
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -38,7 +43,7 @@ dependencies {
 
     // Firebase / Play Services
     implementation "com.google.firebase:firebase-auth:15.1.0"
-    implementation "com.google.android.gms:play-services-auth:15.0.0"
+    implementation "com.google.android.gms:play-services-auth:15.0.1"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:1.2.31"
 }
 

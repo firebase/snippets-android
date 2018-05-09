@@ -64,19 +64,19 @@ public class FaceDetectionActivity extends AppCompatActivity {
                                             FirebaseVisionFaceLandmark leftEar = face.getLandmark(FirebaseVisionFaceLandmark.LEFT_EAR);
                                             if (leftEar != null) {
                                                 FirebaseVisionPoint leftEarPos = leftEar.getPosition();
+                                            }
 
-                                                // If classification was enabled:
-                                                if (face.getSmilingProbability() != FirebaseVisionFace.UNCOMPUTED_PROBABILITY) {
-                                                    float smileProb = face.getSmilingProbability();
-                                                }
-                                                if (face.getRightEyeOpenProbability() != FirebaseVisionFace.UNCOMPUTED_PROBABILITY) {
-                                                    float rightEyeOpenProb = face.getRightEyeOpenProbability();
-                                                }
+                                            // If classification was enabled:
+                                            if (face.getSmilingProbability() != FirebaseVisionFace.UNCOMPUTED_PROBABILITY) {
+                                                float smileProb = face.getSmilingProbability();
+                                            }
+                                            if (face.getRightEyeOpenProbability() != FirebaseVisionFace.UNCOMPUTED_PROBABILITY) {
+                                                float rightEyeOpenProb = face.getRightEyeOpenProbability();
+                                            }
 
-                                                // If face tracking was enabled:
-                                                if (face.getTrackingId() != FirebaseVisionFace.INVALID_ID) {
-                                                    int id = face.getTrackingId();
-                                                }
+                                            // If face tracking was enabled:
+                                            if (face.getTrackingId() != FirebaseVisionFace.INVALID_ID) {
+                                                int id = face.getTrackingId();
                                             }
                                         }
                                         // [END get_face_info]

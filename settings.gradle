@@ -1,2 +1,2 @@
-include ':auth:app', ':database:app', ':firebaseoptions:app', ':firestore:app', ':storage:app', ':tasks:app', ':dynamic-links:app', ':firestore:app'
+include ':auth:app', ':database:app', ':firebaseoptions:app', ':firestore:app', ':storage:app', ':tasks:app', ':dynamic-links:app', ':firestore:app', ':ml-kit:app'
 

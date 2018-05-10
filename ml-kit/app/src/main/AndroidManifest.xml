@@ -10,7 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".FaceDetectionActivity" />
-        <activity android:name=".ImageLabelingActivity"></activity>
+        <activity android:name=".ImageLabelingActivity" />
+        <activity android:name=".BarcodeScanningActivity" />
+        <activity android:name=".TextRecognitionActivity" />
+        <activity android:name=".LandmarkRecognitionActivity" />
     </application>
 
 </manifest>

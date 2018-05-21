@@ -29,6 +29,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.ServerTimestamp;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.firestore.Source;
 import com.google.firebase.firestore.Transaction;
 import com.google.firebase.firestore.WriteBatch;
 
@@ -86,6 +87,7 @@ public class DocSnippets implements DocSnippetsInterface {
         transactions();
         transactionPromise();
         getDocument();
+        getDocumentWithOptions();
         listenToDocument();
         listenToDocumentLocal();
         getMultipleDocs();
@@ -609,6 +611,30 @@ public class DocSnippets implements DocSnippetsInterface {
             }
         });
         // [END get_document]
+    }
+
+    @Override
+    public void getDocumentWithOptions() {
+        // [START get_document_options]
+        DocumentReference docRef = db.collection("cities").document("SF");
+
+        // Source can be CACHE, SERVER, or DEFAULT.
+        Source source = Source.CACHE;
+
+        // Get the document, forcing the SDK to use the offline cache
+        docRef.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    // Document found in the offline cache
+                    DocumentSnapshot document = task.getResult();
+                    Log.d(TAG, "Cached document data: " + document.getData());
+                } else {
+                    Log.d(TAG, "Cached get failed: ", task.getException());
+                }
+            }
+        });
+        // [END get_document_options]
     }
 
     @Override

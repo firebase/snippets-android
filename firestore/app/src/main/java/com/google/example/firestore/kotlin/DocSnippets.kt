@@ -53,6 +53,7 @@ class DocSnippets(val db: FirebaseFirestore) : DocSnippetsInterface {
         transactions()
         transactionPromise()
         getDocument()
+        getDocumentWithOptions()
         listenToDocument()
         listenToDocumentLocal()
         getMultipleDocs()
@@ -407,6 +408,26 @@ class DocSnippets(val db: FirebaseFirestore) : DocSnippetsInterface {
             }
         }
         // [END get_document]
+    }
+
+    override fun getDocumentWithOptions() {
+        // [START get_document_options]
+        val docRef = db.collection("cities").document("SF")
+
+        // Source can be CACHE, SERVER, or DEFAULT.
+        val source = Source.CACHE
+
+        // Get the document, forcing the SDK to use the offline cache
+        docRef.get(source).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                // Document found in the offline cache
+                val document = task.result
+                Log.d(TAG, "Cached document data: " + document.data!!)
+            } else {
+                Log.d(TAG, "Cached get failed: ", task.exception)
+            }
+        }
+        // [END get_document_options]
     }
 
     override fun customObjects() {

@@ -50,6 +50,8 @@ public interface DocSnippetsInterface {
 
     void getDocument();
 
+    void getDocumentWithOptions();
+
     void customObjects();
 
     void listenToDocument();

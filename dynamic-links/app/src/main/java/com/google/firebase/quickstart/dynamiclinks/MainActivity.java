@@ -37,8 +37,8 @@ public class MainActivity extends AppCompatActivity {
     public void createDynamicLink_Basic() {
         // [START create_link_basic]
         DynamicLink dynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
-                .setLink(Uri.parse("https://example.com/"))
-                .setDynamicLinkDomain("abc123.app.goo.gl")
+                .setLink(Uri.parse("https://www.example.com/"))
+                .setDynamicLinkDomain("example.page.link")
                 // Open links with this app on Android
                 .setAndroidParameters(new DynamicLink.AndroidParameters.Builder().build())
                 // Open links with com.example.ios on iOS
@@ -52,8 +52,8 @@ public class MainActivity extends AppCompatActivity {
     public void createDynamicLink_Advanced() {
         // [START create_link_advanced]
         DynamicLink dynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
-                .setLink(Uri.parse("https://example.com/"))
-                .setDynamicLinkDomain("abc123.app.goo.gl")
+                .setLink(Uri.parse("https://www.example.com/"))
+                .setDynamicLinkDomain("example.page.link")
                 .setAndroidParameters(
                         new DynamicLink.AndroidParameters.Builder("com.example.android")
                                 .setMinimumVersion(125)
@@ -86,8 +86,8 @@ public class MainActivity extends AppCompatActivity {
     public void createShortLink() {
         // [START create_short_link]
         Task<ShortDynamicLink> shortLinkTask = FirebaseDynamicLinks.getInstance().createDynamicLink()
-                .setLink(Uri.parse("https://example.com/"))
-                .setDynamicLinkDomain("abc123.app.goo.gl")
+                .setLink(Uri.parse("https://www.example.com/"))
+                .setDynamicLinkDomain("example.page.link")
                 // Set parameters
                 // ...
                 .buildShortDynamicLink()
@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
     public void shotenLongLink() {
         // [START shorten_long_link]
         Task<ShortDynamicLink> shortLinkTask = FirebaseDynamicLinks.getInstance().createDynamicLink()
-                .setLongLink(Uri.parse("https://abc123.app.goo.gl/?link=https://example.com/&apn=com.example.android&ibn=com.example.ios"))
+                .setLongLink(Uri.parse("https://example.page.link/?link=https://www.example.com/&apn=com.example.android&ibn=com.example.ios"))
                 .buildShortDynamicLink()
                 .addOnCompleteListener(this, new OnCompleteListener<ShortDynamicLink>() {
                     @Override

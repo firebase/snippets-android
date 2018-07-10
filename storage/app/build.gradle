@@ -21,7 +21,7 @@ android {
 dependencies {
     implementation "com.android.support:support-v4:27.1.1"
     implementation "com.android.support:appcompat-v7:27.1.1"
-    implementation "com.google.firebase:firebase-storage:15.0.2"
+    implementation "com.google.firebase:firebase-storage:16.0.1"
 }
 
 apply plugin: 'com.google.gms.google-services'

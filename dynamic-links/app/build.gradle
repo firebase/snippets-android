@@ -22,5 +22,5 @@ android {
 dependencies {
     implementation "com.android.support:support-v4:27.1.1"
     implementation "com.android.support:appcompat-v7:27.1.1"
-    implementation "com.google.firebase:firebase-invites:15.0.0"
+    implementation "com.google.firebase:firebase-invites:16.0.1"
 }

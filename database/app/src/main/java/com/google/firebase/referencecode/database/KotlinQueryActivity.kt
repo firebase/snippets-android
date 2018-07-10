@@ -76,11 +76,11 @@ class KotlinQueryActivity : AppCompatActivity(), QueryActivityInterface {
         myTopPostsQuery.addChildEventListener(object : ChildEventListener {
             // TODO: implement the ChildEventListener methods as documented above
             // [START_EXCLUDE]
-            override fun onChildAdded(dataSnapshot: DataSnapshot, s: String) {}
+            override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {}
 
-            override fun onChildChanged(dataSnapshot: DataSnapshot, s: String) {}
+            override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {}
             override fun onChildRemoved(dataSnapshot: DataSnapshot) {}
-            override fun onChildMoved(dataSnapshot: DataSnapshot, s: String) {}
+            override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) {}
             override fun onCancelled(databaseError: DatabaseError) {}
             // [END_EXCLUDE]
         })

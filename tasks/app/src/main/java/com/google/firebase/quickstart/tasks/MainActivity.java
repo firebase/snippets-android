@@ -29,6 +29,7 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.quickstart.tasks.interfaces.MainActivityInterface;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -36,7 +37,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainActivityInterface {
 
     // [START basic_sign_in_task]
     Task<AuthResult> task = FirebaseAuth.getInstance().signInAnonymously();
@@ -48,7 +49,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    private void basicTaskHandlers() {
+    @Override
+    public void basicTaskHandlers() {
         // [START success_listener]
         task.addOnSuccessListener(new OnSuccessListener<AuthResult>() {
             @Override
@@ -105,7 +107,8 @@ public class MainActivity extends AppCompatActivity {
         // [END listener_try_catch]
     }
 
-    private void taskOnExecutor() {
+    @Override
+    public void taskOnExecutor() {
         // [START create_handler_and_executor]
         // Create a new ThreadPoolExecutor with 2 threads for each processor on the
         // device and a 60 second keep-alive time.
@@ -124,7 +127,8 @@ public class MainActivity extends AppCompatActivity {
         // [END run_task_executor]
     }
 
-    private void activityScopedTask() {
+    @Override
+    public void activityScopedTask() {
         // [START activity_scoped]
         Activity activity = MainActivity.this;
         task.addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
@@ -136,15 +140,17 @@ public class MainActivity extends AppCompatActivity {
         // [END activity_scoped]
     }
 
+    @Override
     // [START string_task_method]
-    private Task<String> doSomething(AuthResult authResult) {
+    public Task<String> doSomething(AuthResult authResult) {
         // [START_EXCLUDE]
         return Tasks.forResult("Hello, World!");
         // [END_EXCLUDE]
     }
     // [END string_task_method]
 
-    private void taskChaining() {
+    @Override
+    public void taskChaining() {
         // [START task_chaining]
         Task<AuthResult> signInTask = FirebaseAuth.getInstance().signInAnonymously();
 
@@ -171,7 +177,8 @@ public class MainActivity extends AppCompatActivity {
         // [END task_chaining]
     }
 
-    private void blockingTask() {
+    @Override
+    public void blockingTask() {
         // [START blocking_task]
         try {
             // Block on a task and get the result synchronously. This is generally done

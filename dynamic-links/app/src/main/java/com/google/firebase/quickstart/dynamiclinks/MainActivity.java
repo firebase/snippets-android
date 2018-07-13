@@ -25,8 +25,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.dynamiclinks.DynamicLink;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.google.firebase.dynamiclinks.ShortDynamicLink;
+import com.google.firebase.quickstart.dynamiclinks.interfaces.MainActivityInterface;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainActivityInterface {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
+    @Override
     public void createDynamicLink_Basic() {
         // [START create_link_basic]
         DynamicLink dynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
@@ -49,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         // [END create_link_basic]
     }
 
+    @Override
     public void createDynamicLink_Advanced() {
         // [START create_link_advanced]
         DynamicLink dynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
@@ -83,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         // [END create_link_advanced]
     }
 
+    @Override
     public void createShortLink() {
         // [START create_short_link]
         Task<ShortDynamicLink> shortLinkTask = FirebaseDynamicLinks.getInstance().createDynamicLink()
@@ -107,7 +111,8 @@ public class MainActivity extends AppCompatActivity {
         // [END create_short_link]
     }
 
-    public void shotenLongLink() {
+    @Override
+    public void shortenLongLink() {
         // [START shorten_long_link]
         Task<ShortDynamicLink> shortLinkTask = FirebaseDynamicLinks.getInstance().createDynamicLink()
                 .setLongLink(Uri.parse("https://example.page.link/?link=https://www.example.com/&apn=com.example.android&ibn=com.example.ios"))

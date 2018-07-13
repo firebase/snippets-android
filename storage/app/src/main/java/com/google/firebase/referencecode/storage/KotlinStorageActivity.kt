@@ -19,6 +19,7 @@ import java.io.FileInputStream
 
 class KotlinStorageActivity : AppCompatActivity(), StorageActivityInterface {
     // [START storage_field_declaration]
+    lateinit var storage: FirebaseStorage
     // [END storage_field_declaration]
 
 
@@ -27,7 +28,7 @@ class KotlinStorageActivity : AppCompatActivity(), StorageActivityInterface {
         setContentView(R.layout.activity_storage)
 
         // [START storage_field_initialization]
-        val storage = FirebaseStorage.getInstance()
+        storage = FirebaseStorage.getInstance()
         // [END storage_field_initialization]
 
         includesForCreateReference()
@@ -57,11 +58,11 @@ class KotlinStorageActivity : AppCompatActivity(), StorageActivityInterface {
         // ## Navigate with References
 
         // [START navigate_references]
-        // getParent allows us to move our reference to a parent node
+        // parent allows us to move our reference to a parent node
         // imagesRef now points to 'images'
         imagesRef = spaceRef.parent
 
-        // getRoot allows us to move all the way back to the top of our bucket
+        // root allows us to move all the way back to the top of our bucket
         // rootRef now points to the root
         val rootRef = spaceRef.root
         // [END navigate_references]
@@ -168,7 +169,7 @@ class KotlinStorageActivity : AppCompatActivity(), StorageActivityInterface {
 
         // [START upload_file]
         var file = Uri.fromFile(File("path/to/images/rivers.jpg"))
-        val riversRef = storageRef.child("images/"+file.lastPathSegment)
+        val riversRef = storageRef.child("images/${file.lastPathSegment}")
         uploadTask = riversRef.putFile(file)
 
         // Register observers to listen for when the download is done or if it fails
@@ -220,10 +221,10 @@ class KotlinStorageActivity : AppCompatActivity(), StorageActivityInterface {
         // Create the file metadata
         metadata = StorageMetadata.Builder()
                 .setContentType("image/jpeg")
-                .build();
+                .build()
 
         // Upload file and metadata to the path 'images/mountains.jpg'
-        uploadTask = storageRef.child("images/"+file.lastPathSegment).putFile(file, metadata)
+        uploadTask = storageRef.child("images/${file.lastPathSegment}").putFile(file, metadata)
 
         // Listen for state changes, errors, and completion of the upload.
         uploadTask.addOnProgressListener { taskSnapshot ->

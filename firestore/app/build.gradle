@@ -44,7 +44,7 @@ dependencies {
     // Firebase / Play Services
     implementation "com.google.firebase:firebase-auth:16.0.2"
     implementation "com.google.android.gms:play-services-auth:15.0.1"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:1.2.51"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:1.2.60"
 }
 
 apply plugin: 'com.google.gms.google-services'

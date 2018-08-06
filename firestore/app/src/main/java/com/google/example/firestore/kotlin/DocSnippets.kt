@@ -197,9 +197,10 @@ class DocSnippets(val db: FirebaseFirestore) : DocSnippetsInterface {
                     val state: String?,
                     val country: String?,
                     val isCapital: Boolean?,
-                    val population: Long?) {
+                    val population: Long?,
+                    val regions: Array<String>?) {
         // [START_EXCLUDE]
-        constructor() : this(null, null, null, null, null)
+        constructor() : this(null, null, null, null, null, null)
         // [END_EXCLUDE]
     }
     // [END city_class]
@@ -249,7 +250,8 @@ class DocSnippets(val db: FirebaseFirestore) : DocSnippetsInterface {
 
     override fun addCustomClass() {
         // [START add_custom_class]
-        val city = City("Los Angeles", "CA", "USA", false, 5000000L)
+        val city = City("Los Angeles", "CA", "USA",
+                false, 5000000L, arrayOf("west_coast", "socal"))
         db.collection("cities").document("LA").set(city)
         // [END add_custom_class]
     }
@@ -639,6 +641,7 @@ class DocSnippets(val db: FirebaseFirestore) : DocSnippetsInterface {
         data1["country"] = "USA"
         data1["capital"] = false
         data1["population"] = 860000
+        data1["regions"] = arrayOf("west_coast", "norcal")
         cities.document("SF").set(data1)
 
         val data2 = HashMap<String, Any>()
@@ -647,6 +650,7 @@ class DocSnippets(val db: FirebaseFirestore) : DocSnippetsInterface {
         data2["country"] = "USA"
         data2["capital"] = false
         data2["population"] = 3900000
+        data2["regions"] = arrayOf("west_coast", "socal")
         cities.document("LA").set(data2)
 
         val data3 = HashMap<String, Any?>()
@@ -655,6 +659,7 @@ class DocSnippets(val db: FirebaseFirestore) : DocSnippetsInterface {
         data3["country"] = "USA"
         data3["capital"] = true
         data3["population"] = 680000
+        data3["regions"] = arrayOf("east_coast")
         cities.document("DC").set(data3)
 
         val data4 = HashMap<String, Any?>()
@@ -663,6 +668,7 @@ class DocSnippets(val db: FirebaseFirestore) : DocSnippetsInterface {
         data4["country"] = "Japan"
         data4["capital"] = true
         data4["population"] = 9000000
+        data4["regions"] = arrayOf("kanto", "honshu")
         cities.document("TOK").set(data4)
 
         val data5 = HashMap<String, Any?>()
@@ -671,6 +677,7 @@ class DocSnippets(val db: FirebaseFirestore) : DocSnippetsInterface {
         data5["country"] = "China"
         data5["capital"] = true
         data5["population"] = 21500000
+        data5["regions"] = arrayOf("jingjinji", "hebei")
         cities.document("BJ").set(data5)
         // [END example_data]
     }
@@ -693,6 +700,14 @@ class DocSnippets(val db: FirebaseFirestore) : DocSnippetsInterface {
         citiesRef.whereLessThan("population", 100000)
         citiesRef.whereGreaterThanOrEqualTo("name", "San Francisco")
         // [END example_filters]
+    }
+
+    override fun arrayContainsQueries() {
+        // [START array_contains_filter]
+        val citiesRef = db.collection("cities")
+
+        citiesRef.whereArrayContains("regions", "west_coast")
+        // [END array_contains_filter]
     }
 
     override fun compoundQueries() {

@@ -78,6 +78,8 @@ public interface DocSnippetsInterface {
 
     void simpleQueries();
 
+    void arrayContainsQueries();
+
     void compoundQueries();
 
     void compoundQueriesInvalid();

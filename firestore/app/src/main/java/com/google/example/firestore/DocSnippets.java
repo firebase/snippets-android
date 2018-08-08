@@ -457,6 +457,19 @@ public class DocSnippets implements DocSnippetsInterface {
     }
 
     @Override
+    public void updateDocumentArray() {
+        // [START update_document_array]
+        DocumentReference washingtonRef = db.collection("cities").document("DC");
+
+        // Atomically add a new region to the "regions" array field.
+        washingtonRef.update("regions", FieldValue.arrayUnion("greater_virginia"));
+
+        // Atomically remove a region from the "regions" array field.
+        washingtonRef.update("regions", FieldValue.arrayRemove("east_coast"));
+        // [END update_document_array]
+    }
+
+    @Override
     public void updateDocumentNested() {
         // [START update_document_nested]
         // Assume the document contains:

@@ -36,6 +36,8 @@ public interface DocSnippetsInterface {
 
     void updateDocument();
 
+    void updateDocumentArray();
+
     void updateDocumentNested();
 
     void setFieldWithMerge();

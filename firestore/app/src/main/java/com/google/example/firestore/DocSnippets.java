@@ -280,16 +280,18 @@ public class DocSnippets implements DocSnippetsInterface {
         private String country;
         private boolean capital;
         private long population;
+        private List<String> regions;
 
         public City() {}
 
-        public City(String name, String state, String country, boolean capital, long population) {
+        public City(String name, String state, String country, boolean capital, long population, List<String> regions) {
             // [START_EXCLUDE]
             this.name = name;
             this.state = state;
             this.country = country;
             this.capital = capital;
             this.population = population;
+            this.regions = regions;
             // [END_EXCLUDE]
         }
 
@@ -311,6 +313,10 @@ public class DocSnippets implements DocSnippetsInterface {
 
         public long getPopulation() {
             return population;
+        }
+
+        public List<String> getRegions() {
+            return regions;
         }
 
     }
@@ -384,7 +390,8 @@ public class DocSnippets implements DocSnippetsInterface {
     @Override
     public void addCustomClass() {
         // [START add_custom_class]
-        City city = new City("Los Angeles", "CA", "USA", false, 5000000L);
+        City city = new City("Los Angeles", "CA", "USA",
+                false, 5000000L, Arrays.asList("west_coast", "sorcal"));
         db.collection("cities").document("LA").set(city);
         // [END add_custom_class]
     }
@@ -447,6 +454,19 @@ public class DocSnippets implements DocSnippetsInterface {
                     }
                 });
         // [END update_document]
+    }
+
+    @Override
+    public void updateDocumentArray() {
+        // [START update_document_array]
+        DocumentReference washingtonRef = db.collection("cities").document("DC");
+
+        // Atomically add a new region to the "regions" array field.
+        washingtonRef.update("regions", FieldValue.arrayUnion("greater_virginia"));
+
+        // Atomically remove a region from the "regions" array field.
+        washingtonRef.update("regions", FieldValue.arrayRemove("east_coast"));
+        // [END update_document_array]
     }
 
     @Override
@@ -900,6 +920,7 @@ public class DocSnippets implements DocSnippetsInterface {
         data1.put("country", "USA");
         data1.put("capital", false);
         data1.put("population", 860000);
+        data1.put("regions", Arrays.asList("west_coast", "norcal"));
         cities.document("SF").set(data1);
 
         Map<String, Object> data2 = new HashMap<>();
@@ -908,6 +929,7 @@ public class DocSnippets implements DocSnippetsInterface {
         data2.put("country", "USA");
         data2.put("capital", false);
         data2.put("population", 3900000);
+        data2.put("regions", Arrays.asList("west_coast", "socal"));
         cities.document("LA").set(data2);
 
         Map<String, Object> data3 = new HashMap<>();
@@ -916,6 +938,7 @@ public class DocSnippets implements DocSnippetsInterface {
         data3.put("country", "USA");
         data3.put("capital", true);
         data3.put("population", 680000);
+        data3.put("regions", Arrays.asList("east_coast"));
         cities.document("DC").set(data3);
 
         Map<String, Object> data4 = new HashMap<>();
@@ -924,6 +947,7 @@ public class DocSnippets implements DocSnippetsInterface {
         data4.put("country", "Japan");
         data4.put("capital", true);
         data4.put("population", 9000000);
+        data4.put("regions", Arrays.asList("kanto", "honshu"));
         cities.document("TOK").set(data4);
 
         Map<String, Object> data5 = new HashMap<>();
@@ -932,6 +956,7 @@ public class DocSnippets implements DocSnippetsInterface {
         data5.put("country", "China");
         data5.put("capital", true);
         data5.put("population", 21500000);
+        data5.put("regions", Arrays.asList("jingjinji", "hebei"));
         cities.document("BJ").set(data5);
         // [END example_data]
     }
@@ -955,6 +980,15 @@ public class DocSnippets implements DocSnippetsInterface {
         citiesRef.whereLessThan("population", 100000);
         citiesRef.whereGreaterThanOrEqualTo("name", "San Francisco");
         // [END example_filters]
+    }
+
+    @Override
+    public void arrayContainsQueries() {
+        // [START array_contains_filter]
+        CollectionReference citiesRef = db.collection("cities");
+
+        citiesRef.whereArrayContains("regions", "west_coast");
+        // [END array_contains_filter]
     }
 
     @Override

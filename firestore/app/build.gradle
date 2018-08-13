@@ -39,12 +39,12 @@ dependencies {
     implementation "com.android.support:multidex:1.0.3"
 
     // Firestore
-    implementation "com.google.firebase:firebase-firestore:17.0.4"
+    implementation "com.google.firebase:firebase-firestore:17.0.5"
 
     // Firebase / Play Services
     implementation "com.google.firebase:firebase-auth:16.0.2"
     implementation "com.google.android.gms:play-services-auth:15.0.1"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:1.2.60"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.60"
 }
 
 apply plugin: 'com.google.gms.google-services'

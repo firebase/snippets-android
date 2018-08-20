@@ -23,7 +23,10 @@ dependencies {
     implementation "com.android.support:support-v4:27.1.1"
     implementation "com.android.support:appcompat-v7:27.1.1"
     implementation "com.google.firebase:firebase-auth:16.0.3"
+    implementation "com.firebaseui:firebase-ui-auth:4.1.0"
+    implementation 'com.facebook.android:facebook-android-sdk:4.27.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
 }
 repositories {
     mavenCentral()

@@ -16,6 +16,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".KotlinMainActivity" />
+        <activity android:name=".FirebaseUIActivity"></activity>
     </application>
 
 </manifest>

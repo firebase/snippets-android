@@ -15,6 +15,7 @@
  */
 package com.google.firebase.quickstart.auth;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,18 +23,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GithubAuthProvider;
+import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.auth.UserInfo;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.quickstart.auth.interfaces.MainActivityInterface;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements MainActivityInterface {
 
@@ -291,4 +298,219 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
                 });
         // [END auth_with_github]
     }
+
+    // TODO: kotlin
+    public void linkAndMerge(AuthCredential credential) {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+        // [START auth_link_and_merge]
+        FirebaseUser prevUser = FirebaseAuth.getInstance().getCurrentUser();
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        FirebaseUser currentUser = task.getResult().getUser();
+                        // Merge prevUser and currentUser accounts and data
+                        // ...
+                    }
+                });
+        // [END auth_link_and_merge]
+    }
+
+    // TODO: kotlin
+    public void unlink(String providerId) {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+        // [START auth_unlink]
+        mAuth.getCurrentUser().unlink(providerId)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Auth provider unlinked from account
+                            // ...
+                        }
+                    }
+                });
+        // [END auth_unlink]
+    }
+
+    // TODO: kotlin
+    public void buildActionCodeSettings() {
+        // [START auth_build_action_code_settings]
+        ActionCodeSettings actionCodeSettings =
+                ActionCodeSettings.newBuilder()
+                        // URL you want to redirect back to. The domain (www.example.com) for this
+                        // URL must be whitelisted in the Firebase Console.
+                        .setUrl("https://www.example.com/finishSignUp?cartId=1234")
+                        // This must be true
+                        .setHandleCodeInApp(true)
+                        .setIOSBundleId("com.example.ios")
+                        .setAndroidPackageName(
+                                "com.example.android",
+                                true, /* installIfNotAvailable */
+                                "12"    /* minimumVersion */)
+                        .build();
+        // [END auth_build_action_code_settings]
+    }
+
+    // TODO: kotlin
+    public void sendSignInLink(String email, ActionCodeSettings actionCodeSettings) {
+        // [START auth_send_sign_in_link]
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth.sendSignInLinkToEmail(email, actionCodeSettings)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "Email sent.");
+                        }
+                    }
+                });
+        // [END auth_send_sign_in_link]
+    }
+
+    // TODO: kotlin
+    public void verifySignInLink() {
+        // [START auth_verify_sign_in_link]
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        Intent intent = getIntent();
+        String emailLink = intent.getData().toString();
+
+        // Confirm the link is a sign-in with email link.
+        if (auth.isSignInWithEmailLink(emailLink)) {
+            // Retrieve this from wherever you stored it
+            String email = "someemail@domain.com";
+
+            // The client SDK will parse the code from the link for you.
+            auth.signInWithEmailLink(email, emailLink)
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "Successfully signed in with email link!");
+                                AuthResult result = task.getResult();
+                                // You can access the new user via result.getUser()
+                                // Additional user info profile *not* available via:
+                                // result.getAdditionalUserInfo().getProfile() == null
+                                // You can check if the user is new or existing:
+                                // result.getAdditionalUserInfo().isNewUser()
+                            } else {
+                                Log.e(TAG, "Error signing in with email link", task.getException());
+                            }
+                        }
+                    });
+        }
+        // [END auth_verify_sign_in_link]
+    }
+
+    // TODO: kotlin
+    public void linkWithSignInLink(String email, String emailLink) {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        
+        // [START auth_link_with_link]
+        // Construct the email link credential from the current URL.
+        AuthCredential credential =
+                EmailAuthProvider.getCredentialWithLink(email, emailLink);
+
+        // Link the credential to the current user.
+        auth.getCurrentUser().linkWithCredential(credential)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "Successfully linked emailLink credential!");
+                            AuthResult result = task.getResult();
+                            // You can access the new user via result.getUser()
+                            // Additional user info profile *not* available via:
+                            // result.getAdditionalUserInfo().getProfile() == null
+                            // You can check if the user is new or existing:
+                            // result.getAdditionalUserInfo().isNewUser()
+                        } else {
+                            Log.e(TAG, "Error linking emailLink credential", task.getException());
+                        }
+                    }
+                });
+        // [END auth_link_with_link]
+    }
+
+    // TODO: kotlin
+    public void reauthWithLink(String email, String emailLink) {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+
+        // [START auth_reauth_with_link]
+        // Construct the email link credential from the current URL.
+        AuthCredential credential =
+                EmailAuthProvider.getCredentialWithLink(email, emailLink);
+
+        // Re-authenticate the user with this credential.
+        auth.getCurrentUser().reauthenticateAndRetrieveData(credential)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // User is now successfully reauthenticated
+                        } else {
+                            Log.e(TAG, "Error reauthenticating", task.getException());
+                        }
+                    }
+                });
+        // [END auth_reauth_with_link]
+    }
+
+    // TODO: kotlin
+    public void differentiateLink(String email) {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+
+        // [START auth_differentiate_link]
+        auth.fetchSignInMethodsForEmail(email)
+                .addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
+                        if (task.isSuccessful()) {
+                            SignInMethodQueryResult result = task.getResult();
+                            List<String> signInMethods = result.getSignInMethods();
+                            if (signInMethods.contains(EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD)) {
+                                // User can sign in with email/password
+                            } else if (signInMethods.contains(EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD)) {
+                                // User can sign in with email/link
+                            }
+                        } else {
+                            Log.e(TAG, "Error getting sign in methods for user", task.getException());
+                        }
+                    }
+                });
+        // [END auth_differentiate_link]
+    }
+
+    // TODO kotlin
+    public void getGoogleCredentials() {
+        String googleIdToken = "";
+        // [START auth_google_cred]
+        AuthCredential credential = GoogleAuthProvider.getCredential(googleIdToken, null);
+        // [END auth_google_cred]
+    }
+
+    // TODO: kotlin
+    public void getFbCredentials() {
+        AccessToken token = AccessToken.getCurrentAccessToken();
+        // [START auth_fb_cred]
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        // [END auth_fb_cred]
+    }
+
+    // TODO: kotlin
+    public void getEmailCredentials() {
+        String email = "";
+        String password = "";
+        // [START auth_email_cred]
+        AuthCredential credential = EmailAuthProvider.getCredential(email, password);
+        // [END auth_email_cred]
+    }
+
+    // TODO: kotlin
+    public void signOut() {
+        FirebaseAuth.getInstance().signOut();
+    }
+
 }

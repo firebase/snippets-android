@@ -3,8 +3,14 @@ package com.google.firebase.example.appindexing;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.appindexing.Action;
+import com.google.firebase.appindexing.FirebaseAppIndex;
 import com.google.firebase.appindexing.FirebaseUserActions;
+import com.google.firebase.appindexing.Indexable;
+import com.google.firebase.appindexing.builders.Indexables;
+import com.google.firebase.example.appindexing.model.Note;
+import com.google.firebase.example.appindexing.model.Recipe;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     // [END appindexing_onstart_onstop]
 
     // [START appindexing_instantaneous]
-    private void displayNoteDialog(final String positiveText, final String negativeText) {
+    public void displayNoteDialog(final String positiveText, final String negativeText) {
         // ...
 
         // If you’re logging an action on content that hasn’t been added to the index yet,
@@ -45,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         // ...
     }
 
-    private Action getNoteCommentAction() {
+    public Action getNoteCommentAction() {
         return new Action.Builder(Action.Builder.COMMENT_ACTION)
                 .setObject(mNote.getTitle(), mNote.getNoteUrl())
                 // Keep action data for personal connulltent on the device
@@ -54,16 +60,24 @@ public class MainActivity extends AppCompatActivity {
     }
     // [END appindexing_instantaneous]
 
-    private class Note {
+    // [START appindexing_update]
+    public void indexNote(Recipe recipe) {
+        Note note = recipe.getNote();
+        Indexable noteToIndex = Indexables.noteDigitalDocumentBuilder()
+                .setName(recipe.getTitle())
+                .setText(note.getText())
+                .setUrl(recipe.getNoteUrl())
+                .build();
 
-        public String getTitle() {
-            return "";
-        }
+        Task<Void> task = FirebaseAppIndex.getInstance().update(noteToIndex);
+        // ...
+    }
+    // [END appindexing_update]
 
-        public String getNoteUrl() {
-            return "";
-        }
-
+    public void removeAll() {
+        // [START appindexing_remove_all]
+        FirebaseAppIndex.getInstance().removeAll();
+        // [END appindexing_remove_all]
     }
 
     private Action getRecipeViewAction() {

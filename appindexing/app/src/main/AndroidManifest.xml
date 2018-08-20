@@ -11,11 +11,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <!-- [START appindexing_noindex_metadata -->
+        <!-- [START appindexing_noindex_metadata] -->
         <meta-data
             android:name="search-engine"
             android:resource="@xml/noindex" />
-        <!-- [END appindexing_noindex_metadata -->
+        <!-- [END appindexing_noindex_metadata] -->
 
         <activity android:name=".MainActivity">
             <intent-filter>

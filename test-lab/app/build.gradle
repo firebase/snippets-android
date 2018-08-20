@@ -5,7 +5,7 @@ android {
     compileSdkVersion 27
 
     defaultConfig {
-        applicationId "com.google.firebase.example.instanceid"
+        applicationId "com.google.firebase.example.testlab"
         minSdkVersion 16
         targetSdkVersion 27
         versionCode 1

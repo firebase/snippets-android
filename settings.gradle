@@ -7,5 +7,12 @@ include ':auth:app',
         ':dynamic-links:app',
         ':instanceid:app',
         ':admob:app',
-        ':appindexing:app'
+        ':appindexing:app',
+        ':messaging:app',
+        ':crash:app',
+        ':crashlytics:app',
+        ':invites:app',
+        ':mlkit:app',
+        ':perf:app',
+        ':test-lab:app'
 

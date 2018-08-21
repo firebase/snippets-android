@@ -15,6 +15,7 @@
  */
 package com.google.firebase.quickstart.dynamiclinks;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,8 +23,10 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.appinvite.FirebaseAppInvite;
 import com.google.firebase.dynamiclinks.DynamicLink;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
+import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 import com.google.firebase.dynamiclinks.ShortDynamicLink;
 import com.google.firebase.quickstart.dynamiclinks.interfaces.MainActivityInterface;
 
@@ -131,6 +134,41 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
                     }
                 });
         // [END shorten_long_link]
+    }
+
+    // TODO: kotlin
+    public void shareLink(Uri myDynamicLink) {
+        // [START ddl_share_link]
+        Intent sendIntent = new Intent();
+        String msg = "Hey, check this out: " + myDynamicLink;
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, msg);
+        sendIntent.setType("text/plain");
+        startActivity(sendIntent);
+        // [END ddl_share_link]
+    }
+
+    // TODO: kotlin
+    public void getInvitation() {
+        // [START ddl_get_invitation]
+        FirebaseDynamicLinks.getInstance()
+                .getDynamicLink(getIntent())
+                .addOnCompleteListener(new OnCompleteListener<PendingDynamicLinkData>() {
+                    @Override
+                    public void onComplete(@NonNull Task<PendingDynamicLinkData> task) {
+                        if (!task.isSuccessful()) {
+                            // Handle error
+                            // ...
+                        }
+
+                        FirebaseAppInvite invite = FirebaseAppInvite.getInvitation(task.getResult());
+                        if (invite != null) {
+                            // Handle invite
+                            // ...
+                        }
+                    }
+                });
+        // [END ddl_get_invitation]
     }
 
 }

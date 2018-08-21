@@ -16,6 +16,8 @@
 package com.google.firebase.referencecode.database;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -155,6 +157,34 @@ public class QueryActivity extends AppCompatActivity implements QueryActivityInt
         // [START clean_basic_query]
         mMessagesQuery.removeEventListener(mMessagesQueryListener);
         // [END clean_basic_query]
+    }
+
+    // TODO: kotlin
+    public void orderByNested() {
+        // [START rtdb_order_by_nested]
+        // Most viewed posts
+        Query myMostViewedPostsQuery = databaseReference.child("posts")
+                .orderByChild("metrics/views");
+        myMostViewedPostsQuery.addChildEventListener(new ChildEventListener() {
+            // TODO: implement the ChildEventListener methods as documented above
+            // [START_EXCLUDE]
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
+            // [END_EXCLUDE]
+        });
+        // [END rtdb_order_by_nested]
     }
 
     @Override

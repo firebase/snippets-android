@@ -24,6 +24,7 @@ dependencies {
     implementation "com.android.support:support-v4:27.1.1"
     implementation "com.android.support:appcompat-v7:27.1.1"
     implementation "com.google.firebase:firebase-ml-common:16.1.2"
+    implementation "com.google.firebase:firebase-ml-model-interpreter:16.2.0"
     implementation "com.google.firebase:firebase-ml-vision:17.0.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }

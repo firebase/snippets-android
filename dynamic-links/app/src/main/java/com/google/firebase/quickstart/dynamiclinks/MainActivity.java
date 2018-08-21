@@ -171,4 +171,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         // [END ddl_get_invitation]
     }
 
+    public void onboardingShare(ShortDynamicLink dl) {
+        // [START ddl_onboarding_share]
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, "Try this amazing app: " + dl.getShortLink());
+        startActivity(Intent.createChooser(intent, "Share using"));
+        // [END ddl_onboarding_share]
+    }
+
 }

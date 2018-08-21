@@ -29,11 +29,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.referencecode.storage.interfaces.StorageActivityInterface;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnPausedListener;
 import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -532,5 +534,38 @@ public class StorageActivity extends AppCompatActivity implements StorageActivit
         });
         // [END delete_file]
     }
+
+    // TODO: kotlin
+    public void nonDefaultBucket() {
+        // [START storage_non_default_bucket]
+        // Get a non-default Storage bucket
+        FirebaseStorage storage = FirebaseStorage.getInstance("gs://my-custom-bucket");
+        // [END storage_non_default_bucket]
+    }
+
+    // TODO: kotlin
+    public void customApp() {
+        FirebaseApp customApp = FirebaseApp.initializeApp(this);
+
+        // [START storage_custom_app]
+        // Get the default bucket from a custom FirebaseApp
+        FirebaseStorage storage = FirebaseStorage.getInstance(customApp);
+
+        // Get a non-default bucket from a custom FirebaseApp
+        FirebaseStorage customStorage = FirebaseStorage.getInstance(customApp, "gs://my-custom-bucket");
+        // [END storage_custom_app]
+    }
+
+    // TODO: kotlin
+    // [START storage_custom_failure_listener]
+    class MyFailureListener implements OnFailureListener {
+        @Override
+        public void onFailure(@NonNull Exception exception) {
+            int errorCode = ((StorageException) exception).getErrorCode();
+            String errorMessage = exception.getMessage();
+            // test the errorCode and errorMessage, and handle accordingly
+        }
+    }
+    // [START storage_custom_failure_listener]
 
 }

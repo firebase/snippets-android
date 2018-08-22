@@ -515,7 +515,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
 
     // TODO: kotlin
     public void signOut() {
+        // [START auth_sign_out]
         FirebaseAuth.getInstance().signOut();
+        // [END auth_sign_out]
     }
 
     // TODO: kotlin

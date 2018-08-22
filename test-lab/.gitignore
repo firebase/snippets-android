@@ -7,3 +7,5 @@
 /build
 /captures
 .externalNativeBuild
+
+!aars/cloudtestingscreenshotter_lib.aar

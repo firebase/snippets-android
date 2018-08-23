@@ -566,6 +566,6 @@ public class StorageActivity extends AppCompatActivity implements StorageActivit
             // test the errorCode and errorMessage, and handle accordingly
         }
     }
-    // [START storage_custom_failure_listener]
+    // [END storage_custom_failure_listener]
 
 }

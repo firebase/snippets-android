@@ -23,7 +23,7 @@ android {
 dependencies {
     implementation "com.android.support:support-v4:27.1.1"
     implementation "com.android.support:appcompat-v7:27.1.1"
-    implementation "com.google.firebase:firebase-invites:16.0.1"
+    implementation "com.google.firebase:firebase-invites:16.0.3"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 

@@ -23,7 +23,7 @@ import devrel.firebase.google.com.firebaseoptions.R;
 
 public class MainActivity extends AppCompatActivity {
 
-    // [START perf_traced_create[
+    // [START perf_traced_create]
     @Override
     @AddTrace(name = "onCreateTrace", enabled = true /* optional */)
     protected void onCreate(Bundle savedInstanceState) {

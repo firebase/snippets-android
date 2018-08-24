@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
 
         // [START perf_attr_pii]
         trace.putAttribute("email", user.getEmailAddress());
-        // [START perf_attr_pii]
+        // [END perf_attr_pii]
     }
 
     private void printStreamContent(InputStream inputStream) {

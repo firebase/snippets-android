@@ -26,5 +26,3 @@ dependencies {
     implementation "com.google.firebase:firebase-iid:17.0.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
-
-apply plugin: 'com.google.gms.google-services'

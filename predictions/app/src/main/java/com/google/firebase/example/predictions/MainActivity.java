@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseAnalytics.getInstance(this).logEvent("gift_policy_set", new Bundle());
     }
-    // [START pred_execute_gift_policy]
+    // [END pred_execute_gift_policy]
 
     private void grantGiftOnLevel2() {
         // Nothing

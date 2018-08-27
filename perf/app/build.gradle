@@ -27,5 +27,3 @@ dependencies {
     implementation "com.google.firebase:firebase-perf:16.1.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
-
-apply plugin: 'com.google.gms.google-services'

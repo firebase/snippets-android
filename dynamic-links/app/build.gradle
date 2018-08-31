@@ -27,5 +27,5 @@ dependencies {
     implementation "com.google.firebase:firebase-invites:16.0.3"
     implementation "com.google.firebase:firebase-database:16.0.1"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
 }

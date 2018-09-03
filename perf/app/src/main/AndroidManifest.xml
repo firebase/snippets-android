@@ -17,6 +17,7 @@
         </activity>
         <activity android:name=".KotlinMainActivity" />
         <activity android:name="com.google.firebase.example.perf.MainActivity"></activity>
+        <activity android:name="com.google.firebase.example.perf.KotlinMainActivity" />
     </application>
 
 </manifest>

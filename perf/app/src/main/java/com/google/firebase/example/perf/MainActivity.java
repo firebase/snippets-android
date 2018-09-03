@@ -6,6 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.example.perf.interfaces.MainActivityInterface;
+import com.google.firebase.example.perf.model.Item;
+import com.google.firebase.example.perf.model.ItemCache;
+import com.google.firebase.example.perf.model.User;
 import com.google.firebase.perf.FirebasePerformance;
 import com.google.firebase.perf.metrics.AddTrace;
 import com.google.firebase.perf.metrics.HttpMetric;
@@ -21,7 +25,7 @@ import java.util.Map;
 
 import devrel.firebase.google.com.firebaseoptions.R;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainActivityInterface {
 
     // [START perf_traced_create]
     @Override
@@ -129,7 +133,8 @@ public class MainActivity extends AppCompatActivity {
         try {
             DataOutputStream outputStream = new DataOutputStream(conn.getOutputStream());
             outputStream.write(data);
-        } catch (IOException e) { }
+        } catch (IOException ignored) {
+        }
         metric.setRequestPayloadSize(data.length);
         metric.setHttpResponseCode(conn.getResponseCode());
         printStreamContent(conn.getInputStream());
@@ -139,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
         // [END perf_manual_network_trace]
     }
 
-    private void piiExamples() {
+    public void piiExamples() {
         Trace trace = FirebasePerformance.getInstance().newTrace("trace");
         User user = new User();
 
@@ -152,31 +157,9 @@ public class MainActivity extends AppCompatActivity {
         // [END perf_attr_pii]
     }
 
-    private void printStreamContent(InputStream inputStream) {
+    public void printStreamContent(InputStream inputStream) {
         // Unimplemented
         // ...
     }
-
-
-    private class ItemCache {
-
-        public Item fetch(String name) {
-            return null;
-        }
-
-    }
-
-    private class Item {
-
-    }
-
-    private class User {
-
-        public String getEmailAddress() {
-            return "";
-        }
-
-    }
-
 
 }

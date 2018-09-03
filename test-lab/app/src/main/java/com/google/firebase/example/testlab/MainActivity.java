@@ -9,10 +9,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.google.android.libraries.cloudtesting.screenshots.ScreenShotter;
+import com.google.firebase.example.testlab.interfaces.MainActivityInterface;
 
 import java.io.FileNotFoundException;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainActivityInterface {
 
     private static final String TAG = "MainActivity";
 

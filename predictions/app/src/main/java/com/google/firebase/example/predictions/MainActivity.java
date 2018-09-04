@@ -10,12 +10,13 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.example.predictions.interfaces.MainActivityInterface;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainActivityInterface {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         // [END pred_config_show_ads]
     }
 
-    private void executeAdsPolicy() {
+    public void executeAdsPolicy() {
         // [START pred_ads_policy]
         FirebaseRemoteConfig config = FirebaseRemoteConfig.getInstance();
         String adPolicy = config.getString("ads_policy");
@@ -73,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         // [END pred_ads_policy]
     }
 
-    private void configPromoStrategy() {
+    public void configPromoStrategy() {
         long cacheExpiration = 60L;
 
         // [START config_promo_strategy]
@@ -102,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // [START pred_get_promoted_bundle]
-    private String getPromotedBundle() {
+    public String getPromotedBundle() {
         FirebaseAnalytics.getInstance(this).logEvent("promotion_set", new Bundle());
 
         FirebaseRemoteConfig config = FirebaseRemoteConfig.getInstance();
@@ -117,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
     }
     // [END pred_get_promoted_bundle]
 
-    private void configPreventChurn() {
+    public void configPreventChurn() {
         long cacheExpiration = 60L;
 
         // [START pred_config_prevent_churn]
@@ -146,14 +147,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // [START pred_execute_gift_policy]
-    private void executeGiftPolicy() {
+    public void executeGiftPolicy() {
         FirebaseRemoteConfig config = FirebaseRemoteConfig.getInstance();
         String giftPolicy = config.getString("gift_policy");
-        boolean will_churn = config.getBoolean("will_churn");
+        boolean willChurn = config.getBoolean("will_churn");
 
         if (giftPolicy.equals("gift_achievement")) {
             grantGiftOnLevel2();
-        } else if (giftPolicy.equals("gift_likelychurn") && will_churn) {
+        } else if (giftPolicy.equals("gift_likelychurn") && willChurn) {
             grantGiftNow();
         }
 
@@ -161,11 +162,11 @@ public class MainActivity extends AppCompatActivity {
     }
     // [END pred_execute_gift_policy]
 
-    private void grantGiftOnLevel2() {
+    public void grantGiftOnLevel2() {
         // Nothing
     }
 
-    private void grantGiftNow() {
+    public void grantGiftNow() {
         // Nothing
     }
 }

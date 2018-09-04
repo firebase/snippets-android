@@ -8,10 +8,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.firebase.example.crashlytics.interfaces.MainActivityInterface;
 
 import io.fabric.sdk.android.Fabric;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainActivityInterface {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         // [END crash_set_keys_basic]
     }
 
-    public void reSetKey() {
+    public void resetKey() {
         // [START crash_re_set_key]
         Crashlytics.setInt("current_level", 3);
         Crashlytics.setString("last_UI_action", "logged_in");
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         // [END crash_set_user_id]
     }
 
-    private void methodThatThrows() throws Exception {
+    public void methodThatThrows() throws Exception {
         throw new Exception();
     }
 

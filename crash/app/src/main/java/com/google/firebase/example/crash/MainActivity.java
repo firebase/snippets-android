@@ -4,8 +4,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.google.firebase.crash.FirebaseCrash;
+import com.google.firebase.example.crash.interfaces.MainActivityInterface;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainActivityInterface {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

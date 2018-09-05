@@ -8,9 +8,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.google.firebase.appindexing.AndroidAppUri;
+import com.google.firebase.example.appindexing.interfaces.MeasureActivityInterface;
 
 // [START appindexing_measure_activity]
-public class MeasureActivity extends AppCompatActivity {
+public class MeasureActivity extends AppCompatActivity implements MeasureActivityInterface {
 
     @Override
     public Uri getReferrer() {
@@ -26,11 +27,11 @@ public class MeasureActivity extends AppCompatActivity {
             return referrer;
         }
 
-        String referrer_name = intent.getStringExtra("android.intent.extra.REFERRER_NAME");
+        String referrerName = intent.getStringExtra("android.intent.extra.REFERRER_NAME");
 
-        if (referrer_name != null) {
+        if (referrerName != null) {
             try {
-                return Uri.parse(referrer_name);
+                return Uri.parse(referrerName);
             } catch (ParseException e) {
                 // ...
             }

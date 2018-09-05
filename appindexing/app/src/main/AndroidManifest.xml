@@ -24,11 +24,24 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".KotlinMainActivity" />
+        <activity android:name=".KotlinMeasureActivity" />
+
+        <receiver
+            android:name=".KotlinAppIndexingUpdateReceiver"
+            android:exported="true"
+            android:permission="com.google.android.gms.permission.APPINDEXING">
+            <intent-filter>
+                <action android:name="com.google.firebase.appindexing.UPDATE_INDEX" />
+            </intent-filter>
+        </receiver>
+
         <activity android:name="com.google.firebase.example.appindexing.MeasureActivity" />
 
         <!-- [START appindexing_service_manifest] -->
         <!-- Register the BroadcastReceiver -->
-        <receiver android:name=".AppIndexingUpdateReceiver"
+        <receiver
+            android:name=".AppIndexingUpdateReceiver"
             android:exported="true"
             android:permission="com.google.android.gms.permission.APPINDEXING">
             <intent-filter>
@@ -37,10 +50,14 @@
         </receiver>
 
         <!-- Grant the AppIndexingUpdateService permission and enable it to run after being triggered -->
-        <service android:name=".AppIndexingUpdateService"
+        <service
+            android:name=".AppIndexingUpdateService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
         <!-- [END appindexing_service_manifest] -->
 
+        <service
+            android:name=".KotlinAppIndexingUpdateService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
 
 </manifest>

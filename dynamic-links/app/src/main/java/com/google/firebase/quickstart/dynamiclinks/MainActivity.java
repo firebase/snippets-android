@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         // [END shorten_long_link]
     }
 
-    // TODO: kotlin
+    @Override
     public void shareLink(Uri myDynamicLink) {
         // [START ddl_share_link]
         Intent sendIntent = new Intent();
@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         // [END ddl_share_link]
     }
 
-    // TODO: kotlin
+    @Override
     public void getInvitation() {
         // [START ddl_get_invitation]
         FirebaseDynamicLinks.getInstance()
@@ -171,6 +171,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         // [END ddl_get_invitation]
     }
 
+    @Override
     public void onboardingShare(ShortDynamicLink dl) {
         // [START ddl_onboarding_share]
         Intent intent = new Intent(Intent.ACTION_SEND);

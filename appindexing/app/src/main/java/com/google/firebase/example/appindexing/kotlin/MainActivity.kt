@@ -1,4 +1,4 @@
-package com.google.firebase.example.appindexing
+package com.google.firebase.example.appindexing.kotlin
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -10,7 +10,7 @@ import com.google.firebase.example.appindexing.interfaces.MainActivityInterface
 import com.google.firebase.example.appindexing.model.Note
 import com.google.firebase.example.appindexing.model.Recipe
 
-class KotlinMainActivity : AppCompatActivity(), MainActivityInterface {
+class MainActivity : AppCompatActivity(), MainActivityInterface {
     lateinit var mNote: Note
 
     override fun onCreate(savedInstanceState: Bundle?) {

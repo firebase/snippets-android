@@ -1,4 +1,4 @@
-package com.google.firebase.example.appindexing
+package com.google.firebase.example.appindexing.kotlin
 
 import android.net.ParseException
 import android.net.Uri
@@ -9,7 +9,7 @@ import com.google.firebase.appindexing.AndroidAppUri
 import com.google.firebase.example.appindexing.interfaces.MeasureActivityInterface
 
 // [START appindexing_measure_activity]
-class KotlinMeasureActivity : AppCompatActivity(), MeasureActivityInterface {
+class MeasureActivity : AppCompatActivity(), MeasureActivityInterface {
 
     override fun getReferrer() : Uri? {
 

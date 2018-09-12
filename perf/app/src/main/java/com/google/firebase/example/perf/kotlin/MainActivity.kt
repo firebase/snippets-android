@@ -1,10 +1,10 @@
-package com.google.firebase.example.perf
+package com.google.firebase.example.perf.kotlin
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.google.firebase.example.perf.interfaces.MainActivityInterface
-import com.google.firebase.example.perf.model.ItemCache
-import com.google.firebase.example.perf.model.User
+import com.google.firebase.example.perf.kotlin.model.ItemCache
+import com.google.firebase.example.perf.kotlin.model.User
 import com.google.firebase.perf.FirebasePerformance
 import com.google.firebase.perf.metrics.AddTrace
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
@@ -15,7 +15,7 @@ import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
 
-class KotlinMainActivity : AppCompatActivity(), MainActivityInterface {
+class MainActivity : AppCompatActivity(), MainActivityInterface {
 
     // [START perf_traced_create]
     @AddTrace(name = "onCreateTrace", enabled = true)

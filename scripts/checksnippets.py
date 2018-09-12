@@ -23,6 +23,8 @@ def checkSnippets(folder):
     for f in javaFiles:
         checkJavaFile(folder, f)
 
+    print 'Done'
+
 
 def checkJavaFile(folder, javaFile):
     javaRegions = regionsInFile(javaFile)
@@ -47,6 +49,8 @@ def checkJavaFile(folder, javaFile):
     regionDiff = javaRegions.difference(kotlinRegions)
     if len(regionDiff) > 0:
         print 'ERROR: The following snippets are missing from {}: {}'.format(kotlinName, regionDiff)
+
+    print 'SUCCESS: {} <--> {}'.format(javaName, kotlinName)
 
 
 def regionsInFile(path):

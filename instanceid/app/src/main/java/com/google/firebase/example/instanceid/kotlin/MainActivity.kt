@@ -1,4 +1,4 @@
-package com.google.firebase.example.instanceid
+package com.google.firebase.example.instanceid.kotlin
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -6,7 +6,7 @@ import android.util.Log
 import com.google.firebase.example.instanceid.interfaces.MainActivityInterface
 import com.google.firebase.iid.FirebaseInstanceId
 
-class KotlinMainActivity : AppCompatActivity(), MainActivityInterface {
+class MainActivity : AppCompatActivity(), MainActivityInterface {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

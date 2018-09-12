@@ -1,4 +1,4 @@
-package com.google.firebase.example.crashlytics
+package com.google.firebase.example.crashlytics.kotlin
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -10,7 +10,7 @@ import com.crashlytics.android.Crashlytics
 import com.google.firebase.example.crashlytics.interfaces.MainActivityInterface
 import io.fabric.sdk.android.Fabric
 
-class KotlinMainActivity : AppCompatActivity(), MainActivityInterface {
+class MainActivity : AppCompatActivity(), MainActivityInterface {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

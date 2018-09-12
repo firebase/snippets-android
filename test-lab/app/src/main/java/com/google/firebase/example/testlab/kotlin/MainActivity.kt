@@ -1,4 +1,4 @@
-package com.google.firebase.example.testlab
+package com.google.firebase.example.testlab.kotlin
 
 import android.os.Bundle
 import android.provider.Settings
@@ -8,7 +8,7 @@ import com.google.android.libraries.cloudtesting.screenshots.ScreenShotter
 import com.google.firebase.example.testlab.interfaces.MainActivityInterface
 import java.io.FileNotFoundException
 
-class KotlinMainActivity : AppCompatActivity(), MainActivityInterface {
+class MainActivity : AppCompatActivity(), MainActivityInterface {
     private val TAG = "MainActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {

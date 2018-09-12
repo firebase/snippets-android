@@ -1,4 +1,4 @@
-package com.google.firebase.example.perf.model
+package com.google.firebase.example.perf.kotlin.model
 
 class ItemCache {
     fun fetch(name: String): Item? {

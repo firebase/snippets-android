@@ -1,4 +1,4 @@
-package com.google.firebase.example.predictions
+package com.google.firebase.example.predictions.kotlin
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -6,11 +6,12 @@ import android.view.View
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.example.predictions.R
 import com.google.firebase.example.predictions.interfaces.MainActivityInterface
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import java.util.*
 
-class KotlinMainActivity : AppCompatActivity(), MainActivityInterface {
+class MainActivity : AppCompatActivity(), MainActivityInterface {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

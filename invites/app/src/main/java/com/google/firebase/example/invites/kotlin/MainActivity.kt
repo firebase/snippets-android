@@ -1,4 +1,4 @@
-package com.google.firebase.example.invites
+package com.google.firebase.example.invites.kotlin
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -6,7 +6,7 @@ import com.google.android.gms.appinvite.AppInviteInvitation
 import com.google.firebase.example.invites.interfaces.MainActivityInterface
 import devrel.firebase.google.com.firebaseoptions.R
 
-class KotlinMainActivity : AppCompatActivity(), MainActivityInterface {
+class MainActivity : AppCompatActivity(), MainActivityInterface {
 
     private val IOS_APP_CLIENT_ID = "foo-bar-baz"
     private val REQUEST_INVITE = 101

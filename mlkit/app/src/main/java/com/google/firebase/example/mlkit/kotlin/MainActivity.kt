@@ -1,11 +1,11 @@
-package com.google.firebase.example.mlkit
+package com.google.firebase.example.mlkit.kotlin
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.google.firebase.example.mlkit.interfaces.MainActivityInterface
 import com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions
 
-class KotlinMainActivity : AppCompatActivity(), MainActivityInterface {
+class MainActivity : AppCompatActivity(), MainActivityInterface {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

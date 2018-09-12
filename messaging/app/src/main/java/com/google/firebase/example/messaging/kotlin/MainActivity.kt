@@ -1,4 +1,4 @@
-package com.google.firebase.example.messaging
+package com.google.firebase.example.messaging.kotlin
 
 import android.accounts.AccountManager
 import android.annotation.SuppressLint
@@ -18,7 +18,7 @@ import java.net.URL
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 
-class KotlinMainActivity : AppCompatActivity(), MainActivityInterface {
+class MainActivity : AppCompatActivity(), MainActivityInterface {
     private val TAG = "MainActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {

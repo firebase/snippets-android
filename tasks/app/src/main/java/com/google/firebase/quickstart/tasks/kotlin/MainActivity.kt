@@ -1,4 +1,4 @@
-package com.google.firebase.quickstart.tasks
+package com.google.firebase.quickstart.tasks.kotlin
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -8,10 +8,11 @@ import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
+import com.google.firebase.quickstart.tasks.R
 import com.google.firebase.quickstart.tasks.interfaces.MainActivityInterface
 import java.util.concurrent.*
 
-class KotlinMainActivity : AppCompatActivity(), MainActivityInterface {
+class MainActivity : AppCompatActivity(), MainActivityInterface {
 
     // [START basic_sign_in_task]
     val task = FirebaseAuth.getInstance().signInAnonymously()

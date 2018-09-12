@@ -1,10 +1,10 @@
-package com.google.firebase.example.admob
+package com.google.firebase.example.admob.kotlin
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.google.android.gms.ads.MobileAds
 
-class KotlinMainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
 
     // [START ads_on_create]
     override fun onCreate(savedInstanceState: Bundle?) {

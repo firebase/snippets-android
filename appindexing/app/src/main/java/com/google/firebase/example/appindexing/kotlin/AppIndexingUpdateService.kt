@@ -1,4 +1,4 @@
-package com.google.firebase.example.appindexing
+package com.google.firebase.example.appindexing.kotlin
 
 import android.content.Context
 import android.content.Intent
@@ -6,11 +6,12 @@ import android.support.v4.app.JobIntentService
 import com.google.firebase.appindexing.FirebaseAppIndex
 import com.google.firebase.appindexing.Indexable
 import com.google.firebase.appindexing.builders.Indexables
+import com.google.firebase.example.appindexing.AppIndexingUpdateService
 import com.google.firebase.example.appindexing.model.Recipe
 import java.util.*
 
 // [START appindexing_update_service]
-class KotlinAppIndexingUpdateService : JobIntentService() {
+class AppIndexingUpdateService : JobIntentService() {
     // Job-ID must be unique across your whole app.
     private val UNIQUE_JOB_ID = 42
 

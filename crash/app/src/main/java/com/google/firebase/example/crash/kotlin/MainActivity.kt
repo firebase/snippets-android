@@ -1,11 +1,11 @@
-package com.google.firebase.example.crash
+package com.google.firebase.example.crash.kotlin
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.google.firebase.crash.FirebaseCrash
 import com.google.firebase.example.crash.interfaces.MainActivityInterface
 
-class KotlinMainActivity : AppCompatActivity(), MainActivityInterface {
+class MainActivity : AppCompatActivity(), MainActivityInterface {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

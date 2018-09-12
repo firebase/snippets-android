@@ -1,7 +1,7 @@
 """Script for checking that Java and Kotlin snippets are in line.
 
 Example:
-$ python scripts/checksnippets.py storage/app/src/
+$ python scripts/checksnippets.py
 Checking snippets in folder: storage/app/src/
 ERROR: Missing kotlin file for java file FirebaseUIActivity.java
 ERROR: The following snippets are missing from StorageActivity.kt: set(['storage_custom_app'])
@@ -16,9 +16,27 @@ import re
 
 _RE_REGION_TAG_START = re.compile(r'\[START ([\w_\-]+)\]')
 
+class MissingKotlinFile(Exception):
+
+    def __init__(self, javaName):
+        self.javaName = javaName
+    
+    def __str__(self):
+        return 'ERROR: Missing kotlin file for java file {}'.format(self.javaName)
+
+class RegionTagMismatch(Exception):
+
+    def __init__(self, kotlinName, regionDiff):
+        self.kotlinName = kotlinName
+        self.regionDiff = regionDiff
+
+    def __str__(self):
+         return 'ERROR: The following snippets are missing from {}: {}'.format(
+             self.kotlinName, self.regionDiff)
+
 def checkSnippets(folder):
     print 'Checking snippets in folder: {}'.format(folder)
-    javaFiles = findWithPattern(folder, '*.java')
+    javaFiles = findFileWithPattern(folder, '*.java')
 
     for f in javaFiles:
         checkJavaFile(folder, f)
@@ -37,10 +55,9 @@ def checkJavaFile(folder, javaFile):
         return
 
     # Check to make sure a matching kotlin file exists
-    kotlinFiles = findWithPattern(folder, kotlinName)
+    kotlinFiles = findFileWithPattern(folder, kotlinName)
     if len(kotlinFiles) == 0:
-        print 'ERROR: Missing kotlin file for java file {}'.format(javaName)
-        return
+        raise MissingKotlinFile(javaName)
 
     # Find all regions in the kotlin file, and check if they differ from the java file
     kotlinFile = kotlinFiles[0]
@@ -48,7 +65,7 @@ def checkJavaFile(folder, javaFile):
 
     regionDiff = javaRegions.difference(kotlinRegions)
     if len(regionDiff) > 0:
-        print 'ERROR: The following snippets are missing from {}: {}'.format(kotlinName, regionDiff)
+        raise RegionTagMismatch(kotlinName, regionDiff)
 
     print 'SUCCESS: {} <--> {}'.format(javaName, kotlinName)
 
@@ -65,13 +82,18 @@ def regionsInFile(path):
     return regions
         
 
-def findWithPattern(folder, pattern):
+def findFileWithPattern(folder, pattern):
     matches = []
-    for root, _, filenames in os.walk(folder):
+    for root, dirnames, filenames in os.walk(folder):
+        for dirname in fnmatch.filter(dirnames, pattern):
+            matches.append(os.path.join(root, dirname))
+
         for filename in fnmatch.filter(filenames, pattern):
             matches.append(os.path.join(root, filename))
+
     return matches
 
 if __name__ == "__main__":
-    folder = sys.argv[1]
-    checkSnippets(folder)
+    sourceFolders = findFileWithPattern('.', 'src')
+    for folder in sourceFolders:
+        checkSnippets(folder)

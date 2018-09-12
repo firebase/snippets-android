@@ -1,4 +1,4 @@
-package com.google.firebase.quickstart.auth
+package com.google.firebase.quickstart.auth.kotlin
 
 import android.net.Uri
 import android.os.Bundle
@@ -8,13 +8,14 @@ import android.widget.Toast
 import com.facebook.AccessToken
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.*
+import com.google.firebase.quickstart.auth.R
 import com.google.firebase.quickstart.auth.interfaces.MainActivityInterface
 import java.util.concurrent.TimeUnit
 
 /**
  * Created by harshitdwivedi on 14/03/18.
  */
-class KotlinMainActivity : AppCompatActivity(), MainActivityInterface {
+class MainActivity : AppCompatActivity(), MainActivityInterface {
 
     private val TAG = "MainActivity"
 
@@ -219,7 +220,7 @@ class KotlinMainActivity : AppCompatActivity(), MainActivityInterface {
                     // signed in user can be handled in the listener.
                     if (!task.isSuccessful) {
                         Log.w(TAG, "signInWithCredential", task.exception)
-                        Toast.makeText(this@KotlinMainActivity, "Authentication failed.",
+                        Toast.makeText(this@MainActivity, "Authentication failed.",
                                 Toast.LENGTH_SHORT).show()
                     }
 
@@ -425,7 +426,7 @@ class KotlinMainActivity : AppCompatActivity(), MainActivityInterface {
                 // ...
 
                 // The corresponding whitelisted code above should be used to complete sign-in.
-                this@KotlinMainActivity.enableUserManuallyInputCode()
+                this@MainActivity.enableUserManuallyInputCode()
             }
 
             override fun onVerificationCompleted(phoneAuthCredential: PhoneAuthCredential) {

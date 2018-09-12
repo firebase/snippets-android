@@ -535,7 +535,7 @@ public class StorageActivity extends AppCompatActivity implements StorageActivit
         // [END delete_file]
     }
 
-    // TODO: kotlin
+    @Override
     public void nonDefaultBucket() {
         // [START storage_non_default_bucket]
         // Get a non-default Storage bucket
@@ -543,7 +543,7 @@ public class StorageActivity extends AppCompatActivity implements StorageActivit
         // [END storage_non_default_bucket]
     }
 
-    // TODO: kotlin
+    @Override
     public void customApp() {
         FirebaseApp customApp = FirebaseApp.initializeApp(this);
 
@@ -556,7 +556,6 @@ public class StorageActivity extends AppCompatActivity implements StorageActivit
         // [END storage_custom_app]
     }
 
-    // TODO: kotlin
     // [START storage_custom_failure_listener]
     class MyFailureListener implements OnFailureListener {
         @Override

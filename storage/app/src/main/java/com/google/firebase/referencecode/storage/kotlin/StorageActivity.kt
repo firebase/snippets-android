@@ -1,4 +1,4 @@
-package com.google.firebase.referencecode.storage
+package com.google.firebase.referencecode.storage.kotlin
 
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
@@ -7,17 +7,17 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.ImageView
 import com.google.android.gms.tasks.Continuation
+import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.Task
+import com.google.firebase.FirebaseApp
+import com.google.firebase.referencecode.storage.R
 import com.google.firebase.referencecode.storage.interfaces.StorageActivityInterface
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageMetadata
-import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.UploadTask
+import com.google.firebase.storage.*
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
 
-class KotlinStorageActivity : AppCompatActivity(), StorageActivityInterface {
+class StorageActivity : AppCompatActivity(), StorageActivityInterface {
     // [START storage_field_declaration]
     lateinit var storage: FirebaseStorage
     // [END storage_field_declaration]
@@ -403,4 +403,33 @@ class KotlinStorageActivity : AppCompatActivity(), StorageActivityInterface {
         }
         // [END delete_file]
     }
+
+    override fun nonDefaultBucket() {
+        // [START storage_non_default_bucket]
+        // Get a non-default Storage bucket
+        val storage = FirebaseStorage.getInstance("gs://my-custom-bucket")
+        // [END storage_non_default_bucket]
+    }
+
+    override fun customApp() {
+        val customApp = FirebaseApp.initializeApp(this)
+
+        // [START storage_custom_app]
+        // Get the default bucket from a custom FirebaseApp
+        val storage = FirebaseStorage.getInstance(customApp!!)
+
+        // Get a non-default bucket from a custom FirebaseApp
+        val customStorage = FirebaseStorage.getInstance(customApp, "gs://my-custom-bucket")
+        // [END storage_custom_app]
+    }
+
+    // [START storage_custom_failure_listener]
+    internal inner class MyFailureListener : OnFailureListener {
+        override fun onFailure(exception: Exception) {
+            val errorCode = (exception as StorageException).errorCode
+            val errorMessage = exception.message
+            // test the errorCode and errorMessage, and handle accordingly
+        }
+    }
+    // [END storage_custom_failure_listener]
 }

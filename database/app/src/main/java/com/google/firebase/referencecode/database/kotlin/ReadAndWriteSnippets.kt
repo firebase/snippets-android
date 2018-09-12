@@ -1,10 +1,10 @@
-package com.google.firebase.referencecode.database
+package com.google.firebase.referencecode.database.kotlin
 
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.referencecode.database.interfaces.ReadAndWriteSnippetsInterface
 import com.google.firebase.referencecode.database.models.User
 
-class KotlinReadAndWriteSnippets(private val mDatabase: DatabaseReference) : ReadAndWriteSnippetsInterface {
+class ReadAndWriteSnippets(private val mDatabase: DatabaseReference) : ReadAndWriteSnippetsInterface {
 
     // [START rtdb_write_new_user]
     override fun writeNewUser(userId: String, name: String, email: String) {

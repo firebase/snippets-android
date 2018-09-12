@@ -1,16 +1,17 @@
-package com.google.firebase.referencecode.database
+package com.google.firebase.referencecode.database.kotlin
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.google.firebase.database.*
+import com.google.firebase.referencecode.database.R
 import com.google.firebase.referencecode.database.interfaces.QueryActivityInterface
 import com.google.firebase.referencecode.database.models.Message
 
 /**
  * Kotlin verison of {@link QueryActivity].
  */
-class KotlinQueryActivity : AppCompatActivity(), QueryActivityInterface {
+class QueryActivity : AppCompatActivity(), QueryActivityInterface {
 
     companion object {
         private val TAG = "KotlinQueryActivity"
@@ -45,7 +46,7 @@ class KotlinQueryActivity : AppCompatActivity(), QueryActivityInterface {
                 // data at this path or a subpath.
 
                 Log.d(TAG, "Number of messages: ${dataSnapshot.childrenCount}")
-                dataSnapshot.children?.forEach { child ->
+                dataSnapshot.children.forEach { child ->
                     // Extract Message object from the DataSnapshot
                     val message: Message? = child.getValue(Message::class.java)
 
@@ -122,6 +123,28 @@ class KotlinQueryActivity : AppCompatActivity(), QueryActivityInterface {
         // [START clean_basic_query]
         messagesQuery.removeEventListener(messagesQueryListener)
         // [END clean_basic_query]
+    }
+
+    override fun orderByNested() {
+        // [START rtdb_order_by_nested]
+        // Most viewed posts
+        val myMostViewedPostsQuery = databaseReference.child("posts")
+                .orderByChild("metrics/views")
+        myMostViewedPostsQuery.addChildEventListener(object : ChildEventListener {
+            // TODO: implement the ChildEventListener methods as documented above
+            // [START_EXCLUDE]
+            override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {}
+
+            override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {}
+
+            override fun onChildRemoved(dataSnapshot: DataSnapshot) {}
+
+            override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) {}
+
+            override fun onCancelled(databaseError: DatabaseError) {}
+            // [END_EXCLUDE]
+        })
+        // [END rtdb_order_by_nested]
     }
 
     override fun onStart() {

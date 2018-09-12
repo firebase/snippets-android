@@ -159,7 +159,7 @@ public class QueryActivity extends AppCompatActivity implements QueryActivityInt
         // [END clean_basic_query]
     }
 
-    // TODO: kotlin
+    @Override
     public void orderByNested() {
         // [START rtdb_order_by_nested]
         // Most viewed posts

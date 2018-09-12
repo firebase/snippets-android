@@ -1,4 +1,4 @@
-package com.google.firebase.referencecode.database
+package com.google.firebase.referencecode.database.kotlin
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -7,9 +7,10 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.referencecode.database.R
 import com.google.firebase.referencecode.database.interfaces.MainActivityInterface
 
-class KotlinMainActivity : AppCompatActivity(), MainActivityInterface {
+class MainActivity : AppCompatActivity(), MainActivityInterface {
 
     companion object {
         private val TAG = "KotlinActivity"

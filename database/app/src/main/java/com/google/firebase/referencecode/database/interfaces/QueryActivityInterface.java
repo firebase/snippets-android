@@ -17,4 +17,6 @@ public interface QueryActivityInterface {
 
     void cleanBasicQuery();
 
+    void orderByNested();
+
 }

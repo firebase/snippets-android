@@ -18,16 +18,16 @@ import com.google.firebase.dynamiclinks.DynamicLink;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 import com.google.firebase.dynamiclinks.ShortDynamicLink;
+import com.google.firebase.quickstart.dynamiclinks.interfaces.ReferralActivityInterface;
 
 /**
  * Snippets for the "rewarded referral" use case.
- *
- * TODO: kotlin
  */
-public class ReferralActivity extends AppCompatActivity {
+public class ReferralActivity extends AppCompatActivity implements ReferralActivityInterface {
 
     private Uri mInvitationUrl;
 
+    @Override
     public void createLink() {
         // [START ddl_referral_create_link]
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -56,6 +56,7 @@ public class ReferralActivity extends AppCompatActivity {
         // [END ddl_referral_create_link]
     }
 
+    @Override
     public void sendInvitation() {
         // [START ddl_referral_send]
         String referrerName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
@@ -129,12 +130,14 @@ public class ReferralActivity extends AppCompatActivity {
     }
     // [END ddl_referral_on_create]
 
+    @Override
     public void getCredential(String email, String password) {
         // [START ddl_referral_get_cred]
         AuthCredential credential = EmailAuthProvider.getCredential(email, password);
         // [END ddl_referral_get_cred]
     }
 
+    @Override
     public void linkCredential(AuthCredential credential) {
         // [START ddl_referral_link_cred]
         FirebaseAuth.getInstance().getCurrentUser()
@@ -148,6 +151,7 @@ public class ReferralActivity extends AppCompatActivity {
         // [END ddl_referral_link_cred]
     }
 
+    @Override
     public void rewardUser(AuthCredential credential) {
         // [START ddl_referral_reward_user]
         FirebaseAuth.getInstance().getCurrentUser()

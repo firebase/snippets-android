@@ -1,10 +1,7 @@
-package com.google.example.firestore;
+package com.google.example.firestore.interfaces;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
-/**
- * Interface for {@link DocSnippets}.
- */
 public interface DocSnippetsInterface {
     void setup();
 

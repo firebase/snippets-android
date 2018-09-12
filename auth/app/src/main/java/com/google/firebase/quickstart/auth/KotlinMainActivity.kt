@@ -5,10 +5,11 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.Toast
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
+import com.facebook.AccessToken
+import com.google.firebase.FirebaseException
 import com.google.firebase.auth.*
 import com.google.firebase.quickstart.auth.interfaces.MainActivityInterface
+import java.util.concurrent.TimeUnit
 
 /**
  * Created by harshitdwivedi on 14/03/18.
@@ -225,6 +226,256 @@ class KotlinMainActivity : AppCompatActivity(), MainActivityInterface {
                     // ...
                 }
         // [END auth_with_github]
+    }
+
+    override fun linkAndMerge(credential: AuthCredential) {
+        val mAuth = FirebaseAuth.getInstance()
+
+        // [START auth_link_and_merge]
+        val prevUser = FirebaseAuth.getInstance().currentUser
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener { task ->
+                    val currentUser = task.result.user
+                    // Merge prevUser and currentUser accounts and data
+                    // ...
+                }
+        // [END auth_link_and_merge]
+    }
+
+    override fun unlink(providerId: String) {
+        val mAuth = FirebaseAuth.getInstance()
+
+        // [START auth_unlink]
+        mAuth.currentUser!!.unlink(providerId)
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        // Auth provider unlinked from account
+                        // ...
+                    }
+                }
+        // [END auth_unlink]
+    }
+
+    override fun buildActionCodeSettings() {
+        // [START auth_build_action_code_settings]
+        val actionCodeSettings = ActionCodeSettings.newBuilder()
+                // URL you want to redirect back to. The domain (www.example.com) for this
+                // URL must be whitelisted in the Firebase Console.
+                .setUrl("https://www.example.com/finishSignUp?cartId=1234")
+                // This must be true
+                .setHandleCodeInApp(true)
+                .setIOSBundleId("com.example.ios")
+                .setAndroidPackageName(
+                        "com.example.android",
+                        true, /* installIfNotAvailable */
+                        "12"    /* minimumVersion */)
+                .build()
+        // [END auth_build_action_code_settings]
+    }
+
+    override fun sendSignInLink(email: String, actionCodeSettings: ActionCodeSettings) {
+        // [START auth_send_sign_in_link]
+        val auth = FirebaseAuth.getInstance()
+        auth.sendSignInLinkToEmail(email, actionCodeSettings)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Log.d(TAG, "Email sent.")
+                    }
+                }
+        // [END auth_send_sign_in_link]
+    }
+
+    override fun verifySignInLink() {
+        // [START auth_verify_sign_in_link]
+        val auth = FirebaseAuth.getInstance()
+        val intent = intent
+        val emailLink = intent.data!!.toString()
+
+        // Confirm the link is a sign-in with email link.
+        if (auth.isSignInWithEmailLink(emailLink)) {
+            // Retrieve this from wherever you stored it
+            val email = "someemail@domain.com"
+
+            // The client SDK will parse the code from the link for you.
+            auth.signInWithEmailLink(email, emailLink)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Log.d(TAG, "Successfully signed in with email link!")
+                            val result = task.result
+                            // You can access the new user via result.getUser()
+                            // Additional user info profile *not* available via:
+                            // result.getAdditionalUserInfo().getProfile() == null
+                            // You can check if the user is new or existing:
+                            // result.getAdditionalUserInfo().isNewUser()
+                        } else {
+                            Log.e(TAG, "Error signing in with email link", task.exception)
+                        }
+                    }
+        }
+        // [END auth_verify_sign_in_link]
+    }
+
+    override fun linkWithSignInLink(email: String, emailLink: String) {
+        val auth = FirebaseAuth.getInstance()
+
+        // [START auth_link_with_link]
+        // Construct the email link credential from the current URL.
+        val credential = EmailAuthProvider.getCredentialWithLink(email, emailLink)
+
+        // Link the credential to the current user.
+        auth.currentUser!!.linkWithCredential(credential)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Log.d(TAG, "Successfully linked emailLink credential!")
+                        val result = task.result
+                        // You can access the new user via result.getUser()
+                        // Additional user info profile *not* available via:
+                        // result.getAdditionalUserInfo().getProfile() == null
+                        // You can check if the user is new or existing:
+                        // result.getAdditionalUserInfo().isNewUser()
+                    } else {
+                        Log.e(TAG, "Error linking emailLink credential", task.exception)
+                    }
+                }
+        // [END auth_link_with_link]
+    }
+
+    override fun reauthWithLink(email: String, emailLink: String) {
+        val auth = FirebaseAuth.getInstance()
+
+        // [START auth_reauth_with_link]
+        // Construct the email link credential from the current URL.
+        val credential = EmailAuthProvider.getCredentialWithLink(email, emailLink)
+
+        // Re-authenticate the user with this credential.
+        auth.currentUser!!.reauthenticateAndRetrieveData(credential)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        // User is now successfully reauthenticated
+                    } else {
+                        Log.e(TAG, "Error reauthenticating", task.exception)
+                    }
+                }
+        // [END auth_reauth_with_link]
+    }
+
+    override fun differentiateLink(email: String) {
+        val auth = FirebaseAuth.getInstance()
+
+        // [START auth_differentiate_link]
+        auth.fetchSignInMethodsForEmail(email)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val result = task.result
+                        val signInMethods = result.signInMethods
+                        if (signInMethods!!.contains(EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD)) {
+                            // User can sign in with email/password
+                        } else if (signInMethods.contains(EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD)) {
+                            // User can sign in with email/link
+                        }
+                    } else {
+                        Log.e(TAG, "Error getting sign in methods for user", task.exception)
+                    }
+                }
+        // [END auth_differentiate_link]
+    }
+
+    override fun getGoogleCredentials() {
+        val googleIdToken = ""
+        // [START auth_google_cred]
+        val credential = GoogleAuthProvider.getCredential(googleIdToken, null)
+        // [END auth_google_cred]
+    }
+
+    override fun getFbCredentials() {
+        val token = AccessToken.getCurrentAccessToken()
+        // [START auth_fb_cred]
+        val credential = FacebookAuthProvider.getCredential(token.token)
+        // [END auth_fb_cred]
+    }
+
+    override fun getEmailCredentials() {
+        val email = ""
+        val password = ""
+        // [START auth_email_cred]
+        val credential = EmailAuthProvider.getCredential(email, password)
+        // [END auth_email_cred]
+    }
+
+    override fun signOut() {
+        // [START auth_sign_out]
+        FirebaseAuth.getInstance().signOut()
+        // [END auth_sign_out]
+    }
+
+    override fun testPhoneVerify() {
+        // [START auth_test_phone_verify]
+        val phoneNum = "+16505554567"
+        val testVerificationCode = "123456"
+
+        // Whenever verification is triggered with the whitelisted number,
+        // provided it is not set for auto-retrieval, onCodeSent will be triggered.
+        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                phoneNum, 30L /*timeout*/, TimeUnit.SECONDS,
+                this, object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+
+            override fun onCodeSent(verificationId: String?,
+                                    forceResendingToken: PhoneAuthProvider.ForceResendingToken?) {
+                // Save the verification id somewhere
+                // ...
+
+                // The corresponding whitelisted code above should be used to complete sign-in.
+                this@KotlinMainActivity.enableUserManuallyInputCode()
+            }
+
+            override fun onVerificationCompleted(phoneAuthCredential: PhoneAuthCredential) {
+                // Sign in with the credential
+                // ...
+            }
+
+            override fun onVerificationFailed(e: FirebaseException) {
+                // ...
+            }
+
+        })
+        // [END auth_test_phone_verify]
+    }
+
+    private fun enableUserManuallyInputCode() {
+        // No-op
+    }
+
+    override fun testPhoneAutoRetrieve() {
+        // [START auth_test_phone_auto]
+        // The test phone number and code should be whitelisted in the console.
+        val phoneNumber = "+16505554567"
+        val smsCode = "123456"
+
+        val firebaseAuth = FirebaseAuth.getInstance()
+        val firebaseAuthSettings = firebaseAuth.firebaseAuthSettings
+
+        // Configure faking the auto-retrieval with the whitelisted numbers.
+        firebaseAuthSettings.setAutoRetrievedSmsCodeForPhoneNumber(phoneNumber, smsCode)
+
+        val phoneAuthProvider = PhoneAuthProvider.getInstance()
+        phoneAuthProvider.verifyPhoneNumber(
+                phoneNumber,
+                60L,
+                TimeUnit.SECONDS,
+                this, /* activity */
+                object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+                    override fun onVerificationCompleted(credential: PhoneAuthCredential) {
+                        // Instant verification is applied and a credential is directly returned.
+                        // ...
+                    }
+
+                    // [START_EXCLUDE]
+                    override fun onVerificationFailed(e: FirebaseException) {
+
+                    }
+                    // [END_EXCLUDE]
+                })
+        // [END auth_test_phone_auto]
     }
 
 }

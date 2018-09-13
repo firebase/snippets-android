@@ -2,7 +2,6 @@ package com.google.firebase.example.perf.kotlin
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import com.google.firebase.example.perf.interfaces.MainActivityInterface
 import com.google.firebase.example.perf.kotlin.model.ItemCache
 import com.google.firebase.example.perf.kotlin.model.User
 import com.google.firebase.perf.FirebasePerformance
@@ -15,17 +14,16 @@ import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
 
-class MainActivity : AppCompatActivity(), MainActivityInterface {
+class MainActivity : AppCompatActivity() {
 
     // [START perf_traced_create]
-    @AddTrace(name = "onCreateTrace", enabled = true)
-    /* optional */
+    @AddTrace(name = "onCreateTrace", enabled = true /* optional */)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
     // [END perf_traced_create]
 
-    override fun basicTrace() {
+    fun basicTrace() {
         val cache = ItemCache()
 
         // [START perf_basic_trace_start]
@@ -47,7 +45,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END perf_basic_trace_stop]
     }
 
-    override fun traceCustomAttributes() {
+    fun traceCustomAttributes() {
         // [START perf_trace_custom_attrs]
         val trace = FirebasePerformance.getInstance().newTrace("test_trace")
 
@@ -65,7 +63,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END perf_trace_custom_attrs]
     }
 
-    override fun disableWithConfig() {
+    fun disableWithConfig() {
         // [START perf_disable_with_config]
         // Setup remote config
         val config = FirebaseRemoteConfig.getInstance()
@@ -86,7 +84,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END perf_disable_with_config]
     }
 
-    override fun activateConfig() {
+    fun activateConfig() {
         // [START perf_activate_config]
         //Remote Config fetches and activates parameter values from the service
         val config = FirebaseRemoteConfig.getInstance()
@@ -102,7 +100,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
     }
 
     @Throws(Exception::class)
-    override fun manualNetworkTrace() {
+    fun manualNetworkTrace() {
         val data = "badgerbadgerbadgerbadgerMUSHROOM!".toByteArray()
 
         // [START perf_manual_network_trace]
@@ -128,7 +126,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END perf_manual_network_trace]
     }
 
-    override fun piiExamples() {
+    fun piiExamples() {
         val trace = FirebasePerformance.getInstance().newTrace("trace")
         val user = User()
 
@@ -141,7 +139,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END perf_attr_pii]
     }
 
-    override fun printStreamContent(stream: InputStream) {
+    fun printStreamContent(stream: InputStream) {
         // Unimplemented
         // ...
     }

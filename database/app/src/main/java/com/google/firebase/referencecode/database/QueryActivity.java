@@ -28,7 +28,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.referencecode.database.interfaces.QueryActivityInterface;
 import com.google.firebase.referencecode.database.models.Message;
 
 /**
@@ -37,7 +36,7 @@ import com.google.firebase.referencecode.database.models.Message;
  *
  * Use {@link MainActivity} to populate the Message data.
  */
-public class QueryActivity extends AppCompatActivity implements QueryActivityInterface {
+public class QueryActivity extends AppCompatActivity {
 
     private static final String TAG = "QueryActivity";
 
@@ -57,12 +56,10 @@ public class QueryActivity extends AppCompatActivity implements QueryActivityInt
         databaseReference = FirebaseDatabase.getInstance().getReference();
     }
 
-    @Override
     public String getUid() {
         return "42";
     }
 
-    @Override
     public void basicListen() {
         // [START basic_listen]
         // Get a reference to Messages and attach a listener
@@ -97,7 +94,6 @@ public class QueryActivity extends AppCompatActivity implements QueryActivityInt
         // [END basic_listen]
     }
 
-    @Override
     public void basicQuery() {
         // [START basic_query]
         // My top posts by number of stars
@@ -117,7 +113,6 @@ public class QueryActivity extends AppCompatActivity implements QueryActivityInt
         // [END basic_query]
     }
 
-    @Override
     public void basicQueryValueListener() {
         String myUserId = getUid();
         Query myTopPostsQuery = databaseReference.child("user-posts").child(myUserId)
@@ -143,7 +138,6 @@ public class QueryActivity extends AppCompatActivity implements QueryActivityInt
         // [END basic_query_value_listener]
     }
 
-    @Override
     public void cleanBasicListener() {
         // Clean up value listener
         // [START clean_basic_listen]
@@ -151,7 +145,6 @@ public class QueryActivity extends AppCompatActivity implements QueryActivityInt
         // [END clean_basic_listen]
     }
 
-    @Override
     public void cleanBasicQuery() {
         // Clean up query listener
         // [START clean_basic_query]
@@ -159,7 +152,6 @@ public class QueryActivity extends AppCompatActivity implements QueryActivityInt
         // [END clean_basic_query]
     }
 
-    @Override
     public void orderByNested() {
         // [START rtdb_order_by_nested]
         // Most viewed posts

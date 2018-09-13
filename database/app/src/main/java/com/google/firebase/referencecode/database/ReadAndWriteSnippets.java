@@ -5,10 +5,9 @@ import android.support.annotation.NonNull;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.referencecode.database.interfaces.ReadAndWriteSnippetsInterface;
 import com.google.firebase.referencecode.database.models.User;
 
-public class ReadAndWriteSnippets implements ReadAndWriteSnippetsInterface {
+public class ReadAndWriteSnippets {
 
     private DatabaseReference mDatabase;
 
@@ -16,7 +15,6 @@ public class ReadAndWriteSnippets implements ReadAndWriteSnippetsInterface {
         mDatabase = database;
     }
 
-    @Override
     // [START rtdb_write_new_user]
     public void writeNewUser(String userId, String name, String email) {
         User user = new User(name, email);
@@ -25,7 +23,6 @@ public class ReadAndWriteSnippets implements ReadAndWriteSnippetsInterface {
     }
     // [END rtdb_write_new_user]
 
-    @Override
     public void writeNewUserWithTaskListeners(String userId, String name, String email) {
         User user = new User(name, email);
 

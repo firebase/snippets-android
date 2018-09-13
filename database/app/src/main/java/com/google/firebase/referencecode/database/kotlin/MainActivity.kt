@@ -8,9 +8,8 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.referencecode.database.R
-import com.google.firebase.referencecode.database.interfaces.MainActivityInterface
 
-class MainActivity : AppCompatActivity(), MainActivityInterface {
+abstract class MainActivity : AppCompatActivity() {
 
     companion object {
         private val TAG = "KotlinActivity"
@@ -22,7 +21,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         setContentView(R.layout.activity_main)
     }
 
-    override fun basicReadWrite() {
+    fun basicReadWrite() {
         // [START write_message]
         // Write a message to the database
         val database = FirebaseDatabase.getInstance()

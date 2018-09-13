@@ -5,13 +5,12 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.google.firebase.database.*
 import com.google.firebase.referencecode.database.R
-import com.google.firebase.referencecode.database.interfaces.QueryActivityInterface
 import com.google.firebase.referencecode.database.models.Message
 
 /**
  * Kotlin verison of {@link QueryActivity].
  */
-class QueryActivity : AppCompatActivity(), QueryActivityInterface {
+abstract class QueryActivity : AppCompatActivity() {
 
     companion object {
         private val TAG = "KotlinQueryActivity"
@@ -24,6 +23,8 @@ class QueryActivity : AppCompatActivity(), QueryActivityInterface {
     private lateinit var messagesListener: ValueEventListener
     private lateinit var messagesQueryListener: ChildEventListener
 
+    var uid: String = "42"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_query)
@@ -31,11 +32,7 @@ class QueryActivity : AppCompatActivity(), QueryActivityInterface {
         databaseReference = FirebaseDatabase.getInstance().reference
     }
 
-    override fun getUid(): String {
-        return "42"
-    }
-
-    override fun basicListen() {
+    fun basicListen() {
         // [START basic_listen]
         // Get a reference to Messages and attach a listener
         messagesRef = databaseReference.child("messages")
@@ -67,7 +64,7 @@ class QueryActivity : AppCompatActivity(), QueryActivityInterface {
         // [END basic_listen]
     }
 
-    override fun basicQuery() {
+    fun basicQuery() {
         // [START basic_query]
         // My top posts by number of stars
         val myUserId = uid
@@ -88,7 +85,7 @@ class QueryActivity : AppCompatActivity(), QueryActivityInterface {
         // [END basic_query]
     }
 
-    override fun basicQueryValueListener() {
+    fun basicQueryValueListener() {
         val myUserId = uid
         val myTopPostsQuery = databaseReference.child("user-posts").child(myUserId)
             .orderByChild("starCount")
@@ -111,21 +108,21 @@ class QueryActivity : AppCompatActivity(), QueryActivityInterface {
         // [END basic_query_value_listener]
     }
 
-    override fun cleanBasicListener() {
+    fun cleanBasicListener() {
         // Clean up value listener
         // [START clean_basic_listen]
         messagesRef.removeEventListener(messagesListener)
         // [END clean_basic_listen]
     }
 
-    override fun cleanBasicQuery() {
+    fun cleanBasicQuery() {
         // Clean up query listener
         // [START clean_basic_query]
         messagesQuery.removeEventListener(messagesQueryListener)
         // [END clean_basic_query]
     }
 
-    override fun orderByNested() {
+    fun orderByNested() {
         // [START rtdb_order_by_nested]
         // Most viewed posts
         val myMostViewedPostsQuery = databaseReference.child("posts")

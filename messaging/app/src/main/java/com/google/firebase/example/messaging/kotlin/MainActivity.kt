@@ -2,11 +2,9 @@ package com.google.firebase.example.messaging.kotlin
 
 import android.accounts.AccountManager
 import android.annotation.SuppressLint
-import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.google.android.gms.auth.GoogleAuthUtil
-import com.google.firebase.example.messaging.interfaces.MainActivityInterface
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.RemoteMessage
 import org.json.JSONArray
@@ -18,11 +16,10 @@ import java.net.URL
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 
-class MainActivity : AppCompatActivity(), MainActivityInterface {
-    private val TAG = "MainActivity"
+class MainActivity : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    companion object {
+        private val TAG = "MainActivity"
     }
 
     fun runtimeEnableAutoInit() {
@@ -31,7 +28,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END fcm_runtime_enable_auto_init]
     }
 
-    override fun deviceGroupUpstream() {
+    fun deviceGroupUpstream() {
         // [START fcm_device_group_upstream]
         val to = "a_unique_key" // the notification key
         val msgId = AtomicInteger()
@@ -44,7 +41,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
 
     // [START fcm_get_account]
     @SuppressLint("MissingPermission")
-    override fun getAccount(): String {
+    fun getAccount(): String {
         // This call requires the Android GET_ACCOUNTS permission
         val accounts = AccountManager.get(this /* activity */).getAccountsByType("com.google")
         return if (accounts.isEmpty()) {
@@ -53,7 +50,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
     }
     // [END fcm_get_account]
 
-    override fun getAuthToken() {
+    fun getAuthToken() {
         // [START fcm_get_token]
         val accountName = getAccount()
 
@@ -72,7 +69,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
 
     // [START fcm_add_to_group]
     @Throws(IOException::class, JSONException::class)
-    override fun addToGroup(
+    fun addToGroup(
             senderId: String, userEmail: String, registrationId: String, idToken: String): String {
         val url = URL("https://fcm.googleapis.com/fcm/googlenotification")
         val con = url.openConnection() as HttpURLConnection
@@ -108,7 +105,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
     // [END fcm_add_to_group]
 
     @Throws(JSONException::class)
-    override fun removeFromGroup(userEmail: String, registrationId: String, idToken: String) {
+    fun removeFromGroup(userEmail: String, registrationId: String, idToken: String) {
         // [START fcm_remove_from_group]
         // HTTP request
         val data = JSONObject()

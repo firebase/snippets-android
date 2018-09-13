@@ -5,17 +5,16 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.ImageView
 import com.google.firebase.referencecode.storage.GlideApp
 import com.google.firebase.referencecode.storage.R
-import com.google.firebase.referencecode.storage.interfaces.FirebaseUIActivityInterface
 import com.google.firebase.storage.FirebaseStorage
 
-class FirebaseUIActivity : AppCompatActivity(), FirebaseUIActivityInterface {
+abstract class FirebaseUIActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_firebase_ui)
     }
 
-    override fun loadWithGlide() {
+    fun loadWithGlide() {
         // [START storage_load_with_glide]
         // Reference to an image file in Cloud Storage
         val storageReference = FirebaseStorage.getInstance().reference

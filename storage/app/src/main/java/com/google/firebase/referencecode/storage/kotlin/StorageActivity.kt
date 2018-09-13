@@ -11,17 +11,16 @@ import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseApp
 import com.google.firebase.referencecode.storage.R
-import com.google.firebase.referencecode.storage.interfaces.StorageActivityInterface
 import com.google.firebase.storage.*
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
 
-class StorageActivity : AppCompatActivity(), StorageActivityInterface {
+abstract class StorageActivity : AppCompatActivity() {
+
     // [START storage_field_declaration]
     lateinit var storage: FirebaseStorage
     // [END storage_field_declaration]
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +33,7 @@ class StorageActivity : AppCompatActivity(), StorageActivityInterface {
         includesForCreateReference()
     }
 
-    override fun includesForCreateReference() {
+    fun includesForCreateReference() {
         val storage = FirebaseStorage.getInstance()
 
         // ## Create a Reference
@@ -116,7 +115,7 @@ class StorageActivity : AppCompatActivity(), StorageActivityInterface {
         // [END reference_full_example]
     }
 
-    override fun includesForUploadFiles() {
+    fun includesForUploadFiles() {
         val storage = FirebaseStorage.getInstance()
 
         // [START upload_create_reference]
@@ -262,7 +261,7 @@ class StorageActivity : AppCompatActivity(), StorageActivityInterface {
         // [END upload_get_download_url]
     }
 
-    override fun includesForDownloadFiles() {
+    fun includesForDownloadFiles() {
         val storage = FirebaseStorage.getInstance()
 
         // [START download_create_reference]
@@ -320,7 +319,7 @@ class StorageActivity : AppCompatActivity(), StorageActivityInterface {
         // [END download_full_example]
     }
 
-    override fun includesForFileMetadata() {
+    fun includesForFileMetadata() {
         val storage = FirebaseStorage.getInstance()
 
         // [START metadata_get_storage_reference]
@@ -356,7 +355,7 @@ class StorageActivity : AppCompatActivity(), StorageActivityInterface {
         // [END update_file_metadata]
     }
 
-    override fun includesForMetadata_delete() {
+    fun includesForMetadata_delete() {
         val storage = FirebaseStorage.getInstance()
         val storageRef = storage.reference
         val forestRef = storageRef.child("images/forest.jpg")
@@ -376,7 +375,7 @@ class StorageActivity : AppCompatActivity(), StorageActivityInterface {
         // [END delete_file_metadata]
     }
 
-    override fun includesForMetadata_custom() {
+    fun includesForMetadata_custom() {
         // [START custom_metadata]
         val metadata = StorageMetadata.Builder()
                 .setCustomMetadata("location", "Yosemite, CA, USA")
@@ -385,7 +384,7 @@ class StorageActivity : AppCompatActivity(), StorageActivityInterface {
         // [END custom_metadata]
     }
 
-    override fun includesForDeleteFiles() {
+    fun includesForDeleteFiles() {
         val storage = FirebaseStorage.getInstance()
 
         // [START delete_file]
@@ -404,14 +403,14 @@ class StorageActivity : AppCompatActivity(), StorageActivityInterface {
         // [END delete_file]
     }
 
-    override fun nonDefaultBucket() {
+    fun nonDefaultBucket() {
         // [START storage_non_default_bucket]
         // Get a non-default Storage bucket
         val storage = FirebaseStorage.getInstance("gs://my-custom-bucket")
         // [END storage_non_default_bucket]
     }
 
-    override fun customApp() {
+    fun customApp() {
         val customApp = FirebaseApp.initializeApp(this)
 
         // [START storage_custom_app]

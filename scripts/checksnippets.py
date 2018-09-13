@@ -15,6 +15,7 @@ import os
 import re
 
 _RE_REGION_TAG_START = re.compile(r'\[START ([\w_\-]+)\]')
+_RE_REGION_TAG_END = re.compile(r'\[END ([\w_\-]+)\]')
 
 class MissingKotlinFile(Exception):
 
@@ -23,6 +24,7 @@ class MissingKotlinFile(Exception):
     
     def __str__(self):
         return 'ERROR: Missing kotlin file for java file {}'.format(self.javaName)
+
 
 class RegionTagMismatch(Exception):
 
@@ -33,6 +35,18 @@ class RegionTagMismatch(Exception):
     def __str__(self):
          return 'ERROR: The following snippets are missing from {}: {}'.format(
              self.kotlinName, self.regionDiff)
+
+
+class MissingEndTag(Exception):
+
+    def __init__(self, fileName, missing):
+        self.fileName = fileName
+        self.missing = missing
+
+    def __str__(self):
+        return 'ERROR: The following snippets in {} are missing END tags: {}'.format(
+            self.fileName, self.missing)
+
 
 def checkSnippets(folder):
     print 'Checking snippets in folder: {}'.format(folder)
@@ -71,15 +85,24 @@ def checkJavaFile(folder, javaFile):
 
 
 def regionsInFile(path):
-    regions = set()
+    start_tags = set()
+    end_tags = set()
     with open(path, 'r') as f:
         lines = f.read().split('\n')
         for line in lines:
-            m = _RE_REGION_TAG_START.search(line)
-            if m:
-                regions.add(m.group(1))
+            start_match = _RE_REGION_TAG_START.search(line)
+            if start_match:
+                start_tags.add(start_match.group(1))
 
-    return regions
+            end_match = _RE_REGION_TAG_END.search(line)
+            if end_match:
+                end_tags.add(end_match.group(1))
+
+    startEndDiff = start_tags.difference(end_tags)
+    if len(startEndDiff) > 0:
+        raise MissingEndTag(path, startEndDiff)
+
+    return start_tags
         
 
 def findFileWithPattern(folder, pattern):

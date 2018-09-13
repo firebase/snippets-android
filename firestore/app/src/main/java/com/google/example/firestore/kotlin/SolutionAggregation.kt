@@ -1,7 +1,6 @@
 package com.google.example.firestore.kotlin
 
 import com.google.android.gms.tasks.Task
-import com.google.example.firestore.interfaces.SolutionAggregationInterface
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
@@ -10,23 +9,28 @@ import java.util.*
 /**
  * https://firebase.google.com/docs/firestore/solutions/aggregation
  */
-class SolutionAggregation : SolutionAggregationInterface {
-
-    private val db: FirebaseFirestore? = null
+abstract class SolutionAggregation(val db: FirebaseFirestore) {
 
     // [START restaurant_class]
-    inner class Restaurant(internal var name: String, internal var avgRating: Double, internal var numRatings: Int)
+    data class Restaurant(internal var name: String,
+                           internal var avgRating: Double,
+                           internal var numRatings: Int) {
+
+        // No-arg constructor required for use with "toObject"
+        constructor() : this("", 0.0, 0)
+
+    }
     // [END restaurant_class]
 
-    override fun exampleRestaurant() {
+    fun exampleRestaurant() {
         // [START example_restaurant]
         val arinell = Restaurant("Arinell Pizza", 4.65, 683)
         // [END example_restaurant]
     }
 
-    override fun getAllRatings() {
+    fun getAllRatings() {
         // [START get_all_ratings]
-        db!!.collection("restaurants")
+        db.collection("restaurants")
                 .document("arinell-pizza")
                 .collection("ratings")
                 .get()
@@ -39,7 +43,7 @@ class SolutionAggregation : SolutionAggregationInterface {
         val ratingRef = restaurantRef.collection("ratings").document()
 
         // In a transaction, add the new rating and update the aggregate totals
-        return db!!.runTransaction { transaction ->
+        return db.runTransaction { transaction ->
             val restaurant = transaction.get(restaurantRef).toObject(Restaurant::class.java)
 
             // Compute new number of ratings

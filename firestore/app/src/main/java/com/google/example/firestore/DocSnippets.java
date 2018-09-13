@@ -10,7 +10,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-import com.google.example.firestore.interfaces.DocSnippetsInterface;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentChange.Type;
@@ -50,7 +49,7 @@ import java.util.concurrent.TimeUnit;
  * Snippets for inclusion in documentation.
  */
 @SuppressWarnings({"unused", "Convert2Lambda"})
-public class DocSnippets implements DocSnippetsInterface {
+public class DocSnippets {
 
     private static final String TAG = "DocSnippets";
 
@@ -127,7 +126,6 @@ public class DocSnippets implements DocSnippetsInterface {
         deleteCollection(db.collection(path), 50, EXECUTOR);
     }
 
-    @Override
     public void setup() {
         // [START get_firestore_instance]
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -141,7 +139,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END set_firestore_settings]
     }
 
-    @Override
     public void addAdaLovelace() {
         // [START add_ada_lovelace]
         // Create a new user with a first and last name
@@ -169,7 +166,6 @@ public class DocSnippets implements DocSnippetsInterface {
     }
 
 
-    @Override
     public void addAlanTuring() {
         // [START add_alan_turing]
         // Create a new user with a first, middle, and last name
@@ -197,7 +193,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END add_alan_turing]
     }
 
-    @Override
     public void getAllUsers() {
         // [START get_all_users]
         db.collection("users")
@@ -217,7 +212,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END get_all_users]
     }
 
-    @Override
     public void listenForUsers() {
         // [START listen_for_users]
         // Listen for users born before 1900.
@@ -242,21 +236,18 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END listen_for_users]
     }
 
-    @Override
     public void docReference() {
         // [START doc_reference]
         DocumentReference alovelaceDocumentRef = db.collection("users").document("alovelace");
         // [END doc_reference]
     }
 
-    @Override
     public void collectionReference() {
         // [START collection_reference]
         CollectionReference usersCollectionRef = db.collection("users");
         // [END collection_reference]
     }
 
-    @Override
     public void subcollectionReference() {
         // [START subcollection_reference]
         DocumentReference messageRef = db
@@ -265,7 +256,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END subcollection_reference]
     }
 
-    @Override
     public void docReferenceAlternate() {
         // [START doc_reference_alternate]
         DocumentReference alovelaceDocumentRef = db.document("users/alovelace");
@@ -323,7 +313,6 @@ public class DocSnippets implements DocSnippetsInterface {
     }
     // [END city_class]
 
-    @Override
     public void setDocument() {
         // [START set_document]
         Map<String, Object> city = new HashMap<>();
@@ -354,7 +343,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END set_with_id]
     }
 
-    @Override
     public void dataTypes() {
         // [START data_types]
         Map<String, Object> docData = new HashMap<>();
@@ -388,7 +376,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END data_types]
     }
 
-    @Override
     public void addCustomClass() {
         // [START add_custom_class]
         City city = new City("Los Angeles", "CA", "USA",
@@ -397,7 +384,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END add_custom_class]
     }
 
-    @Override
     public void addDocument() {
         // [START add_document]
         // Add a new document with a generated id.
@@ -422,7 +408,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END add_document]
     }
 
-    @Override
     public void newDocument() {
         // [START new_document]
         Map<String, Object> data = new HashMap<>();
@@ -434,7 +419,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END new_document]
     }
 
-    @Override
     public void updateDocument() {
         // [START update_document]
         DocumentReference washingtonRef = db.collection("cities").document("DC");
@@ -457,7 +441,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END update_document]
     }
 
-    @Override
     public void updateDocumentArray() {
         // [START update_document_array]
         DocumentReference washingtonRef = db.collection("cities").document("DC");
@@ -470,7 +453,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END update_document_array]
     }
 
-    @Override
     public void updateDocumentNested() {
         // [START update_document_nested]
         // Assume the document contains:
@@ -489,7 +471,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END update_document_nested]
     }
 
-    @Override
     public void setFieldWithMerge() {
         // [START set_field_with_merge]
         // Update one field, creating the document if it does not already exist.
@@ -501,7 +482,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END set_field_with_merge]
     }
 
-    @Override
     public void deleteDocument() {
         // [START delete_document]
         db.collection("cities").document("DC")
@@ -521,7 +501,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END delete_document]
     }
 
-    @Override
     public void transactions() {
         // [START transactions]
         final DocumentReference sfDocRef = db.collection("cities").document("SF");
@@ -551,7 +530,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END transactions]
     }
 
-    @Override
     public void transactionPromise() {
         // [START transaction_with_result]
         final DocumentReference sfDocRef = db.collection("cities").document("SF");
@@ -584,7 +562,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END transaction_with_result]
     }
 
-    @Override
     public void writeBatch() {
         // [START write_batch]
         // Get a new write batch
@@ -612,7 +589,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END write_batch]
     }
 
-    @Override
     public void getDocument() {
         // [START get_document]
         DocumentReference docRef = db.collection("cities").document("SF");
@@ -634,7 +610,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END get_document]
     }
 
-    @Override
     public void getDocumentWithOptions() {
         // [START get_document_options]
         DocumentReference docRef = db.collection("cities").document("SF");
@@ -658,7 +633,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END get_document_options]
     }
 
-    @Override
     public void customObjects() {
         // [START custom_objects]
         DocumentReference docRef = db.collection("cities").document("BJ");
@@ -671,7 +645,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END custom_objects]
     }
 
-    @Override
     public void listenToDocument() {
         // [START listen_document]
         final DocumentReference docRef = db.collection("cities").document("SF");
@@ -694,7 +667,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END listen_document]
     }
 
-    @Override
     public void listenToDocumentLocal() {
         // [START listen_document_local]
         final DocumentReference docRef = db.collection("cities").document("SF");
@@ -720,7 +692,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END listen_document_local]
     }
 
-    @Override
     public void listenWithMetadata() {
         // [START listen_with_metadata]
         // Listen for metadata changes to the document.
@@ -735,7 +706,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END listen_with_metadata]
     }
 
-    @Override
     public void getMultipleDocs() {
         // [START get_multiple]
         db.collection("cities")
@@ -756,7 +726,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END get_multiple]
     }
 
-    @Override
     public void getAllDocs() {
         // [START get_multiple_all]
         db.collection("cities")
@@ -776,7 +745,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END get_multiple_all]
     }
 
-    @Override
     public void listenToMultiple() {
         // [START listen_multiple]
         db.collection("cities")
@@ -802,7 +770,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END listen_multiple]
     }
 
-    @Override
     public void listenToDiffs() {
         // [START listen_diffs]
         db.collection("cities")
@@ -835,7 +802,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END listen_diffs]
     }
 
-    @Override
     public void listenState() {
         // [START listen_state]
         db.collection("cities")
@@ -864,7 +830,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END listen_state]
     }
 
-    @Override
     public void detachListener() {
         // [START detach_listener]
         Query query = db.collection("cities");
@@ -886,7 +851,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END detach_listener]
     }
 
-    @Override
     public void handleListenErrors() {
         // [START handle_listen_errors]
         db.collection("cities")
@@ -910,7 +874,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END handle_listen_errors]
     }
 
-    @Override
     public void exampleData() {
         // [START example_data]
         CollectionReference cities = db.collection("cities");
@@ -962,7 +925,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END example_data]
     }
 
-    @Override
     public void simpleQueries() {
         // [START simple_queries]
         // Create a reference to the cities collection
@@ -983,7 +945,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END example_filters]
     }
 
-    @Override
     public void arrayContainsQueries() {
         // [START array_contains_filter]
         CollectionReference citiesRef = db.collection("cities");
@@ -992,7 +953,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END array_contains_filter]
     }
 
-    @Override
     public void compoundQueries() {
         CollectionReference citiesRef = db.collection("cities");
 
@@ -1009,7 +969,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END valid_range_filters]
     }
 
-    @Override
     public void compoundQueriesInvalid() {
         CollectionReference citiesRef = db.collection("cities");
 
@@ -1018,7 +977,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END invalid_range_filters]
     }
 
-    @Override
     public void orderAndLimit() {
         CollectionReference citiesRef = db.collection("cities");
 
@@ -1043,7 +1001,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END valid_filter_and_order]
     }
 
-    @Override
     public void orderAndLimitInvalid() {
         CollectionReference citiesRef = db.collection("cities");
 
@@ -1052,7 +1009,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END invalid_filter_and_order]
     }
 
-    @Override
     public void queryStartAtEndAt() {
         // [START query_start_at_single]
         // Get all cities with a population >= 1,000,000, ordered by population,
@@ -1186,7 +1142,6 @@ public class DocSnippets implements DocSnippetsInterface {
     }
     // [END delete_collection]
 
-    @Override
     public void toggleOffline() {
         // [START disable_network]
         db.disableNetwork()
@@ -1211,7 +1166,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END enable_network]
     }
 
-    @Override
     public void offlineListen(FirebaseFirestore db) {
         // [START offline_listen]
         db.collection("cities").whereEqualTo("state", "CA")
@@ -1250,7 +1204,6 @@ public class DocSnippets implements DocSnippetsInterface {
     }
     // [END server_timestamp_annotation]
 
-    @Override
     public void updateWithServerTimestamp() {
         // [START update_with_server_timestamp]
         DocumentReference docRef = db.collection("objects").document("some-id");
@@ -1268,7 +1221,6 @@ public class DocSnippets implements DocSnippetsInterface {
         // [END update_with_server_timestamp]
     }
 
-    @Override
     public void updateDeleteField() {
         // [START update_delete_field]
         DocumentReference docRef = db.collection("cities").document("BJ");

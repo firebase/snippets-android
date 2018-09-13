@@ -7,17 +7,12 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.example.predictions.R
-import com.google.firebase.example.predictions.interfaces.MainActivityInterface
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import java.util.*
 
-class MainActivity : AppCompatActivity(), MainActivityInterface {
+class MainActivity : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
-    override fun configShowAds() {
+    fun configShowAds() {
         val cacheExpiration = 60L
 
         // [START pred_config_show_ads]
@@ -45,7 +40,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END pred_config_show_ads]
     }
 
-    override fun executeAdsPolicy() {
+    fun executeAdsPolicy() {
         // [START pred_ads_policy]
         val config = FirebaseRemoteConfig.getInstance()
         val adPolicy = config.getString("ads_policy")
@@ -64,7 +59,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END pred_ads_policy]
     }
 
-    override fun configPromoStrategy() {
+    fun configPromoStrategy() {
         val cacheExpiration = 60L
 
         // [START config_promo_strategy]
@@ -90,7 +85,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
     }
 
     // [START pred_get_promoted_bundle]
-    override fun getPromotedBundle(): String {
+    fun getPromotedBundle(): String {
         FirebaseAnalytics.getInstance(this).logEvent("promotion_set", Bundle())
 
         val config = FirebaseRemoteConfig.getInstance()
@@ -105,7 +100,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
     }
     // [END pred_get_promoted_bundle]
 
-    override fun configPreventChurn() {
+    fun configPreventChurn() {
         val cacheExpiration = 60L
 
         // [START pred_config_prevent_churn]
@@ -131,7 +126,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
     }
 
     // [START pred_execute_gift_policy]
-    override fun executeGiftPolicy() {
+    fun executeGiftPolicy() {
         val config = FirebaseRemoteConfig.getInstance()
         val giftPolicy = config.getString("gift_policy")
         val willChurn = config.getBoolean("will_churn")
@@ -146,11 +141,11 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
     }
     // [END pred_execute_gift_policy]
 
-    override fun grantGiftOnLevel2() {
+    fun grantGiftOnLevel2() {
         // Nothing
     }
 
-    override fun grantGiftNow() {
+    fun grantGiftNow() {
         // Nothing
     }
 

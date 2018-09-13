@@ -1,6 +1,7 @@
 package com.google.example.firestore;
 
 import com.google.android.gms.tasks.Task;
+import com.google.example.firestore.interfaces.SolutionAggregationInterface;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -13,7 +14,7 @@ import java.util.Map;
 /**
  * https://firebase.google.com/docs/firestore/solutions/aggregation
  */
-public class SolutionAggregation {
+public class SolutionAggregation implements SolutionAggregationInterface {
 
     private FirebaseFirestore db;
 
@@ -31,12 +32,14 @@ public class SolutionAggregation {
     }
     // [END restaurant_class]
 
+    @Override
     public void exampleRestaurant() {
         // [START example_restaurant]
         Restaurant arinell = new Restaurant("Arinell Pizza", 4.65, 683);
         // [END example_restaurant]
     }
 
+    @Override
     public void getAllRatings() {
         // [START get_all_ratings]
         db.collection("restaurants")

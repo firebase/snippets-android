@@ -19,4 +19,8 @@ public interface StorageActivityInterface {
 
     void includesForDeleteFiles();
 
+    void nonDefaultBucket();
+
+    void customApp();
+
 }

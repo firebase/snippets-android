@@ -4,11 +4,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
+import com.google.firebase.referencecode.storage.interfaces.FirebaseUIActivityInterface;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-// TODO: kotlin
-public class FirebaseUIActivity extends AppCompatActivity {
+public class FirebaseUIActivity extends AppCompatActivity implements FirebaseUIActivityInterface {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

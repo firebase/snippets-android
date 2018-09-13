@@ -15,7 +15,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.google.firebase.example.mlkit.KotlinMainActivity" />
+        <activity android:name="com.google.firebase.example.mlkit.kotlin.MainActivity" />
     </application>
 
 </manifest>

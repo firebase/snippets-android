@@ -304,7 +304,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         // [END auth_with_github]
     }
 
-    // TODO: kotlin
+    
+    @Override
     public void linkAndMerge(AuthCredential credential) {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
@@ -322,7 +323,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         // [END auth_link_and_merge]
     }
 
-    // TODO: kotlin
+    
+    @Override
     public void unlink(String providerId) {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
@@ -340,7 +342,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         // [END auth_unlink]
     }
 
-    // TODO: kotlin
+    @Override
     public void buildActionCodeSettings() {
         // [START auth_build_action_code_settings]
         ActionCodeSettings actionCodeSettings =
@@ -359,7 +361,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         // [END auth_build_action_code_settings]
     }
 
-    // TODO: kotlin
+    @Override
     public void sendSignInLink(String email, ActionCodeSettings actionCodeSettings) {
         // [START auth_send_sign_in_link]
         FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -374,8 +376,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
                 });
         // [END auth_send_sign_in_link]
     }
-
-    // TODO: kotlin
+    
+    @Override
     public void verifySignInLink() {
         // [START auth_verify_sign_in_link]
         FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -409,7 +411,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         // [END auth_verify_sign_in_link]
     }
 
-    // TODO: kotlin
+    @Override
     public void linkWithSignInLink(String email, String emailLink) {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         
@@ -439,7 +441,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         // [END auth_link_with_link]
     }
 
-    // TODO: kotlin
+    @Override
     public void reauthWithLink(String email, String emailLink) {
         FirebaseAuth auth = FirebaseAuth.getInstance();
 
@@ -463,7 +465,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         // [END auth_reauth_with_link]
     }
 
-    // TODO: kotlin
+    @Override
     public void differentiateLink(String email) {
         FirebaseAuth auth = FirebaseAuth.getInstance();
 
@@ -488,7 +490,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         // [END auth_differentiate_link]
     }
 
-    // TODO kotlin
+    @Override
     public void getGoogleCredentials() {
         String googleIdToken = "";
         // [START auth_google_cred]
@@ -496,7 +498,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         // [END auth_google_cred]
     }
 
-    // TODO: kotlin
+    
+    @Override
     public void getFbCredentials() {
         AccessToken token = AccessToken.getCurrentAccessToken();
         // [START auth_fb_cred]
@@ -504,7 +507,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         // [END auth_fb_cred]
     }
 
-    // TODO: kotlin
+    @Override
     public void getEmailCredentials() {
         String email = "";
         String password = "";
@@ -513,14 +516,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         // [END auth_email_cred]
     }
 
-    // TODO: kotlin
+    @Override
     public void signOut() {
         // [START auth_sign_out]
         FirebaseAuth.getInstance().signOut();
         // [END auth_sign_out]
     }
 
-    // TODO: kotlin
+    @Override
     public void testPhoneVerify() {
         // [START auth_test_phone_verify]
         String phoneNum = "+16505554567";
@@ -561,6 +564,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         // No-op
     }
 
+    @Override
     public void testPhoneAutoRetrieve() {
         // [START auth_test_phone_auto]
         // The test phone number and code should be whitelisted in the console.

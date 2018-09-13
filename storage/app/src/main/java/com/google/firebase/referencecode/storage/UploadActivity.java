@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.referencecode.storage.interfaces.UploadActivityInterface;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageMetadata;
@@ -13,7 +14,8 @@ import com.google.firebase.storage.UploadTask;
 
 import java.util.List;
 
-public class UploadActivity extends AppCompatActivity {
+
+public class UploadActivity extends AppCompatActivity implements UploadActivityInterface {
 
     private StorageReference mStorageRef;  //mStorageRef was previously used to transfer data.
     private boolean mSaved;
@@ -64,6 +66,7 @@ public class UploadActivity extends AppCompatActivity {
     }
     // [END storage_upload_lifecycle]
 
+    @Override
     public void continueAcrossRestarts() {
         Uri localFile = null;
         Uri sessionUri = null;

@@ -8,7 +8,7 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
-import com.google.example.firestore.DocSnippetsInterface
+import com.google.example.firestore.interfaces.DocSnippetsInterface
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
 import java.util.*

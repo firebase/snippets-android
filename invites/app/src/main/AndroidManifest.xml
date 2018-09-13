@@ -15,7 +15,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.google.firebase.example.invites.KotlinMainActivity" />
+        <activity android:name="com.google.firebase.example.invites.kotlin.MainActivity" />
     </application>
 
 </manifest>

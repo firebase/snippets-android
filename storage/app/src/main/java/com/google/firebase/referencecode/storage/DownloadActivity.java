@@ -10,7 +10,6 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
-// TODO: kotlin
 public class DownloadActivity extends AppCompatActivity {
 
     // mStorageRef was previously used to transfer data.

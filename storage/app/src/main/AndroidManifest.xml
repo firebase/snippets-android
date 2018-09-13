@@ -15,7 +15,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".KotlinStorageActivity" />
+        <activity android:name=".kotlin.StorageActivity" />
         <activity android:name=".FirebaseUIActivity" />
         <activity android:name=".DownloadActivity" />
         <activity android:name=".UploadActivity"></activity>

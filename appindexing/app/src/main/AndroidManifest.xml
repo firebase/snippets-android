@@ -24,11 +24,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".KotlinMainActivity" />
-        <activity android:name=".KotlinMeasureActivity" />
+        <activity android:name=".kotlin.MainActivity" />
+        <activity android:name=".kotlin.MeasureActivity" />
 
         <receiver
-            android:name=".KotlinAppIndexingUpdateReceiver"
+            android:name=".kotlin.AppIndexingUpdateReceiver"
             android:exported="true"
             android:permission="com.google.android.gms.permission.APPINDEXING">
             <intent-filter>
@@ -56,7 +56,7 @@
         <!-- [END appindexing_service_manifest] -->
 
         <service
-            android:name=".KotlinAppIndexingUpdateService"
+            android:name=".kotlin.AppIndexingUpdateService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
 

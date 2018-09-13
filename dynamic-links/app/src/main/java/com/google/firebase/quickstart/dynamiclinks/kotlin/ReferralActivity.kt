@@ -11,16 +11,15 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ServerValue
 import com.google.firebase.dynamiclinks.DynamicLink
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
-import com.google.firebase.quickstart.dynamiclinks.interfaces.ReferralActivityInterface
 
 /**
  * Snippets for the "rewarded referral" use case.
  */
-class ReferralActivity : AppCompatActivity(), ReferralActivityInterface {
+abstract class ReferralActivity : AppCompatActivity() {
 
     private var mInvitationUrl: Uri? = null
 
-    override fun createLink() {
+    fun createLink() {
         // [START ddl_referral_create_link]
         val user = FirebaseAuth.getInstance().currentUser
         val uid = user!!.uid
@@ -45,7 +44,7 @@ class ReferralActivity : AppCompatActivity(), ReferralActivityInterface {
         // [END ddl_referral_create_link]
     }
 
-    override fun sendInvitation() {
+    fun sendInvitation() {
         // [START ddl_referral_send]
         val referrerName = FirebaseAuth.getInstance().currentUser!!.displayName
         val subject = String.format("%s wants you to play MyExampleGame!", referrerName)
@@ -108,13 +107,13 @@ class ReferralActivity : AppCompatActivity(), ReferralActivityInterface {
     }
     // [END ddl_referral_on_create]
 
-    override fun getCredential(email: String, password: String) {
+    fun getCredential(email: String, password: String) {
         // [START ddl_referral_get_cred]
         val credential = EmailAuthProvider.getCredential(email, password)
         // [END ddl_referral_get_cred]
     }
 
-    override fun linkCredential(credential: AuthCredential) {
+    fun linkCredential(credential: AuthCredential) {
         // [START ddl_referral_link_cred]
         FirebaseAuth.getInstance().currentUser!!
                 .linkWithCredential(credential)
@@ -124,7 +123,7 @@ class ReferralActivity : AppCompatActivity(), ReferralActivityInterface {
         // [END ddl_referral_link_cred]
     }
 
-    override fun rewardUser(credential: AuthCredential) {
+    fun rewardUser(credential: AuthCredential) {
         // [START ddl_referral_reward_user]
         FirebaseAuth.getInstance().currentUser!!
                 .linkWithCredential(credential)

@@ -28,9 +28,8 @@ import com.google.firebase.dynamiclinks.DynamicLink;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 import com.google.firebase.dynamiclinks.ShortDynamicLink;
-import com.google.firebase.quickstart.dynamiclinks.interfaces.MainActivityInterface;
 
-public class MainActivity extends AppCompatActivity implements MainActivityInterface {
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +37,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         setContentView(R.layout.activity_main);
     }
 
-    @Override
     public void createDynamicLink_Basic() {
         // [START create_link_basic]
         DynamicLink dynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
@@ -54,7 +52,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         // [END create_link_basic]
     }
 
-    @Override
     public void createDynamicLink_Advanced() {
         // [START create_link_advanced]
         DynamicLink dynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
@@ -89,7 +86,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         // [END create_link_advanced]
     }
 
-    @Override
     public void createShortLink() {
         // [START create_short_link]
         Task<ShortDynamicLink> shortLinkTask = FirebaseDynamicLinks.getInstance().createDynamicLink()
@@ -114,7 +110,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         // [END create_short_link]
     }
 
-    @Override
     public void shortenLongLink() {
         // [START shorten_long_link]
         Task<ShortDynamicLink> shortLinkTask = FirebaseDynamicLinks.getInstance().createDynamicLink()
@@ -136,7 +131,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         // [END shorten_long_link]
     }
 
-    @Override
     public void shareLink(Uri myDynamicLink) {
         // [START ddl_share_link]
         Intent sendIntent = new Intent();
@@ -148,7 +142,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         // [END ddl_share_link]
     }
 
-    @Override
     public void getInvitation() {
         // [START ddl_get_invitation]
         FirebaseDynamicLinks.getInstance()
@@ -171,7 +164,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         // [END ddl_get_invitation]
     }
 
-    @Override
     public void onboardingShare(ShortDynamicLink dl) {
         // [START ddl_onboarding_share]
         Intent intent = new Intent(Intent.ACTION_SEND);

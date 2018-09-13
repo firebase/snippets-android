@@ -1,21 +1,18 @@
 package com.google.firebase.example.testlab.kotlin
 
-import android.os.Bundle
 import android.provider.Settings
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.google.android.libraries.cloudtesting.screenshots.ScreenShotter
-import com.google.firebase.example.testlab.interfaces.MainActivityInterface
 import java.io.FileNotFoundException
 
-class MainActivity : AppCompatActivity(), MainActivityInterface {
-    private val TAG = "MainActivity"
+class MainActivity : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    companion object {
+        private val TAG = "MainActivity"
     }
 
-    override fun checkEnvironment() {
+    fun checkEnvironment() {
         // [START ftl_check_env]
         val testLabSetting = Settings.System.getString(contentResolver, "firebase.test.lab")
         if ("true" == testLabSetting) {
@@ -25,7 +22,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END ftl_check_env]
     }
 
-    override fun gameCheckIntent() {
+    fun gameCheckIntent() {
         // [START ftl_game_check_intent]
         val launchIntent = intent
         if (launchIntent.action == "com.google.intent.action.TEST_LOOP") {
@@ -35,14 +32,14 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END ftl_game_check_intent]
     }
 
-    override fun gameFinish() {
+    fun gameFinish() {
         val yourActivity = this
         // [START ftl_game_finish]
         yourActivity.finish()
         // [END ftl_game_finish]
     }
 
-    override fun gameOutputFile() {
+    fun gameOutputFile() {
         // [START ftl_game_output_file]
         val launchIntent = intent
         val logFile = launchIntent.data
@@ -54,7 +51,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
     }
 
     @Throws(FileNotFoundException::class)
-    override fun gameOutputFileDescriptor() {
+    fun gameOutputFileDescriptor() {
         // [START ftl_game_output_fd]
         val launchIntent = intent
         val logFile = launchIntent.data
@@ -81,14 +78,14 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END ftl_game_output_fd]
     }
 
-    override fun gameScenario() {
+    fun gameScenario() {
         // [START ftl_game_scenario]
         val launchIntent = intent
         val scenario = launchIntent.getIntExtra("scenario", 0)
         // [END ftl_game_scenario]
     }
 
-    override fun takeScreenshot() {
+    fun takeScreenshot() {
         // [START ftl_take_screenshot]
         ScreenShotter.takeScreenshot("main_screen_2", this /* activity */)
         // [END ftl_take_screenshot]

@@ -9,13 +9,12 @@ import com.facebook.AccessToken
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.*
 import com.google.firebase.quickstart.auth.R
-import com.google.firebase.quickstart.auth.interfaces.MainActivityInterface
 import java.util.concurrent.TimeUnit
 
 /**
  * Created by harshitdwivedi on 14/03/18.
  */
-class MainActivity : AppCompatActivity(), MainActivityInterface {
+abstract class MainActivity : AppCompatActivity() {
 
     private val TAG = "MainActivity"
 
@@ -24,7 +23,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         setContentView(R.layout.activity_main)
     }
 
-    override fun checkCurrentUser() {
+    fun checkCurrentUser() {
         // [START check_current_user]
         val user = FirebaseAuth.getInstance().currentUser
         if (user != null) {
@@ -35,7 +34,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END check_current_user]
     }
 
-    override fun getUserProfile() {
+    fun getUserProfile() {
         // [START get_user_profile]
         val user = FirebaseAuth.getInstance().currentUser
         user?.let {
@@ -55,7 +54,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END get_user_profile]
     }
 
-    override fun getProviderData() {
+    fun getProviderData() {
         // [START get_provider_data]
         val user = FirebaseAuth.getInstance().currentUser
         user?.let {
@@ -75,7 +74,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END get_provider_data]
     }
 
-    override fun updateProfile() {
+    fun updateProfile() {
         // [START update_profile]
         val user = FirebaseAuth.getInstance().currentUser
 
@@ -93,7 +92,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END update_profile]
     }
 
-    override fun updateEmail() {
+    fun updateEmail() {
         // [START update_email]
         val user = FirebaseAuth.getInstance().currentUser
 
@@ -106,7 +105,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END update_email]
     }
 
-    override fun updatePassword() {
+    fun updatePassword() {
         // [START update_password]
         val user = FirebaseAuth.getInstance().currentUser
         val newPassword = "SOME-SECURE-PASSWORD"
@@ -120,7 +119,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END update_password]
     }
 
-    override fun sendEmailVerification() {
+    fun sendEmailVerification() {
         // [START send_email_verification]
         val auth = FirebaseAuth.getInstance()
         val user = auth.currentUser
@@ -134,7 +133,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END send_email_verification]
     }
 
-    override fun sendEmailVerificationWithContinueUrl() {
+    fun sendEmailVerificationWithContinueUrl() {
         // [START send_email_verification_with_continue_url]
         val auth = FirebaseAuth.getInstance()
         val user = auth.currentUser
@@ -162,7 +161,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END localize_verification_email]
     }
 
-    override fun sendPasswordReset() {
+    fun sendPasswordReset() {
         // [START send_password_reset]
         val auth = FirebaseAuth.getInstance()
         val emailAddress = "user@example.com"
@@ -176,7 +175,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END send_password_reset]
     }
 
-    override fun deleteUser() {
+    fun deleteUser() {
         // [START delete_user]
         val user = FirebaseAuth.getInstance().currentUser
 
@@ -189,7 +188,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END delete_user]
     }
 
-    override fun reauthenticate() {
+    fun reauthenticate() {
         // [START reauthenticate]
         val user = FirebaseAuth.getInstance().currentUser
 
@@ -205,7 +204,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END reauthenticate]
     }
 
-    override fun authWithGithub() {
+    fun authWithGithub() {
         val mAuth = FirebaseAuth.getInstance()
 
         // [START auth_with_github]
@@ -229,7 +228,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END auth_with_github]
     }
 
-    override fun linkAndMerge(credential: AuthCredential) {
+    fun linkAndMerge(credential: AuthCredential) {
         val mAuth = FirebaseAuth.getInstance()
 
         // [START auth_link_and_merge]
@@ -243,7 +242,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END auth_link_and_merge]
     }
 
-    override fun unlink(providerId: String) {
+    fun unlink(providerId: String) {
         val mAuth = FirebaseAuth.getInstance()
 
         // [START auth_unlink]
@@ -257,7 +256,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END auth_unlink]
     }
 
-    override fun buildActionCodeSettings() {
+    fun buildActionCodeSettings() {
         // [START auth_build_action_code_settings]
         val actionCodeSettings = ActionCodeSettings.newBuilder()
                 // URL you want to redirect back to. The domain (www.example.com) for this
@@ -274,7 +273,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END auth_build_action_code_settings]
     }
 
-    override fun sendSignInLink(email: String, actionCodeSettings: ActionCodeSettings) {
+    fun sendSignInLink(email: String, actionCodeSettings: ActionCodeSettings) {
         // [START auth_send_sign_in_link]
         val auth = FirebaseAuth.getInstance()
         auth.sendSignInLinkToEmail(email, actionCodeSettings)
@@ -286,7 +285,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END auth_send_sign_in_link]
     }
 
-    override fun verifySignInLink() {
+    fun verifySignInLink() {
         // [START auth_verify_sign_in_link]
         val auth = FirebaseAuth.getInstance()
         val intent = intent
@@ -316,7 +315,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END auth_verify_sign_in_link]
     }
 
-    override fun linkWithSignInLink(email: String, emailLink: String) {
+    fun linkWithSignInLink(email: String, emailLink: String) {
         val auth = FirebaseAuth.getInstance()
 
         // [START auth_link_with_link]
@@ -341,7 +340,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END auth_link_with_link]
     }
 
-    override fun reauthWithLink(email: String, emailLink: String) {
+    fun reauthWithLink(email: String, emailLink: String) {
         val auth = FirebaseAuth.getInstance()
 
         // [START auth_reauth_with_link]
@@ -360,7 +359,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END auth_reauth_with_link]
     }
 
-    override fun differentiateLink(email: String) {
+    fun differentiateLink(email: String) {
         val auth = FirebaseAuth.getInstance()
 
         // [START auth_differentiate_link]
@@ -381,21 +380,21 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END auth_differentiate_link]
     }
 
-    override fun getGoogleCredentials() {
+    fun getGoogleCredentials() {
         val googleIdToken = ""
         // [START auth_google_cred]
         val credential = GoogleAuthProvider.getCredential(googleIdToken, null)
         // [END auth_google_cred]
     }
 
-    override fun getFbCredentials() {
+    fun getFbCredentials() {
         val token = AccessToken.getCurrentAccessToken()
         // [START auth_fb_cred]
         val credential = FacebookAuthProvider.getCredential(token.token)
         // [END auth_fb_cred]
     }
 
-    override fun getEmailCredentials() {
+    fun getEmailCredentials() {
         val email = ""
         val password = ""
         // [START auth_email_cred]
@@ -403,13 +402,13 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END auth_email_cred]
     }
 
-    override fun signOut() {
+    fun signOut() {
         // [START auth_sign_out]
         FirebaseAuth.getInstance().signOut()
         // [END auth_sign_out]
     }
 
-    override fun testPhoneVerify() {
+    fun testPhoneVerify() {
         // [START auth_test_phone_verify]
         val phoneNum = "+16505554567"
         val testVerificationCode = "123456"
@@ -446,7 +445,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // No-op
     }
 
-    override fun testPhoneAutoRetrieve() {
+    fun testPhoneAutoRetrieve() {
         // [START auth_test_phone_auto]
         // The test phone number and code should be whitelisted in the console.
         val phoneNumber = "+16505554567"

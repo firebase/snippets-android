@@ -11,13 +11,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.quickstart.auth.interfaces.FirebaseUIActivityInterface;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class FirebaseUIActivity extends AppCompatActivity implements FirebaseUIActivityInterface {
+public class FirebaseUIActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 123;
 
@@ -27,7 +26,6 @@ public class FirebaseUIActivity extends AppCompatActivity implements FirebaseUIA
         setContentView(R.layout.activity_firebase_ui);
     }
 
-    @Override
     public void createSignInIntent() {
         // [START auth_fui_create_intent]
         // Choose authentication providers
@@ -70,7 +68,6 @@ public class FirebaseUIActivity extends AppCompatActivity implements FirebaseUIA
     }
     // [END auth_fui_result]
 
-    @Override
     public void signOut() {
         // [START auth_fui_signout]
         AuthUI.getInstance()
@@ -83,7 +80,6 @@ public class FirebaseUIActivity extends AppCompatActivity implements FirebaseUIA
         // [END auth_fui_signout]
     }
 
-    @Override
     public void delete() {
         // [START auth_fui_delete]
         AuthUI.getInstance()
@@ -97,7 +93,6 @@ public class FirebaseUIActivity extends AppCompatActivity implements FirebaseUIA
         // [END auth_fui_delete]
     }
 
-    @Override
     public void themeAndLogo() {
         List<AuthUI.IdpConfig> providers = Collections.emptyList();
 
@@ -113,7 +108,6 @@ public class FirebaseUIActivity extends AppCompatActivity implements FirebaseUIA
         // [END auth_fui_theme_logo]
     }
 
-    @Override
     public void privacyAndTerms() {
         List<AuthUI.IdpConfig> providers = Collections.emptyList();
         // [START auth_fui_pp_tos]

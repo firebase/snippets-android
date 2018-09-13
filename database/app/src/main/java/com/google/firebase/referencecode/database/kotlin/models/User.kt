@@ -1,4 +1,4 @@
-package com.google.firebase.referencecode.database.models.kotlin
+package com.google.firebase.referencecode.database.kotlin.models
 
 import com.google.firebase.database.IgnoreExtraProperties
 

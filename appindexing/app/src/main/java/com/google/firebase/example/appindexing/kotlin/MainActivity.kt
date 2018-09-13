@@ -1,21 +1,16 @@
 package com.google.firebase.example.appindexing.kotlin
 
-import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.google.firebase.appindexing.Action
 import com.google.firebase.appindexing.FirebaseAppIndex
 import com.google.firebase.appindexing.FirebaseUserActions
 import com.google.firebase.appindexing.builders.Indexables
-import com.google.firebase.example.appindexing.interfaces.MainActivityInterface
 import com.google.firebase.example.appindexing.model.Note
 import com.google.firebase.example.appindexing.model.Recipe
 
-class MainActivity : AppCompatActivity(), MainActivityInterface {
-    lateinit var mNote: Note
+class MainActivity : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    private lateinit var note: Note
 
     // [START appindexing_onstart_onstop]
     override fun onStart() {
@@ -34,7 +29,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
     // [END appindexing_onstart_onstop]
 
     // [START appindexing_instantaneous]
-    override fun displayNoteDialog(positiveText: String, negativeText: String) {
+    fun displayNoteDialog(positiveText: String, negativeText: String) {
         // ...
 
         // If you’re logging an action on content that hasn’t been added to the index yet,
@@ -45,9 +40,9 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // ...
     }
 
-    override fun getNoteCommentAction(): Action {
+    fun getNoteCommentAction(): Action {
         return Action.Builder(Action.Builder.COMMENT_ACTION)
-                .setObject(mNote.title, mNote.noteUrl)
+                .setObject(note.title, note.noteUrl)
                 // Keep action data for personal connulltent on the device
                 .setMetadata(Action.Metadata.Builder().setUpload(false))
                 .build()
@@ -55,7 +50,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
     // [END appindexing_instantaneous]
 
     // [START appindexing_update]
-    override fun indexNote(recipe: Recipe) {
+    fun indexNote(recipe: Recipe) {
         val note = recipe.note
         val noteToIndex = Indexables.noteDigitalDocumentBuilder()
                 .setName(recipe.title)
@@ -68,13 +63,13 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
     }
     // [END appindexing_update]
 
-    override fun removeAll() {
+    fun removeAll() {
         // [START appindexing_remove_all]
         FirebaseAppIndex.getInstance().removeAll()
         // [END appindexing_remove_all]
     }
 
-    override fun getRecipeViewAction(): Action? {
+    fun getRecipeViewAction(): Action? {
         // This is just to make some things compile.
         return null
     }

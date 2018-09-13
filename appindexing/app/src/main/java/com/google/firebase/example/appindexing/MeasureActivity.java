@@ -8,10 +8,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.google.firebase.appindexing.AndroidAppUri;
-import com.google.firebase.example.appindexing.interfaces.MeasureActivityInterface;
 
 // [START appindexing_measure_activity]
-public class MeasureActivity extends AppCompatActivity implements MeasureActivityInterface {
+public class MeasureActivity extends AppCompatActivity {
 
     @Override
     public Uri getReferrer() {

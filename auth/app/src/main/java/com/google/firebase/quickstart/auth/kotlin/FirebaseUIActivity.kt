@@ -8,17 +8,16 @@ import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.quickstart.auth.R
-import com.google.firebase.quickstart.auth.interfaces.FirebaseUIActivityInterface
 import java.util.*
 
-class FirebaseUIActivity : AppCompatActivity(), FirebaseUIActivityInterface {
+abstract class FirebaseUIActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_firebase_ui)
     }
 
-    override fun createSignInIntent() {
+    fun createSignInIntent() {
         // [START auth_fui_create_intent]
         // Choose authentication providers
         val providers = Arrays.asList<AuthUI.IdpConfig>(
@@ -59,7 +58,7 @@ class FirebaseUIActivity : AppCompatActivity(), FirebaseUIActivityInterface {
     }
     // [END auth_fui_result]
 
-    override fun signOut() {
+    fun signOut() {
         // [START auth_fui_signout]
         AuthUI.getInstance()
                 .signOut(this)
@@ -69,7 +68,7 @@ class FirebaseUIActivity : AppCompatActivity(), FirebaseUIActivityInterface {
         // [END auth_fui_signout]
     }
 
-    override fun delete() {
+    fun delete() {
         // [START auth_fui_delete]
         AuthUI.getInstance()
                 .delete(this)
@@ -79,7 +78,7 @@ class FirebaseUIActivity : AppCompatActivity(), FirebaseUIActivityInterface {
         // [END auth_fui_delete]
     }
 
-    override fun themeAndLogo() {
+    fun themeAndLogo() {
         val providers = emptyList<AuthUI.IdpConfig>()
 
         // [START auth_fui_theme_logo]
@@ -94,7 +93,7 @@ class FirebaseUIActivity : AppCompatActivity(), FirebaseUIActivityInterface {
         // [END auth_fui_theme_logo]
     }
 
-    override fun privacyAndTerms() {
+    fun privacyAndTerms() {
         val providers = emptyList<AuthUI.IdpConfig>()
         // [START auth_fui_pp_tos]
         startActivityForResult(

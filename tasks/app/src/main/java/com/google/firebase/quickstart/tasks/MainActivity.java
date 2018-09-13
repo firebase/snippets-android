@@ -29,7 +29,6 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
-import com.google.firebase.quickstart.tasks.interfaces.MainActivityInterface;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -37,7 +36,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-public class MainActivity extends AppCompatActivity implements MainActivityInterface {
+public class MainActivity extends AppCompatActivity {
 
     // [START basic_sign_in_task]
     Task<AuthResult> task = FirebaseAuth.getInstance().signInAnonymously();
@@ -49,7 +48,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         setContentView(R.layout.activity_main);
     }
 
-    @Override
     public void basicTaskHandlers() {
         // [START success_listener]
         task.addOnSuccessListener(new OnSuccessListener<AuthResult>() {
@@ -107,7 +105,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         // [END listener_try_catch]
     }
 
-    @Override
     public void taskOnExecutor() {
         // [START create_handler_and_executor]
         // Create a new ThreadPoolExecutor with 2 threads for each processor on the
@@ -127,7 +124,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         // [END run_task_executor]
     }
 
-    @Override
     public void activityScopedTask() {
         // [START activity_scoped]
         Activity activity = MainActivity.this;
@@ -140,7 +136,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         // [END activity_scoped]
     }
 
-    @Override
     // [START string_task_method]
     public Task<String> doSomething(AuthResult authResult) {
         // [START_EXCLUDE]
@@ -149,7 +144,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
     }
     // [END string_task_method]
 
-    @Override
     public void taskChaining() {
         // [START task_chaining]
         Task<AuthResult> signInTask = FirebaseAuth.getInstance().signInAnonymously();
@@ -177,7 +171,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         // [END task_chaining]
     }
 
-    @Override
     public void blockingTask() {
         // [START blocking_task]
         try {

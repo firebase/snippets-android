@@ -2,7 +2,6 @@ package com.google.example.firestore.kotlin
 
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
-import com.google.example.firestore.interfaces.SolutionCountersInterface
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
@@ -10,16 +9,14 @@ import java.util.*
 /**
  * https://firebase.google.com/docs/firestore/solutions/counters
  */
-class SolutionCounters : SolutionCountersInterface {
-
-    private val db: FirebaseFirestore? = null
+class SolutionCounters(val db: FirebaseFirestore) {
 
     // [START counter_classes]
     // counters/${ID}
-    inner class Counter(internal var numShards: Int)
+    data class Counter(var numShards: Int)
 
     // counters/${ID}/shards/${NUM}
-    inner class Shard(internal var count: Int)
+    data class Shard(var count: Int)
     // [END counter_classes]
 
     // [START create_counter]
@@ -52,7 +49,7 @@ class SolutionCounters : SolutionCountersInterface {
         val shardId = Math.floor(Math.random() * numShards).toInt()
         val shardRef = ref.collection("shards").document(shardId.toString())
 
-        return db!!.runTransaction { transaction ->
+        return db.runTransaction { transaction ->
             val shard = transaction.get(shardRef).toObject(Shard::class.java)
             shard!!.count += 1
 

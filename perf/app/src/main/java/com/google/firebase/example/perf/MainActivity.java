@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.example.perf.interfaces.MainActivityInterface;
 import com.google.firebase.example.perf.kotlin.model.Item;
 import com.google.firebase.example.perf.kotlin.model.ItemCache;
 import com.google.firebase.example.perf.kotlin.model.User;
@@ -25,7 +24,7 @@ import java.util.Map;
 
 import devrel.firebase.google.com.firebaseoptions.R;
 
-public class MainActivity extends AppCompatActivity implements MainActivityInterface {
+public class MainActivity extends AppCompatActivity {
 
     // [START perf_traced_create]
     @Override

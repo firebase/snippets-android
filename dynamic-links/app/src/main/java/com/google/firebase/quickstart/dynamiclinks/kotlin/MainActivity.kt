@@ -9,16 +9,15 @@ import com.google.firebase.dynamiclinks.DynamicLink
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.google.firebase.dynamiclinks.ShortDynamicLink
 import com.google.firebase.quickstart.dynamiclinks.R
-import com.google.firebase.quickstart.dynamiclinks.interfaces.MainActivityInterface
 
-class MainActivity : AppCompatActivity(), MainActivityInterface {
+abstract class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
     }
 
-    override fun createDynamicLink_Basic() {
+    fun createDynamicLink_Basic() {
         // [START create_link_basic]
         val dynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
                 .setLink(Uri.parse("https://www.example.com/"))
@@ -33,7 +32,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END create_link_basic]
     }
 
-    override fun createDynamicLink_Advanced() {
+    fun createDynamicLink_Advanced() {
         // [START create_link_advanced]
         val dynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
                 .setLink(Uri.parse("https://www.example.com/"))
@@ -67,7 +66,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END create_link_advanced]
     }
 
-    override fun createShortLink() {
+    fun createShortLink() {
         // [START create_short_link]
         val shortLinkTask = FirebaseDynamicLinks.getInstance().createDynamicLink()
                 .setLink(Uri.parse("https://www.example.com/"))
@@ -88,7 +87,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END create_short_link]
     }
 
-    override fun shortenLongLink() {
+    fun shortenLongLink() {
         // [START shorten_long_link]
         val shortLinkTask = FirebaseDynamicLinks.getInstance().createDynamicLink()
                 .setLongLink(Uri.parse("https://example.page.link/?link=https://www.example.com/&apn=com.example.android&ibn=com.example.ios"))
@@ -106,7 +105,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END shorten_long_link]
     }
 
-    override fun shareLink(myDynamicLink: Uri) {
+    fun shareLink(myDynamicLink: Uri) {
         // [START ddl_share_link]
         val sendIntent = Intent()
         val msg = "Hey, check this out: $myDynamicLink"
@@ -117,7 +116,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END ddl_share_link]
     }
 
-    override fun getInvitation() {
+    fun getInvitation() {
         // [START ddl_get_invitation]
         FirebaseDynamicLinks.getInstance()
                 .getDynamicLink(intent)
@@ -136,7 +135,7 @@ class MainActivity : AppCompatActivity(), MainActivityInterface {
         // [END ddl_get_invitation]
     }
 
-    override fun onboardingShare(dl: ShortDynamicLink) {
+    fun onboardingShare(dl: ShortDynamicLink) {
         // [START ddl_onboarding_share]
         val intent = Intent(Intent.ACTION_SEND)
         intent.type = "text/plain"

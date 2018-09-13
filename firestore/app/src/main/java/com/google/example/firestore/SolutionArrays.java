@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.example.firestore.interfaces.SolutionArraysInterface;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -16,7 +15,7 @@ import java.util.Map;
 /**
  * https://firebase.google.com/docs/firestore/solutions/arrays
  */
-public class SolutionArrays implements SolutionArraysInterface {
+public class SolutionArrays {
 
     private FirebaseFirestore db;
 
@@ -58,7 +57,6 @@ public class SolutionArrays implements SolutionArraysInterface {
     // [END map_post_class_advanced]
 
 
-    @Override
     public void examplePosts() {
         // [START example_array_post]
         ArrayPost myArrayPost = new ArrayPost("My great post", Arrays.asList(
@@ -75,7 +73,6 @@ public class SolutionArrays implements SolutionArraysInterface {
         // [END example_map_post]
     }
 
-    @Override
     public void examplePosts_Advanced() {
         // [START example_map_post_advanced]
         Map<String, Long> categories = new HashMap<>();
@@ -86,7 +83,6 @@ public class SolutionArrays implements SolutionArraysInterface {
         // [END example_map_post_advanced]
     }
 
-    @Override
     public void queryForCats() {
         // [START query_for_cats]
         db.collection("posts")
@@ -101,7 +97,6 @@ public class SolutionArrays implements SolutionArraysInterface {
         // [END query_for_cats]
     }
 
-    @Override
     public void queryForCatsTimestamp() {
         // [START query_for_cats_timestamp_invalid]
         db.collection("posts")

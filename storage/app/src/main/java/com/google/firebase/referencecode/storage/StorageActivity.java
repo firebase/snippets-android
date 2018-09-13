@@ -30,7 +30,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.referencecode.storage.interfaces.StorageActivityInterface;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnPausedListener;
@@ -47,7 +46,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class StorageActivity extends AppCompatActivity implements StorageActivityInterface {
+public class StorageActivity extends AppCompatActivity {
     // [START storage_field_declaration]
     // [END storage_field_declaration]
 
@@ -64,7 +63,6 @@ public class StorageActivity extends AppCompatActivity implements StorageActivit
         includesForCreateReference();
     }
 
-    @Override
     public void includesForCreateReference() {
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
@@ -147,7 +145,6 @@ public class StorageActivity extends AppCompatActivity implements StorageActivit
         // [END reference_full_example]
     }
 
-    @Override
     public void includesForUploadFiles() throws FileNotFoundException {
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
@@ -336,7 +333,6 @@ public class StorageActivity extends AppCompatActivity implements StorageActivit
         // [END upload_get_download_url]
     }
 
-    @Override
     public void includesForDownloadFiles() throws IOException {
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
@@ -419,7 +415,6 @@ public class StorageActivity extends AppCompatActivity implements StorageActivit
         // [END download_full_example]
     }
 
-    @Override
     public void includesForFileMetadata() {
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
@@ -470,7 +465,6 @@ public class StorageActivity extends AppCompatActivity implements StorageActivit
         // [END update_file_metadata]
     }
 
-    @Override
     public void includesForMetadata_delete() {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
@@ -499,7 +493,6 @@ public class StorageActivity extends AppCompatActivity implements StorageActivit
         // [END delete_file_metadata]
     }
 
-    @Override
     public void includesForMetadata_custom() {
         // [START custom_metadata]
         StorageMetadata metadata = new StorageMetadata.Builder()
@@ -509,7 +502,6 @@ public class StorageActivity extends AppCompatActivity implements StorageActivit
         // [END custom_metadata]
     }
 
-    @Override
     public void includesForDeleteFiles() {
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
@@ -535,7 +527,6 @@ public class StorageActivity extends AppCompatActivity implements StorageActivit
         // [END delete_file]
     }
 
-    @Override
     public void nonDefaultBucket() {
         // [START storage_non_default_bucket]
         // Get a non-default Storage bucket
@@ -543,7 +534,6 @@ public class StorageActivity extends AppCompatActivity implements StorageActivit
         // [END storage_non_default_bucket]
     }
 
-    @Override
     public void customApp() {
         FirebaseApp customApp = FirebaseApp.initializeApp(this);
 

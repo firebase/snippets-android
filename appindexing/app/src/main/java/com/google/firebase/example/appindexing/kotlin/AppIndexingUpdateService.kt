@@ -6,17 +6,21 @@ import android.support.v4.app.JobIntentService
 import com.google.firebase.appindexing.FirebaseAppIndex
 import com.google.firebase.appindexing.Indexable
 import com.google.firebase.appindexing.builders.Indexables
-import com.google.firebase.example.appindexing.AppIndexingUpdateService
 import com.google.firebase.example.appindexing.model.Recipe
 import java.util.*
 
 // [START appindexing_update_service]
 class AppIndexingUpdateService : JobIntentService() {
-    // Job-ID must be unique across your whole app.
-    private val UNIQUE_JOB_ID = 42
 
-    fun enqueueWork(context: Context) {
-        JobIntentService.enqueueWork(context, AppIndexingUpdateService::class.java, UNIQUE_JOB_ID, Intent())
+    companion object {
+
+        // Job-ID must be unique across your whole app.
+        private const val UNIQUE_JOB_ID = 42;
+
+        fun enqueueWork(context: Context) {
+            JobIntentService.enqueueWork(context, AppIndexingUpdateService::class.java, UNIQUE_JOB_ID, Intent())
+        }
+
     }
 
     override fun onHandleWork(intent: Intent) {

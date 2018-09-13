@@ -9,11 +9,10 @@ import com.google.firebase.appindexing.FirebaseAppIndex;
 import com.google.firebase.appindexing.FirebaseUserActions;
 import com.google.firebase.appindexing.Indexable;
 import com.google.firebase.appindexing.builders.Indexables;
-import com.google.firebase.example.appindexing.interfaces.MainActivityInterface;
 import com.google.firebase.example.appindexing.model.Note;
 import com.google.firebase.example.appindexing.model.Recipe;
 
-public class MainActivity extends AppCompatActivity implements MainActivityInterface {
+public class MainActivity extends AppCompatActivity {
 
     private Note mNote;
 

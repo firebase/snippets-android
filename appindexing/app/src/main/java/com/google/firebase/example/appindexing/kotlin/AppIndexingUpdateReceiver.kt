@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.google.firebase.appindexing.FirebaseAppIndex
-import com.google.firebase.example.appindexing.AppIndexingUpdateService
 
 // [START appindexing_update_receiver]
 /** Receives broadcast for App Indexing Update. */

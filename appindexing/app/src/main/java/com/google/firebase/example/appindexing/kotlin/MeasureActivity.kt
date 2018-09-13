@@ -6,10 +6,9 @@ import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.google.firebase.appindexing.AndroidAppUri
-import com.google.firebase.example.appindexing.interfaces.MeasureActivityInterface
 
 // [START appindexing_measure_activity]
-class MeasureActivity : AppCompatActivity(), MeasureActivityInterface {
+class MeasureActivity : AppCompatActivity() {
 
     override fun getReferrer() : Uri? {
 
@@ -19,7 +18,7 @@ class MeasureActivity : AppCompatActivity(), MeasureActivityInterface {
         }
 
         val intent = intent
-        val referrer = intent?.extras?.get("android.intent.extra.REFERRER") as Uri
+        val referrer = intent?.extras?.get("android.intent.extra.REFERRER") as Uri?
         if (referrer != null) {
             return referrer
         }

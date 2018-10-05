@@ -19,11 +19,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
@@ -39,6 +42,7 @@ import com.google.firebase.auth.GithubAuthProvider;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.auth.PlayGamesAuthProvider;
 import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.auth.UserInfo;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -571,5 +575,62 @@ public class MainActivity extends AppCompatActivity {
                     // [END_EXCLUDE]
                 });
         // [END auth_test_phone_auto]
+    }
+
+    public void gamesMakeGoogleSignInOptions() {
+        // [START games_google_signin_options]
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN)
+                .requestServerAuthCode(getString(R.string.default_web_client_id))
+                .build();
+        // [END games_google_signin_options]
+    }
+
+    // [START games_auth_with_firebase]
+    // Call this both in the silent sign-in task's OnCompleteListener and in the
+    // Activity's onActivityResult handler.
+    private void firebaseAuthWithPlayGames(GoogleSignInAccount acct) {
+        Log.d(TAG, "firebaseAuthWithPlayGames:" + acct.getId());
+
+        final FirebaseAuth auth = FirebaseAuth.getInstance();
+        AuthCredential credential = PlayGamesAuthProvider.getCredential(acct.getServerAuthCode());
+        auth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithCredential:success");
+                            FirebaseUser user = auth.getCurrentUser();
+                            updateUI(user);
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+                            Toast.makeText(MainActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                            updateUI(null);
+                        }
+
+                        // ...
+                    }
+                });
+    }
+    // [END games_auth_with_firebase]
+
+    private void gamesGetUserInfo() {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+        // [START games_get_user_info]
+        FirebaseUser user = mAuth.getCurrentUser();
+        String playerName = user.getDisplayName();
+
+        // The user's Id, unique to the Firebase project.
+        // Do NOT use this value to authenticate with your backend server, if you
+        // have one; use FirebaseUser.getIdToken() instead.
+        String uid = user.getUid();
+        // [END games_get_user_info]
+    }
+
+    private void updateUI(@Nullable FirebaseUser user) {
+        // No-op
     }
 }

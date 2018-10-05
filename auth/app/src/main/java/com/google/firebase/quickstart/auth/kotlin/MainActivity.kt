@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.Toast
 import com.facebook.AccessToken
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.*
 import com.google.firebase.quickstart.auth.R
@@ -157,7 +159,7 @@ abstract class MainActivity : AppCompatActivity() {
         // [START localize_verification_email]
         auth.setLanguageCode("fr")
         // To apply the default app language instead of explicitly setting it.
-        // auth.useAppLanguage();
+        // auth.useAppLanguage()
         // [END localize_verification_email]
     }
 
@@ -476,6 +478,63 @@ abstract class MainActivity : AppCompatActivity() {
                     // [END_EXCLUDE]
                 })
         // [END auth_test_phone_auto]
+    }
+
+    fun gamesMakeGoogleSignInOptions() {
+        // [START games_google_signin_options]
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN)
+                .requestServerAuthCode(getString(R.string.default_web_client_id))
+                .build()
+        // [END games_google_signin_options]
+    }
+
+    // [START games_auth_with_firebase]
+    // Call this both in the silent sign-in task's OnCompleteListener and in the
+    // Activity's onActivityResult handler.
+    private fun firebaseAuthWithPlayGames(acct: GoogleSignInAccount) {
+        Log.d(TAG, "firebaseAuthWithPlayGames:" + acct.id!!)
+
+        val auth = FirebaseAuth.getInstance()
+        val credential = PlayGamesAuthProvider.getCredential(acct.serverAuthCode!!)
+        auth.signInWithCredential(credential)
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(TAG, "signInWithCredential:success")
+                        val user = auth.currentUser
+                        updateUI(user)
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w(TAG, "signInWithCredential:failure", task.exception)
+                        Toast.makeText(this@MainActivity, "Authentication failed.",
+                                Toast.LENGTH_SHORT).show()
+                        updateUI(null)
+                    }
+
+                    // ...
+                }
+    }
+    // [END games_auth_with_firebase]
+
+    private fun gamesGetUserInfo() {
+        val auth = FirebaseAuth.getInstance()
+
+        // [START games_get_user_info]
+        val user = auth.currentUser
+        user?.let {
+            val playerName = user.displayName
+
+            // The user's Id, unique to the Firebase project.
+            // Do NOT use this value to authenticate with your backend server, if you
+            // have one; use FirebaseUser.getIdToken() instead.
+            val uid = user.uid
+        }
+
+        // [END games_get_user_info]
+    }
+
+    private fun updateUI(user: FirebaseUser?) {
+        // No-op
     }
 
 }

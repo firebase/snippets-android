@@ -107,7 +107,6 @@ public class MainActivity extends AppCompatActivity {
                 String email = profile.getEmail();
                 Uri photoUrl = profile.getPhotoUrl();
             }
-            ;
         }
         // [END get_provider_data]
     }

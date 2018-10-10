@@ -56,8 +56,8 @@ public class VisionImage {
 
     private void imageFromArray(byte[] byteArray, int rotation) {
         FirebaseVisionImageMetadata metadata = new FirebaseVisionImageMetadata.Builder()
-                .setWidth(1280)
-                .setHeight(720)
+                .setWidth(480)   // 480x360 is typically sufficient for
+                .setHeight(360)  // image recognition
                 .setFormat(FirebaseVisionImageMetadata.IMAGE_FORMAT_NV21)
                 .setRotation(rotation)
                 .build();

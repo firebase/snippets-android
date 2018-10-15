@@ -15,6 +15,5 @@ class AppIndexingUpdateReceiver : BroadcastReceiver() {
             AppIndexingUpdateService.enqueueWork(context)
         }
     }
-
 }
 // [END appindexing_update_receiver]

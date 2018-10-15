@@ -34,23 +34,22 @@ abstract class UploadActivity : AppCompatActivity() {
         super.onRestoreInstanceState(savedInstanceState)
 
         // If there was an upload in progress, get its reference and create a new StorageReference
-        val stringRef = savedInstanceState.getString("reference")
-        if (stringRef == null) {
-            return
-        }
+        val stringRef = savedInstanceState.getString("reference") ?: return
 
         storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(stringRef)
 
         // Find all UploadTasks under this StorageReference (in this example, there should be one)
-        val tasks = storageRef!!.activeUploadTasks
-        if (tasks.size > 0) {
-            // Get the task monitoring the upload
-            val task = tasks[0]
 
-            // Add new listeners to the task using an Activity scope
-            task.addOnSuccessListener(this) {
-                // Success!
-                // ...
+        storageRef?.activeUploadTasks?.let { it ->
+            if (it.size > 0) {
+                // Get the task monitoring the upload
+                val task = it[0]
+
+                // Add new listeners to the task using an Activity scope
+                task.addOnSuccessListener(this) {
+                    // Success!
+                    // ...
+                }
             }
         }
     }
@@ -74,8 +73,8 @@ abstract class UploadActivity : AppCompatActivity() {
         // [END save_before_restart]
 
         // [START restore_after_restart]
-        //resume the upload task from where it left off when the process died.
-        //to do this, pass the sessionUri as the last parameter
+        // resume the upload task from where it left off when the process died.
+        // to do this, pass the sessionUri as the last parameter
         uploadTask = storageRef!!.putFile(localFile,
                 StorageMetadata.Builder().build(), sessionUri)
         // [END restore_after_restart]

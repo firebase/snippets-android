@@ -10,22 +10,21 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
     }
 
-    fun logSimple() {
+    private fun logSimple() {
         // [START crash_log_simple]
         FirebaseCrash.log("Activity created")
         // [END crash_log_simple]
     }
 
-    fun disableCollection() {
+    private fun disableCollection() {
         // [START crash_disable_collection]
         FirebaseCrash.setCrashCollectionEnabled(false)
         // [END crash_disable_collection]
     }
 
-    fun enableCollection() {
+    private fun enableCollection() {
         // [START crash_enable_collection]
         FirebaseCrash.setCrashCollectionEnabled(true)
         // [END crash_enable_collection]
     }
-
 }

@@ -4,7 +4,6 @@ import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
-import java.util.*
 
 /**
  * https://firebase.google.com/docs/firestore/solutions/counters
@@ -25,10 +24,10 @@ class SolutionCounters(val db: FirebaseFirestore) {
         return ref.set(Counter(numShards))
                 .continueWithTask { task ->
                     if (!task.isSuccessful) {
-                        throw task.getException()!!
+                        throw task.exception!!
                     }
 
-                    val tasks = ArrayList<Task<Void>>()
+                    val tasks = arrayListOf<Task<Void>>()
 
                     // Initialize each shard with count=0
                     for (i in 0 until numShards) {
@@ -73,5 +72,4 @@ class SolutionCounters(val db: FirebaseFirestore) {
                 }
     }
     // [END get_count]
-
 }

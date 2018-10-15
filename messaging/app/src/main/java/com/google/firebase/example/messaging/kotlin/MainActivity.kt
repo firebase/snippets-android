@@ -14,12 +14,13 @@ import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.*
+
 import java.util.concurrent.atomic.AtomicInteger
 
 class MainActivity : AppCompatActivity() {
 
     companion object {
-        private val TAG = "MainActivity"
+        private const val TAG = "MainActivity"
     }
 
     fun runtimeEnableAutoInit() {
@@ -70,7 +71,11 @@ class MainActivity : AppCompatActivity() {
     // [START fcm_add_to_group]
     @Throws(IOException::class, JSONException::class)
     fun addToGroup(
-            senderId: String, userEmail: String, registrationId: String, idToken: String): String {
+        senderId: String,
+        userEmail: String,
+        registrationId: String,
+        idToken: String
+    ): String {
         val url = URL("https://fcm.googleapis.com/fcm/googlenotification")
         val con = url.openConnection() as HttpURLConnection
         con.doOutput = true
@@ -86,7 +91,7 @@ class MainActivity : AppCompatActivity() {
         val data = JSONObject()
         data.put("operation", "add")
         data.put("notification_key_name", userEmail)
-        data.put("registration_ids", JSONArray(Arrays.asList(registrationId)))
+        data.put("registration_ids", JSONArray(arrayListOf(registrationId)))
         data.put("id_token", idToken)
 
         val os = con.outputStream
@@ -111,7 +116,7 @@ class MainActivity : AppCompatActivity() {
         val data = JSONObject()
         data.put("operation", "remove")
         data.put("notification_key_name", userEmail)
-        data.put("registration_ids", JSONArray(Arrays.asList(registrationId)))
+        data.put("registration_ids", JSONArray(arrayListOf(registrationId)))
         data.put("id_token", idToken)
         // [END fcm_remove_from_group]
     }

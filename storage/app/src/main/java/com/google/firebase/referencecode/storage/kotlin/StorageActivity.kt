@@ -5,13 +5,13 @@ import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.widget.ImageView
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseApp
 import com.google.firebase.referencecode.storage.R
 import com.google.firebase.storage.*
+import kotlinx.android.synthetic.main.activity_storage.*
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
@@ -33,7 +33,7 @@ abstract class StorageActivity : AppCompatActivity() {
         includesForCreateReference()
     }
 
-    fun includesForCreateReference() {
+    private fun includesForCreateReference() {
         val storage = FirebaseStorage.getInstance()
 
         // ## Create a Reference
@@ -133,9 +133,6 @@ abstract class StorageActivity : AppCompatActivity() {
         mountainsRef.path == mountainImagesRef.path    // false
         // [END upload_create_reference]
 
-
-        val imageView = findViewById<ImageView>(android.R.id.text1)
-
         // [START upload_memory]
         // Get the data from an ImageView as bytes
         imageView.isDrawingCacheEnabled = true
@@ -146,9 +143,9 @@ abstract class StorageActivity : AppCompatActivity() {
         val data = baos.toByteArray()
 
         var uploadTask = mountainsRef.putBytes(data)
-        uploadTask.addOnFailureListener { exception ->
+        uploadTask.addOnFailureListener {
             // Handle unsuccessful uploads
-        }.addOnSuccessListener { taskSnapshot ->
+        }.addOnSuccessListener {
             // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
             // ...
         }
@@ -158,9 +155,9 @@ abstract class StorageActivity : AppCompatActivity() {
         val stream = FileInputStream(File("path/to/images/rivers.jpg"))
 
         uploadTask = mountainsRef.putStream(stream)
-        uploadTask.addOnFailureListener { exception ->
+        uploadTask.addOnFailureListener {
             // Handle unsuccessful uploads
-        }.addOnSuccessListener { taskSnapshot ->
+        }.addOnSuccessListener {
             // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
             // ...
         }
@@ -172,9 +169,9 @@ abstract class StorageActivity : AppCompatActivity() {
         uploadTask = riversRef.putFile(file)
 
         // Register observers to listen for when the download is done or if it fails
-        uploadTask.addOnFailureListener { exception ->
+        uploadTask.addOnFailureListener {
             // Handle unsuccessful uploads
-        }.addOnSuccessListener { taskSnapshot ->
+        }.addOnSuccessListener {
             // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
             // ...
         }
@@ -208,7 +205,7 @@ abstract class StorageActivity : AppCompatActivity() {
         uploadTask.addOnProgressListener { taskSnapshot ->
             val progress = (100.0 * taskSnapshot.bytesTransferred) / taskSnapshot.totalByteCount
             System.out.println("Upload is $progress% done")
-        }.addOnPausedListener { taskSnapshot ->
+        }.addOnPausedListener {
             System.out.println("Upload is paused")
         }
         // [END monitor_upload_progress]
@@ -229,11 +226,11 @@ abstract class StorageActivity : AppCompatActivity() {
         uploadTask.addOnProgressListener { taskSnapshot ->
             val progress = (100.0 * taskSnapshot.bytesTransferred) / taskSnapshot.totalByteCount
             System.out.println("Upload is $progress% done")
-        }.addOnPausedListener { taskSnapshot ->
+        }.addOnPausedListener {
             System.out.println("Upload is paused")
-        }.addOnFailureListener{ exception ->
+        }.addOnFailureListener {
             // Handle unsuccessful uploads
-        }.addOnSuccessListener { taskSnapshot ->
+        }.addOnSuccessListener {
             // Handle successful uploads on complete
             // ...
         }
@@ -283,9 +280,9 @@ abstract class StorageActivity : AppCompatActivity() {
         var islandRef = storageRef.child("images/island.jpg")
 
         val ONE_MEGABYTE: Long = 1024 * 1024
-        islandRef.getBytes(ONE_MEGABYTE).addOnSuccessListener { bytes ->
+        islandRef.getBytes(ONE_MEGABYTE).addOnSuccessListener {
             // Data for "images/island.jpg" is returned, use this as needed
-        }.addOnFailureListener { exception ->
+        }.addOnFailureListener {
             // Handle any errors
         }
         // [END download_to_memory]
@@ -295,25 +292,25 @@ abstract class StorageActivity : AppCompatActivity() {
 
         val localFile = File.createTempFile("images", "jpg")
 
-        islandRef.getFile(localFile).addOnSuccessListener { taskSnapshot ->
+        islandRef.getFile(localFile).addOnSuccessListener {
             // Local temp file has been created
-        }.addOnFailureListener{ exception ->
+        }.addOnFailureListener {
             // Handle any errors
         }
         // [END download_to_local_file]
 
         // [START download_via_url]
-        storageRef.child("users/me/profile.png").downloadUrl.addOnSuccessListener { uri ->
+        storageRef.child("users/me/profile.png").downloadUrl.addOnSuccessListener {
             // Got the download URL for 'users/me/profile.png'
-        }.addOnFailureListener { exception ->
+        }.addOnFailureListener {
             // Handle any errors
         }
         // [END download_via_url]
 
         // [START download_full_example]
-        storageRef.child("users/me/profile.png").getBytes(Long.MAX_VALUE).addOnSuccessListener { bytes ->
+        storageRef.child("users/me/profile.png").getBytes(Long.MAX_VALUE).addOnSuccessListener {
             // Use the bytes to display the image
-        }.addOnFailureListener { exception ->
+        }.addOnFailureListener {
             // Handle any errors
         }
         // [END download_full_example]
@@ -330,11 +327,10 @@ abstract class StorageActivity : AppCompatActivity() {
         val forestRef = storageRef.child("images/forest.jpg")
         // [END metadata_get_storage_reference]
 
-
         // [START get_file_metadata]
-        forestRef.metadata.addOnSuccessListener { storageMetadata ->
+        forestRef.metadata.addOnSuccessListener {
             // Metadata now contains the metadata for 'images/forest.jpg'
-        }.addOnFailureListener { exception ->
+        }.addOnFailureListener {
             // Uh-oh, an error occurred!
         }
         // [END get_file_metadata]
@@ -347,9 +343,9 @@ abstract class StorageActivity : AppCompatActivity() {
                 .build()
 
         // Update metadata properties
-        forestRef.updateMetadata(metadata).addOnSuccessListener { storageMetadata ->
+        forestRef.updateMetadata(metadata).addOnSuccessListener {
             // Updated metadata is in storageMetadata
-        }.addOnFailureListener { exception ->
+        }.addOnFailureListener {
             // Uh-oh, an error occurred!
         }
         // [END update_file_metadata]
@@ -367,9 +363,9 @@ abstract class StorageActivity : AppCompatActivity() {
                 .build()
 
         // Delete the metadata property
-        forestRef.updateMetadata(metadata).addOnSuccessListener { storageMetadata ->
+        forestRef.updateMetadata(metadata).addOnSuccessListener {
             // metadata.contentType should be null
-        }.addOnFailureListener { exception ->
+        }.addOnFailureListener {
             // Uh-oh, an error occurred!
         }
         // [END delete_file_metadata]
@@ -395,9 +391,9 @@ abstract class StorageActivity : AppCompatActivity() {
         val desertRef = storageRef.child("images/desert.jpg")
 
         // Delete the file
-        desertRef.delete().addOnSuccessListener { aVoid ->
+        desertRef.delete().addOnSuccessListener {
             // File deleted successfully
-        }.addOnFailureListener { exception ->
+        }.addOnFailureListener {
             // Uh-oh, an error occurred!
         }
         // [END delete_file]

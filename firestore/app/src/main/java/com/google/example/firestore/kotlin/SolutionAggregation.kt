@@ -4,21 +4,21 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
-import java.util.*
 
 /**
  * https://firebase.google.com/docs/firestore/solutions/aggregation
  */
-abstract class SolutionAggregation(val db: FirebaseFirestore) {
+abstract class SolutionAggregation(private val db: FirebaseFirestore) {
 
     // [START restaurant_class]
-    data class Restaurant(internal var name: String,
-                           internal var avgRating: Double,
-                           internal var numRatings: Int) {
+    data class Restaurant(
+        internal var name: String,
+        internal var avgRating: Double,
+        internal var numRatings: Int
+    ) {
 
         // No-arg constructor required for use with "toObject"
         constructor() : this("", 0.0, 0)
-
     }
     // [END restaurant_class]
 
@@ -61,7 +61,7 @@ abstract class SolutionAggregation(val db: FirebaseFirestore) {
             transaction.set(restaurantRef, restaurant)
 
             // Update rating
-            val data = HashMap<String, Any>()
+            val data = hashMapOf<String, Any>()
             data["rating"] = rating
             transaction.set(ratingRef, data, SetOptions.merge())
 
@@ -69,5 +69,4 @@ abstract class SolutionAggregation(val db: FirebaseFirestore) {
         }
     }
     // [END add_rating]
-
 }

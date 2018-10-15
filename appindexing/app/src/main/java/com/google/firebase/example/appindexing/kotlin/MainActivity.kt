@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         // ...
     }
 
-    fun getNoteCommentAction(): Action {
+    private fun getNoteCommentAction(): Action {
         return Action.Builder(Action.Builder.COMMENT_ACTION)
                 .setObject(note.title, note.noteUrl)
                 // Keep action data for personal connulltent on the device
@@ -63,15 +63,14 @@ class MainActivity : AppCompatActivity() {
     }
     // [END appindexing_update]
 
-    fun removeAll() {
+    private fun removeAll() {
         // [START appindexing_remove_all]
         FirebaseAppIndex.getInstance().removeAll()
         // [END appindexing_remove_all]
     }
 
-    fun getRecipeViewAction(): Action? {
+    private fun getRecipeViewAction(): Action? {
         // This is just to make some things compile.
         return null
     }
-
 }

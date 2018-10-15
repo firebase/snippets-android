@@ -28,5 +28,4 @@ abstract class ReadAndWriteSnippets(private val database: DatabaseReference) {
                 }
         // [END rtdb_write_new_user_task]
     }
-
 }

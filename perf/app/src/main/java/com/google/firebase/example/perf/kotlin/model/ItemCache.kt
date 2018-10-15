@@ -4,5 +4,4 @@ class ItemCache {
     fun fetch(name: String): Item? {
         return null
     }
-
 }

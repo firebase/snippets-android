@@ -14,7 +14,7 @@ import java.util.concurrent.*
 abstract class MainActivity : AppCompatActivity() {
 
     // [START basic_sign_in_task]
-    val task = FirebaseAuth.getInstance().signInAnonymously()
+    private val task = FirebaseAuth.getInstance().signInAnonymously()
     // [END basic_sign_in_task]
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,16 +22,16 @@ abstract class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
     }
 
-    fun basicTaskHandlers() {
+    private fun basicTaskHandlers() {
         // [START success_listener]
-        task.addOnSuccessListener { authResult ->
+        task.addOnSuccessListener {
             // Task completed successfully
             // ...
         }
         // [END success_listener]
 
         // [START failure_listener]
-        task.addOnFailureListener { e ->
+        task.addOnFailureListener {
             // Task failed with an exception
             // ...
         }
@@ -39,7 +39,7 @@ abstract class MainActivity : AppCompatActivity() {
 
         // [START completion_listener]
         task.addOnCompleteListener { task ->
-            if (task.isSuccessful()) {
+            if (task.isSuccessful) {
                 // Task completed successfully
                 val result = task.result
             } else {
@@ -67,7 +67,7 @@ abstract class MainActivity : AppCompatActivity() {
         // [END listener_try_catch]
     }
 
-    fun taskOnExecutor() {
+    private fun taskOnExecutor() {
         // [START create_handler_and_executor]
         // Create a new ThreadPoolExecutor with 2 threads for each processor on the
         // device and a 60 second keep-alive time.
@@ -77,30 +77,30 @@ abstract class MainActivity : AppCompatActivity() {
         // [END create_handler_and_executor]
 
         // [START run_task_executor]
-        task.addOnCompleteListener(executor, OnCompleteListener { task ->
+        task.addOnCompleteListener(executor, OnCompleteListener {
             // ...
         })
         // [END run_task_executor]
     }
 
-    fun activityScopedTask() {
+    private fun activityScopedTask() {
         // [START activity_scoped]
         val activity = this
-        task.addOnCompleteListener(activity, OnCompleteListener { task ->
+        task.addOnCompleteListener(activity) {
             // ...
-        })
+        }
         // [END activity_scoped]
     }
 
     // [START string_task_method]
-    fun doSomething(authResult: AuthResult): Task<String> {
+    private fun doSomething(authResult: AuthResult): Task<String> {
         // [START_EXCLUDE]
         return Tasks.forResult("Hello, World!")
         // [END_EXCLUDE]
     }
     // [END string_task_method]
 
-    fun taskChaining() {
+    private fun taskChaining() {
         // [START task_chaining]
         val signInTask = FirebaseAuth.getInstance().signInAnonymously()
 
@@ -118,7 +118,7 @@ abstract class MainActivity : AppCompatActivity() {
         // [END task_chaining]
     }
 
-    fun blockingTask() {
+    private fun blockingTask() {
         // [START blocking_task]
         try {
             // Block on a task and get the result synchronously. This is generally done

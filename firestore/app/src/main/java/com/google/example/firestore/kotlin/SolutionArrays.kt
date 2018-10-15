@@ -1,12 +1,11 @@
 package com.google.example.firestore.kotlin
 
 import com.google.firebase.firestore.FirebaseFirestore
-import java.util.*
 
 /**
  * https://firebase.google.com/docs/firestore/solutions/arrays
  */
-abstract class SolutionArrays(val db: FirebaseFirestore) {
+abstract class SolutionArrays(private val db: FirebaseFirestore) {
 
     // [START array_post_class]
     data class ArrayPost(var title: String, var categories: List<String>)
@@ -20,16 +19,15 @@ abstract class SolutionArrays(val db: FirebaseFirestore) {
     data class MapPostAdvanced(var title: String, var categories: Map<String, Long>)
     // [END map_post_class_advanced]
 
-
     fun examplePosts() {
         // [START example_array_post]
-        val myArrayPost = ArrayPost("My great post", Arrays.asList(
+        val myArrayPost = ArrayPost("My great post", arrayListOf(
                 "technology", "opinion", "cats"
         ))
         // [END example_array_post]
 
         // [START example_map_post]
-        val categories = HashMap<String, Boolean>()
+        val categories = hashMapOf<String, Boolean>()
         categories["technology"] = true
         categories["opinion"] = true
         categories["cats"] = true
@@ -39,7 +37,7 @@ abstract class SolutionArrays(val db: FirebaseFirestore) {
 
     fun examplePosts_Advanced() {
         // [START example_map_post_advanced]
-        val categories = HashMap<String, Long>()
+        val categories = hashMapOf<String, Long>()
         categories["technology"] = 1502144665L
         categories["opinion"] = 1502144665L
         categories["cats"] = 1502144665L

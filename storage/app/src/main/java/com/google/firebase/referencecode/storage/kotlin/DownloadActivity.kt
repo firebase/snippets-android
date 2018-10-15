@@ -30,23 +30,23 @@ class DownloadActivity : AppCompatActivity() {
         super.onRestoreInstanceState(savedInstanceState)
 
         // If there was a download in progress, get its reference and create a new StorageReference
-        val stringRef = savedInstanceState.getString("reference")
-        if (stringRef == null) {
-            return
-        }
+        val stringRef = savedInstanceState.getString("reference") ?: return
 
         storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(stringRef)
 
         // Find all DownloadTasks under this StorageReference (in this example, there should be one)
-        val tasks = storageRef!!.activeDownloadTasks
-        if (tasks.size > 0) {
-            // Get the task monitoring the download
-            val task = tasks[0]
+        val tasks = storageRef?.activeDownloadTasks
 
-            // Add new listeners to the task using an Activity scope
-            task.addOnSuccessListener(this) {
-                // Success!
-                // ...
+        tasks?.size?.let { it ->
+            if (it > 0) {
+                // Get the task monitoring the download
+                val task = tasks[0]
+
+                // Add new listeners to the task using an Activity scope
+                task.addOnSuccessListener(this) {
+                    // Success!
+                    // ...
+                }
             }
         }
     }

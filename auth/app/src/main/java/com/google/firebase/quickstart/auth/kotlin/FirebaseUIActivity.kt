@@ -8,7 +8,6 @@ import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.quickstart.auth.R
-import java.util.*
 
 abstract class FirebaseUIActivity : AppCompatActivity() {
 
@@ -17,10 +16,10 @@ abstract class FirebaseUIActivity : AppCompatActivity() {
         setContentView(R.layout.activity_firebase_ui)
     }
 
-    fun createSignInIntent() {
+    private fun createSignInIntent() {
         // [START auth_fui_create_intent]
         // Choose authentication providers
-        val providers = Arrays.asList<AuthUI.IdpConfig>(
+        val providers = arrayListOf(
                 AuthUI.IdpConfig.EmailBuilder().build(),
                 AuthUI.IdpConfig.PhoneBuilder().build(),
                 AuthUI.IdpConfig.GoogleBuilder().build(),
@@ -58,7 +57,7 @@ abstract class FirebaseUIActivity : AppCompatActivity() {
     }
     // [END auth_fui_result]
 
-    fun signOut() {
+    private fun signOut() {
         // [START auth_fui_signout]
         AuthUI.getInstance()
                 .signOut(this)
@@ -68,7 +67,7 @@ abstract class FirebaseUIActivity : AppCompatActivity() {
         // [END auth_fui_signout]
     }
 
-    fun delete() {
+    private fun delete() {
         // [START auth_fui_delete]
         AuthUI.getInstance()
                 .delete(this)
@@ -78,7 +77,7 @@ abstract class FirebaseUIActivity : AppCompatActivity() {
         // [END auth_fui_delete]
     }
 
-    fun themeAndLogo() {
+    private fun themeAndLogo() {
         val providers = emptyList<AuthUI.IdpConfig>()
 
         // [START auth_fui_theme_logo]
@@ -93,7 +92,7 @@ abstract class FirebaseUIActivity : AppCompatActivity() {
         // [END auth_fui_theme_logo]
     }
 
-    fun privacyAndTerms() {
+    private fun privacyAndTerms() {
         val providers = emptyList<AuthUI.IdpConfig>()
         // [START auth_fui_pp_tos]
         startActivityForResult(
@@ -111,6 +110,5 @@ abstract class FirebaseUIActivity : AppCompatActivity() {
     companion object {
 
         private const val RC_SIGN_IN = 123
-
     }
 }

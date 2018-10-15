@@ -13,7 +13,7 @@ import com.google.firebase.referencecode.database.models.Message
 abstract class QueryActivity : AppCompatActivity() {
 
     companion object {
-        private val TAG = "KotlinQueryActivity"
+        private const val TAG = "KotlinQueryActivity"
     }
 
     private lateinit var messagesRef: DatabaseReference
@@ -32,7 +32,7 @@ abstract class QueryActivity : AppCompatActivity() {
         databaseReference = FirebaseDatabase.getInstance().reference
     }
 
-    fun basicListen() {
+    private fun basicListen() {
         // [START basic_listen]
         // Get a reference to Messages and attach a listener
         messagesRef = databaseReference.child("messages")
@@ -64,7 +64,7 @@ abstract class QueryActivity : AppCompatActivity() {
         // [END basic_listen]
     }
 
-    fun basicQuery() {
+    private fun basicQuery() {
         // [START basic_query]
         // My top posts by number of stars
         val myUserId = uid
@@ -85,7 +85,7 @@ abstract class QueryActivity : AppCompatActivity() {
         // [END basic_query]
     }
 
-    fun basicQueryValueListener() {
+    private fun basicQueryValueListener() {
         val myUserId = uid
         val myTopPostsQuery = databaseReference.child("user-posts").child(myUserId)
             .orderByChild("starCount")
@@ -108,14 +108,14 @@ abstract class QueryActivity : AppCompatActivity() {
         // [END basic_query_value_listener]
     }
 
-    fun cleanBasicListener() {
+    private fun cleanBasicListener() {
         // Clean up value listener
         // [START clean_basic_listen]
         messagesRef.removeEventListener(messagesListener)
         // [END clean_basic_listen]
     }
 
-    fun cleanBasicQuery() {
+    private fun cleanBasicQuery() {
         // Clean up query listener
         // [START clean_basic_query]
         messagesQuery.removeEventListener(messagesQueryListener)
@@ -156,5 +156,4 @@ abstract class QueryActivity : AppCompatActivity() {
         cleanBasicListener()
         cleanBasicQuery()
     }
-
 }

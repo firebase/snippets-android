@@ -12,5 +12,4 @@ class MainActivity : AppCompatActivity() {
                 .addOnCompleteListener { task -> Log.d("IID_TOKEN", task.result.token) }
         // [END log_iid_token]
     }
-
 }

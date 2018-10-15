@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity() {
         // Load in-app defaults from an XML file that sets perf_disable to false until you update
         // values in the Firebase Console
 
-        //Observe the remote config parameter "perf_disable" and disable Performance Monitoring if true
+        // Observe the remote config parameter "perf_disable" and disable Performance Monitoring if true
         config.setDefaults(R.xml.remote_config_defaults)
         FirebasePerformance.getInstance().isPerformanceCollectionEnabled = !config.getBoolean("perf_disable")
         // [END perf_disable_with_config]
@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
 
     fun activateConfig() {
         // [START perf_activate_config]
-        //Remote Config fetches and activates parameter values from the service
+        // Remote Config fetches and activates parameter values from the service
         val config = FirebaseRemoteConfig.getInstance()
         config.fetch(3600)
                 .addOnCompleteListener(this) { task ->
@@ -139,9 +139,8 @@ class MainActivity : AppCompatActivity() {
         // [END perf_attr_pii]
     }
 
-    fun printStreamContent(stream: InputStream) {
+    private fun printStreamContent(stream: InputStream) {
         // Unimplemented
         // ...
     }
-
 }

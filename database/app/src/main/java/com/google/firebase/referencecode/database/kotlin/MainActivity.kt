@@ -12,12 +12,12 @@ import com.google.firebase.referencecode.database.R
 abstract class MainActivity : AppCompatActivity() {
 
     companion object {
-        private val TAG = "KotlinActivity"
+        private const val TAG = "KotlinActivity"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //Reuse the layout used in MainActivity
+        // Reuse the layout used in MainActivity
         setContentView(R.layout.activity_main)
     }
 
@@ -37,7 +37,7 @@ abstract class MainActivity : AppCompatActivity() {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
                 val value = dataSnapshot.getValue(String::class.java)
-                Log.d(TAG, "Value is: " + value)
+                Log.d(TAG, "Value is: $value")
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -47,5 +47,4 @@ abstract class MainActivity : AppCompatActivity() {
         })
         // [END read_message]
     }
-
 }

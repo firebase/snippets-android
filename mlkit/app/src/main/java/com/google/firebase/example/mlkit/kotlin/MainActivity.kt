@@ -13,5 +13,4 @@ class MainActivity : AppCompatActivity() {
                 .build()
         // [END ml_build_cloud_vision_options]
     }
-
 }

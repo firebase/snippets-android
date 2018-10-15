@@ -8,7 +8,7 @@ import com.google.android.gms.ads.AdView
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.example.predictions.R
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import java.util.*
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -40,19 +40,18 @@ class MainActivity : AppCompatActivity() {
         // [END pred_config_show_ads]
     }
 
-    fun executeAdsPolicy() {
+    private fun executeAdsPolicy() {
         // [START pred_ads_policy]
         val config = FirebaseRemoteConfig.getInstance()
         val adPolicy = config.getString("ads_policy")
-        val will_not_spend = config.getBoolean("will_not_spend")
-        val mAdView = findViewById<View>(R.id.adView) as AdView
+        val willNotSpend = config.getBoolean("will_not_spend")
 
-        if (adPolicy == "ads_always" || adPolicy == "ads_nonspenders" && will_not_spend) {
+        if (adPolicy == "ads_always" || adPolicy == "ads_nonspenders" && willNotSpend) {
             val adRequest = AdRequest.Builder().build()
-            mAdView.loadAd(adRequest)
-            mAdView.visibility = View.VISIBLE
+            adView.loadAd(adRequest)
+            adView.visibility = View.VISIBLE
         } else {
-            mAdView.visibility = View.GONE
+            adView.visibility = View.GONE
         }
 
         FirebaseAnalytics.getInstance(this).logEvent("ads_policy_set", Bundle())
@@ -85,14 +84,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     // [START pred_get_promoted_bundle]
-    fun getPromotedBundle(): String {
+    private fun getPromotedBundle(): String {
         FirebaseAnalytics.getInstance(this).logEvent("promotion_set", Bundle())
 
         val config = FirebaseRemoteConfig.getInstance()
         val promotedBundle = config.getString("promoted_bundle")
-        val will_spend = config.getBoolean("predicted_will_spend")
+        val willSpend = config.getBoolean("predicted_will_spend")
 
-        return if (promotedBundle == "predicted" && will_spend) {
+        return if (promotedBundle == "predicted" && willSpend) {
             "premium"
         } else {
             promotedBundle
@@ -106,7 +105,7 @@ class MainActivity : AppCompatActivity() {
         // [START pred_config_prevent_churn]
         val config = FirebaseRemoteConfig.getInstance()
 
-        val remoteConfigDefaults = HashMap<String, Any>()
+        val remoteConfigDefaults = hashMapOf<String, Any>()
         remoteConfigDefaults["gift_policy"] = "gift_never"
         config.setDefaults(remoteConfigDefaults)
 
@@ -126,7 +125,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // [START pred_execute_gift_policy]
-    fun executeGiftPolicy() {
+    private fun executeGiftPolicy() {
         val config = FirebaseRemoteConfig.getInstance()
         val giftPolicy = config.getString("gift_policy")
         val willChurn = config.getBoolean("will_churn")
@@ -141,12 +140,11 @@ class MainActivity : AppCompatActivity() {
     }
     // [END pred_execute_gift_policy]
 
-    fun grantGiftOnLevel2() {
+    private fun grantGiftOnLevel2() {
         // Nothing
     }
 
-    fun grantGiftNow() {
+    private fun grantGiftNow() {
         // Nothing
     }
-
 }

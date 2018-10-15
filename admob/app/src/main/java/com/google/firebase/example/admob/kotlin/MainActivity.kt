@@ -14,5 +14,4 @@ class MainActivity : AppCompatActivity() {
         MobileAds.initialize(this, "YOUR_ADMOB_APP_ID")
     }
     // [END ads_on_create]
-
 }

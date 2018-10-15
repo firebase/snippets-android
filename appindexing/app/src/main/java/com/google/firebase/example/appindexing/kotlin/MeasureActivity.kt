@@ -10,7 +10,7 @@ import com.google.firebase.appindexing.AndroidAppUri
 // [START appindexing_measure_activity]
 class MeasureActivity : AppCompatActivity() {
 
-    override fun getReferrer() : Uri? {
+    override fun getReferrer(): Uri? {
 
         // There is a built in function available from SDK>=22
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
@@ -31,7 +31,6 @@ class MeasureActivity : AppCompatActivity() {
             } catch (e: ParseException) {
                 // ...
             }
-
         }
 
         return null
@@ -50,7 +49,6 @@ class MeasureActivity : AppCompatActivity() {
 
                 // Add analytics code below to track this click from web Search
                 // ...
-
             } else if (referrer.scheme == "android-app") {
                 // App was opened from another app
                 val appUri = AndroidAppUri.newAndroidAppUri(referrer)
@@ -62,7 +60,6 @@ class MeasureActivity : AppCompatActivity() {
 
                     // Add analytics code below to track this click from the Google app
                     // ...
-
                 } else if ("com.google.appcrawler" == referrerPackage) {
                     // Make sure this is not being counted as part of app usage
                     // ...
@@ -71,6 +68,5 @@ class MeasureActivity : AppCompatActivity() {
         }
         // ...
     }
-
 }
 // [END appindexing_measure_activity]

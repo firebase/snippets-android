@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
     }
 
-    fun setKeysBasic(key: String) {
+    private fun setKeysBasic(key: String) {
         // [START crash_set_keys_basic]
         Crashlytics.setString(key, "foo" /* string value */)
 
@@ -28,43 +28,43 @@ class MainActivity : AppCompatActivity() {
         // [END crash_set_keys_basic]
     }
 
-    fun resetKey() {
+    private fun resetKey() {
         // [START crash_re_set_key]
         Crashlytics.setInt("current_level", 3)
         Crashlytics.setString("last_UI_action", "logged_in")
         // [END crash_re_set_key]
     }
 
-    fun logReportAndPrint() {
+    private fun logReportAndPrint() {
         // [START crash_log_report_and_print]
         Crashlytics.log(Log.DEBUG, "tag", "message")
         // [END crash_log_report_and_print]
     }
 
-    fun logReportOnly() {
+    private fun logReportOnly() {
         // [START crash_log_report_only]
         Crashlytics.log("message")
         // [END crash_log_report_only]
     }
 
-    fun enableAtRuntime() {
+    private fun enableAtRuntime() {
         // [START crash_enable_at_runtime]
         Fabric.with(this, Crashlytics())
         // [END crash_enable_at_runtime]
     }
 
-    fun setUserId() {
+    private fun setUserId() {
         // [START crash_set_user_id]
         Crashlytics.setUserIdentifier("user123456789")
         // [END crash_set_user_id]
     }
 
     @Throws(Exception::class)
-    fun methodThatThrows() {
+    private fun methodThatThrows() {
         throw Exception()
     }
 
-    fun logCaughtEx() {
+    private fun logCaughtEx() {
         // [START crash_log_caught_ex]
         try {
             methodThatThrows()
@@ -75,17 +75,17 @@ class MainActivity : AppCompatActivity() {
         // [END crash_log_caught_ex]
     }
 
-    fun enableDebugMode() {
+    private fun enableDebugMode() {
         // [START crash_enable_debug_mode]
         val fabric = Fabric.Builder(this)
                 .kits(Crashlytics())
-                .debuggable(true)  // Enables Crashlytics debugger
+                .debuggable(true) // Enables Crashlytics debugger
                 .build()
         Fabric.with(fabric)
         // [END crash_enable_debug_mode]
     }
 
-    fun forceACrash() {
+    private fun forceACrash() {
         // [START crash_force_crash]
         val crashButton = Button(this)
         crashButton.text = "Crash!"
@@ -98,5 +98,4 @@ class MainActivity : AppCompatActivity() {
                 ViewGroup.LayoutParams.WRAP_CONTENT))
         // [END crash_force_crash]
     }
-
 }

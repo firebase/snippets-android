@@ -7,8 +7,8 @@ import devrel.firebase.google.com.firebaseoptions.R
 class MainActivity : AppCompatActivity() {
 
     companion object {
-        private val IOS_APP_CLIENT_ID = "foo-bar-baz"
-        private val REQUEST_INVITE = 101
+        private const val IOS_APP_CLIENT_ID = "foo-bar-baz"
+        private const val REQUEST_INVITE = 101
     }
 
     fun sendInvitationIOS() {
@@ -22,5 +22,4 @@ class MainActivity : AppCompatActivity() {
                 .build()
         // [END invites_send_invitation_ios]
     }
-
 }

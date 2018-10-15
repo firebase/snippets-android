@@ -7,7 +7,6 @@ import com.google.firebase.appindexing.FirebaseAppIndex
 import com.google.firebase.appindexing.Indexable
 import com.google.firebase.appindexing.builders.Indexables
 import com.google.firebase.example.appindexing.model.Recipe
-import java.util.*
 
 // [START appindexing_update_service]
 class AppIndexingUpdateService : JobIntentService() {
@@ -15,18 +14,17 @@ class AppIndexingUpdateService : JobIntentService() {
     companion object {
 
         // Job-ID must be unique across your whole app.
-        private const val UNIQUE_JOB_ID = 42;
+        private const val UNIQUE_JOB_ID = 42
 
         fun enqueueWork(context: Context) {
             JobIntentService.enqueueWork(context, AppIndexingUpdateService::class.java, UNIQUE_JOB_ID, Intent())
         }
-
     }
 
     override fun onHandleWork(intent: Intent) {
         // TODO Insert your Indexable objects — for example, the recipe notes look as follows:
 
-        val indexableNotes = ArrayList<Indexable>()
+        val indexableNotes = arrayListOf<Indexable>()
 
         for (recipe in getAllRecipes()) {
             val note = recipe.note
@@ -42,7 +40,7 @@ class AppIndexingUpdateService : JobIntentService() {
         }
 
         if (indexableNotes.size > 0) {
-            val notesArr: Array<Indexable> = indexableNotes.toTypedArray<Indexable>()
+            val notesArr: Array<Indexable> = indexableNotes.toTypedArray()
 
             // batch insert indexable notes into index
             FirebaseAppIndex.getInstance().update(*notesArr)

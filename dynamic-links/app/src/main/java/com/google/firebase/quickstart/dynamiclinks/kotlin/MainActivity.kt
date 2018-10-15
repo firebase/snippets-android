@@ -62,7 +62,7 @@ abstract class MainActivity : AppCompatActivity() {
                                 .setTitle("Example of a Dynamic Link")
                                 .setDescription("This link works whether the app is installed or not!")
                                 .build())
-                .buildDynamicLink()  // Or buildShortDynamicLink()
+                .buildDynamicLink() // Or buildShortDynamicLink()
         // [END create_link_advanced]
     }
 
@@ -143,5 +143,4 @@ abstract class MainActivity : AppCompatActivity() {
         startActivity(Intent.createChooser(intent, "Share using"))
         // [END ddl_onboarding_share]
     }
-
 }

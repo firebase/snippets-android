@@ -46,9 +46,9 @@ abstract class ReferralActivity : AppCompatActivity() {
 
     fun sendInvitation() {
         // [START ddl_referral_send]
-        val referrerName = FirebaseAuth.getInstance().currentUser!!.displayName
+        val referrerName = FirebaseAuth.getInstance().currentUser?.displayName
         val subject = String.format("%s wants you to play MyExampleGame!", referrerName)
-        val invitationLink = mInvitationUrl!!.toString()
+        val invitationLink = mInvitationUrl.toString()
         val msg = "Let's play MyExampleGame together! Use my referrer link: $invitationLink"
         val msgHtml = String.format("<p>Let's play MyExampleGame together! Use my " + "<a href=\"%s\">referrer link</a>!</p>", invitationLink)
 
@@ -83,9 +83,9 @@ abstract class ReferralActivity : AppCompatActivity() {
                     // referrer's UID.
                     //
                     val user = FirebaseAuth.getInstance().currentUser
-                    if (user == null
-                            && deepLink != null
-                            && deepLink.getBooleanQueryParameter("invitedby", false)) {
+                    if (user == null &&
+                            deepLink != null &&
+                            deepLink.getBooleanQueryParameter("invitedby", false)) {
                         val referrerUid = deepLink.getQueryParameter("invitedby")
                         createAnonymousAccountWithReferrerInfo(referrerUid)
                     }

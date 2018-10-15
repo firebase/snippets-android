@@ -25,7 +25,7 @@ abstract class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
     }
 
-    fun checkCurrentUser() {
+    private fun checkCurrentUser() {
         // [START check_current_user]
         val user = FirebaseAuth.getInstance().currentUser
         if (user != null) {
@@ -36,7 +36,7 @@ abstract class MainActivity : AppCompatActivity() {
         // [END check_current_user]
     }
 
-    fun getUserProfile() {
+    private fun getUserProfile() {
         // [START get_user_profile]
         val user = FirebaseAuth.getInstance().currentUser
         user?.let {
@@ -56,7 +56,7 @@ abstract class MainActivity : AppCompatActivity() {
         // [END get_user_profile]
     }
 
-    fun getProviderData() {
+    private fun getProviderData() {
         // [START get_provider_data]
         val user = FirebaseAuth.getInstance().currentUser
         user?.let {
@@ -76,7 +76,7 @@ abstract class MainActivity : AppCompatActivity() {
         // [END get_provider_data]
     }
 
-    fun updateProfile() {
+    private fun updateProfile() {
         // [START update_profile]
         val user = FirebaseAuth.getInstance().currentUser
 
@@ -94,7 +94,7 @@ abstract class MainActivity : AppCompatActivity() {
         // [END update_profile]
     }
 
-    fun updateEmail() {
+    private fun updateEmail() {
         // [START update_email]
         val user = FirebaseAuth.getInstance().currentUser
 
@@ -107,7 +107,7 @@ abstract class MainActivity : AppCompatActivity() {
         // [END update_email]
     }
 
-    fun updatePassword() {
+    private fun updatePassword() {
         // [START update_password]
         val user = FirebaseAuth.getInstance().currentUser
         val newPassword = "SOME-SECURE-PASSWORD"
@@ -121,7 +121,7 @@ abstract class MainActivity : AppCompatActivity() {
         // [END update_password]
     }
 
-    fun sendEmailVerification() {
+    private fun sendEmailVerification() {
         // [START send_email_verification]
         val auth = FirebaseAuth.getInstance()
         val user = auth.currentUser
@@ -135,7 +135,7 @@ abstract class MainActivity : AppCompatActivity() {
         // [END send_email_verification]
     }
 
-    fun sendEmailVerificationWithContinueUrl() {
+    private fun sendEmailVerificationWithContinueUrl() {
         // [START send_email_verification_with_continue_url]
         val auth = FirebaseAuth.getInstance()
         val user = auth.currentUser
@@ -163,7 +163,7 @@ abstract class MainActivity : AppCompatActivity() {
         // [END localize_verification_email]
     }
 
-    fun sendPasswordReset() {
+    private fun sendPasswordReset() {
         // [START send_password_reset]
         val auth = FirebaseAuth.getInstance()
         val emailAddress = "user@example.com"
@@ -177,7 +177,7 @@ abstract class MainActivity : AppCompatActivity() {
         // [END send_password_reset]
     }
 
-    fun deleteUser() {
+    private fun deleteUser() {
         // [START delete_user]
         val user = FirebaseAuth.getInstance().currentUser
 
@@ -190,7 +190,7 @@ abstract class MainActivity : AppCompatActivity() {
         // [END delete_user]
     }
 
-    fun reauthenticate() {
+    private fun reauthenticate() {
         // [START reauthenticate]
         val user = FirebaseAuth.getInstance().currentUser
 
@@ -206,7 +206,7 @@ abstract class MainActivity : AppCompatActivity() {
         // [END reauthenticate]
     }
 
-    fun authWithGithub() {
+    private fun authWithGithub() {
         val mAuth = FirebaseAuth.getInstance()
 
         // [START auth_with_github]
@@ -221,7 +221,7 @@ abstract class MainActivity : AppCompatActivity() {
                     // signed in user can be handled in the listener.
                     if (!task.isSuccessful) {
                         Log.w(TAG, "signInWithCredential", task.exception)
-                        Toast.makeText(this@MainActivity, "Authentication failed.",
+                        Toast.makeText(baseContext, "Authentication failed.",
                                 Toast.LENGTH_SHORT).show()
                     }
 
@@ -230,7 +230,7 @@ abstract class MainActivity : AppCompatActivity() {
         // [END auth_with_github]
     }
 
-    fun linkAndMerge(credential: AuthCredential) {
+    private fun linkAndMerge(credential: AuthCredential) {
         val mAuth = FirebaseAuth.getInstance()
 
         // [START auth_link_and_merge]
@@ -244,7 +244,7 @@ abstract class MainActivity : AppCompatActivity() {
         // [END auth_link_and_merge]
     }
 
-    fun unlink(providerId: String) {
+    private fun unlink(providerId: String) {
         val mAuth = FirebaseAuth.getInstance()
 
         // [START auth_unlink]
@@ -258,7 +258,7 @@ abstract class MainActivity : AppCompatActivity() {
         // [END auth_unlink]
     }
 
-    fun buildActionCodeSettings() {
+    private fun buildActionCodeSettings() {
         // [START auth_build_action_code_settings]
         val actionCodeSettings = ActionCodeSettings.newBuilder()
                 // URL you want to redirect back to. The domain (www.example.com) for this
@@ -270,12 +270,12 @@ abstract class MainActivity : AppCompatActivity() {
                 .setAndroidPackageName(
                         "com.example.android",
                         true, /* installIfNotAvailable */
-                        "12"    /* minimumVersion */)
+                        "12" /* minimumVersion */)
                 .build()
         // [END auth_build_action_code_settings]
     }
 
-    fun sendSignInLink(email: String, actionCodeSettings: ActionCodeSettings) {
+    private fun sendSignInLink(email: String, actionCodeSettings: ActionCodeSettings) {
         // [START auth_send_sign_in_link]
         val auth = FirebaseAuth.getInstance()
         auth.sendSignInLinkToEmail(email, actionCodeSettings)
@@ -287,7 +287,7 @@ abstract class MainActivity : AppCompatActivity() {
         // [END auth_send_sign_in_link]
     }
 
-    fun verifySignInLink() {
+    private fun verifySignInLink() {
         // [START auth_verify_sign_in_link]
         val auth = FirebaseAuth.getInstance()
         val intent = intent
@@ -317,7 +317,7 @@ abstract class MainActivity : AppCompatActivity() {
         // [END auth_verify_sign_in_link]
     }
 
-    fun linkWithSignInLink(email: String, emailLink: String) {
+    private fun linkWithSignInLink(email: String, emailLink: String) {
         val auth = FirebaseAuth.getInstance()
 
         // [START auth_link_with_link]
@@ -342,7 +342,7 @@ abstract class MainActivity : AppCompatActivity() {
         // [END auth_link_with_link]
     }
 
-    fun reauthWithLink(email: String, emailLink: String) {
+    private fun reauthWithLink(email: String, emailLink: String) {
         val auth = FirebaseAuth.getInstance()
 
         // [START auth_reauth_with_link]
@@ -361,7 +361,7 @@ abstract class MainActivity : AppCompatActivity() {
         // [END auth_reauth_with_link]
     }
 
-    fun differentiateLink(email: String) {
+    private fun differentiateLink(email: String) {
         val auth = FirebaseAuth.getInstance()
 
         // [START auth_differentiate_link]
@@ -382,21 +382,21 @@ abstract class MainActivity : AppCompatActivity() {
         // [END auth_differentiate_link]
     }
 
-    fun getGoogleCredentials() {
+    private fun getGoogleCredentials() {
         val googleIdToken = ""
         // [START auth_google_cred]
         val credential = GoogleAuthProvider.getCredential(googleIdToken, null)
         // [END auth_google_cred]
     }
 
-    fun getFbCredentials() {
+    private fun getFbCredentials() {
         val token = AccessToken.getCurrentAccessToken()
         // [START auth_fb_cred]
         val credential = FacebookAuthProvider.getCredential(token.token)
         // [END auth_fb_cred]
     }
 
-    fun getEmailCredentials() {
+    private fun getEmailCredentials() {
         val email = ""
         val password = ""
         // [START auth_email_cred]
@@ -404,13 +404,13 @@ abstract class MainActivity : AppCompatActivity() {
         // [END auth_email_cred]
     }
 
-    fun signOut() {
+    private fun signOut() {
         // [START auth_sign_out]
         FirebaseAuth.getInstance().signOut()
         // [END auth_sign_out]
     }
 
-    fun testPhoneVerify() {
+    private fun testPhoneVerify() {
         // [START auth_test_phone_verify]
         val phoneNum = "+16505554567"
         val testVerificationCode = "123456"
@@ -421,8 +421,10 @@ abstract class MainActivity : AppCompatActivity() {
                 phoneNum, 30L /*timeout*/, TimeUnit.SECONDS,
                 this, object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
-            override fun onCodeSent(verificationId: String?,
-                                    forceResendingToken: PhoneAuthProvider.ForceResendingToken?) {
+            override fun onCodeSent(
+                verificationId: String?,
+                forceResendingToken: PhoneAuthProvider.ForceResendingToken?
+            ) {
                 // Save the verification id somewhere
                 // ...
 
@@ -438,7 +440,6 @@ abstract class MainActivity : AppCompatActivity() {
             override fun onVerificationFailed(e: FirebaseException) {
                 // ...
             }
-
         })
         // [END auth_test_phone_verify]
     }
@@ -447,7 +448,7 @@ abstract class MainActivity : AppCompatActivity() {
         // No-op
     }
 
-    fun testPhoneAutoRetrieve() {
+    private fun testPhoneAutoRetrieve() {
         // [START auth_test_phone_auto]
         // The test phone number and code should be whitelisted in the console.
         val phoneNumber = "+16505554567"
@@ -473,14 +474,13 @@ abstract class MainActivity : AppCompatActivity() {
 
                     // [START_EXCLUDE]
                     override fun onVerificationFailed(e: FirebaseException) {
-
                     }
                     // [END_EXCLUDE]
                 })
         // [END auth_test_phone_auto]
     }
 
-    fun gamesMakeGoogleSignInOptions() {
+    private fun gamesMakeGoogleSignInOptions() {
         // [START games_google_signin_options]
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN)
                 .requestServerAuthCode(getString(R.string.default_web_client_id))
@@ -506,7 +506,7 @@ abstract class MainActivity : AppCompatActivity() {
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithCredential:failure", task.exception)
-                        Toast.makeText(this@MainActivity, "Authentication failed.",
+                        Toast.makeText(baseContext, "Authentication failed.",
                                 Toast.LENGTH_SHORT).show()
                         updateUI(null)
                     }
@@ -536,5 +536,4 @@ abstract class MainActivity : AppCompatActivity() {
     private fun updateUI(user: FirebaseUser?) {
         // No-op
     }
-
 }

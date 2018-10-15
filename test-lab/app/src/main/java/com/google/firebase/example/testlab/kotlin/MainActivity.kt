@@ -9,10 +9,10 @@ import java.io.FileNotFoundException
 class MainActivity : AppCompatActivity() {
 
     companion object {
-        private val TAG = "MainActivity"
+        private const val TAG = "MainActivity"
     }
 
-    fun checkEnvironment() {
+    private fun checkEnvironment() {
         // [START ftl_check_env]
         val testLabSetting = Settings.System.getString(contentResolver, "firebase.test.lab")
         if ("true" == testLabSetting) {
@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         // [END ftl_check_env]
     }
 
-    fun gameCheckIntent() {
+    private fun gameCheckIntent() {
         // [START ftl_game_check_intent]
         val launchIntent = intent
         if (launchIntent.action == "com.google.intent.action.TEST_LOOP") {
@@ -32,14 +32,14 @@ class MainActivity : AppCompatActivity() {
         // [END ftl_game_check_intent]
     }
 
-    fun gameFinish() {
+    private fun gameFinish() {
         val yourActivity = this
         // [START ftl_game_finish]
         yourActivity.finish()
         // [END ftl_game_finish]
     }
 
-    fun gameOutputFile() {
+    private fun gameOutputFile() {
         // [START ftl_game_output_file]
         val launchIntent = intent
         val logFile = launchIntent.data
@@ -51,26 +51,25 @@ class MainActivity : AppCompatActivity() {
     }
 
     @Throws(FileNotFoundException::class)
-    fun gameOutputFileDescriptor() {
+    private fun gameOutputFileDescriptor() {
         // [START ftl_game_output_fd]
         val launchIntent = intent
         val logFile = launchIntent.data
         var fd = -1
         if (logFile != null) {
             Log.i(TAG, "Log file " + logFile.encodedPath!!)
-            try {
-                fd = contentResolver
+            fd = try {
+                contentResolver
                         .openAssetFileDescriptor(logFile, "w")!!
                         .parcelFileDescriptor
                         .fd
             } catch (e: FileNotFoundException) {
                 e.printStackTrace()
-                fd = -1
+                -1
             } catch (e: NullPointerException) {
                 e.printStackTrace()
-                fd = -1
+                -1
             }
-
         }
 
         // C++ code invoked here.
@@ -78,14 +77,14 @@ class MainActivity : AppCompatActivity() {
         // [END ftl_game_output_fd]
     }
 
-    fun gameScenario() {
+    private fun gameScenario() {
         // [START ftl_game_scenario]
         val launchIntent = intent
         val scenario = launchIntent.getIntExtra("scenario", 0)
         // [END ftl_game_scenario]
     }
 
-    fun takeScreenshot() {
+    private fun takeScreenshot() {
         // [START ftl_take_screenshot]
         ScreenShotter.takeScreenshot("main_screen_2", this /* activity */)
         // [END ftl_take_screenshot]

@@ -90,7 +90,8 @@ abstract class MainActivity : AppCompatActivity() {
     fun shortenLongLink() {
         // [START shorten_long_link]
         val shortLinkTask = FirebaseDynamicLinks.getInstance().createDynamicLink()
-                .setLongLink(Uri.parse("https://example.page.link/?link=https://www.example.com/&apn=com.example.android&ibn=com.example.ios"))
+                .setLongLink(Uri.parse("https://example.page.link/?link=" +
+                        "https://www.example.com/&apn=com.example.android&ibn=com.example.ios"))
                 .buildShortDynamicLink()
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {

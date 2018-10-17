@@ -21,4 +21,4 @@ android:
     - tools
 script:
   - python scripts/checksnippets.py 
-  - ./gradlew clean build
+  - ./gradlew clean ktlint build

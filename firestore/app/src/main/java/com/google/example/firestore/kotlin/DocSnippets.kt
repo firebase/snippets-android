@@ -6,10 +6,29 @@ import android.support.annotation.WorkerThread
 import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
-import com.google.firebase.firestore.*
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentChange
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.EventListener
-import java.util.*
-import java.util.concurrent.*
+import com.google.firebase.firestore.FieldPath
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.FirebaseFirestoreSettings
+import com.google.firebase.firestore.MetadataChanges
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.ServerTimestamp
+import com.google.firebase.firestore.SetOptions
+import com.google.firebase.firestore.Source
+import java.util.ArrayList
+import java.util.Date
+import java.util.HashMap
+import java.util.concurrent.Callable
+import java.util.concurrent.Executor
+import java.util.concurrent.LinkedBlockingQueue
+import java.util.concurrent.ThreadPoolExecutor
+import java.util.concurrent.TimeUnit
 
 /**
  * Kotlin version of doc snippets.
@@ -106,8 +125,12 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         // Add a new document with a generated ID
         db.collection("users")
             .add(user)
-            .addOnSuccessListener { documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.id) }
-            .addOnFailureListener { e -> Log.w(TAG, "Error adding document", e) }
+            .addOnSuccessListener { documentReference ->
+                Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.id)
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error adding document", e)
+            }
         // [END add_ada_lovelace]
     }
 
@@ -123,8 +146,12 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         // Add a new document with a generated ID
         db.collection("users")
             .add(user)
-            .addOnSuccessListener { documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.id) }
-            .addOnFailureListener { e -> Log.w(TAG, "Error adding document", e) }
+            .addOnSuccessListener { documentReference ->
+                Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.id)
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error adding document", e)
+            }
         // [END add_alan_turing]
     }
 
@@ -265,8 +292,12 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
 
         db.collection("cities")
             .add(data)
-            .addOnSuccessListener { documentReference -> Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.id) }
-            .addOnFailureListener { e -> Log.w(TAG, "Error adding document", e) }
+            .addOnSuccessListener { documentReference ->
+                Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.id)
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error adding document", e)
+            }
         // [END add_document]
     }
 
@@ -447,7 +478,9 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
     fun customObjects() {
         // [START custom_objects]
         val docRef = db.collection("cities").document("BJ")
-        docRef.get().addOnSuccessListener { documentSnapshot -> val city = documentSnapshot.toObject(City::class.java) }
+        docRef.get().addOnSuccessListener { documentSnapshot ->
+            val city = documentSnapshot.toObject(City::class.java)
+        }
         // [END custom_objects]
     }
 
@@ -738,7 +771,8 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         val citiesRef = db.collection("cities")
 
         // [START invalid_range_filters]
-        citiesRef.whereGreaterThanOrEqualTo("state", "CA").whereGreaterThan("population", 100000)
+        citiesRef.whereGreaterThanOrEqualTo("state", "CA")
+                .whereGreaterThan("population", 100000)
         // [END invalid_range_filters]
     }
 

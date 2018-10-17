@@ -97,7 +97,7 @@ abstract class MainActivity : AppCompatActivity() {
     }
 
     // [START string_task_method]
-    private fun doSomething(authResult: AuthResult): Task<String> {
+    private fun doSomething(authResult: AuthResult?): Task<String> {
         // [START_EXCLUDE]
         return Tasks.forResult("Hello, World!")
         // [END_EXCLUDE]

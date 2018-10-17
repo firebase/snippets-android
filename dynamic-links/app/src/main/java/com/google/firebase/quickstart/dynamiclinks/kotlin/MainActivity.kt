@@ -74,15 +74,13 @@ abstract class MainActivity : AppCompatActivity() {
                 // Set parameters
                 // ...
                 .buildShortDynamicLink()
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        // Short link created
-                        val shortLink = task.result.shortLink
-                        val flowchartLink = task.result.previewLink
-                    } else {
-                        // Error
-                        // ...
-                    }
+                .addOnSuccessListener { result ->
+                    // Short link created
+                    val shortLink = result.shortLink
+                    val flowchartLink = result.previewLink
+                }.addOnFailureListener {
+                    // Error
+                    // ...
                 }
         // [END create_short_link]
     }
@@ -93,15 +91,14 @@ abstract class MainActivity : AppCompatActivity() {
                 .setLongLink(Uri.parse("https://example.page.link/?link=" +
                         "https://www.example.com/&apn=com.example.android&ibn=com.example.ios"))
                 .buildShortDynamicLink()
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        // Short link created
-                        val shortLink = task.result.shortLink
-                        val flowchartLink = task.result.previewLink
-                    } else {
-                        // Error
-                        // ...
-                    }
+                .addOnSuccessListener { result ->
+                    // Short link created
+                    val shortLink = result.shortLink
+                    val flowchartLink = result.previewLink
+                }
+                .addOnFailureListener {
+                    // Error
+                    // ...
                 }
         // [END shorten_long_link]
     }

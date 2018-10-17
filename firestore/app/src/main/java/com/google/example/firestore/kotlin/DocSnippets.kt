@@ -185,8 +185,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
                     }
 
                     Log.d(TAG, "Current users born before 1900: " + snapshots!!)
-                }
-                )
+                })
         // [END listen_for_users]
     }
 
@@ -218,12 +217,12 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
 
     // [START city_class]
     data class City(
-            val name: String?,
-            val state: String?,
-            val country: String?,
-            val isCapital: Boolean?,
-            val population: Long?,
-            val regions: List<String>?
+        val name: String?,
+        val state: String?,
+        val country: String?,
+        val isCapital: Boolean?,
+        val population: Long?,
+        val regions: List<String>?
     ) {
         // [START_EXCLUDE]
         constructor() : this(null, null, null, null, null, null)
@@ -401,8 +400,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
                 newPopulation
             } else {
                 throw FirebaseFirestoreException("Population too high",
-                        FirebaseFirestoreException.Code.ABORTED
-                )
+                        FirebaseFirestoreException.Code.ABORTED)
             }
         }.addOnSuccessListener { result ->
             Log.d(TAG, "Transaction success: " + result!!)
@@ -496,8 +494,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             } else {
                 Log.d(TAG, "Current data: null")
             }
-        }
-        )
+        })
         // [END listen_document]
     }
 
@@ -520,8 +517,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             } else {
                 Log.d(TAG, "$source data: null")
             }
-        }
-        )
+        })
         // [END listen_document_local]
     }
 
@@ -562,7 +558,6 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
                 }
                 .addOnFailureListener { exception ->
                     Log.d(TAG, "Error getting documents: ", exception)
-
                 }
         // [END get_multiple_all]
     }
@@ -584,8 +579,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
                         }
                     }
                     Log.d(TAG, "Current cites in CA: $cities")
-                }
-                )
+                })
         // [END listen_multiple]
     }
 
@@ -606,8 +600,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
                             DocumentChange.Type.REMOVED -> Log.d(TAG, "Removed city: " + dc.document.data)
                         }
                     }
-                }
-                )
+                })
         // [END listen_diffs]
     }
 
@@ -630,8 +623,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
                     if (!snapshots.metadata.isFromCache) {
                         Log.d(TAG, "Got initial state.")
                     }
-                }
-                )
+                })
         // [END listen_state]
     }
 
@@ -664,8 +656,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
                             Log.d(TAG, "New city: " + dc.document.data)
                         }
                     }
-                }
-                )
+                })
         // [END handle_listen_errors]
     }
 
@@ -880,9 +871,9 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
      * thread. This does *not* automatically discover and delete subcollections.
      */
     private fun deleteCollection(
-            collection: CollectionReference,
-            batchSize: Int,
-            executor: Executor
+        collection: CollectionReference,
+        batchSize: Int,
+        executor: Executor
     ): Task<Void> {
 
         // Perform the delete operation on the provided Executor, which allows us to use
@@ -908,8 +899,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             }
 
             null
-        }
-        )
+        })
     }
 
     /**
@@ -967,8 +957,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
                             "server"
                         Log.d(TAG, "Data fetched from $source")
                     }
-                }
-                )
+                })
         // [END offline_listen]
     }
 

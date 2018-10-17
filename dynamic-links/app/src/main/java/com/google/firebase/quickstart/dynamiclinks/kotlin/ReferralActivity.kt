@@ -50,7 +50,8 @@ abstract class ReferralActivity : AppCompatActivity() {
         val subject = String.format("%s wants you to play MyExampleGame!", referrerName)
         val invitationLink = mInvitationUrl.toString()
         val msg = "Let's play MyExampleGame together! Use my referrer link: $invitationLink"
-        val msgHtml = String.format("<p>Let's play MyExampleGame together! Use my " + "<a href=\"%s\">referrer link</a>!</p>", invitationLink)
+        val msgHtml = String.format("<p>Let's play MyExampleGame together! Use my " +
+                "<a href=\"%s\">referrer link</a>!</p>", invitationLink)
 
         val intent = Intent(Intent.ACTION_SENDTO)
         intent.data = Uri.parse("mailto:") // only email apps should handle this

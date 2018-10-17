@@ -3,7 +3,6 @@ package com.google.firebase.referencecode.storage.kotlin
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.ImageView
-import com.google.firebase.referencecode.storage.GlideApp
 import com.google.firebase.referencecode.storage.R
 import com.google.firebase.storage.FirebaseStorage
 

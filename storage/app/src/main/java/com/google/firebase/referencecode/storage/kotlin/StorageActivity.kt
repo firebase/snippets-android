@@ -10,8 +10,12 @@ import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseApp
 import com.google.firebase.referencecode.storage.R
-import com.google.firebase.storage.*
-import kotlinx.android.synthetic.main.activity_storage.*
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageException
+import com.google.firebase.storage.StorageMetadata
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.UploadTask
+import kotlinx.android.synthetic.main.activity_storage.imageView
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
@@ -273,7 +277,8 @@ abstract class StorageActivity : AppCompatActivity() {
 
         // Create a reference from an HTTPS URL
         // Note that in the URL, characters are URL escaped!
-        val httpsReference = storage.getReferenceFromUrl("https://firebasestorage.googleapis.com/b/bucket/o/images%20stars.jpg")
+        val httpsReference = storage.getReferenceFromUrl(
+                "https://firebasestorage.googleapis.com/b/bucket/o/images%20stars.jpg")
         // [END download_create_reference]
 
         // [START download_to_memory]

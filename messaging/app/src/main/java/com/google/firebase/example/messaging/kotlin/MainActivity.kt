@@ -13,8 +13,7 @@ import org.json.JSONObject
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
-import java.util.*
-
+import java.util.Scanner
 import java.util.concurrent.atomic.AtomicInteger
 
 class MainActivity : AppCompatActivity() {
@@ -56,7 +55,8 @@ class MainActivity : AppCompatActivity() {
         val accountName = getAccount()
 
         // Initialize the scope using the client ID you got from the Console.
-        val scope = "audience:server:client_id:" + "1262xxx48712-9qs6n32447mcj9dirtnkyrejt82saa52.apps.googleusercontent.com"
+        val scope = "audience:server:client_id:" +
+                "1262xxx48712-9qs6n32447mcj9dirtnkyrejt82saa52.apps.googleusercontent.com"
 
         var idToken: String? = null
         try {

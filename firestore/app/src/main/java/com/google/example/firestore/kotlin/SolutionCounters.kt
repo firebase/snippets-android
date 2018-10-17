@@ -64,7 +64,7 @@ class SolutionCounters(val db: FirebaseFirestore) {
         return ref.collection("shards").get()
                 .continueWith { task ->
                     var count = 0
-                    for (snap in task.result) {
+                    for (snap in task.result!!) {
                         val shard = snap.toObject(Shard::class.java)
                         count += shard.count
                     }

@@ -247,9 +247,12 @@ abstract class MainActivity : AppCompatActivity() {
         // [START auth_link_and_merge]
         val prevUser = FirebaseAuth.getInstance().currentUser
         mAuth.signInWithCredential(credential)
-                .addOnCompleteListener { task ->
-                    val currentUser = task.result.user
+                .addOnSuccessListener { result ->
+                    val currentUser = result.user
                     // Merge prevUser and currentUser accounts and data
+                    // ...
+                }
+                .addOnFailureListener {
                     // ...
                 }
         // [END auth_link_and_merge]
@@ -377,18 +380,16 @@ abstract class MainActivity : AppCompatActivity() {
 
         // [START auth_differentiate_link]
         auth.fetchSignInMethodsForEmail(email)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        val result = task.result
-                        val signInMethods = result.signInMethods
-                        if (signInMethods!!.contains(EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD)) {
-                            // User can sign in with email/password
-                        } else if (signInMethods.contains(EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD)) {
-                            // User can sign in with email/link
-                        }
-                    } else {
-                        Log.e(TAG, "Error getting sign in methods for user", task.exception)
+                .addOnSuccessListener { result ->
+                    val signInMethods = result.signInMethods
+                    if (signInMethods!!.contains(EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD)) {
+                        // User can sign in with email/password
+                    } else if (signInMethods.contains(EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD)) {
+                        // User can sign in with email/link
                     }
+                }
+                .addOnFailureListener { exception ->
+                    Log.e(TAG, "Error getting sign in methods for user", exception)
                 }
         // [END auth_differentiate_link]
     }

@@ -9,7 +9,9 @@ class MainActivity : AppCompatActivity() {
     fun logInstanceIdToken() {
         // [START log_iid_token]
         FirebaseInstanceId.getInstance().instanceId
-                .addOnCompleteListener { task -> Log.d("IID_TOKEN", task.result.token) }
+                .addOnSuccessListener { result ->
+                    Log.d("IID_TOKEN", result.token)
+                }
         // [END log_iid_token]
     }
 }

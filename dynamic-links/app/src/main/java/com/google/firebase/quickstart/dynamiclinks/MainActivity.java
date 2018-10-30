@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         // [START create_link_basic]
         DynamicLink dynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
                 .setLink(Uri.parse("https://www.example.com/"))
-                .setDynamicLinkDomain("example.page.link")
+                .setDomainUriPrefix("example.page.link")
                 // Open links with this app on Android
                 .setAndroidParameters(new DynamicLink.AndroidParameters.Builder().build())
                 // Open links with com.example.ios on iOS
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         // [START create_link_advanced]
         DynamicLink dynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
                 .setLink(Uri.parse("https://www.example.com/"))
-                .setDynamicLinkDomain("example.page.link")
+                .setDomainUriPrefix("example.page.link")
                 .setAndroidParameters(
                         new DynamicLink.AndroidParameters.Builder("com.example.android")
                                 .setMinimumVersion(125)
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         // [START create_short_link]
         Task<ShortDynamicLink> shortLinkTask = FirebaseDynamicLinks.getInstance().createDynamicLink()
                 .setLink(Uri.parse("https://www.example.com/"))
-                .setDynamicLinkDomain("example.page.link")
+                .setDomainUriPrefix("example.page.link")
                 // Set parameters
                 // ...
                 .buildShortDynamicLink()

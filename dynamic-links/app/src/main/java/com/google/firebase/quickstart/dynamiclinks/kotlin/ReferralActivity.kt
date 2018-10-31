@@ -26,7 +26,7 @@ abstract class ReferralActivity : AppCompatActivity() {
         val link = "https://mygame.example.com/?invitedby=$uid"
         FirebaseDynamicLinks.getInstance().createDynamicLink()
                 .setLink(Uri.parse(link))
-                .setDomainUriPrefix("example.page.link")
+                .setDomainUriPrefix("https://example.page.link")
                 .setAndroidParameters(
                         DynamicLink.AndroidParameters.Builder("com.example.android")
                                 .setMinimumVersion(125)

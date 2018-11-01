@@ -29,7 +29,7 @@ dependencies {
 
     implementation "com.google.firebase:firebase-auth:16.0.5"
     implementation "com.firebaseui:firebase-ui-auth:4.2.1"
-    implementation "com.facebook.android:facebook-android-sdk:4.38.0"
+    implementation "com.facebook.android:facebook-android-sdk:4.38.1"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "com.android.support.constraint:constraint-layout:1.1.3"
 }

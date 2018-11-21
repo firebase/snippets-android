@@ -60,5 +60,4 @@ class BarcodeScanningActivity : AppCompatActivity() {
                 }
         // [END run_detector]
     }
-
 }

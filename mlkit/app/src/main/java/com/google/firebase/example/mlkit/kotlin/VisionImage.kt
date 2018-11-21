@@ -133,5 +133,4 @@ class VisionImage {
         }
         // [END camera_orientations]
     }
-
 }

@@ -1,4 +1,4 @@
-package com.google.firebase.quickstart.mlkit;
+package com.google.firebase.example.mlkit;
 
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -23,7 +23,6 @@ public class ImageLabelingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_image_labeling);
     }
 
     private void labelImages(FirebaseVisionImage image) {

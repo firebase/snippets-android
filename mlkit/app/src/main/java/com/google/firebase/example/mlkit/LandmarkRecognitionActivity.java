@@ -1,4 +1,4 @@
-package com.google.firebase.quickstart.mlkit;
+package com.google.firebase.example.mlkit;
 
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
@@ -12,8 +12,6 @@ import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions;
 import com.google.firebase.ml.vision.cloud.landmark.FirebaseVisionCloudLandmark;
 import com.google.firebase.ml.vision.cloud.landmark.FirebaseVisionCloudLandmarkDetector;
-import com.google.firebase.ml.vision.cloud.text.FirebaseVisionCloudText;
-import com.google.firebase.ml.vision.cloud.text.FirebaseVisionCloudTextDetector;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.common.FirebaseVisionLatLng;
 
@@ -24,7 +22,6 @@ public class LandmarkRecognitionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_landmark_recognition);
     }
 
 

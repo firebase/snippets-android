@@ -1,4 +1,4 @@
-package com.google.firebase.quickstart.mlkit;
+package com.google.firebase.example.mlkit;
 
 import android.app.Activity;
 import android.content.Context;

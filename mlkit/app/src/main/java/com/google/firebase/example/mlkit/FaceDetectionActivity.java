@@ -1,10 +1,9 @@
-package com.google.firebase.quickstart.mlkit;
+package com.google.firebase.example.mlkit;
 
-import android.graphics.PointF;
 import android.graphics.Rect;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -24,18 +23,17 @@ public class FaceDetectionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_face_detection);
     }
 
     private void detectFaces(FirebaseVisionImage image) {
         // [START set_detector_options]
         FirebaseVisionFaceDetectorOptions options =
                 new FirebaseVisionFaceDetectorOptions.Builder()
-                        .setModeType(FirebaseVisionFaceDetectorOptions.ACCURATE_MODE)
-                        .setLandmarkType(FirebaseVisionFaceDetectorOptions.ALL_LANDMARKS)
-                        .setClassificationType(FirebaseVisionFaceDetectorOptions.ALL_CLASSIFICATIONS)
+                        .setClassificationMode(FirebaseVisionFaceDetectorOptions.ACCURATE)
+                        .setLandmarkMode(FirebaseVisionFaceDetectorOptions.ALL_LANDMARKS)
+                        .setClassificationMode(FirebaseVisionFaceDetectorOptions.ALL_CLASSIFICATIONS)
                         .setMinFaceSize(0.15f)
-                        .setTrackingEnabled(true)
+                        .enableTracking()
                         .build();
         // [END set_detector_options]
 

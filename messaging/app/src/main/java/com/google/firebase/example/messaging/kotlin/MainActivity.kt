@@ -120,4 +120,17 @@ class MainActivity : AppCompatActivity() {
         data.put("id_token", idToken)
         // [END fcm_remove_from_group]
     }
+
+    fun sendUpstream() {
+        val SENDER_ID = "YOUR_SENDER_ID"
+        val messageId = 0 // Increment for each
+        // [START fcm_send_upstream]
+        val fm = FirebaseMessaging.getInstance()
+        fm.send(RemoteMessage.Builder("$SENDER_ID@gcm.googleapis.com")
+                .setMessageId(Integer.toString(messageId))
+                .addData("my_message", "Hello World")
+                .addData("my_action", "SAY_HELLO")
+                .build())
+        // [END fcm_send_upstream]
+    }
 }

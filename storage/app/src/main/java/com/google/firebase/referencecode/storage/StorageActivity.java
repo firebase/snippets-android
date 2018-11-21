@@ -17,18 +17,24 @@
 package com.google.firebase.referencecode.storage;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnPausedListener;
 import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -57,8 +63,7 @@ public class StorageActivity extends AppCompatActivity {
         includesForCreateReference();
     }
 
-
-    private void includesForCreateReference() {
+    public void includesForCreateReference() {
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
         // ## Create a Reference
@@ -140,7 +145,7 @@ public class StorageActivity extends AppCompatActivity {
         // [END reference_full_example]
     }
 
-    private void includesForUploadFiles() throws FileNotFoundException {
+    public void includesForUploadFiles() throws FileNotFoundException {
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
         // [START upload_create_reference]
@@ -165,7 +170,7 @@ public class StorageActivity extends AppCompatActivity {
         // Get the data from an ImageView as bytes
         imageView.setDrawingCacheEnabled(true);
         imageView.buildDrawingCache();
-        Bitmap bitmap = imageView.getDrawingCache();
+        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
@@ -179,8 +184,8 @@ public class StorageActivity extends AppCompatActivity {
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                // ...
             }
         });
         // [END upload_memory]
@@ -197,8 +202,8 @@ public class StorageActivity extends AppCompatActivity {
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                // ...
             }
         });
         // [END upload_stream]
@@ -217,8 +222,8 @@ public class StorageActivity extends AppCompatActivity {
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                // ...
             }
         });
         // [END upload_file]
@@ -295,13 +300,40 @@ public class StorageActivity extends AppCompatActivity {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 // Handle successful uploads on complete
-                Uri downloadUrl = taskSnapshot.getMetadata().getDownloadUrl();
+                // ...
             }
         });
         // [END upload_complete_example]
+
+        // [START upload_get_download_url]
+        final StorageReference ref = storageRef.child("images/mountains.jpg");
+        uploadTask = ref.putFile(file);
+
+        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
+
+                // Continue with the task to get the download URL
+                return ref.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    Uri downloadUri = task.getResult();
+                } else {
+                    // Handle failures
+                    // ...
+                }
+            }
+        });
+        // [END upload_get_download_url]
     }
 
-    private void includesForDownloadFiles() throws IOException {
+    public void includesForDownloadFiles() throws IOException {
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
         // [START download_create_reference]
@@ -383,7 +415,7 @@ public class StorageActivity extends AppCompatActivity {
         // [END download_full_example]
     }
 
-    private void includesForFileMetadata() {
+    public void includesForFileMetadata() {
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
         // [START metadata_get_storage_reference]
@@ -433,7 +465,7 @@ public class StorageActivity extends AppCompatActivity {
         // [END update_file_metadata]
     }
 
-    private void includesForMetadata_delete() {
+    public void includesForMetadata_delete() {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
         StorageReference forestRef = storageRef.child("images/forest.jpg");
@@ -461,7 +493,7 @@ public class StorageActivity extends AppCompatActivity {
         // [END delete_file_metadata]
     }
 
-    private void includesForMetadata_custom() {
+    public void includesForMetadata_custom() {
         // [START custom_metadata]
         StorageMetadata metadata = new StorageMetadata.Builder()
                 .setCustomMetadata("location", "Yosemite, CA, USA")
@@ -470,7 +502,7 @@ public class StorageActivity extends AppCompatActivity {
         // [END custom_metadata]
     }
 
-    private void includesForDeleteFiles() {
+    public void includesForDeleteFiles() {
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
         // [START delete_file]
@@ -494,5 +526,35 @@ public class StorageActivity extends AppCompatActivity {
         });
         // [END delete_file]
     }
+
+    public void nonDefaultBucket() {
+        // [START storage_non_default_bucket]
+        // Get a non-default Storage bucket
+        FirebaseStorage storage = FirebaseStorage.getInstance("gs://my-custom-bucket");
+        // [END storage_non_default_bucket]
+    }
+
+    public void customApp() {
+        FirebaseApp customApp = FirebaseApp.initializeApp(this);
+
+        // [START storage_custom_app]
+        // Get the default bucket from a custom FirebaseApp
+        FirebaseStorage storage = FirebaseStorage.getInstance(customApp);
+
+        // Get a non-default bucket from a custom FirebaseApp
+        FirebaseStorage customStorage = FirebaseStorage.getInstance(customApp, "gs://my-custom-bucket");
+        // [END storage_custom_app]
+    }
+
+    // [START storage_custom_failure_listener]
+    class MyFailureListener implements OnFailureListener {
+        @Override
+        public void onFailure(@NonNull Exception exception) {
+            int errorCode = ((StorageException) exception).getErrorCode();
+            String errorMessage = exception.getMessage();
+            // test the errorCode and errorMessage, and handle accordingly
+        }
+    }
+    // [END storage_custom_failure_listener]
 
 }

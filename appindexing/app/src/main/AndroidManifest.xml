@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.google.firebase.example.appindexing">
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <!-- [START appindexing_noindex_metadata] -->
+        <meta-data
+            android:name="search-engine"
+            android:resource="@xml/noindex" />
+        <!-- [END appindexing_noindex_metadata] -->
+
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".kotlin.MainActivity" />
+        <activity android:name=".kotlin.MeasureActivity" />
+
+        <receiver
+            android:name=".kotlin.AppIndexingUpdateReceiver"
+            android:exported="true"
+            android:permission="com.google.android.gms.permission.APPINDEXING">
+            <intent-filter>
+                <action android:name="com.google.firebase.appindexing.UPDATE_INDEX" />
+            </intent-filter>
+        </receiver>
+
+        <activity android:name="com.google.firebase.example.appindexing.MeasureActivity" />
+
+        <!-- [START appindexing_service_manifest] -->
+        <!-- Register the BroadcastReceiver -->
+        <receiver
+            android:name=".AppIndexingUpdateReceiver"
+            android:exported="true"
+            android:permission="com.google.android.gms.permission.APPINDEXING">
+            <intent-filter>
+                <action android:name="com.google.firebase.appindexing.UPDATE_INDEX" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Grant the AppIndexingUpdateService permission and enable it to run after being triggered -->
+        <service
+            android:name=".AppIndexingUpdateService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <!-- [END appindexing_service_manifest] -->
+
+        <service
+            android:name=".kotlin.AppIndexingUpdateService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+    </application>
+
+</manifest>

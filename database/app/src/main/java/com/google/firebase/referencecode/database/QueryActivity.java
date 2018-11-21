@@ -16,6 +16,8 @@
 package com.google.firebase.referencecode.database;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -54,14 +56,11 @@ public class QueryActivity extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance().getReference();
     }
 
-    private String getUid() {
+    public String getUid() {
         return "42";
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
+    public void basicListen() {
         // [START basic_listen]
         // Get a reference to Messages and attach a listener
         mMessagesRef = databaseReference.child("messages");
@@ -93,8 +92,9 @@ public class QueryActivity extends AppCompatActivity {
         };
         mMessagesRef.addValueEventListener(mMessagesListener);
         // [END basic_listen]
+    }
 
-
+    public void basicQuery() {
         // [START basic_query]
         // My top posts by number of stars
         String myUserId = getUid();
@@ -111,6 +111,12 @@ public class QueryActivity extends AppCompatActivity {
             // [END_EXCLUDE]
         });
         // [END basic_query]
+    }
+
+    public void basicQueryValueListener() {
+        String myUserId = getUid();
+        Query myTopPostsQuery = databaseReference.child("user-posts").child(myUserId)
+                .orderByChild("starCount");
 
         // [START basic_query_value_listener]
         // My top posts by number of stars
@@ -130,22 +136,62 @@ public class QueryActivity extends AppCompatActivity {
             }
         });
         // [END basic_query_value_listener]
+    }
 
+    public void cleanBasicListener() {
+        // Clean up value listener
+        // [START clean_basic_listen]
+        mMessagesRef.removeEventListener(mMessagesListener);
+        // [END clean_basic_listen]
+    }
+
+    public void cleanBasicQuery() {
+        // Clean up query listener
+        // [START clean_basic_query]
+        mMessagesQuery.removeEventListener(mMessagesQueryListener);
+        // [END clean_basic_query]
+    }
+
+    public void orderByNested() {
+        // [START rtdb_order_by_nested]
+        // Most viewed posts
+        Query myMostViewedPostsQuery = databaseReference.child("posts")
+                .orderByChild("metrics/views");
+        myMostViewedPostsQuery.addChildEventListener(new ChildEventListener() {
+            // TODO: implement the ChildEventListener methods as documented above
+            // [START_EXCLUDE]
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
+            // [END_EXCLUDE]
+        });
+        // [END rtdb_order_by_nested]
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        basicListen();
+        basicQuery();
+        basicQueryValueListener();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-
-        // Clean up value listener
-        // [START clean_basic_listen]
-        mMessagesRef.removeEventListener(mMessagesListener);
-        // [END clean_basic_listen]
-
-        // Clean up query listener
-        // [START clean_basic_query]
-        mMessagesQuery.removeEventListener(mMessagesQueryListener);
-        // [END clean_basic_query]
+        cleanBasicListener();
+        cleanBasicQuery();
     }
 }
 

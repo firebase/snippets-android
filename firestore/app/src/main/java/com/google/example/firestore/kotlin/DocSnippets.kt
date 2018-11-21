@@ -1,15 +1,34 @@
+@file:Suppress("UNUSED_VARIABLE", "UNUSED_ANONYMOUS_PARAMETER")
+
 package com.google.example.firestore.kotlin
 
 import android.support.annotation.WorkerThread
 import android.util.Log
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
-import com.google.firebase.firestore.*
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentChange
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.EventListener
-import java.util.*
-import java.util.concurrent.*
+import com.google.firebase.firestore.FieldPath
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.FirebaseFirestoreSettings
+import com.google.firebase.firestore.MetadataChanges
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.ServerTimestamp
+import com.google.firebase.firestore.SetOptions
+import com.google.firebase.firestore.Source
+import java.util.ArrayList
+import java.util.Date
+import java.util.HashMap
+import java.util.concurrent.Callable
+import java.util.concurrent.Executor
+import java.util.concurrent.LinkedBlockingQueue
+import java.util.concurrent.ThreadPoolExecutor
+import java.util.concurrent.TimeUnit
 
 /**
  * Kotlin version of doc snippets.
@@ -17,13 +36,16 @@ import java.util.concurrent.*
  * Note: this is a naive auto-translation of the Java code with a few edits, this is not intended
  *       as a good example of idiomatic Kotlin.
  */
-class DocSnippets(val db: FirebaseFirestore) {
+abstract class DocSnippets(val db: FirebaseFirestore) {
 
-    private val TAG = "DocSnippets"
+    companion object {
 
-    private val EXECUTOR = ThreadPoolExecutor(2, 4,
-            60, TimeUnit.SECONDS, LinkedBlockingQueue()
-    )
+        private val TAG = "DocSnippets"
+
+        private val EXECUTOR = ThreadPoolExecutor(2, 4,
+                60, TimeUnit.SECONDS, LinkedBlockingQueue()
+        )
+    }
 
     internal fun runAll() {
         Log.d(TAG, "================= BEGIN RUN ALL ===============")
@@ -50,6 +72,7 @@ class DocSnippets(val db: FirebaseFirestore) {
         transactions()
         transactionPromise()
         getDocument()
+        getDocumentWithOptions()
         listenToDocument()
         listenToDocumentLocal()
         getMultipleDocs()
@@ -76,28 +99,17 @@ class DocSnippets(val db: FirebaseFirestore) {
         } catch (e: Exception) {
             Log.d(TAG, "orderAndLimitInvalid", e)
         }
-
     }
 
-
-    internal fun deleteAll() {
-        deleteCollection("cities")
-        deleteCollection("users")
-    }
-
-    private fun deleteCollection(path: String) {
-        deleteCollection(db.collection(path), 50, EXECUTOR)
-    }
-
-    private fun setup() {
+    fun setup() {
         // [START get_firestore_instance]
         val db = FirebaseFirestore.getInstance()
         // [END get_firestore_instance]
 
         // [START set_firestore_settings]
         val settings = FirebaseFirestoreSettings.Builder()
-            .setPersistenceEnabled(true)
-            .build()
+                .setPersistenceEnabled(true)
+                .build()
         db.firestoreSettings = settings
         // [END set_firestore_settings]
     }
@@ -106,49 +118,55 @@ class DocSnippets(val db: FirebaseFirestore) {
         // [START add_ada_lovelace]
         // Create a new user with a first and last name
         val user = HashMap<String, Any>()
-        user.put("first", "Ada")
-        user.put("last", "Lovelace")
-        user.put("born", 1815)
+        user["first"] = "Ada"
+        user["last"] = "Lovelace"
+        user["born"] = 1815
 
         // Add a new document with a generated ID
         db.collection("users")
             .add(user)
-            .addOnSuccessListener { documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.id) }
-            .addOnFailureListener { e -> Log.w(TAG, "Error adding document", e) }
+            .addOnSuccessListener { documentReference ->
+                Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.id)
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error adding document", e)
+            }
         // [END add_ada_lovelace]
     }
-
 
     private fun addAlanTuring() {
         // [START add_alan_turing]
         // Create a new user with a first, middle, and last name
         val user = HashMap<String, Any>()
-        user.put("first", "Alan")
-        user.put("middle", "Mathison")
-        user.put("last", "Turring")
-        user.put("born", 1912)
+        user["first"] = "Alan"
+        user["middle"] = "Mathison"
+        user["last"] = "Turring"
+        user["born"] = 1912
 
         // Add a new document with a generated ID
         db.collection("users")
             .add(user)
-            .addOnSuccessListener { documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.id) }
-            .addOnFailureListener { e -> Log.w(TAG, "Error adding document", e) }
+            .addOnSuccessListener { documentReference ->
+                Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.id)
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error adding document", e)
+            }
         // [END add_alan_turing]
     }
 
     private fun getAllUsers() {
         // [START get_all_users]
         db.collection("users")
-            .get()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    for (document in task.result) {
+                .get()
+                .addOnSuccessListener { result ->
+                    for (document in result) {
                         Log.d(TAG, document.id + " => " + document.data)
                     }
-                } else {
-                    Log.w(TAG, "Error getting documents.", task.exception)
                 }
-            }
+                .addOnFailureListener { exception ->
+                    Log.w(TAG, "Error getting documents.", exception)
+                }
         // [END get_all_users]
     }
 
@@ -159,16 +177,15 @@ class DocSnippets(val db: FirebaseFirestore) {
         // You will get a first snapshot with the initial results and a new
         // snapshot each time there is a change in the results.
         db.collection("users")
-            .whereLessThan("born", 1900)
-            .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
-                if (e != null) {
-                    Log.w(TAG, "Listen failed.", e)
-                    return@EventListener
-                }
+                .whereLessThan("born", 1900)
+                .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
+                    if (e != null) {
+                        Log.w(TAG, "Listen failed.", e)
+                        return@EventListener
+                    }
 
-                Log.d(TAG, "Current users born before 1900: " + snapshots!!)
-            }
-            )
+                    Log.d(TAG, "Current users born before 1900: " + snapshots!!)
+                })
         // [END listen_for_users]
     }
 
@@ -187,25 +204,28 @@ class DocSnippets(val db: FirebaseFirestore) {
     private fun subcollectionReference() {
         // [START subcollection_reference]
         val messageRef = db
-            .collection("rooms").document("roomA")
-            .collection("messages").document("message1")
+                .collection("rooms").document("roomA")
+                .collection("messages").document("message1")
         // [END subcollection_reference]
     }
 
-    private fun docReferenceAlternate() {
+    fun docReferenceAlternate() {
         // [START doc_reference_alternate]
         val alovelaceDocumentRef = db.document("users/alovelace")
         // [END doc_reference_alternate]
     }
 
     // [START city_class]
-    data class City(val name: String?,
-                    val state: String?,
-                    val country: String?,
-                    val isCapital: Boolean?,
-                    val population: Long?) {
+    data class City(
+        val name: String?,
+        val state: String?,
+        val country: String?,
+        val isCapital: Boolean?,
+        val population: Long?,
+        val regions: List<String>?
+    ) {
         // [START_EXCLUDE]
-        constructor() : this(null, null, null, null, null)
+        constructor() : this(null, null, null, null, null, null)
         // [END_EXCLUDE]
     }
     // [END city_class]
@@ -213,14 +233,14 @@ class DocSnippets(val db: FirebaseFirestore) {
     private fun setDocument() {
         // [START set_document]
         val city = HashMap<String, Any>()
-        city.put("name", "Los Angeles")
-        city.put("state", "CA")
-        city.put("country", "USA")
+        city["name"] = "Los Angeles"
+        city["state"] = "CA"
+        city["country"] = "USA"
 
         db.collection("cities").document("LA")
-            .set(city)
-            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
-            .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+                .set(city)
+                .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+                .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
         // [END set_document]
 
         val data = HashMap<String, Any>()
@@ -233,29 +253,30 @@ class DocSnippets(val db: FirebaseFirestore) {
     private fun dataTypes() {
         // [START data_types]
         val docData = HashMap<String, Any?>()
-        docData.put("stringExample", "Hello world!")
-        docData.put("booleanExample", true)
-        docData.put("numberExample", 3.14159265)
-        docData.put("dateExample", Date())
-        docData.put("listExample", Arrays.asList(1, 2, 3))
-        docData.put("nullExample", null)
+        docData["stringExample"] = "Hello world!"
+        docData["booleanExample"] = true
+        docData["numberExample"] = 3.14159265
+        docData["dateExample"] = Date()
+        docData["listExample"] = arrayListOf(1, 2, 3)
+        docData["nullExample"] = null
 
         val nestedData = HashMap<String, Any>()
-        nestedData.put("a", 5)
-        nestedData.put("b", true)
+        nestedData["a"] = 5
+        nestedData["b"] = true
 
-        docData.put("objectExample", nestedData)
+        docData["objectExample"] = nestedData
 
         db.collection("data").document("one")
-            .set(docData)
-            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
-            .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+                .set(docData)
+                .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+                .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
         // [END data_types]
     }
 
-    private fun addCustomClass() {
+    fun addCustomClass() {
         // [START add_custom_class]
-        val city = City("Los Angeles", "CA", "USA", false, 5000000L)
+        val city = City("Los Angeles", "CA", "USA",
+                false, 5000000L, listOf("west_coast", "socal"))
         db.collection("cities").document("LA").set(city)
         // [END add_custom_class]
     }
@@ -264,13 +285,17 @@ class DocSnippets(val db: FirebaseFirestore) {
         // [START add_document]
         // Add a new document with a generated id.
         val data = HashMap<String, Any>()
-        data.put("name", "Tokyo")
-        data.put("country", "Japan")
+        data["name"] = "Tokyo"
+        data["country"] = "Japan"
 
         db.collection("cities")
             .add(data)
-            .addOnSuccessListener { documentReference -> Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.id) }
-            .addOnFailureListener { e -> Log.w(TAG, "Error adding document", e) }
+            .addOnSuccessListener { documentReference ->
+                Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.id)
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error adding document", e)
+            }
         // [END add_document]
     }
 
@@ -291,10 +316,22 @@ class DocSnippets(val db: FirebaseFirestore) {
 
         // Set the "isCapital" field of the city 'DC'
         washingtonRef
-            .update("capital", true)
-            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully updated!") }
-            .addOnFailureListener { e -> Log.w(TAG, "Error updating document", e) }
+                .update("capital", true)
+                .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully updated!") }
+                .addOnFailureListener { e -> Log.w(TAG, "Error updating document", e) }
         // [END update_document]
+    }
+
+    fun updateDocumentArray() {
+        // [START update_document_array]
+        val washingtonRef = db.collection("cities").document("DC")
+
+        // Atomically add a new region to the "regions" array field.
+        washingtonRef.update("regions", FieldValue.arrayUnion("greater_virginia"))
+
+        // Atomically remove a region from the "regions" array field.
+        washingtonRef.update("regions", FieldValue.arrayRemove("east_coast"))
+        // [END update_document_array]
     }
 
     private fun updateDocumentNested() {
@@ -308,10 +345,10 @@ class DocSnippets(val db: FirebaseFirestore) {
         //
         // To update age and favorite color:
         db.collection("users").document("frank")
-            .update(
-                    "age", 13,
-                    "favorites.color", "Red"
-            )
+                .update(
+                        "age", 13,
+                        "favorites.color", "Red"
+                )
         // [END update_document_nested]
     }
 
@@ -319,19 +356,19 @@ class DocSnippets(val db: FirebaseFirestore) {
         // [START set_field_with_merge]
         // Update one field, creating the document if it does not already exist.
         val data = HashMap<String, Any>()
-        data.put("capital", true)
+        data["capital"] = true
 
         db.collection("cities").document("BJ")
-            .set(data, SetOptions.merge())
+                .set(data, SetOptions.merge())
         // [END set_field_with_merge]
     }
 
     private fun deleteDocument() {
         // [START delete_document]
         db.collection("cities").document("DC")
-            .delete()
-            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully deleted!") }
-            .addOnFailureListener { e -> Log.w(TAG, "Error deleting document", e) }
+                .delete()
+                .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully deleted!") }
+                .addOnFailureListener { e -> Log.w(TAG, "Error deleting document", e) }
         // [END delete_document]
     }
 
@@ -347,7 +384,7 @@ class DocSnippets(val db: FirebaseFirestore) {
             // Success
             null
         }.addOnSuccessListener { Log.d(TAG, "Transaction success!") }
-            .addOnFailureListener { e -> Log.w(TAG, "Transaction failure.", e) }
+                .addOnFailureListener { e -> Log.w(TAG, "Transaction failure.", e) }
         // [END transactions]
     }
 
@@ -363,8 +400,7 @@ class DocSnippets(val db: FirebaseFirestore) {
                 newPopulation
             } else {
                 throw FirebaseFirestoreException("Population too high",
-                        FirebaseFirestoreException.Code.ABORTED
-                )
+                        FirebaseFirestoreException.Code.ABORTED)
             }
         }.addOnSuccessListener { result ->
             Log.d(TAG, "Transaction success: " + result!!)
@@ -374,7 +410,7 @@ class DocSnippets(val db: FirebaseFirestore) {
         // [END transaction_with_result]
     }
 
-    private fun writeBatch() {
+    fun writeBatch() {
         // [START write_batch]
         // Get a new write batch
         val batch = db.batch()
@@ -401,25 +437,46 @@ class DocSnippets(val db: FirebaseFirestore) {
     private fun getDocument() {
         // [START get_document]
         val docRef = db.collection("cities").document("SF")
-        docRef.get().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val document = task.result
-                if (document != null) {
-                    Log.d(TAG, "DocumentSnapshot data: " + task.result.data)
-                } else {
-                    Log.d(TAG, "No such document")
+        docRef.get()
+                .addOnSuccessListener { document ->
+                    if (document != null) {
+                        Log.d(TAG, "DocumentSnapshot data: " + document.data)
+                    } else {
+                        Log.d(TAG, "No such document")
+                    }
                 }
-            } else {
-                Log.d(TAG, "get failed with ", task.exception)
-            }
-        }
+                .addOnFailureListener { exception ->
+                    Log.d(TAG, "get failed with ", exception)
+                }
         // [END get_document]
     }
 
-    private fun customObjects() {
+    private fun getDocumentWithOptions() {
+        // [START get_document_options]
+        val docRef = db.collection("cities").document("SF")
+
+        // Source can be CACHE, SERVER, or DEFAULT.
+        val source = Source.CACHE
+
+        // Get the document, forcing the SDK to use the offline cache
+        docRef.get(source).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                // Document found in the offline cache
+                val document = task.result!!
+                Log.d(TAG, "Cached document data: " + document.data)
+            } else {
+                Log.d(TAG, "Cached get failed: ", task.exception)
+            }
+        }
+        // [END get_document_options]
+    }
+
+    fun customObjects() {
         // [START custom_objects]
         val docRef = db.collection("cities").document("BJ")
-        docRef.get().addOnSuccessListener { documentSnapshot -> val city = documentSnapshot.toObject(City::class.java) }
+        docRef.get().addOnSuccessListener { documentSnapshot ->
+            val city = documentSnapshot.toObject(City::class.java)
+        }
         // [END custom_objects]
     }
 
@@ -432,13 +489,12 @@ class DocSnippets(val db: FirebaseFirestore) {
                 return@EventListener
             }
 
-            if (snapshot != null && snapshot!!.exists()) {
-                Log.d(TAG, "Current data: " + snapshot!!.data)
+            if (snapshot != null && snapshot.exists()) {
+                Log.d(TAG, "Current data: " + snapshot.data)
             } else {
                 Log.d(TAG, "Current data: null")
             }
-        }
-        )
+        })
         // [END listen_document]
     }
 
@@ -451,119 +507,123 @@ class DocSnippets(val db: FirebaseFirestore) {
                 return@EventListener
             }
 
-            val source = if (snapshot != null && snapshot!!.metadata.hasPendingWrites())
+            val source = if (snapshot != null && snapshot.metadata.hasPendingWrites())
                 "Local"
             else
                 "Server"
 
-            if (snapshot != null && snapshot!!.exists()) {
-                Log.d(TAG, source + " data: " + snapshot!!.data)
+            if (snapshot != null && snapshot.exists()) {
+                Log.d(TAG, source + " data: " + snapshot.data)
             } else {
-                Log.d(TAG, source + " data: null")
+                Log.d(TAG, "$source data: null")
             }
-        }
-        )
+        })
         // [END listen_document_local]
+    }
+
+    fun listenWithMetadata() {
+        // [START listen_with_metadata]
+        // Listen for metadata changes to the document.
+        val docRef = db.collection("cities").document("SF")
+        docRef.addSnapshotListener(MetadataChanges.INCLUDE) { snapshot, e ->
+            // ...
+        }
+        // [END listen_with_metadata]
     }
 
     private fun getMultipleDocs() {
         // [START get_multiple]
         db.collection("cities")
-            .whereEqualTo("capital", true)
-            .get()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    for (document in task.result) {
+                .whereEqualTo("capital", true)
+                .get()
+                .addOnSuccessListener { documents ->
+                    for (document in documents) {
                         Log.d(TAG, document.id + " => " + document.data)
                     }
-                } else {
-                    Log.d(TAG, "Error getting documents: ", task.exception)
                 }
-            }
+                .addOnFailureListener { exception ->
+                    Log.w(TAG, "Error getting documents: ", exception)
+                }
         // [END get_multiple]
     }
 
     private fun getAllDocs() {
         // [START get_multiple_all]
         db.collection("cities")
-            .get()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    for (document in task.result) {
+                .get()
+                .addOnSuccessListener { result ->
+                    for (document in result) {
                         Log.d(TAG, document.id + " => " + document.data)
                     }
-                } else {
-                    Log.d(TAG, "Error getting documents: ", task.exception)
                 }
-            }
+                .addOnFailureListener { exception ->
+                    Log.d(TAG, "Error getting documents: ", exception)
+                }
         // [END get_multiple_all]
     }
 
     private fun listenToMultiple() {
         // [START listen_multiple]
         db.collection("cities")
-            .whereEqualTo("state", "CA")
-            .addSnapshotListener(EventListener<QuerySnapshot> { value, e ->
-                if (e != null) {
-                    Log.w(TAG, "Listen failed.", e)
-                    return@EventListener
-                }
-
-                val cities = ArrayList<String>()
-                for (doc in value!!) {
-                    if (doc.get("name") != null) {
-                        cities.add(doc.getString("name"))
+                .whereEqualTo("state", "CA")
+                .addSnapshotListener(EventListener<QuerySnapshot> { value, e ->
+                    if (e != null) {
+                        Log.w(TAG, "Listen failed.", e)
+                        return@EventListener
                     }
-                }
-                Log.d(TAG, "Current cites in CA: " + cities)
-            }
-            )
+
+                    val cities = ArrayList<String>()
+                    for (doc in value!!) {
+                        if (doc.get("name") != null) {
+                            cities.add(doc.getString("name")!!)
+                        }
+                    }
+                    Log.d(TAG, "Current cites in CA: $cities")
+                })
         // [END listen_multiple]
     }
 
     private fun listenToDiffs() {
         // [START listen_diffs]
         db.collection("cities")
-            .whereEqualTo("state", "CA")
-            .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
-                if (e != null) {
-                    Log.w(TAG, "listen:error", e)
-                    return@EventListener
-                }
-
-                for (dc in snapshots!!.documentChanges) {
-                    when (dc.type) {
-                        DocumentChange.Type.ADDED -> Log.d(TAG, "New city: " + dc.document.data)
-                        DocumentChange.Type.MODIFIED -> Log.d(TAG, "Modified city: " + dc.document.data)
-                        DocumentChange.Type.REMOVED -> Log.d(TAG, "Removed city: " + dc.document.data)
+                .whereEqualTo("state", "CA")
+                .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
+                    if (e != null) {
+                        Log.w(TAG, "listen:error", e)
+                        return@EventListener
                     }
-                }
-            }
-            )
+
+                    for (dc in snapshots!!.documentChanges) {
+                        when (dc.type) {
+                            DocumentChange.Type.ADDED -> Log.d(TAG, "New city: " + dc.document.data)
+                            DocumentChange.Type.MODIFIED -> Log.d(TAG, "Modified city: " + dc.document.data)
+                            DocumentChange.Type.REMOVED -> Log.d(TAG, "Removed city: " + dc.document.data)
+                        }
+                    }
+                })
         // [END listen_diffs]
     }
 
     private fun listenState() {
         // [START listen_state]
         db.collection("cities")
-            .whereEqualTo("state", "CA")
-            .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
-                if (e != null) {
-                    Log.w(TAG, "listen:error", e)
-                    return@EventListener
-                }
-
-                for (dc in snapshots!!.documentChanges) {
-                    if (dc.type == DocumentChange.Type.ADDED) {
-                        Log.d(TAG, "New city: " + dc.document.data)
+                .whereEqualTo("state", "CA")
+                .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
+                    if (e != null) {
+                        Log.w(TAG, "listen:error", e)
+                        return@EventListener
                     }
-                }
 
-                if (!snapshots!!.metadata.isFromCache) {
-                    Log.d(TAG, "Got initial state.")
-                }
-            }
-            )
+                    for (dc in snapshots!!.documentChanges) {
+                        if (dc.type == DocumentChange.Type.ADDED) {
+                            Log.d(TAG, "New city: " + dc.document.data)
+                        }
+                    }
+
+                    if (!snapshots.metadata.isFromCache) {
+                        Log.d(TAG, "Got initial state.")
+                    }
+                })
         // [END listen_state]
     }
 
@@ -585,12 +645,10 @@ class DocSnippets(val db: FirebaseFirestore) {
     private fun handleListenErrors() {
         // [START handle_listen_errors]
         db.collection("cities")
-            .addSnapshotListener(object : EventListener<QuerySnapshot> {
-                override fun onEvent(snapshots: QuerySnapshot?,
-                                     e: FirebaseFirestoreException?) {
+                .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
                     if (e != null) {
                         Log.w(TAG, "listen:error", e)
-                        return
+                        return@EventListener
                     }
 
                     for (dc in snapshots!!.documentChanges) {
@@ -598,10 +656,7 @@ class DocSnippets(val db: FirebaseFirestore) {
                             Log.d(TAG, "New city: " + dc.document.data)
                         }
                     }
-
-                }
-            }
-            )
+                })
         // [END handle_listen_errors]
     }
 
@@ -610,43 +665,48 @@ class DocSnippets(val db: FirebaseFirestore) {
         val cities = db.collection("cities")
 
         val data1 = HashMap<String, Any>()
-        data1.put("name", "San Francisco")
-        data1.put("state", "CA")
-        data1.put("country", "USA")
-        data1.put("capital", false)
-        data1.put("population", 860000)
+        data1["name"] = "San Francisco"
+        data1["state"] = "CA"
+        data1["country"] = "USA"
+        data1["capital"] = false
+        data1["population"] = 860000
+        data1["regions"] = listOf("west_coast", "norcal")
         cities.document("SF").set(data1)
 
         val data2 = HashMap<String, Any>()
-        data2.put("name", "Los Angeles")
-        data2.put("state", "CA")
-        data2.put("country", "USA")
-        data2.put("capital", false)
-        data2.put("population", 3900000)
+        data2["name"] = "Los Angeles"
+        data2["state"] = "CA"
+        data2["country"] = "USA"
+        data2["capital"] = false
+        data2["population"] = 3900000
+        data2["regions"] = listOf("west_coast", "socal")
         cities.document("LA").set(data2)
 
         val data3 = HashMap<String, Any?>()
-        data3.put("name", "Washington D.C.")
-        data3.put("state", null)
-        data3.put("country", "USA")
-        data3.put("capital", true)
-        data3.put("population", 680000)
+        data3["name"] = "Washington D.C."
+        data3["state"] = null
+        data3["country"] = "USA"
+        data3["capital"] = true
+        data3["population"] = 680000
+        data3["regions"] = listOf("east_coast")
         cities.document("DC").set(data3)
 
         val data4 = HashMap<String, Any?>()
-        data4.put("name", "Tokyo")
-        data4.put("state", null)
-        data4.put("country", "Japan")
-        data4.put("capital", true)
-        data4.put("population", 9000000)
+        data4["name"] = "Tokyo"
+        data4["state"] = null
+        data4["country"] = "Japan"
+        data4["capital"] = true
+        data4["population"] = 9000000
+        data4["regions"] = listOf("kanto", "honshu")
         cities.document("TOK").set(data4)
 
         val data5 = HashMap<String, Any?>()
-        data5.put("name", "Beijing")
-        data5.put("state", null)
-        data5.put("country", "China")
-        data5.put("capital", true)
-        data5.put("population", 21500000)
+        data5["name"] = "Beijing"
+        data5["state"] = null
+        data5["country"] = "China"
+        data5["capital"] = true
+        data5["population"] = 21500000
+        data5["regions"] = listOf("jingjinji", "hebei")
         cities.document("BJ").set(data5)
         // [END example_data]
     }
@@ -671,6 +731,14 @@ class DocSnippets(val db: FirebaseFirestore) {
         // [END example_filters]
     }
 
+    fun arrayContainsQueries() {
+        // [START array_contains_filter]
+        val citiesRef = db.collection("cities")
+
+        citiesRef.whereArrayContains("regions", "west_coast")
+        // [END array_contains_filter]
+    }
+
     private fun compoundQueries() {
         val citiesRef = db.collection("cities")
 
@@ -681,9 +749,9 @@ class DocSnippets(val db: FirebaseFirestore) {
 
         // [START valid_range_filters]
         citiesRef.whereGreaterThanOrEqualTo("state", "CA")
-            .whereLessThanOrEqualTo("state", "IN")
+                .whereLessThanOrEqualTo("state", "IN")
         citiesRef.whereEqualTo("state", "CA")
-            .whereGreaterThan("population", 1000000)
+                .whereGreaterThan("population", 1000000)
         // [END valid_range_filters]
     }
 
@@ -691,7 +759,8 @@ class DocSnippets(val db: FirebaseFirestore) {
         val citiesRef = db.collection("cities")
 
         // [START invalid_range_filters]
-        citiesRef.whereGreaterThanOrEqualTo("state", "CA").whereGreaterThan("population", 100000)
+        citiesRef.whereGreaterThanOrEqualTo("state", "CA")
+                .whereGreaterThan("population", 100000)
         // [END invalid_range_filters]
     }
 
@@ -731,43 +800,39 @@ class DocSnippets(val db: FirebaseFirestore) {
         // [START query_start_at_single]
         // Get all cities with a population >= 1,000,000, ordered by population,
         db.collection("cities")
-            .orderBy("population")
-            .startAt(1000000)
+                .orderBy("population")
+                .startAt(1000000)
         // [END query_start_at_single]
 
         // [START query_end_at_single]
         // Get all cities with a population <= 1,000,000, ordered by population,
         db.collection("cities")
-            .orderBy("population")
-            .endAt(1000000)
+                .orderBy("population")
+                .endAt(1000000)
         // [END query_end_at_single]
 
         // [START query_start_at_doc_snapshot]
         // Get the data for "San Francisco"
         db.collection("cities").document("SF")
-            .get()
-            .addOnSuccessListener(object : OnSuccessListener<DocumentSnapshot> {
-                override fun onSuccess(documentSnapshot: DocumentSnapshot) {
+                .get()
+                .addOnSuccessListener { documentSnapshot ->
                     // Get all cities with a population bigger than San Francisco.
                     val biggerThanSf = db.collection("cities")
-                        .orderBy("population")
-                        .startAt(documentSnapshot)
+                            .orderBy("population")
+                            .startAt(documentSnapshot)
 
                     // ...
                 }
-            }
-            )
         // [END query_start_at_doc_snapshot]
 
         // [START query_pagination]
         // Construct query for first 25 cities, ordered by population
         val first = db.collection("cities")
-            .orderBy("population")
-            .limit(25)
+                .orderBy("population")
+                .limit(25)
 
         first.get()
-            .addOnSuccessListener(object : OnSuccessListener<QuerySnapshot> {
-                override fun onSuccess(documentSnapshots: QuerySnapshot) {
+                .addOnSuccessListener { documentSnapshots ->
                     // ...
 
                     // Get the last visible document
@@ -776,29 +841,27 @@ class DocSnippets(val db: FirebaseFirestore) {
                     // Construct a new query starting at this document,
                     // get the next 25 cities.
                     val next = db.collection("cities")
-                        .orderBy("population")
-                        .startAfter(lastVisible)
-                        .limit(25)
+                            .orderBy("population")
+                            .startAfter(lastVisible)
+                            .limit(25)
 
                     // Use the query for pagination
                     // ...
                 }
-            }
-            )
         // [END query_pagination]
 
         // [START multi_cursor]
         // Will return all Springfields
         db.collection("cities")
-            .orderBy("name")
-            .orderBy("state")
-            .startAt("Springfield")
+                .orderBy("name")
+                .orderBy("state")
+                .startAt("Springfield")
 
         // Will return "Springfield, Missouri" and "Springfield, Wisconsin"
         db.collection("cities")
-            .orderBy("name")
-            .orderBy("state")
-            .startAt("Springfield", "Missouri")
+                .orderBy("name")
+                .orderBy("state")
+                .startAt("Springfield", "Missouri")
         // [END multi_cursor]
     }
 
@@ -807,39 +870,36 @@ class DocSnippets(val db: FirebaseFirestore) {
      * Delete all documents in a collection. Uses an Executor to perform work on a background
      * thread. This does *not* automatically discover and delete subcollections.
      */
-    private fun deleteCollection(collection: CollectionReference,
-                                 batchSize: Int,
-                                 executor: Executor): Task<Void> {
+    private fun deleteCollection(
+        collection: CollectionReference,
+        batchSize: Int,
+        executor: Executor
+    ): Task<Void> {
 
         // Perform the delete operation on the provided Executor, which allows us to use
         // simpler synchronous logic without blocking the main thread.
-        return Tasks.call(executor, object : Callable<Void> {
-            @Throws(Exception::class)
-            override fun call(): Void? {
-                // Get the first batch of documents in the collection
-                var query = collection.orderBy(FieldPath.documentId()).limit(batchSize.toLong())
+        return Tasks.call(executor, Callable<Void> {
+            // Get the first batch of documents in the collection
+            var query = collection.orderBy(FieldPath.documentId()).limit(batchSize.toLong())
 
-                // Get a list of deleted documents
-                var deleted = deleteQueryBatch(query)
+            // Get a list of deleted documents
+            var deleted = deleteQueryBatch(query)
 
-                // While the deleted documents in the last batch indicate that there
-                // may still be more documents in the collection, page down to the
-                // next batch and delete again
-                while (deleted.size >= batchSize) {
-                    // Move the query cursor to start after the last doc in the batch
-                    val last = deleted[deleted.size - 1]
-                    query = collection.orderBy(FieldPath.documentId())
+            // While the deleted documents in the last batch indicate that there
+            // may still be more documents in the collection, page down to the
+            // next batch and delete again
+            while (deleted.size >= batchSize) {
+                // Move the query cursor to start after the last doc in the batch
+                val last = deleted[deleted.size - 1]
+                query = collection.orderBy(FieldPath.documentId())
                         .startAfter(last.id)
                         .limit(batchSize.toLong())
 
-                    deleted = deleteQueryBatch(query)
-                }
-
-                return null
+                deleted = deleteQueryBatch(query)
             }
-        }
-        )
 
+            null
+        })
     }
 
     /**
@@ -861,15 +921,29 @@ class DocSnippets(val db: FirebaseFirestore) {
     }
     // [END delete_collection]
 
-    private fun offlineListen(db: FirebaseFirestore) {
+    fun toggleOffline() {
+        // [START disable_network]
+        db.disableNetwork().addOnCompleteListener {
+            // Do offline things
+            // ...
+        }
+        // [END disable_network]
+
+        // [START enable_network]
+        db.enableNetwork().addOnCompleteListener {
+            // Do online things
+            // ...
+        }
+        // [END enable_network]
+    }
+
+    fun offlineListen(db: FirebaseFirestore) {
         // [START offline_listen]
         db.collection("cities").whereEqualTo("state", "CA")
-            .addSnapshotListener(object : EventListener<QuerySnapshot> {
-                override fun onEvent(querySnapshot: QuerySnapshot?,
-                                     e: FirebaseFirestoreException?) {
+                .addSnapshotListener(EventListener<QuerySnapshot> { querySnapshot, e ->
                     if (e != null) {
                         Log.w(TAG, "Listen error", e)
-                        return
+                        return@EventListener
                     }
 
                     for (change in querySnapshot!!.documentChanges) {
@@ -877,19 +951,15 @@ class DocSnippets(val db: FirebaseFirestore) {
                             Log.d(TAG, "New city:" + change.document.data)
                         }
 
-                        val source = if (querySnapshot!!.metadata.isFromCache)
+                        val source = if (querySnapshot.metadata.isFromCache)
                             "local cache"
                         else
                             "server"
-                        Log.d(TAG, "Data fetched from " + source)
+                        Log.d(TAG, "Data fetched from $source")
                     }
-
-                }
-            }
-            )
+                })
         // [END offline_listen]
     }
-
 
     // [START server_timestamp_annotation]
     inner class MyObject {
@@ -900,37 +970,27 @@ class DocSnippets(val db: FirebaseFirestore) {
     }
     // [END server_timestamp_annotation]
 
-    private fun updateWithServerTimestamp() {
+    fun updateWithServerTimestamp() {
         // [START update_with_server_timestamp]
         val docRef = db.collection("objects").document("some-id")
 
         // Update the timestamp field with the value from the server
         val updates = HashMap<String, Any>()
-        updates.put("timestamp", FieldValue.serverTimestamp())
+        updates["timestamp"] = FieldValue.serverTimestamp()
 
-        docRef.update(updates).addOnCompleteListener(object : OnCompleteListener<Void> {
-            // [START_EXCLUDE]
-            override fun onComplete(task: Task<Void>) {}
-            // [START_EXCLUDE]
-        }
-        )
+        docRef.update(updates).addOnCompleteListener { }
         // [END update_with_server_timestamp]
     }
 
-    private fun updateDeleteField() {
+    fun updateDeleteField() {
         // [START update_delete_field]
         val docRef = db.collection("cities").document("BJ")
 
         // Remove the 'capital' field from the document
         val updates = HashMap<String, Any>()
-        updates.put("capital", FieldValue.delete())
+        updates["capital"] = FieldValue.delete()
 
-        docRef.update(updates).addOnCompleteListener(object : OnCompleteListener<Void> {
-            // [START_EXCLUDE]
-            override fun onComplete(task: Task<Void>) {}
-            // [START_EXCLUDE]
-        }
-        )
+        docRef.update(updates).addOnCompleteListener { }
         // [END update_delete_field]
     }
 }

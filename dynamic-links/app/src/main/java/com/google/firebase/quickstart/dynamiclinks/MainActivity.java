@@ -15,6 +15,7 @@
  */
 package com.google.firebase.quickstart.dynamiclinks;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,8 +23,10 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.appinvite.FirebaseAppInvite;
 import com.google.firebase.dynamiclinks.DynamicLink;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
+import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 import com.google.firebase.dynamiclinks.ShortDynamicLink;
 
 public class MainActivity extends AppCompatActivity {
@@ -37,8 +40,8 @@ public class MainActivity extends AppCompatActivity {
     public void createDynamicLink_Basic() {
         // [START create_link_basic]
         DynamicLink dynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
-                .setLink(Uri.parse("https://example.com/"))
-                .setDynamicLinkDomain("abc123.app.goo.gl")
+                .setLink(Uri.parse("https://www.example.com/"))
+                .setDomainUriPrefix("https://example.page.link")
                 // Open links with this app on Android
                 .setAndroidParameters(new DynamicLink.AndroidParameters.Builder().build())
                 // Open links with com.example.ios on iOS
@@ -52,8 +55,8 @@ public class MainActivity extends AppCompatActivity {
     public void createDynamicLink_Advanced() {
         // [START create_link_advanced]
         DynamicLink dynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
-                .setLink(Uri.parse("https://example.com/"))
-                .setDynamicLinkDomain("abc123.app.goo.gl")
+                .setLink(Uri.parse("https://www.example.com/"))
+                .setDomainUriPrefix("https://example.page.link")
                 .setAndroidParameters(
                         new DynamicLink.AndroidParameters.Builder("com.example.android")
                                 .setMinimumVersion(125)
@@ -86,8 +89,8 @@ public class MainActivity extends AppCompatActivity {
     public void createShortLink() {
         // [START create_short_link]
         Task<ShortDynamicLink> shortLinkTask = FirebaseDynamicLinks.getInstance().createDynamicLink()
-                .setLink(Uri.parse("https://example.com/"))
-                .setDynamicLinkDomain("abc123.app.goo.gl")
+                .setLink(Uri.parse("https://www.example.com/"))
+                .setDomainUriPrefix("https://example.page.link")
                 // Set parameters
                 // ...
                 .buildShortDynamicLink()
@@ -107,10 +110,10 @@ public class MainActivity extends AppCompatActivity {
         // [END create_short_link]
     }
 
-    public void shotenLongLink() {
+    public void shortenLongLink() {
         // [START shorten_long_link]
         Task<ShortDynamicLink> shortLinkTask = FirebaseDynamicLinks.getInstance().createDynamicLink()
-                .setLongLink(Uri.parse("https://abc123.app.goo.gl/?link=https://example.com/&apn=com.example.android&ibn=com.example.ios"))
+                .setLongLink(Uri.parse("https://example.page.link/?link=https://www.example.com/&apn=com.example.android&ibn=com.example.ios"))
                 .buildShortDynamicLink()
                 .addOnCompleteListener(this, new OnCompleteListener<ShortDynamicLink>() {
                     @Override
@@ -126,6 +129,48 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
         // [END shorten_long_link]
+    }
+
+    public void shareLink(Uri myDynamicLink) {
+        // [START ddl_share_link]
+        Intent sendIntent = new Intent();
+        String msg = "Hey, check this out: " + myDynamicLink;
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, msg);
+        sendIntent.setType("text/plain");
+        startActivity(sendIntent);
+        // [END ddl_share_link]
+    }
+
+    public void getInvitation() {
+        // [START ddl_get_invitation]
+        FirebaseDynamicLinks.getInstance()
+                .getDynamicLink(getIntent())
+                .addOnCompleteListener(new OnCompleteListener<PendingDynamicLinkData>() {
+                    @Override
+                    public void onComplete(@NonNull Task<PendingDynamicLinkData> task) {
+                        if (!task.isSuccessful()) {
+                            // Handle error
+                            // ...
+                        }
+
+                        FirebaseAppInvite invite = FirebaseAppInvite.getInvitation(task.getResult());
+                        if (invite != null) {
+                            // Handle invite
+                            // ...
+                        }
+                    }
+                });
+        // [END ddl_get_invitation]
+    }
+
+    public void onboardingShare(ShortDynamicLink dl) {
+        // [START ddl_onboarding_share]
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, "Try this amazing app: " + dl.getShortLink());
+        startActivity(Intent.createChooser(intent, "Share using"));
+        // [END ddl_onboarding_share]
     }
 
 }

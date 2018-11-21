@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- [START appindexing_noindex_xml] -->
+<search-engine xmlns:android="http://schemas.android.com/apk/res/android">
+    <noindex android:value="notification"/>
+    <noindex uri="http://recipe-app.com/profile/hidden-page"/>
+    <noindex uriPrefix="http://recipe-app.com/users/hidden_prefix"/>
+</search-engine>
+<!-- [END appindexing_noindex_xml] -->

@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Firebase Options</string>
+    <string name="invitation_title">Invitation Title</string>
+    <string name="invitation_deep_link">https://example.com/deepLink</string>
+</resources>

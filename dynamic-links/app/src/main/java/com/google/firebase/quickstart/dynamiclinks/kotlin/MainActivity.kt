@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import com.google.android.gms.appinvite.AppInviteReferral
 import com.google.firebase.appinvite.FirebaseAppInvite
 import com.google.firebase.dynamiclinks.DynamicLink
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
@@ -103,6 +104,15 @@ abstract class MainActivity : AppCompatActivity() {
         // [END shorten_long_link]
     }
 
+    fun buildShortSuffix() {
+        // [START ddl_short_suffix]
+        val shortLinkTask = FirebaseDynamicLinks.getInstance().createDynamicLink()
+                // ...
+                .buildShortDynamicLink(ShortDynamicLink.Suffix.SHORT)
+                // ...
+        // [END ddl_short_suffix]
+    }
+
     fun shareLink(myDynamicLink: Uri) {
         // [START ddl_share_link]
         val sendIntent = Intent()
@@ -131,6 +141,12 @@ abstract class MainActivity : AppCompatActivity() {
                     }
                 }
         // [END ddl_get_invitation]
+    }
+
+    fun getDeepLink() {
+        // [START ddl_get_deep_link]
+        val link = AppInviteReferral.getDeepLink(intent)
+        // [END ddl_get_deep_link]
     }
 
     fun onboardingShare(dl: ShortDynamicLink) {

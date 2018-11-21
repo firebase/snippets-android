@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
+import com.google.android.gms.appinvite.AppInviteReferral;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.appinvite.FirebaseAppInvite;
@@ -131,6 +132,15 @@ public class MainActivity extends AppCompatActivity {
         // [END shorten_long_link]
     }
 
+    public void buildShortSuffix() {
+        // [START ddl_short_suffix]
+        Task<ShortDynamicLink> shortLinkTask = FirebaseDynamicLinks.getInstance().createDynamicLink()
+                // ...
+                .buildShortDynamicLink(ShortDynamicLink.Suffix.SHORT);
+                // ...
+        // [END ddl_short_suffix]
+    }
+
     public void shareLink(Uri myDynamicLink) {
         // [START ddl_share_link]
         Intent sendIntent = new Intent();
@@ -162,6 +172,13 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
         // [END ddl_get_invitation]
+    }
+
+    public void getDeepLink() {
+        Intent intent = getIntent();
+        // [START ddl_get_deep_link]
+        String link = AppInviteReferral.getDeepLink(intent);
+        // [END ddl_get_deep_link]
     }
 
     public void onboardingShare(ShortDynamicLink dl) {

@@ -31,7 +31,8 @@ class CustomModelActivity : AppCompatActivity() {
 
     private fun configureHostedModelSource() {
         // [START mlkit_cloud_model_source]
-        var conditionsBuilder: FirebaseModelDownloadConditions.Builder = FirebaseModelDownloadConditions.Builder().requireWifi()
+        var conditionsBuilder: FirebaseModelDownloadConditions.Builder =
+                FirebaseModelDownloadConditions.Builder().requireWifi()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             // Enable advanced conditions on Android Nougat and newer.
             conditionsBuilder = conditionsBuilder
@@ -53,7 +54,7 @@ class CustomModelActivity : AppCompatActivity() {
 
     private fun configureLocalModelSource() {
         // [START mlkit_local_model_source]
-        val localSource = FirebaseLocalModelSource.Builder("my_local_model")  // Assign a name for this model
+        val localSource = FirebaseLocalModelSource.Builder("my_local_model") // Assign a name for this model
                 .setAssetFilePath("my_model.tflite")
                 .build()
         FirebaseModelManager.getInstance().registerLocalModelSource(localSource)
@@ -113,7 +114,7 @@ class CustomModelActivity : AppCompatActivity() {
 
         // [START mlkit_run_inference]
         val inputs = FirebaseModelInputs.Builder()
-                .add(input)  // add() as many input arrays as your model requires
+                .add(input) // add() as many input arrays as your model requires
                 .build()
         firebaseInterpreter.run(inputs, inputOutputOptions)
                 .addOnSuccessListener { result ->
@@ -145,6 +146,4 @@ class CustomModelActivity : AppCompatActivity() {
         }
         // [END mlkit_use_inference_result]
     }
-
 }
-

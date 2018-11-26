@@ -44,5 +44,4 @@ class PreventChurnActivity : AppCompatActivity() {
     companion object {
         private val CACHE_EXPIRATION = (60 * 1000).toLong()
     }
-
 }

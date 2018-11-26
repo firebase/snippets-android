@@ -9,7 +9,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import java.util.HashMap
 
 class ConditionalAdsActivity : AppCompatActivity() {
-    
+
     private lateinit var firebaseRemoteConfig: FirebaseRemoteConfig
 
     fun initRemoteConfig() {
@@ -55,10 +55,7 @@ class ConditionalAdsActivity : AppCompatActivity() {
     }
     // [END pred_conditional_ads_policy]
 
-
     companion object {
-
         private val CACHE_EXPIRATION = 60 * 1000L
-
     }
 }

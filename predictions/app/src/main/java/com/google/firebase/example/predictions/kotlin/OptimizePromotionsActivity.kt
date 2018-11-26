@@ -10,10 +10,6 @@ class OptimizePromotionsActivity : AppCompatActivity() {
     private lateinit var config: FirebaseRemoteConfig
     private var promotedBundle: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     private fun initConfig() {
         // [START pred_optimize_promotions_init]
         config = FirebaseRemoteConfig.getInstance()

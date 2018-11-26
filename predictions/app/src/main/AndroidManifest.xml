@@ -17,7 +17,8 @@
         </activity>
         <activity android:name=".kotlin.MainActivity" />
         <activity android:name=".ConditionalAdsActivity" />
-        <activity android:name=".OptimizePromotionsActivity"></activity>
+        <activity android:name=".OptimizePromotionsActivity" />
+        <activity android:name=".PreventChurnActivity"></activity>
     </application>
 
 </manifest>

@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         FirebaseRemoteConfig config = FirebaseRemoteConfig.getInstance();
         String adPolicy = config.getString("ads_policy");
         boolean will_not_spend = config.getBoolean("will_not_spend");
-        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdView mAdView = findViewById(R.id.adView);
 
         if (adPolicy.equals("ads_always") ||
                 (adPolicy.equals("ads_nonspenders") && will_not_spend)) {

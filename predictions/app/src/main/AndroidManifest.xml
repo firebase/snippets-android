@@ -16,6 +16,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".kotlin.MainActivity" />
+        <activity android:name=".ConditionalAdsActivity"></activity>
     </application>
 
 </manifest>

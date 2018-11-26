@@ -152,11 +152,11 @@ public class TextRecognitionActivity extends AppCompatActivity {
 
     private FirebaseVisionDocumentTextRecognizer getLocalDocumentRecognizer() {
         // [START mlkit_local_doc_recognizer]
-        FirebaseVisionDocumentTextRecognizer textRecognizer = FirebaseVision.getInstance()
+        FirebaseVisionDocumentTextRecognizer detector = FirebaseVision.getInstance()
                 .getCloudDocumentTextRecognizer();
         // [END mlkit_local_doc_recognizer]
 
-        return textRecognizer;
+        return detector;
     }
 
     private FirebaseVisionDocumentTextRecognizer getCloudDocumentRecognizer() {
@@ -167,21 +167,21 @@ public class TextRecognitionActivity extends AppCompatActivity {
                 new FirebaseVisionCloudDocumentRecognizerOptions.Builder()
                         .setLanguageHints(Arrays.asList("en", "hi"))
                         .build();
-        FirebaseVisionDocumentTextRecognizer textRecognizer = FirebaseVision.getInstance()
+        FirebaseVisionDocumentTextRecognizer detector = FirebaseVision.getInstance()
                 .getCloudDocumentTextRecognizer(options);
         // [END mlkit_cloud_doc_recognizer]
 
-        return textRecognizer;
+        return detector;
     }
 
     private void processDocumentImage() {
         // Dummy variables
-        FirebaseVisionDocumentTextRecognizer textRecognizer = getLocalDocumentRecognizer();
+        FirebaseVisionDocumentTextRecognizer detector = getLocalDocumentRecognizer();
         FirebaseVisionImage myImage = FirebaseVisionImage.fromByteArray(new byte[]{},
                 new FirebaseVisionImageMetadata.Builder().build());
 
         // [START mlkit_process_doc_image]
-        textRecognizer.processImage(myImage)
+        detector.processImage(myImage)
                 .addOnSuccessListener(new OnSuccessListener<FirebaseVisionDocumentText>() {
                     @Override
                     public void onSuccess(FirebaseVisionDocumentText result) {

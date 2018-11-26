@@ -120,11 +120,11 @@ class TextRecognitionActivity : AppCompatActivity() {
 
     private fun getLocalDocumentRecognizer(): FirebaseVisionDocumentTextRecognizer {
         // [START mlkit_local_doc_recognizer]
-        val textRecognizer = FirebaseVision.getInstance()
+        val detector = FirebaseVision.getInstance()
                 .cloudDocumentTextRecognizer
         // [END mlkit_local_doc_recognizer]
 
-        return textRecognizer
+        return detector
     }
 
     private fun getCloudDocumentRecognizer(): FirebaseVisionDocumentTextRecognizer {
@@ -134,21 +134,21 @@ class TextRecognitionActivity : AppCompatActivity() {
         val options = FirebaseVisionCloudDocumentRecognizerOptions.Builder()
                 .setLanguageHints(Arrays.asList("en", "hi"))
                 .build()
-        val textRecognizer = FirebaseVision.getInstance()
+        val detector = FirebaseVision.getInstance()
                 .getCloudDocumentTextRecognizer(options)
         // [END mlkit_cloud_doc_recognizer]
 
-        return textRecognizer
+        return detector
     }
 
     private fun processDocumentImage() {
         // Dummy variables
-        val textRecognizer = getLocalDocumentRecognizer()
+        val detector = getLocalDocumentRecognizer()
         val myImage = FirebaseVisionImage.fromByteArray(byteArrayOf(),
                 FirebaseVisionImageMetadata.Builder().build())
 
         // [START mlkit_process_doc_image]
-        textRecognizer.processImage(myImage)
+        detector.processImage(myImage)
                 .addOnSuccessListener {
                     // Task completed successfully
                     // ...

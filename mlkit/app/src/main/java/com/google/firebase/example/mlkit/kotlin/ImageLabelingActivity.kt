@@ -26,8 +26,8 @@ class ImageLabelingActivity : AppCompatActivity() {
         /*
         // [START get_detector_options]
         // Or, to set the minimum confidence required:
-        FirebaseVisionLabelDetector detector = FirebaseVision.getInstance()
-                .getVisionLabelDetector(options);
+        val detector = FirebaseVision.getInstance()
+                .getVisionLabelDetector(options)
         // [END get_detector_options]
         */
 

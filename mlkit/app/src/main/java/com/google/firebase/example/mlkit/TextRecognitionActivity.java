@@ -10,12 +10,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.ml.vision.FirebaseVision;
-import com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
 import com.google.firebase.ml.vision.document.FirebaseVisionCloudDocumentRecognizerOptions;
 import com.google.firebase.ml.vision.document.FirebaseVisionDocumentText;
 import com.google.firebase.ml.vision.document.FirebaseVisionDocumentTextRecognizer;
+import com.google.firebase.ml.vision.text.FirebaseVisionCloudTextRecognizerOptions;
 import com.google.firebase.ml.vision.text.FirebaseVisionText;
 import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
 import com.google.firebase.ml.vision.text.RecognizedLanguage;
@@ -75,9 +75,8 @@ public class TextRecognitionActivity extends AppCompatActivity {
 
     private void recognizeTextCloud(FirebaseVisionImage image) {
         // [START set_detector_options_cloud]
-        FirebaseVisionCloudDetectorOptions options = new FirebaseVisionCloudDetectorOptions.Builder()
-                .setModelType(FirebaseVisionCloudDetectorOptions.LATEST_MODEL)
-                .setMaxResults(30)
+        FirebaseVisionCloudTextRecognizerOptions options = new FirebaseVisionCloudTextRecognizerOptions.Builder()
+                .setLanguageHints(Arrays.asList("en", "hi"))
                 .build();
         // [END set_detector_options_cloud]
 
@@ -85,8 +84,8 @@ public class TextRecognitionActivity extends AppCompatActivity {
         FirebaseVisionTextRecognizer detector = FirebaseVision.getInstance()
                 .getCloudTextRecognizer();
         // Or, to change the default settings:
-        // FirebaseVisionTextDetector detector = FirebaseVision.getInstance()
-        //         .getVisionCloudTextDetector(options);
+        //   FirebaseVisionTextRecognizer detector = FirebaseVision.getInstance()
+        //          .getCloudTextRecognizer(options);
         // [END get_detector_cloud]
 
         // [START run_detector_cloud]
@@ -197,5 +196,35 @@ public class TextRecognitionActivity extends AppCompatActivity {
                     }
                 });
         // [END mlkit_process_doc_image]
+    }
+
+    private void processDocumentTextBlock(FirebaseVisionDocumentText result) {
+        // [START mlkit_process_document_text_block]
+        String resultText = result.getText();
+        for (FirebaseVisionDocumentText.Block block: result.getBlocks()) {
+            String blockText = block.getText();
+            Float blockConfidence = block.getConfidence();
+            List<RecognizedLanguage> blockRecognizedLanguages = block.getRecognizedLanguages();
+            Rect blockFrame = block.getBoundingBox();
+            for (FirebaseVisionDocumentText.Paragraph paragraph: block.getParagraphs()) {
+                String paragraphText = paragraph.getText();
+                Float paragraphConfidence = paragraph.getConfidence();
+                List<RecognizedLanguage> paragraphRecognizedLanguages = paragraph.getRecognizedLanguages();
+                Rect paragraphFrame = paragraph.getBoundingBox();
+                for (FirebaseVisionDocumentText.Word word: paragraph.getWords()) {
+                    String wordText = word.getText();
+                    Float wordConfidence = word.getConfidence();
+                    List<RecognizedLanguage> wordRecognizedLanguages = word.getRecognizedLanguages();
+                    Rect wordFrame = word.getBoundingBox();
+                    for (FirebaseVisionDocumentText.Symbol symbol: word.getSymbols()) {
+                        String symbolText = symbol.getText();
+                        Float symbolConfidence = symbol.getConfidence();
+                        List<RecognizedLanguage> symbolRecognizedLanguages = symbol.getRecognizedLanguages();
+                        Rect symbolFrame = symbol.getBoundingBox();
+                    }
+                }
+            }
+        }
+        // [END mlkit_process_document_text_block]
     }
 }

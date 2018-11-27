@@ -2,11 +2,12 @@ package com.google.firebase.example.mlkit.kotlin
 
 import android.support.v7.app.AppCompatActivity
 import com.google.firebase.ml.vision.FirebaseVision
-import com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
 import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata
 import com.google.firebase.ml.vision.document.FirebaseVisionCloudDocumentRecognizerOptions
+import com.google.firebase.ml.vision.document.FirebaseVisionDocumentText
 import com.google.firebase.ml.vision.document.FirebaseVisionDocumentTextRecognizer
+import com.google.firebase.ml.vision.text.FirebaseVisionCloudTextRecognizerOptions
 import com.google.firebase.ml.vision.text.FirebaseVisionText
 import java.util.Arrays
 
@@ -49,18 +50,15 @@ class TextRecognitionActivity : AppCompatActivity() {
 
     private fun recognizeTextCloud(image: FirebaseVisionImage) {
         // [START set_detector_options_cloud]
-        val options = FirebaseVisionCloudDetectorOptions.Builder()
-                .setModelType(FirebaseVisionCloudDetectorOptions.LATEST_MODEL)
-                .setMaxResults(30)
+        val options = FirebaseVisionCloudTextRecognizerOptions.Builder()
+                .setLanguageHints(Arrays.asList("en", "hi"))
                 .build()
         // [END set_detector_options_cloud]
 
         // [START get_detector_cloud]
-        val detector = FirebaseVision.getInstance()
-                .cloudTextRecognizer
+        val detector = FirebaseVision.getInstance().cloudTextRecognizer
         // Or, to change the default settings:
-        // FirebaseVisionTextDetector detector = FirebaseVision.getInstance()
-        //         .getVisionCloudTextDetector(options)
+        // val detector = FirebaseVision.getInstance().getCloudTextRecognizer(options)
         // [END get_detector_cloud]
 
         // [START run_detector_cloud]
@@ -158,5 +156,35 @@ class TextRecognitionActivity : AppCompatActivity() {
                     // ...
                 }
         // [END mlkit_process_doc_image]
+    }
+
+    private fun processDocumentTextBlock(result: FirebaseVisionDocumentText) {
+        // [START mlkit_process_document_text_block]
+        val resultText = result.text
+        for (block in result.blocks) {
+            val blockText = block.text
+            val blockConfidence = block.confidence
+            val blockRecognizedLanguages = block.recognizedLanguages
+            val blockFrame = block.boundingBox
+            for (paragraph in block.paragraphs) {
+                val paragraphText = paragraph.text
+                val paragraphConfidence = paragraph.confidence
+                val paragraphRecognizedLanguages = paragraph.recognizedLanguages
+                val paragraphFrame = paragraph.boundingBox
+                for (word in paragraph.words) {
+                    val wordText = word.text
+                    val wordConfidence = word.confidence
+                    val wordRecognizedLanguages = word.recognizedLanguages
+                    val wordFrame = word.boundingBox
+                    for (symbol in word.symbols) {
+                        val symbolText = symbol.text
+                        val symbolConfidence = symbol.confidence
+                        val symbolRecognizedLanguages = symbol.recognizedLanguages
+                        val symbolFrame = symbol.boundingBox
+                    }
+                }
+            }
+        }
+        // [END mlkit_process_document_text_block]
     }
 }

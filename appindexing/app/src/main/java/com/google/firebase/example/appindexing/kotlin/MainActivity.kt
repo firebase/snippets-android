@@ -63,6 +63,14 @@ class MainActivity : AppCompatActivity() {
     }
     // [END appindexing_update]
 
+    private fun removeNote(recipe: Recipe) {
+        // [START appindexing_remove_one]
+        // Deletes or removes the corresponding notes from index.
+        val noteUrl = recipe.noteUrl
+        FirebaseAppIndex.getInstance().remove(noteUrl)
+        // [END appindexing_remove_one]
+    }
+
     private fun removeAll() {
         // [START appindexing_remove_all]
         FirebaseAppIndex.getInstance().removeAll()

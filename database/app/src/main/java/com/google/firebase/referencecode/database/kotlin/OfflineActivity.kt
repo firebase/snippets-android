@@ -33,17 +33,17 @@ class OfflineActivity : AppCompatActivity() {
         val scoresRef = FirebaseDatabase.getInstance().getReference("scores")
         scoresRef.orderByValue().limitToLast(4).addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChild: String?) {
-                Log.d(TAG, "The " + snapshot.key + " dinosaur's score is " + snapshot.value)
+                Log.d(TAG, "The ${snapshot.key} dinosaur's score is ${snapshot.value}")
             }
 
             // [START_EXCLUDE]
-            override fun onChildRemoved(dataSnapshot: DataSnapshot) {}
+            override fun onChildRemoved(dataSnapshot: DataSnapshot) = Unit
 
-            override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) {}
+            override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) = Unit
 
-            override fun onCancelled(databaseError: DatabaseError) {}
+            override fun onCancelled(databaseError: DatabaseError) = Unit
 
-            override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {}
+            override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) = Unit
             // [END_EXCLUDE]
         })
         // [END rtdb_query_recent_scores]
@@ -51,17 +51,17 @@ class OfflineActivity : AppCompatActivity() {
         // [START rtdb_query_recent_scores_overlap]
         scoresRef.orderByValue().limitToLast(2).addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChild: String?) {
-                Log.d(TAG, "The " + snapshot.key + " dinosaur's score is " + snapshot.value)
+                Log.d(TAG, "The ${snapshot.key} dinosaur's score is ${snapshot.value}")
             }
 
             // [START_EXCLUDE]
-            override fun onChildRemoved(dataSnapshot: DataSnapshot) {}
+            override fun onChildRemoved(dataSnapshot: DataSnapshot) = Unit
 
-            override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) {}
+            override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) = Unit
 
-            override fun onCancelled(databaseError: DatabaseError) {}
+            override fun onCancelled(databaseError: DatabaseError) = Unit
 
-            override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {}
+            override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) = Unit
             // [END_EXCLUDE]
         })
         // [END rtdb_query_recent_scores_overlap]
@@ -77,7 +77,7 @@ class OfflineActivity : AppCompatActivity() {
         // [START rtdb_on_disconnect_remove]
         presenceRef.onDisconnect().removeValue { error, reference ->
             error?.let {
-                Log.d(TAG, "could not establish onDisconnect event:" + error.message)
+                Log.d(TAG, "could not establish onDisconnect event: ${error.message}")
             }
         }
         // [END rtdb_on_disconnect_remove]

@@ -27,8 +27,8 @@ android {
 }
 
 repositories {
-    jcenter()
     google()
+    jcenter()
     mavenLocal()
 }
 

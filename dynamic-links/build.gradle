@@ -2,8 +2,8 @@
 
 buildscript {
     repositories {
-        jcenter()
         google()
+        jcenter()
     }
     dependencies {
         // See root build.gradle
@@ -12,8 +12,8 @@ buildscript {
 
 allprojects {
     repositories {
-        jcenter()
         google()
+        jcenter()
         mavenLocal()
     }
 }

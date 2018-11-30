@@ -2,9 +2,9 @@
 buildscript {
     ext.kotlin_version = '1.2.30'
     repositories {
+        google()
         jcenter()
         mavenCentral()
-        google()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.1.4'
@@ -19,8 +19,8 @@ plugins {
 
 allprojects {
     repositories {
-        jcenter()
         google()
+        jcenter()
         mavenLocal()
     }
 

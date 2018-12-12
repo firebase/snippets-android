@@ -53,7 +53,7 @@ public class CustomModelActivity extends AppCompatActivity {
     private void configureLocalModelSource() {
         // [START mlkit_local_model_source]
         FirebaseLocalModelSource localSource =
-                new FirebaseLocalModelSource.Builder("my_local_model")  // Assign a name for this model
+                new FirebaseLocalModelSource.Builder("my_local_model")  // Assign a name to this model
                         .setAssetFilePath("my_model.tflite")
                         .build();
         FirebaseModelManager.getInstance().registerLocalModelSource(localSource);
@@ -78,7 +78,7 @@ public class CustomModelActivity extends AppCompatActivity {
         FirebaseModelInputOutputOptions inputOutputOptions =
                 new FirebaseModelInputOutputOptions.Builder()
                         .setInputFormat(0, FirebaseModelDataType.FLOAT32, new int[]{1, 224, 224, 3})
-                        .setOutputFormat(0, FirebaseModelDataType.FLOAT32, new int[]{1, 1000})
+                        .setOutputFormat(0, FirebaseModelDataType.FLOAT32, new int[]{1, 5})
                         .build();
         // [END mlkit_create_io_options]
 
@@ -88,18 +88,19 @@ public class CustomModelActivity extends AppCompatActivity {
     private float[][][][] bitmapToInputArray() {
         // [START mlkit_bitmap_input]
         Bitmap bitmap = getYourInputImage();
+        bitmap = Bitmap.createScaledBitmap(bitmap, 224, 224, true);
 
         int batchNum = 0;
         float[][][][] input = new float[1][224][224][3];
         for (int x = 0; x < 224; x++) {
             for (int y = 0; y < 224; y++) {
                 int pixel = bitmap.getPixel(x, y);
-                // Normalize channel values to [0.0, 1.0]. This requirement varies by
+                // Normalize channel values to [-1.0, 1.0]. This requirement varies by
                 // model. For example, some models might require values to be normalized
-                // to the range [-1.0, 1.0] instead.
-                input[batchNum][x][y][0] = Color.red(pixel) / 255.0f;
-                input[batchNum][x][y][1] = Color.green(pixel) / 255.0f;
-                input[batchNum][x][y][2] = Color.blue(pixel) / 255.0f;
+                // to the range [0.0, 1.0] instead.
+                input[batchNum][x][y][0] = (Color.red(pixel) - 127) / 128.0f;
+                input[batchNum][x][y][1] = (Color.green(pixel) - 127) / 128.0f;
+                input[batchNum][x][y][2] = (Color.blue(pixel) - 127) / 128.0f;
             }
         }
         // [END mlkit_bitmap_input]

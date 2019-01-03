@@ -1169,7 +1169,7 @@ public class DocSnippets {
     public void offlineListen(FirebaseFirestore db) {
         // [START offline_listen]
         db.collection("cities").whereEqualTo("state", "CA")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                .addSnapshotListener(MetadataChanges.INCLUDE, new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot querySnapshot,
                                         @Nullable FirebaseFirestoreException e) {

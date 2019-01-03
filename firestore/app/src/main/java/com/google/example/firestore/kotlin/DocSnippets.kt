@@ -940,7 +940,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
     fun offlineListen(db: FirebaseFirestore) {
         // [START offline_listen]
         db.collection("cities").whereEqualTo("state", "CA")
-                .addSnapshotListener(EventListener<QuerySnapshot> { querySnapshot, e ->
+                .addSnapshotListener(MetadataChanges.INCLUDE, EventListener<QuerySnapshot> { querySnapshot, e ->
                     if (e != null) {
                         Log.w(TAG, "Listen error", e)
                         return@EventListener

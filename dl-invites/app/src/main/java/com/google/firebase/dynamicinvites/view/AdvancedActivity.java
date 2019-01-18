@@ -1,4 +1,6 @@
-package com.google.firebase.dynamicinvites;
+package com.google.firebase.dynamicinvites.view;
+
+import com.google.firebase.dynamicinvites.R;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

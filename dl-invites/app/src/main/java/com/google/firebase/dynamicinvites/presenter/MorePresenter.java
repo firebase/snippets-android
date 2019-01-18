@@ -15,6 +15,7 @@ public class MorePresenter extends InvitePresenter {
 
     @Override
     public void sendInvite(Context context) {
+        super.sendInvite(context);
         // TODO: Dynamic link
         Uri link = Uri.parse("https://www.google.com");
 

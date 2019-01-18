@@ -4,7 +4,7 @@ import android.content.Context;
 import android.widget.Toast;
 
 import com.google.firebase.dynamicinvites.R;
-import com.google.firebase.dynamicinvites.model.InviteContent;
+import com.google.firebase.dynamicinvites.kotlin.model.InviteContent;
 
 public class SocialPresenter extends InvitePresenter {
 

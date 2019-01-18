@@ -5,7 +5,8 @@ import android.content.Intent;
 import android.net.Uri;
 
 import com.google.firebase.dynamicinvites.R;
-import com.google.firebase.dynamicinvites.model.InviteContent;
+import com.google.firebase.dynamicinvites.kotlin.model.InviteContent;
+import com.google.firebase.dynamicinvites.util.DynamicLinksUtil;
 
 public class MorePresenter extends InvitePresenter {
 
@@ -16,8 +17,7 @@ public class MorePresenter extends InvitePresenter {
     @Override
     public void sendInvite(Context context) {
         super.sendInvite(context);
-        // TODO: Dynamic link
-        Uri link = Uri.parse("https://www.google.com");
+        Uri link = DynamicLinksUtil.generateContentLink();
 
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");

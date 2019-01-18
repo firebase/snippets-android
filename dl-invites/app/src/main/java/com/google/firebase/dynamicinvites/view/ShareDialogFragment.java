@@ -16,12 +16,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.dynamicinvites.kotlin.model.InviteContent;
 import com.google.firebase.dynamicinvites.presenter.InvitePresenter;
 import com.google.firebase.dynamicinvites.presenter.CopyPresenter;
 import com.google.firebase.dynamicinvites.presenter.EmailPresenter;
 import com.google.firebase.dynamicinvites.presenter.MessagePresenter;
 import com.google.firebase.dynamicinvites.presenter.MorePresenter;
 import com.google.firebase.dynamicinvites.presenter.SocialPresenter;
+import com.google.firebase.dynamicinvites.util.DynamicLinksUtil;
 
 import java.util.Arrays;
 import java.util.List;
@@ -58,13 +60,13 @@ public class ShareDialogFragment extends BottomSheetDialogFragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        // TODO: Non-null content
+        InviteContent content = DynamicLinksUtil.generateInviteContent();
         List<InvitePresenter> presenters = Arrays.asList(
-                new EmailPresenter(true, null),
-                new SocialPresenter(true, null),
-                new MessagePresenter(true, null),
-                new CopyPresenter(true, null),
-                new MorePresenter(true, null)
+                new EmailPresenter(true, content),
+                new SocialPresenter(true, content),
+                new MessagePresenter(true, content),
+                new CopyPresenter(true, content),
+                new MorePresenter(true, content)
         );
 
         RecyclerView recyclerView = (RecyclerView) view;

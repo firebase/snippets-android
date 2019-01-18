@@ -13,5 +13,4 @@ class MessagePresenter(isAvailable: Boolean, content: InviteContent)
         super.sendInvite(context)
         Toast.makeText(context, "TODO: Implement SMS", Toast.LENGTH_SHORT).show()
     }
-
 }

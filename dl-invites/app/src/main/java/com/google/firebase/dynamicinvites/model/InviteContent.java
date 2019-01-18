@@ -5,21 +5,28 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 // [START ddl_invite_content]
+
 /**
  * The content of an invitation, with optional fields to accommodate all presenters.
  * This type could be modified to also include an image, for sending invites over email.
  */
 public class InviteContent {
 
-    /** The subject of the message. Not used for invites without subjects, like SMS. **/
+    /**
+     * The subject of the message. Not used for invites without subjects, like SMS.
+     **/
     @Nullable
     public final String subject;
 
-    /** The body of the message. Indispensable content should go here. **/
+    /**
+     * The body of the message. Indispensable content should go here.
+     **/
     @Nullable
     public final String body;
 
-    /** The URL containing the link to invite. In link-copy cases, only this field will be used. **/
+    /**
+     * The URL containing the link to invite. In link-copy cases, only this field will be used.
+     **/
     @NonNull
     public final Uri link;
 

@@ -1,11 +1,10 @@
 package com.google.firebase.dynamicinvites.view;
 
-import com.google.firebase.dynamicinvites.R;
-
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.google.firebase.dynamicinvites.R;
 import com.google.firebase.dynamicinvites.presenter.InvitePresenter;
 
 public class AdvancedActivity extends AppCompatActivity implements ShareDialogFragment.Listener {

@@ -3,7 +3,6 @@ package com.google.firebase.dynamicinvites.kotlin.view
 import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.BottomSheetDialogFragment
-import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -11,17 +10,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-
 import com.google.firebase.dynamicinvites.R
-import com.google.firebase.dynamicinvites.kotlin.model.InviteContent
-import com.google.firebase.dynamicinvites.presenter.CopyPresenter
-import com.google.firebase.dynamicinvites.presenter.EmailPresenter
-import com.google.firebase.dynamicinvites.presenter.InvitePresenter
-import com.google.firebase.dynamicinvites.presenter.MessagePresenter
-import com.google.firebase.dynamicinvites.presenter.MorePresenter
-import com.google.firebase.dynamicinvites.presenter.SocialPresenter
-import com.google.firebase.dynamicinvites.util.DynamicLinksUtil
-
+import com.google.firebase.dynamicinvites.kotlin.presenter.CopyPresenter
+import com.google.firebase.dynamicinvites.kotlin.presenter.EmailPresenter
+import com.google.firebase.dynamicinvites.kotlin.presenter.InvitePresenter
+import com.google.firebase.dynamicinvites.kotlin.presenter.MessagePresenter
+import com.google.firebase.dynamicinvites.kotlin.presenter.MorePresenter
+import com.google.firebase.dynamicinvites.kotlin.presenter.SocialPresenter
+import com.google.firebase.dynamicinvites.kotlin.util.DynamicLinksUtil
 import java.util.Arrays
 
 /**
@@ -41,9 +37,11 @@ class ShareDialogFragment : BottomSheetDialogFragment() {
 
     private var mListener: Listener? = null
 
-    override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_item_list_dialog, container, false)
     }
 

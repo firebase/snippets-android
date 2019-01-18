@@ -1,16 +1,13 @@
 package com.google.firebase.dynamicinvites.view;
 
-import com.google.firebase.dynamicinvites.R;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.google.firebase.dynamicinvites.R;
 import com.google.firebase.dynamicinvites.util.DynamicLinksUtil;
-import com.google.firebase.dynamiclinks.DynamicLink;
-import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 
 public class MainActivity extends AppCompatActivity {
 

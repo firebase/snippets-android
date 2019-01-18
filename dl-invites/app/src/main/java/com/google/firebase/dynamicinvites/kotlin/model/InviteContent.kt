@@ -8,10 +8,11 @@ import android.net.Uri
  * This type could be modified to also include an image, for sending invites over email.
  */
 data class InviteContent(
-        /** The subject of the message. Not used for invites without subjects, like SMS.  */
-        val subject: String?,
-        /** The body of the message. Indispensable content should go here.  */
-        val body: String?,
-        /** The URL containing the link to invite. In link-copy cases, only this field will be used.  */
-        val link: Uri)
+    /** The subject of the message. Not used for invites without subjects, like SMS.  */
+    val subject: String?,
+    /** The body of the message. Indispensable content should go here.  */
+    val body: String?,
+    /** The URL containing the link to invite. In link-copy cases, only this field will be used.  */
+    val link: Uri
+)
 // [END ddl_invite_content]

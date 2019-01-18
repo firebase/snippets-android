@@ -13,5 +13,4 @@ class SocialPresenter(isAvailable: Boolean, content: InviteContent)
         super.sendInvite(context)
         Toast.makeText(context, "TODO: Implement social sending", Toast.LENGTH_SHORT).show()
     }
-
 }

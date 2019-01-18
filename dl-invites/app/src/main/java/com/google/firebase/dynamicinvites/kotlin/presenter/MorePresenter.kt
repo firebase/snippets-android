@@ -2,8 +2,6 @@ package com.google.firebase.dynamicinvites.kotlin.presenter
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
-
 import com.google.firebase.dynamicinvites.R
 import com.google.firebase.dynamicinvites.kotlin.model.InviteContent
 import com.google.firebase.dynamicinvites.util.DynamicLinksUtil

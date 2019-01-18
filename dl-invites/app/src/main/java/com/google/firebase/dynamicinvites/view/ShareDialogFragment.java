@@ -1,7 +1,5 @@
 package com.google.firebase.dynamicinvites.view;
 
-import com.google.firebase.dynamicinvites.R;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,10 +14,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.dynamicinvites.R;
 import com.google.firebase.dynamicinvites.kotlin.model.InviteContent;
-import com.google.firebase.dynamicinvites.presenter.InvitePresenter;
 import com.google.firebase.dynamicinvites.presenter.CopyPresenter;
 import com.google.firebase.dynamicinvites.presenter.EmailPresenter;
+import com.google.firebase.dynamicinvites.presenter.InvitePresenter;
 import com.google.firebase.dynamicinvites.presenter.MessagePresenter;
 import com.google.firebase.dynamicinvites.presenter.MorePresenter;
 import com.google.firebase.dynamicinvites.presenter.SocialPresenter;

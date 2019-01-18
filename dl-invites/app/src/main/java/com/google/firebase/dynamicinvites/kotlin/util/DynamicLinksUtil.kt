@@ -31,5 +31,4 @@ object DynamicLinksUtil {
         return link.uri
         // [END ddl_generate_content_link[
     }
-
 }

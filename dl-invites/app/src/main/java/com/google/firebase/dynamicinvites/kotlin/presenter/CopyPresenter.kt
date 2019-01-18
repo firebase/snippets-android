@@ -13,5 +13,4 @@ class CopyPresenter(isAvailable: Boolean, content: InviteContent)
         super.sendInvite(context)
         Toast.makeText(context, "TODO: Implement link copying", Toast.LENGTH_SHORT).show()
     }
-
 }

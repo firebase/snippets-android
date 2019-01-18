@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Dynamic Invites</string>
+
+    <!-- Required for Firebase initialization -->
+    <string name="google_api_key" translatable="false">AIzaSyCh-veDlf-cJsVgO0dm1FnQB_kZZEI9fR0</string>
+    <string name="google_app_id" translatable="false">1:733471010301:android:6037b8829628a1f3</string>
+
+    <string name="share_link">Share Link</string>
+    <string name="example_link">https://your-custom-invite.link/111111</string>
+</resources>

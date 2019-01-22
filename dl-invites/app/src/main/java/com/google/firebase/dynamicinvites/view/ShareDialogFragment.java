@@ -43,10 +43,7 @@ public class ShareDialogFragment extends BottomSheetDialogFragment {
     private Listener mListener;
 
     public static ShareDialogFragment newInstance() {
-        final ShareDialogFragment fragment = new ShareDialogFragment();
-        final Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
+        return new ShareDialogFragment();
     }
 
     @Nullable

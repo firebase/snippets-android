@@ -8,8 +8,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import com.google.firebase.dynamicinvites.R
 import com.google.firebase.dynamicinvites.kotlin.presenter.CopyPresenter
 import com.google.firebase.dynamicinvites.kotlin.presenter.EmailPresenter
@@ -18,6 +16,9 @@ import com.google.firebase.dynamicinvites.kotlin.presenter.MessagePresenter
 import com.google.firebase.dynamicinvites.kotlin.presenter.MorePresenter
 import com.google.firebase.dynamicinvites.kotlin.presenter.SocialPresenter
 import com.google.firebase.dynamicinvites.kotlin.util.DynamicLinksUtil
+import kotlinx.android.synthetic.main.fragment_item_list_dialog.recycler
+import kotlinx.android.synthetic.main.item_share_method.view.item_icon
+import kotlinx.android.synthetic.main.item_share_method.view.item_name
 import java.util.Arrays
 
 /**
@@ -35,7 +36,7 @@ import java.util.Arrays
  */
 class ShareDialogFragment : BottomSheetDialogFragment() {
 
-    private var mListener: Listener? = null
+    private var listener: Listener? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,23 +56,22 @@ class ShareDialogFragment : BottomSheetDialogFragment() {
                 MorePresenter(true, content)
         )
 
-        val recyclerView = view as RecyclerView
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = ItemAdapter(presenters)
+        recycler.layoutManager = LinearLayoutManager(context)
+        recycler.adapter = ItemAdapter(presenters)
     }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         val parent = parentFragment
         if (parent != null) {
-            mListener = parent as Listener
+            listener = parent as Listener
         } else {
-            mListener = context as Listener
+            listener = context as Listener
         }
     }
 
     override fun onDetach() {
-        mListener = null
+        listener = null
         super.onDetach()
     }
 
@@ -82,27 +82,14 @@ class ShareDialogFragment : BottomSheetDialogFragment() {
     private inner class ViewHolder(inflater: LayoutInflater, parent: ViewGroup)
         : RecyclerView.ViewHolder(inflater.inflate(R.layout.item_share_method, parent, false)) {
 
-        private val text: TextView
-        private val icon: ImageView
-
-        private lateinit var presenter: InvitePresenter
-
-        init {
-
-            text = itemView.findViewById(R.id.item_name)
-            icon = itemView.findViewById(R.id.item_icon)
+        internal fun bind(presenter: InvitePresenter) {
+            itemView.item_name.text = presenter.name
+            itemView.item_icon.setImageResource(presenter.icon)
 
             itemView.setOnClickListener {
-                mListener?.onItemClicked(presenter)
+                listener?.onItemClicked(presenter)
                 dismiss()
             }
-        }
-
-        internal fun bind(presenter: InvitePresenter) {
-            this.presenter = presenter
-
-            text.text = presenter.name
-            icon.setImageResource(presenter.icon)
         }
     }
 
@@ -124,12 +111,8 @@ class ShareDialogFragment : BottomSheetDialogFragment() {
     }
 
     companion object {
-
         fun newInstance(): ShareDialogFragment {
-            val fragment = ShareDialogFragment()
-            val args = Bundle()
-            fragment.arguments = args
-            return fragment
+            return ShareDialogFragment()
         }
     }
 }

@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity
 
 import com.google.firebase.dynamicinvites.R
 import com.google.firebase.dynamicinvites.kotlin.presenter.InvitePresenter
-import kotlinx.android.synthetic.main.activity_advanced.button_share
+import kotlinx.android.synthetic.main.activity_main.buttonShare
 
 class AdvancedActivity : AppCompatActivity(), ShareDialogFragment.Listener {
 
@@ -13,7 +13,7 @@ class AdvancedActivity : AppCompatActivity(), ShareDialogFragment.Listener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_advanced)
 
-        button_share.setOnClickListener {
+        buttonShare.setOnClickListener {
             ShareDialogFragment.newInstance().show(supportFragmentManager, "dialog")
         }
     }

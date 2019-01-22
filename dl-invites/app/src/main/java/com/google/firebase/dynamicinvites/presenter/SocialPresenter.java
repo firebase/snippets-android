@@ -9,7 +9,7 @@ import com.google.firebase.dynamicinvites.kotlin.model.InviteContent;
 public class SocialPresenter extends InvitePresenter {
 
     public SocialPresenter(boolean isAvailable, InviteContent content) {
-        super("Social", R.drawable.ic_people_black_24dp, isAvailable, content);
+        super("Social", R.drawable.ic_people, isAvailable, content);
     }
 
     @Override

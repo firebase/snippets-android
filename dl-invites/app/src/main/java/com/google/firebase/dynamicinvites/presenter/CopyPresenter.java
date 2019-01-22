@@ -9,7 +9,7 @@ import com.google.firebase.dynamicinvites.kotlin.model.InviteContent;
 public class CopyPresenter extends InvitePresenter {
 
     public CopyPresenter(boolean isAvailable, InviteContent content) {
-        super("Copy Link", R.drawable.ic_content_copy_black_24dp, isAvailable, content);
+        super("Copy Link", R.drawable.ic_content_copy, isAvailable, content);
     }
 
     @Override

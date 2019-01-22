@@ -7,7 +7,7 @@ import com.google.firebase.dynamicinvites.R
 import com.google.firebase.dynamicinvites.kotlin.model.InviteContent
 
 class SocialPresenter(isAvailable: Boolean, content: InviteContent)
-    : InvitePresenter("Social", R.drawable.ic_people_black_24dp, isAvailable, content) {
+    : InvitePresenter("Social", R.drawable.ic_people, isAvailable, content) {
 
     override fun sendInvite(context: Context) {
         super.sendInvite(context)

@@ -14,7 +14,7 @@ public class AdvancedActivity extends AppCompatActivity implements ShareDialogFr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_advanced);
 
-        findViewById(R.id.button_share).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.buttonShare).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ShareDialogFragment.newInstance().show(getSupportFragmentManager(), "dialog");

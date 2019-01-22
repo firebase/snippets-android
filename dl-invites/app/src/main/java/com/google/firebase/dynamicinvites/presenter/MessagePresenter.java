@@ -9,7 +9,7 @@ import com.google.firebase.dynamicinvites.kotlin.model.InviteContent;
 public class MessagePresenter extends InvitePresenter {
 
     public MessagePresenter(boolean isAvailable, InviteContent content) {
-        super("Message", R.drawable.ic_sms_black_24dp, isAvailable, content);
+        super("Message", R.drawable.ic_sms, isAvailable, content);
     }
 
     @Override

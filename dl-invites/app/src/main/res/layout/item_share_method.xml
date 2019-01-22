@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/item_icon"
+        android:id="@+id/itemIcon"
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:layout_marginStart="16dp"
@@ -15,19 +15,19 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/ic_people_black_24dp" />
+        tools:src="@drawable/ic_people" />
 
     <TextView
-        android:id="@+id/item_name"
+        android:id="@+id/itemName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="8dp"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@+id/item_icon"
+        app:layout_constraintBottom_toBottomOf="@+id/itemIcon"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/item_icon"
-        app:layout_constraintTop_toTopOf="@+id/item_icon"
+        app:layout_constraintStart_toEndOf="@+id/itemIcon"
+        app:layout_constraintTop_toTopOf="@+id/itemIcon"
         app:layout_constraintHorizontal_bias="0"
         tools:text="Social" />
 

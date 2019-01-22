@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.google.firebase.dynamicinvites.R
 import com.google.firebase.dynamicinvites.kotlin.util.DynamicLinksUtil
-import kotlinx.android.synthetic.main.activity_main.button_share
+import kotlinx.android.synthetic.main.activity_main.buttonShare
 
 class MainActivity : AppCompatActivity() {
 
@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        button_share.setOnClickListener {
+        buttonShare.setOnClickListener {
             onShareClicked()
         }
     }

@@ -101,8 +101,8 @@ public class ShareDialogFragment extends BottomSheetDialogFragment {
         ViewHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.item_share_method, parent, false));
 
-            text = itemView.findViewById(R.id.item_name);
-            icon = itemView.findViewById(R.id.item_icon);
+            text = itemView.findViewById(R.id.itemName);
+            icon = itemView.findViewById(R.id.itemIcon);
 
             itemView.setOnClickListener(
                     new View.OnClickListener() {

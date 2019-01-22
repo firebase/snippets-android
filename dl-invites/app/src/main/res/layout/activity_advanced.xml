@@ -16,7 +16,7 @@
         android:layout_marginBottom="8dp"
         android:background="#FFFFFF"
         app:cardCornerRadius="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/button_share"
+        app:layout_constraintBottom_toTopOf="@+id/buttonShare"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -48,7 +48,7 @@
     </android.support.v7.widget.CardView>
 
     <Button
-        android:id="@+id/button_share"
+        android:id="@+id/buttonShare"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

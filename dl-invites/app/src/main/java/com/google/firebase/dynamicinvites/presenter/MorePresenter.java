@@ -11,7 +11,7 @@ import com.google.firebase.dynamicinvites.util.DynamicLinksUtil;
 public class MorePresenter extends InvitePresenter {
 
     public MorePresenter(boolean isAvailable, InviteContent content) {
-        super("More", R.drawable.ic_more_horiz_black_24dp, isAvailable, content);
+        super("More", R.drawable.ic_more_horiz, isAvailable, content);
     }
 
     @Override

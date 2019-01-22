@@ -17,8 +17,8 @@ import com.google.firebase.dynamicinvites.kotlin.presenter.MorePresenter
 import com.google.firebase.dynamicinvites.kotlin.presenter.SocialPresenter
 import com.google.firebase.dynamicinvites.kotlin.util.DynamicLinksUtil
 import kotlinx.android.synthetic.main.fragment_item_list_dialog.recycler
-import kotlinx.android.synthetic.main.item_share_method.view.item_icon
-import kotlinx.android.synthetic.main.item_share_method.view.item_name
+import kotlinx.android.synthetic.main.item_share_method.view.itemIcon
+import kotlinx.android.synthetic.main.item_share_method.view.itemName
 import java.util.Arrays
 
 /**
@@ -83,8 +83,8 @@ class ShareDialogFragment : BottomSheetDialogFragment() {
         : RecyclerView.ViewHolder(inflater.inflate(R.layout.item_share_method, parent, false)) {
 
         internal fun bind(presenter: InvitePresenter) {
-            itemView.item_name.text = presenter.name
-            itemView.item_icon.setImageResource(presenter.icon)
+            itemView.itemName.text = presenter.name
+            itemView.itemIcon.setImageResource(presenter.icon)
 
             itemView.setOnClickListener {
                 listener?.onItemClicked(presenter)

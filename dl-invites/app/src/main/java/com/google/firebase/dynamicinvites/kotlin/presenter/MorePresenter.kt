@@ -7,7 +7,7 @@ import com.google.firebase.dynamicinvites.kotlin.model.InviteContent
 import com.google.firebase.dynamicinvites.util.DynamicLinksUtil
 
 class MorePresenter(isAvailable: Boolean, content: InviteContent)
-    : InvitePresenter("More", R.drawable.ic_more_horiz_black_24dp, isAvailable, content) {
+    : InvitePresenter("More", R.drawable.ic_more_horiz, isAvailable, content) {
 
     override fun sendInvite(context: Context) {
         super.sendInvite(context)

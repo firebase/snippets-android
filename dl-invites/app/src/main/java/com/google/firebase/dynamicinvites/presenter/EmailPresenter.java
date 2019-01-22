@@ -9,7 +9,7 @@ import com.google.firebase.dynamicinvites.kotlin.model.InviteContent;
 public class EmailPresenter extends InvitePresenter {
 
     public EmailPresenter(boolean isAvailable, InviteContent content) {
-        super("Email", R.drawable.ic_email_black_24dp, isAvailable, content);
+        super("Email", R.drawable.ic_email, isAvailable, content);
     }
 
     @Override

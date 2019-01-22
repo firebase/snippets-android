@@ -16,7 +16,7 @@ object DynamicLinksUtil {
     }
 
     fun generateContentLink(): Uri {
-        // [START ddl_generate_content_link[
+        // [START ddl_generate_content_link]
         val baseUrl = Uri.parse("https://your-custom-name.page.link")
         val domain = "https://your-app.page.link"
 
@@ -29,6 +29,6 @@ object DynamicLinksUtil {
                 .buildDynamicLink()
 
         return link.uri
-        // [END ddl_generate_content_link[
+        // [END ddl_generate_content_link]
     }
 }

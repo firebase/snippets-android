@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    // [START ddl_on_share_clicked]
     private void onShareClicked() {
         Uri link = DynamicLinksUtil.generateContentLink();
 
@@ -33,4 +34,5 @@ public class MainActivity extends AppCompatActivity {
 
         startActivity(Intent.createChooser(intent, "Share Link"));
     }
+    // [END ddl_on_share_clicked]
 }

@@ -16,7 +16,7 @@ public class DynamicLinksUtil {
     }
 
     public static Uri generateContentLink() {
-        // [START ddl_generate_content_link[
+        // [START ddl_generate_content_link]
         Uri baseUrl = Uri.parse("https://your-custom-name.page.link");
         String domain = "https://your-app.page.link";
 
@@ -29,7 +29,7 @@ public class DynamicLinksUtil {
                 .buildDynamicLink();
 
         return link.getUri();
-        // [END ddl_generate_content_link[
+        // [END ddl_generate_content_link]
     }
 
 }

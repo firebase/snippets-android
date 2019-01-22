@@ -18,6 +18,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // [START ddl_on_share_clicked]
     private fun onShareClicked() {
         val link = DynamicLinksUtil.generateContentLink()
 
@@ -27,4 +28,5 @@ class MainActivity : AppCompatActivity() {
 
         startActivity(Intent.createChooser(intent, "Share Link"))
     }
+    // [END ddl_on_share_clicked]
 }

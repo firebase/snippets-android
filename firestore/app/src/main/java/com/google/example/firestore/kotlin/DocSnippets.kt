@@ -6,6 +6,7 @@ import android.support.annotation.WorkerThread
 import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.DocumentSnapshot
@@ -256,7 +257,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         docData["stringExample"] = "Hello world!"
         docData["booleanExample"] = true
         docData["numberExample"] = 3.14159265
-        docData["dateExample"] = Date()
+        docData["dateExample"] = Timestamp(Date())
         docData["listExample"] = arrayListOf(1, 2, 3)
         docData["nullExample"] = null
 

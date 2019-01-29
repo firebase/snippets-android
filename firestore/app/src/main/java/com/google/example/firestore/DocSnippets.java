@@ -10,6 +10,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentChange.Type;
@@ -349,7 +350,7 @@ public class DocSnippets {
         docData.put("stringExample", "Hello world!");
         docData.put("booleanExample", true);
         docData.put("numberExample", 3.14159265);
-        docData.put("dateExample", new Date());
+        docData.put("dateExample", new Timestamp(new Date()));
         docData.put("listExample", Arrays.asList(1, 2, 3));
         docData.put("nullExample", null);
 

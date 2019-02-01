@@ -21,8 +21,8 @@ class BarcodeScanningActivity : AppCompatActivity() {
         val detector = FirebaseVision.getInstance()
                 .visionBarcodeDetector
         // Or, to specify the formats to recognize:
-        // FirebaseVisionBarcodeDetector detector = FirebaseVision.getInstance()
-        //        .getVisionBarcodeDetector(options);
+        // val detector = FirebaseVision.getInstance()
+        //        .getVisionBarcodeDetector(options)
         // [END get_detector]
 
         // [START run_detector]

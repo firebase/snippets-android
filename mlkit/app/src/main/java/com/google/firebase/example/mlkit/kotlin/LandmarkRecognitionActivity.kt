@@ -19,8 +19,8 @@ class LandmarkRecognitionActivity : AppCompatActivity() {
         val detector = FirebaseVision.getInstance()
                 .visionCloudLandmarkDetector
         // Or, to change the default settings:
-        // FirebaseVisionCloudLandmarkDetector detector = FirebaseVision.getInstance()
-        //         .getVisionCloudLandmarkDetector(options);
+        // val detector = FirebaseVision.getInstance()
+        //         .getVisionCloudLandmarkDetector(options)
         // [END get_detector_cloud]
 
         // [START run_detector_cloud]

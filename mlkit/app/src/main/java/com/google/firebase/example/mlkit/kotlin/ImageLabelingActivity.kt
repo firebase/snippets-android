@@ -67,8 +67,8 @@ class ImageLabelingActivity : AppCompatActivity() {
         val detector = FirebaseVision.getInstance()
                 .visionCloudLabelDetector
         // Or, to change the default settings:
-        // FirebaseVisionCloudLabelDetector detector = FirebaseVision.getInstance()
-        //         .getVisionCloudLabelDetector(options);
+        // val detector = FirebaseVision.getInstance()
+        //         .getVisionCloudLabelDetector(options)
         // [END get_detector_cloud]
 
         // [START run_detector_cloud]

@@ -1,20 +1,18 @@
 package com.google.firebase.example.mlkit;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions;
-import com.google.firebase.ml.vision.cloud.label.FirebaseVisionCloudLabel;
-import com.google.firebase.ml.vision.cloud.label.FirebaseVisionCloudLabelDetector;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
-import com.google.firebase.ml.vision.label.FirebaseVisionLabel;
-import com.google.firebase.ml.vision.label.FirebaseVisionLabelDetector;
-import com.google.firebase.ml.vision.label.FirebaseVisionLabelDetectorOptions;
+import com.google.firebase.ml.vision.label.FirebaseVisionImageLabel;
+import com.google.firebase.ml.vision.label.FirebaseVisionImageLabeler;
+import com.google.firebase.ml.vision.label.FirebaseVisionOnDeviceImageLabelerOptions;
 
 import java.util.List;
 
@@ -27,37 +25,37 @@ public class ImageLabelingActivity extends AppCompatActivity {
 
     private void labelImages(FirebaseVisionImage image) {
         // [START set_detector_options]
-        FirebaseVisionLabelDetectorOptions options =
-                new FirebaseVisionLabelDetectorOptions.Builder()
+        FirebaseVisionOnDeviceImageLabelerOptions options =
+                new FirebaseVisionOnDeviceImageLabelerOptions.Builder()
                         .setConfidenceThreshold(0.8f)
                         .build();
         // [END set_detector_options]
 
         // [START get_detector_default]
-        FirebaseVisionLabelDetector detector = FirebaseVision.getInstance()
-                .getVisionLabelDetector();
+        FirebaseVisionImageLabeler detector = FirebaseVision.getInstance()
+                .getOnDeviceImageLabeler();
         // [END get_detector_default]
 
         /*
         // [START get_detector_options]
         // Or, to set the minimum confidence required:
-        FirebaseVisionLabelDetector detector = FirebaseVision.getInstance()
-                .getVisionLabelDetector(options);
+        FirebaseVisionImageLabeled detector = FirebaseVision.getInstance()
+                .getOnDeviceImageLabeler(options);
         // [END get_detector_options]
         */
 
         // [START run_detector]
-        Task<List<FirebaseVisionLabel>> result =
-                detector.detectInImage(image)
+        Task<List<FirebaseVisionImageLabel>> result =
+                detector.processImage(image)
                         .addOnSuccessListener(
-                                new OnSuccessListener<List<FirebaseVisionLabel>>() {
+                                new OnSuccessListener<List<FirebaseVisionImageLabel>>() {
                                     @Override
-                                    public void onSuccess(List<FirebaseVisionLabel> labels) {
+                                    public void onSuccess(List<FirebaseVisionImageLabel> labels) {
                                         // Task completed successfully
                                         // [START_EXCLUDE]
                                         // [START get_labels]
-                                        for (FirebaseVisionLabel label: labels) {
-                                            String text = label.getLabel();
+                                        for (FirebaseVisionImageLabel label: labels) {
+                                            String text = label.getText();
                                             String entityId = label.getEntityId();
                                             float confidence = label.getConfidence();
                                         }
@@ -85,25 +83,26 @@ public class ImageLabelingActivity extends AppCompatActivity {
         // [END set_detector_options_cloud]
 
         // [START get_detector_cloud]
-        FirebaseVisionCloudLabelDetector detector = FirebaseVision.getInstance()
-                .getVisionCloudLabelDetector();
+        FirebaseVisionImageLabeler detector = FirebaseVision.getInstance()
+                .getCloudImageLabeler();
+
         // Or, to change the default settings:
-        // FirebaseVisionCloudLabelDetector detector = FirebaseVision.getInstance()
-        //         .getVisionCloudLabelDetector(options);
+        // FirebaseVisionImageLabeler detector = FirebaseVision.getInstance()
+        //                .getCloudImageLabeler(options);
         // [END get_detector_cloud]
 
         // [START run_detector_cloud]
-        Task<List<FirebaseVisionCloudLabel>> result =
-                detector.detectInImage(image)
+        Task<List<FirebaseVisionImageLabel>> result =
+                detector.processImage(image)
                         .addOnSuccessListener(
-                                new OnSuccessListener<List<FirebaseVisionCloudLabel>>() {
+                                new OnSuccessListener<List<FirebaseVisionImageLabel>>() {
                                     @Override
-                                    public void onSuccess(List<FirebaseVisionCloudLabel> labels) {
+                                    public void onSuccess(List<FirebaseVisionImageLabel> labels) {
                                         // Task completed successfully
                                         // [START_EXCLUDE]
                                         // [START get_labels_cloud]
-                                        for (FirebaseVisionCloudLabel label: labels) {
-                                            String text = label.getLabel();
+                                        for (FirebaseVisionImageLabel label : labels) {
+                                            String text = label.getText();
                                             String entityId = label.getEntityId();
                                             float confidence = label.getConfidence();
                                         }

@@ -37,8 +37,8 @@ class VisionImage {
     private fun imageFromBuffer(buffer: ByteBuffer, rotation: Int) {
         // [START set_metadata]
         val metadata = FirebaseVisionImageMetadata.Builder()
-                .setWidth(480)   // 480x360 is typically sufficient for
-                .setHeight(360)  // image recognition
+                .setWidth(480) // 480x360 is typically sufficient for
+                .setHeight(360) // image recognition
                 .setFormat(FirebaseVisionImageMetadata.IMAGE_FORMAT_NV21)
                 .setRotation(rotation)
                 .build()
@@ -50,8 +50,8 @@ class VisionImage {
 
     private fun imageFromArray(byteArray: ByteArray, rotation: Int) {
         val metadata = FirebaseVisionImageMetadata.Builder()
-                .setWidth(480)   // 480x360 is typically sufficient for
-                .setHeight(360)  // image recognition
+                .setWidth(480) // 480x360 is typically sufficient for
+                .setHeight(360) // image recognition
                 .setFormat(FirebaseVisionImageMetadata.IMAGE_FORMAT_NV21)
                 .setRotation(rotation)
                 .build()

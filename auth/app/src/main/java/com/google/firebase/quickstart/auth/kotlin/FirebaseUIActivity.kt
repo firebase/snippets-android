@@ -85,8 +85,8 @@ abstract class FirebaseUIActivity : AppCompatActivity() {
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
                         .setAvailableProviders(providers)
-                        .setLogo(R.drawable.my_great_logo)      // Set logo drawable
-                        .setTheme(R.style.MySuperAppTheme)      // Set theme
+                        .setLogo(R.drawable.my_great_logo) // Set logo drawable
+                        .setTheme(R.style.MySuperAppTheme) // Set theme
                         .build(),
                 RC_SIGN_IN)
         // [END auth_fui_theme_logo]

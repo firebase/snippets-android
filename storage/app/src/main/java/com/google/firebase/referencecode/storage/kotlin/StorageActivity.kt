@@ -133,8 +133,8 @@ abstract class StorageActivity : AppCompatActivity() {
         val mountainImagesRef = storageRef.child("images/mountains.jpg")
 
         // While the file names are the same, the references point to different files
-        mountainsRef.name == mountainImagesRef.name    // true
-        mountainsRef.path == mountainImagesRef.path    // false
+        mountainsRef.name == mountainImagesRef.name // true
+        mountainsRef.path == mountainImagesRef.path // false
         // [END upload_create_reference]
 
         // [START upload_memory]

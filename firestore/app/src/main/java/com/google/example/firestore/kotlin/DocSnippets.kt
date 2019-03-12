@@ -127,7 +127,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         db.collection("users")
             .add(user)
             .addOnSuccessListener { documentReference ->
-                Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.id)
+                Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
             }
             .addOnFailureListener { e ->
                 Log.w(TAG, "Error adding document", e)
@@ -148,7 +148,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         db.collection("users")
             .add(user)
             .addOnSuccessListener { documentReference ->
-                Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.id)
+                Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
             }
             .addOnFailureListener { e ->
                 Log.w(TAG, "Error adding document", e)
@@ -162,7 +162,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
                 .get()
                 .addOnSuccessListener { result ->
                     for (document in result) {
-                        Log.d(TAG, document.id + " => " + document.data)
+                        Log.d(TAG, "${document.id} => ${document.data}")
                     }
                 }
                 .addOnFailureListener { exception ->
@@ -185,7 +185,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
                         return@EventListener
                     }
 
-                    Log.d(TAG, "Current users born before 1900: " + snapshots!!)
+                    Log.d(TAG, "Current users born before 1900: ${snapshots!!}")
                 })
         // [END listen_for_users]
     }
@@ -292,7 +292,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         db.collection("cities")
             .add(data)
             .addOnSuccessListener { documentReference ->
-                Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.id)
+                Log.d(TAG, "DocumentSnapshot written with ID: ${documentReference.id}")
             }
             .addOnFailureListener { e ->
                 Log.w(TAG, "Error adding document", e)
@@ -404,7 +404,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
                         FirebaseFirestoreException.Code.ABORTED)
             }
         }.addOnSuccessListener { result ->
-            Log.d(TAG, "Transaction success: " + result!!)
+            Log.d(TAG, "Transaction success: ${result!!}")
         }.addOnFailureListener { e ->
             Log.w(TAG, "Transaction failure.", e)
         }
@@ -441,7 +441,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         docRef.get()
                 .addOnSuccessListener { document ->
                     if (document != null) {
-                        Log.d(TAG, "DocumentSnapshot data: " + document.data)
+                        Log.d(TAG, "DocumentSnapshot data: ${document.data}")
                     } else {
                         Log.d(TAG, "No such document")
                     }
@@ -464,7 +464,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             if (task.isSuccessful) {
                 // Document found in the offline cache
                 val document = task.result!!
-                Log.d(TAG, "Cached document data: " + document.data)
+                Log.d(TAG, "Cached document data: ${document.data}")
             } else {
                 Log.d(TAG, "Cached get failed: ", task.exception)
             }
@@ -491,7 +491,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             }
 
             if (snapshot != null && snapshot.exists()) {
-                Log.d(TAG, "Current data: " + snapshot.data)
+                Log.d(TAG, "Current data: ${snapshot.data}")
             } else {
                 Log.d(TAG, "Current data: null")
             }
@@ -514,7 +514,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
                 "Server"
 
             if (snapshot != null && snapshot.exists()) {
-                Log.d(TAG, source + " data: " + snapshot.data)
+                Log.d(TAG, "$source data: ${snapshot.data}")
             } else {
                 Log.d(TAG, "$source data: null")
             }
@@ -539,7 +539,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
                 .get()
                 .addOnSuccessListener { documents ->
                     for (document in documents) {
-                        Log.d(TAG, document.id + " => " + document.data)
+                        Log.d(TAG, "${document.id} => ${document.data}")
                     }
                 }
                 .addOnFailureListener { exception ->
@@ -554,7 +554,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
                 .get()
                 .addOnSuccessListener { result ->
                     for (document in result) {
-                        Log.d(TAG, document.id + " => " + document.data)
+                        Log.d(TAG, "${document.id} => ${document.data}")
                     }
                 }
                 .addOnFailureListener { exception ->
@@ -596,9 +596,9 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
 
                     for (dc in snapshots!!.documentChanges) {
                         when (dc.type) {
-                            DocumentChange.Type.ADDED -> Log.d(TAG, "New city: " + dc.document.data)
-                            DocumentChange.Type.MODIFIED -> Log.d(TAG, "Modified city: " + dc.document.data)
-                            DocumentChange.Type.REMOVED -> Log.d(TAG, "Removed city: " + dc.document.data)
+                            DocumentChange.Type.ADDED -> Log.d(TAG, "New city: ${dc.document.data}")
+                            DocumentChange.Type.MODIFIED -> Log.d(TAG, "Modified city: ${dc.document.data}")
+                            DocumentChange.Type.REMOVED -> Log.d(TAG, "Removed city: ${dc.document.data}")
                         }
                     }
                 })
@@ -617,7 +617,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
 
                     for (dc in snapshots!!.documentChanges) {
                         if (dc.type == DocumentChange.Type.ADDED) {
-                            Log.d(TAG, "New city: " + dc.document.data)
+                            Log.d(TAG, "New city: ${dc.document.data}")
                         }
                     }
 
@@ -654,7 +654,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
 
                     for (dc in snapshots!!.documentChanges) {
                         if (dc.type == DocumentChange.Type.ADDED) {
-                            Log.d(TAG, "New city: " + dc.document.data)
+                            Log.d(TAG, "New city: ${dc.document.data}")
                         }
                     }
                 })
@@ -949,7 +949,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
 
                     for (change in querySnapshot!!.documentChanges) {
                         if (change.type == DocumentChange.Type.ADDED) {
-                            Log.d(TAG, "New city:" + change.document.data)
+                            Log.d(TAG, "New city: ${change.document.data}")
                         }
 
                         val source = if (querySnapshot.metadata.isFromCache)

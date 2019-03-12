@@ -5,40 +5,40 @@ import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.ml.vision.FirebaseVision
 import com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions
-import com.google.firebase.ml.vision.cloud.label.FirebaseVisionCloudLabel
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
-import com.google.firebase.ml.vision.label.FirebaseVisionLabelDetectorOptions
+import com.google.firebase.ml.vision.label.FirebaseVisionImageLabel
+import com.google.firebase.ml.vision.label.FirebaseVisionOnDeviceImageLabelerOptions
 
 class ImageLabelingActivity : AppCompatActivity() {
 
     private fun labelImages(image: FirebaseVisionImage) {
         // [START set_detector_options]
-        val options = FirebaseVisionLabelDetectorOptions.Builder()
+        val options = FirebaseVisionOnDeviceImageLabelerOptions.Builder()
                 .setConfidenceThreshold(0.8f)
                 .build()
         // [END set_detector_options]
 
         // [START get_detector_default]
         val detector = FirebaseVision.getInstance()
-                .visionLabelDetector
+                .onDeviceImageLabeler
         // [END get_detector_default]
 
         /*
         // [START get_detector_options]
         // Or, to set the minimum confidence required:
         val detector = FirebaseVision.getInstance()
-                .getVisionLabelDetector(options)
+                .getOnDeviceImageLabeler(options)
         // [END get_detector_options]
         */
 
         // [START run_detector]
-        val result = detector.detectInImage(image)
+        val result = detector.processImage(image)
                 .addOnSuccessListener { labels ->
                     // Task completed successfully
                     // [START_EXCLUDE]
                     // [START get_labels]
                     for (label in labels) {
-                        val text = label.label
+                        val text = label.text
                         val entityId = label.entityId
                         val confidence = label.confidence
                     }
@@ -65,22 +65,22 @@ class ImageLabelingActivity : AppCompatActivity() {
 
         // [START get_detector_cloud]
         val detector = FirebaseVision.getInstance()
-                .visionCloudLabelDetector
+                .cloudImageLabeler
         // Or, to change the default settings:
         // val detector = FirebaseVision.getInstance()
-        //         .getVisionCloudLabelDetector(options)
+        //         .getCloudImageLabeler(options)
         // [END get_detector_cloud]
 
         // [START run_detector_cloud]
-        val result = detector.detectInImage(image)
+        val result = detector.processImage(image)
                 .addOnSuccessListener(
-                        object : OnSuccessListener<List<FirebaseVisionCloudLabel>> {
-                            override fun onSuccess(labels: List<FirebaseVisionCloudLabel>) {
+                        object : OnSuccessListener<List<FirebaseVisionImageLabel>> {
+                            override fun onSuccess(labels: List<FirebaseVisionImageLabel>) {
                                 // Task completed successfully
                                 // [START_EXCLUDE]
                                 // [START get_labels_cloud]
                                 for (label in labels) {
-                                    val text = label.label
+                                    val text = label.text
                                     val entityId = label.entityId
                                     val confidence = label.confidence
                                 }

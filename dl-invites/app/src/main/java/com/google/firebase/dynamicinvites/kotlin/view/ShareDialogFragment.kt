@@ -79,8 +79,8 @@ class ShareDialogFragment : BottomSheetDialogFragment() {
         fun onItemClicked(presenter: InvitePresenter)
     }
 
-    private inner class ViewHolder(inflater: LayoutInflater, parent: ViewGroup)
-        : RecyclerView.ViewHolder(inflater.inflate(R.layout.item_share_method, parent, false)) {
+    private inner class ViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
+        RecyclerView.ViewHolder(inflater.inflate(R.layout.item_share_method, parent, false)) {
 
         internal fun bind(presenter: InvitePresenter) {
             itemView.itemName.text = presenter.name
@@ -93,8 +93,8 @@ class ShareDialogFragment : BottomSheetDialogFragment() {
         }
     }
 
-    private inner class ItemAdapter(private val items: List<InvitePresenter>)
-        : RecyclerView.Adapter<ViewHolder>() {
+    private inner class ItemAdapter(private val items: List<InvitePresenter>) :
+        RecyclerView.Adapter<ViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             return ViewHolder(LayoutInflater.from(parent.context), parent)

@@ -35,8 +35,8 @@ class FaceDetectionActivity : AppCompatActivity() {
                     // [START get_face_info]
                     for (face in faces) {
                         val bounds = face.boundingBox
-                        val rotY = face.headEulerAngleY  // Head is rotated to the right rotY degrees
-                        val rotZ = face.headEulerAngleZ  // Head is tilted sideways rotZ degrees
+                        val rotY = face.headEulerAngleY // Head is rotated to the right rotY degrees
+                        val rotZ = face.headEulerAngleZ // Head is tilted sideways rotZ degrees
 
                         // If landmark detection was enabled (mouth, ears, eyes, cheeks, and
                         // nose available):
@@ -91,8 +91,8 @@ class FaceDetectionActivity : AppCompatActivity() {
         // [START mlkit_face_list]
         for (face in faces) {
             val bounds = face.boundingBox
-            val rotY = face.headEulerAngleY  // Head is rotated to the right rotY degrees
-            val rotZ = face.headEulerAngleZ  // Head is tilted sideways rotZ degrees
+            val rotY = face.headEulerAngleY // Head is rotated to the right rotY degrees
+            val rotZ = face.headEulerAngleZ // Head is tilted sideways rotZ degrees
 
             // If landmark detection was enabled (mouth, ears, eyes, cheeks, and
             // nose available):

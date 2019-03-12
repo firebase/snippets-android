@@ -6,6 +6,7 @@ import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
+import com.google.firebase.ml.vision.label.FirebaseVisionCloudImageLabelerOptions;
 
 import devrel.firebase.google.com.firebaseoptions.BuildConfig;
 
@@ -27,20 +28,20 @@ public class MainActivity extends AppCompatActivity {
                 new FirebaseVisionImageMetadata.Builder().build());
 
         // [START mlkit_certificate_matching]
-        FirebaseVisionCloudDetectorOptions.Builder optionsBuilder =
-                new FirebaseVisionCloudDetectorOptions.Builder();
+        FirebaseVisionCloudImageLabelerOptions.Builder optionsBuilder =
+                new FirebaseVisionCloudImageLabelerOptions.Builder();
         if (!BuildConfig.DEBUG) {
             // Requires physical, non-rooted device:
             optionsBuilder.enforceCertFingerprintMatch();
         }
 
         // Set other options. For example:
-        optionsBuilder.setModelType(FirebaseVisionCloudDetectorOptions.STABLE_MODEL);
+        optionsBuilder.setConfidenceThreshold(0.8f);
         // ...
 
         // And lastly:
-        FirebaseVisionCloudDetectorOptions options = optionsBuilder.build();
-        FirebaseVision.getInstance().getVisionCloudLabelDetector(options).detectInImage(myImage);
+        FirebaseVisionCloudImageLabelerOptions options = optionsBuilder.build();
+        FirebaseVision.getInstance().getCloudImageLabeler(options).processImage(myImage);
         // [END mlkit_certificate_matching]
     }
 

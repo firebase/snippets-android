@@ -335,6 +335,16 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         // [END update_document_array]
     }
 
+    fun updateDocumentIncrement() {
+        // [START update_document_increment]
+        val washingtonRef = db.collection("cities").document("DC");
+
+        // Atomically incrememnt the population of the city by 50.
+        // Note that increment() with no arguments increments by 1.
+        washingtonRef.update("population", FieldValue.increment(50));
+        // [END update_document_increment]
+    }
+
     private fun updateDocumentNested() {
         // [START update_document_nested]
         // Assume the document contains:
@@ -379,6 +389,9 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
 
         db.runTransaction { transaction ->
             val snapshot = transaction.get(sfDocRef)
+
+            // Note: this could be done without a transaction
+            //       by updating the population using FieldValue.increment()
             val newPopulation = snapshot.getDouble("population")!! + 1
             transaction.update(sfDocRef, "population", newPopulation)
 

@@ -10,10 +10,10 @@ import android.util.Log;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.ml.common.FirebaseMLException;
-import com.google.firebase.ml.common.modeldownload.FirebaseCloudModelSource;
-import com.google.firebase.ml.common.modeldownload.FirebaseLocalModelSource;
+import com.google.firebase.ml.common.modeldownload.FirebaseLocalModel;
 import com.google.firebase.ml.common.modeldownload.FirebaseModelDownloadConditions;
 import com.google.firebase.ml.common.modeldownload.FirebaseModelManager;
+import com.google.firebase.ml.common.modeldownload.FirebaseRemoteModel;
 import com.google.firebase.ml.custom.FirebaseModelDataType;
 import com.google.firebase.ml.custom.FirebaseModelInputOutputOptions;
 import com.google.firebase.ml.custom.FirebaseModelInputs;
@@ -39,31 +39,31 @@ public class CustomModelActivity extends AppCompatActivity {
         }
         FirebaseModelDownloadConditions conditions = conditionsBuilder.build();
 
-        // Build a FirebaseCloudModelSource object by specifying the name you assigned the model
+        // Build a remote model source object by specifying the name you assigned the model
         // when you uploaded it in the Firebase console.
-        FirebaseCloudModelSource cloudSource = new FirebaseCloudModelSource.Builder("my_cloud_model")
+        FirebaseRemoteModel cloudSource = new FirebaseRemoteModel.Builder("my_cloud_model")
                 .enableModelUpdates(true)
                 .setInitialDownloadConditions(conditions)
                 .setUpdatesDownloadConditions(conditions)
                 .build();
-        FirebaseModelManager.getInstance().registerCloudModelSource(cloudSource);
+        FirebaseModelManager.getInstance().registerRemoteModel(cloudSource);
         // [END mlkit_cloud_model_source]
     }
 
     private void configureLocalModelSource() {
         // [START mlkit_local_model_source]
-        FirebaseLocalModelSource localSource =
-                new FirebaseLocalModelSource.Builder("my_local_model")  // Assign a name to this model
+        FirebaseLocalModel localSource =
+                new FirebaseLocalModel.Builder("my_local_model")  // Assign a name to this model
                         .setAssetFilePath("my_model.tflite")
                         .build();
-        FirebaseModelManager.getInstance().registerLocalModelSource(localSource);
+        FirebaseModelManager.getInstance().registerLocalModel(localSource);
         // [END mlkit_local_model_source]
     }
 
     private FirebaseModelInterpreter createInterpreter() throws FirebaseMLException {
         // [START mlkit_create_interpreter]
         FirebaseModelOptions options = new FirebaseModelOptions.Builder()
-                .setCloudModelName("my_cloud_model")
+                .setRemoteModelName("my_cloud_model")
                 .setLocalModelName("my_local_model")
                 .build();
         FirebaseModelInterpreter firebaseInterpreter =

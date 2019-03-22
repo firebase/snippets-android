@@ -9,10 +9,10 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.firebase.ml.common.FirebaseMLException
-import com.google.firebase.ml.common.modeldownload.FirebaseCloudModelSource
-import com.google.firebase.ml.common.modeldownload.FirebaseLocalModelSource
+import com.google.firebase.ml.common.modeldownload.FirebaseLocalModel
 import com.google.firebase.ml.common.modeldownload.FirebaseModelDownloadConditions
 import com.google.firebase.ml.common.modeldownload.FirebaseModelManager
+import com.google.firebase.ml.common.modeldownload.FirebaseRemoteModel
 import com.google.firebase.ml.custom.FirebaseModelDataType
 import com.google.firebase.ml.custom.FirebaseModelInputOutputOptions
 import com.google.firebase.ml.custom.FirebaseModelInputs
@@ -42,23 +42,23 @@ class CustomModelActivity : AppCompatActivity() {
         }
         val conditions = conditionsBuilder.build()
 
-        // Build a FirebaseCloudModelSource object by specifying the name you assigned the model
+        // Build a remote model object by specifying the name you assigned the model
         // when you uploaded it in the Firebase console.
-        val cloudSource = FirebaseCloudModelSource.Builder("my_cloud_model")
+        val cloudSource = FirebaseRemoteModel.Builder("my_cloud_model")
                 .enableModelUpdates(true)
                 .setInitialDownloadConditions(conditions)
                 .setUpdatesDownloadConditions(conditions)
                 .build()
-        FirebaseModelManager.getInstance().registerCloudModelSource(cloudSource)
+        FirebaseModelManager.getInstance().registerRemoteModel(cloudSource)
         // [END mlkit_cloud_model_source]
     }
 
     private fun configureLocalModelSource() {
         // [START mlkit_local_model_source]
-        val localSource = FirebaseLocalModelSource.Builder("my_local_model") // Assign a name to this model
+        val localSource = FirebaseLocalModel.Builder("my_local_model") // Assign a name to this model
                 .setAssetFilePath("my_model.tflite")
                 .build()
-        FirebaseModelManager.getInstance().registerLocalModelSource(localSource)
+        FirebaseModelManager.getInstance().registerLocalModel(localSource)
         // [END mlkit_local_model_source]
     }
 
@@ -66,7 +66,7 @@ class CustomModelActivity : AppCompatActivity() {
     private fun createInterpreter(): FirebaseModelInterpreter? {
         // [START mlkit_create_interpreter]
         val options = FirebaseModelOptions.Builder()
-                .setCloudModelName("my_cloud_model")
+                .setRemoteModelName("my_cloud_model")
                 .setLocalModelName("my_local_model")
                 .build()
         val interpreter = FirebaseModelInterpreter.getInstance(options)

@@ -49,7 +49,7 @@ class SolutionCounters(val db: FirebaseFirestore) {
         val shardId = Math.floor(Math.random() * numShards).toInt()
         val shardRef = ref.collection("shards").document(shardId.toString())
 
-        return shardRef.update("count", FieldValue.increment())
+        return shardRef.update("count", FieldValue.increment(1))
     }
     // [END increment_counter]
 

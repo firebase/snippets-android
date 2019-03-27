@@ -76,7 +76,7 @@ public class SolutionCounters {
         int shardId = (int) Math.floor(Math.random() * numShards);
         DocumentReference shardRef = ref.collection("shards").document(String.valueOf(shardId));
         
-        return shardRef.update("count", FieldValue.increment());
+        return shardRef.update("count", FieldValue.increment(1));
     }
     // [END increment_counter]
 

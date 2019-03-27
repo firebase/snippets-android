@@ -644,7 +644,6 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         // [START detach_listener]
         val query = db.collection("cities")
         val registration = query.addSnapshotListener { snapshots, e ->
-            // [START_EXCLUDE]
             // ...
         }
 

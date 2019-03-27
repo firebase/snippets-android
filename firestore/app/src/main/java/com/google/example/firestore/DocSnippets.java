@@ -454,6 +454,15 @@ public class DocSnippets {
         // [END update_document_array]
     }
 
+    public void updateDocumentIncrement() {
+        // [START update_document_increment]
+        DocumentReference washingtonRef = db.collection("cities").document("DC");
+
+        // Atomically increment the population of the city by 50.
+        washingtonRef.update("population", FieldValue.increment(50));
+        // [END update_document_increment]
+    }
+
     public void updateDocumentNested() {
         // [START update_document_nested]
         // Assume the document contains:
@@ -510,6 +519,9 @@ public class DocSnippets {
             @Override
             public Void apply(Transaction transaction) throws FirebaseFirestoreException {
                 DocumentSnapshot snapshot = transaction.get(sfDocRef);
+
+                // Note: this could be done without a transaction
+                //       by updating the population using FieldValue.increment()
                 double newPopulation = snapshot.getDouble("population") + 1;
                 transaction.update(sfDocRef, "population", newPopulation);
 

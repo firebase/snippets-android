@@ -31,7 +31,7 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     kapt 'com.github.bumptech.glide:compiler:4.9.0'
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.21"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.30"
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
 }
 

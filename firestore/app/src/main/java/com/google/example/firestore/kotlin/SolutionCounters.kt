@@ -3,6 +3,7 @@ package com.google.example.firestore.kotlin
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 
 /**
@@ -48,13 +49,7 @@ class SolutionCounters(val db: FirebaseFirestore) {
         val shardId = Math.floor(Math.random() * numShards).toInt()
         val shardRef = ref.collection("shards").document(shardId.toString())
 
-        return db.runTransaction { transaction ->
-            val shard = transaction.get(shardRef).toObject(Shard::class.java)
-            shard!!.count += 1
-
-            transaction.set(shardRef, shard!!)
-            null
-        }
+        return shardRef.update("count", FieldValue.increment(1))
     }
     // [END increment_counter]
 

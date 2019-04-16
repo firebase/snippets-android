@@ -43,8 +43,8 @@ class MainActivity : AppCompatActivity() {
         // [START ftl_game_output_file]
         val launchIntent = intent
         val logFile = launchIntent.data
-        if (logFile != null) {
-            Log.i(TAG, "Log file " + logFile.encodedPath!!)
+        logFile?.let {
+            Log.i(TAG, "Log file ${it.encodedPath}")
             // ...
         }
         // [END ftl_game_output_file]
@@ -56,8 +56,8 @@ class MainActivity : AppCompatActivity() {
         val launchIntent = intent
         val logFile = launchIntent.data
         var fd = -1
-        if (logFile != null) {
-            Log.i(TAG, "Log file " + logFile.encodedPath!!)
+        logFile?.let {
+            Log.i(TAG, "Log file ${it.encodedPath}")
             fd = try {
                 contentResolver
                         .openAssetFileDescriptor(logFile, "w")!!

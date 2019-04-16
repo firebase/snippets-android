@@ -355,10 +355,10 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         //
         // To update age and favorite color:
         db.collection("users").document("frank")
-                .update(
-                        "age", 13,
-                        "favorites.color", "Red"
-                )
+                .update(mapOf(
+                        "age" to 13,
+                        "favorites.color" to "Red"
+                ))
         // [END update_document_nested]
     }
 

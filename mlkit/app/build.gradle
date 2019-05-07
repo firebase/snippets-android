@@ -29,10 +29,10 @@ dependencies {
     implementation "com.android.support:support-v4:28.0.0"
     implementation "com.android.support:appcompat-v7:28.0.0"
     implementation "com.android.support:exifinterface:28.0.0"
-    implementation "com.google.firebase:firebase-ml-common:17.0.0"
-    implementation "com.google.firebase:firebase-ml-model-interpreter:18.0.0"
-    implementation "com.google.firebase:firebase-ml-vision:19.0.3"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.30"
+    implementation "com.google.firebase:firebase-ml-common:19.0.0"
+    implementation "com.google.firebase:firebase-ml-model-interpreter:19.0.0"
+    implementation "com.google.firebase:firebase-ml-vision:20.0.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.31"
 }
 
 apply plugin: 'com.google.gms.google-services'

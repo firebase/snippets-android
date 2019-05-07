@@ -68,6 +68,7 @@ public class DocSnippets {
 
         // Write example data
         exampleData();
+        exampleDataCollectionGroup();
 
         // Run all other methods
         addAdaLovelace();
@@ -138,6 +139,15 @@ public class DocSnippets {
                 .build();
         db.setFirestoreSettings(settings);
         // [END set_firestore_settings]
+    }
+
+    public void setupCacheSize() {
+        // [START fs_setup_cache]
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setCacheSizeBytes(FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED)
+                .build();
+        db.setFirestoreSettings(settings);
+        // [END fs_setup_cache]
     }
 
     public void addAdaLovelace() {
@@ -938,6 +948,62 @@ public class DocSnippets {
         // [END example_data]
     }
 
+    public void exampleDataCollectionGroup() {
+        // [START fs_collection_group_query_data_setup]
+        CollectionReference citiesRef = db.collection("cities");
+
+        Map<String, Object> ggbData = new HashMap<>();
+        ggbData.put("name", "Golden Gate Bridge");
+        ggbData.put("type", "bridge");
+        citiesRef.document("SF").collection("landmarks").add(ggbData);
+
+        Map<String, Object> lohData = new HashMap<>();
+        lohData.put("name", "Legion of Honor");
+        lohData.put("type", "musuem");
+        citiesRef.document("SF").collection("landmarks").add(lohData);
+
+        Map<String, Object> gpData = new HashMap<>();
+        gpData.put("name", "Griffith Park");
+        gpData.put("type", "park");
+        citiesRef.document("LA").collection("landmarks").add(gpData);
+
+        Map<String, Object> tgData = new HashMap<>();
+        tgData.put("name", "The Getty");
+        tgData.put("type", "museum");
+        citiesRef.document("LA").collection("landmarks").add(tgData);
+
+        Map<String, Object> lmData = new HashMap<>();
+        lmData.put("name", "Lincoln Memorial");
+        lmData.put("type", "memorial");
+        citiesRef.document("DC").collection("landmarks").add(lmData);
+
+        Map<String, Object> nasaData = new HashMap<>();
+        nasaData.put("name", "National Air and Space Musuem");
+        nasaData.put("type", "museum");
+        citiesRef.document("DC").collection("landmarks").add(nasaData);
+
+        Map<String, Object> upData = new HashMap<>();
+        upData.put("name", "Ueno Park");
+        upData.put("type", "park");
+        citiesRef.document("TOK").collection("landmarks").add(upData);
+
+        Map<String, Object> nmData = new HashMap<>();
+        nmData.put("name", "National Musuem of Nature and Science");
+        nmData.put("type", "museum");
+        citiesRef.document("TOK").collection("landmarks").add(nmData);
+
+        Map<String, Object> jpData = new HashMap<>();
+        jpData.put("name", "Jingshan Park");
+        jpData.put("type", "park");
+        citiesRef.document("BJ").collection("landmarks").add(jpData);
+
+        Map<String, Object> baoData = new HashMap<>();
+        baoData.put("name", "Beijing Ancient Observatory");
+        baoData.put("type", "museum");
+        citiesRef.document("BJ").collection("landmarks").add(baoData);
+        // [END fs_collection_group_query_data_setup]
+    }
+
     public void simpleQueries() {
         // [START simple_queries]
         // Create a reference to the cities collection
@@ -1096,6 +1162,22 @@ public class DocSnippets {
                 .orderBy("state")
                 .startAt("Springfield", "Missouri");
         // [END multi_cursor]
+    }
+
+    public void collectionGroupQuery() {
+        // [START fs_collection_group_query]
+        db.collectionGroup("landmarks").whereEqualTo("type", "museum").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        // [START_EXCLUDE]
+                        for (QueryDocumentSnapshot snap : queryDocumentSnapshots) {
+                            Log.d(TAG, snap.getId() + " => " + snap.getData());
+                        }
+                        // [END_EXCLUDE]
+                    }
+                });
+        // [END fs_collection_group_query]
     }
 
     // [START delete_collection]

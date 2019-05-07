@@ -53,6 +53,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
 
         // Write example data
         exampleData()
+        exampleDataCollectionGroup()
 
         // Run all other methods
         addAdaLovelace()
@@ -87,6 +88,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         compoundQueries()
         orderAndLimit()
         queryStartAtEndAt()
+        collectionGroupQuery()
 
         // Run methods that should fail
         try {
@@ -102,7 +104,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         }
     }
 
-    fun setup() {
+    private fun setup() {
         // [START get_firestore_instance]
         val db = FirebaseFirestore.getInstance()
         // [END get_firestore_instance]
@@ -113,6 +115,15 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
                 .build()
         db.firestoreSettings = settings
         // [END set_firestore_settings]
+    }
+
+    private fun setupCacheSize() {
+        // [START fs_setup_cache]
+        val settings = FirebaseFirestoreSettings.Builder()
+                .setCacheSizeBytes(FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED)
+                .build()
+        db.firestoreSettings = settings
+        // [END fs_setup_cache]
     }
 
     private fun addAdaLovelace() {
@@ -723,6 +734,73 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         // [END example_data]
     }
 
+    fun exampleDataCollectionGroup() {
+        // [START fs_collection_group_query_data_setup]
+        val citiesRef = db.collection("cities")
+
+        val ggbData = mapOf(
+                "name" to "Golden Gate Bridge",
+                "type" to "bridge"
+        )
+        citiesRef.document("SF").collection("landmarks").add(ggbData)
+
+        val lohData = mapOf(
+                "name" to "Legion of Honor",
+                "type" to "museum"
+        )
+        citiesRef.document("SF").collection("landmarks").add(lohData)
+
+        val gpData = mapOf(
+                "name" to "Griffth Park",
+                "type" to "park"
+        )
+        citiesRef.document("LA").collection("landmarks").add(gpData)
+
+        val tgData = mapOf(
+                "name" to "The Getty",
+                "type" to "museum"
+        )
+        citiesRef.document("LA").collection("landmarks").add(tgData)
+
+        val lmData = mapOf(
+                "name" to "Lincoln Memorial",
+                "type" to "memorial"
+        )
+        citiesRef.document("DC").collection("landmarks").add(lmData)
+
+        val nasaData = mapOf(
+                "name" to "National Air and Space Museum",
+                "type" to "museum"
+        )
+        citiesRef.document("DC").collection("landmarks").add(nasaData)
+
+
+        val upData = mapOf(
+                "name" to "Ueno Park",
+                "type" to "park"
+        )
+        citiesRef.document("TOK").collection("landmarks").add(upData)
+
+        val nmData = mapOf(
+                "name" to "National Musuem of Nature and Science",
+                "type" to "museum"
+        )
+        citiesRef.document("TOK").collection("landmarks").add(nmData)
+
+        val jpData = mapOf(
+                "name" to "Jingshan Park",
+                "type" to "park"
+        )
+        citiesRef.document("BJ").collection("landmarks").add(jpData)
+
+        val baoData = mapOf(
+                "name" to "Beijing Ancient Observatory",
+                "type" to "musuem"
+        )
+        citiesRef.document("BJ").collection("landmarks").add(baoData)
+        // [END fs_collection_group_query_data_setup]
+    }
+
     private fun simpleQueries() {
         // [START simple_queries]
         // Create a reference to the cities collection
@@ -875,6 +953,19 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
                 .orderBy("state")
                 .startAt("Springfield", "Missouri")
         // [END multi_cursor]
+    }
+
+    private fun collectionGroupQuery() {
+        // [START fs_collection_group_query]
+        db.collectionGroup("landmarks").whereEqualTo("type", "museum").get()
+                .addOnSuccessListener { queryDocumentSnapshots ->
+                    // [START_EXCLUDE]
+                    for (snap in queryDocumentSnapshots) {
+                        Log.d(TAG, snap.id + " => " + snap.data)
+                    }
+                    // [END_EXCLUDE]
+                }
+        // [END fs_collection_group_query]
     }
 
     // [START delete_collection]

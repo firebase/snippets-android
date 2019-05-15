@@ -152,7 +152,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         val user = HashMap<String, Any>()
         user["first"] = "Alan"
         user["middle"] = "Mathison"
-        user["last"] = "Turring"
+        user["last"] = "Turing"
         user["born"] = 1912
 
         // Add a new document with a generated ID

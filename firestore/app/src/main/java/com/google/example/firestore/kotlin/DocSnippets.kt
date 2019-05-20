@@ -774,7 +774,6 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         )
         citiesRef.document("DC").collection("landmarks").add(nasaData)
 
-
         val upData = mapOf(
                 "name" to "Ueno Park",
                 "type" to "park"

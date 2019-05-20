@@ -11,6 +11,10 @@ android {
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
+<<<<<<< HEAD
+=======
+
+>>>>>>> Fix build
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -27,7 +31,10 @@ dependencies {
     implementation "com.android.support:support-v4:28.0.0"
     implementation "com.android.support:appcompat-v7:28.0.0"
     implementation "com.android.support:customtabs:28.0.0"
+<<<<<<< HEAD
 
+=======
+>>>>>>> Fix build
     implementation "com.google.firebase:firebase-inappmessaging-display:17.1.1"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.31"
 }

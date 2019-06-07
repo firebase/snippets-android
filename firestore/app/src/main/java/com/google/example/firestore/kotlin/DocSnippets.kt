@@ -32,8 +32,6 @@ import java.util.concurrent.TimeUnit
 /**
  * Kotlin version of doc snippets.
  *
- * Note: this is a naive auto-translation of the Java code with a few edits, this is not intended
- *       as a good example of idiomatic Kotlin.
  */
 abstract class DocSnippets(val db: FirebaseFirestore) {
 

@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
         final int messageId = 0; // Increment for each
         // [START fcm_send_upstream]
         FirebaseMessaging fm = FirebaseMessaging.getInstance();
-        fm.send(new RemoteMessage.Builder(SENDER_ID + "@gcm.googleapis.com")
+        fm.send(new RemoteMessage.Builder(SENDER_ID + "@fcm.googleapis.com")
                 .setMessageId(Integer.toString(messageId))
                 .addData("my_message", "Hello World")
                 .addData("my_action","SAY_HELLO")

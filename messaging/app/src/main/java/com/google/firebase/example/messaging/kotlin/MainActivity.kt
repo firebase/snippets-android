@@ -126,7 +126,7 @@ class MainActivity : AppCompatActivity() {
         val messageId = 0 // Increment for each
         // [START fcm_send_upstream]
         val fm = FirebaseMessaging.getInstance()
-        fm.send(RemoteMessage.Builder("$SENDER_ID@gcm.googleapis.com")
+        fm.send(RemoteMessage.Builder("$SENDER_ID@fcm.googleapis.com")
                 .setMessageId(Integer.toString(messageId))
                 .addData("my_message", "Hello World")
                 .addData("my_action", "SAY_HELLO")

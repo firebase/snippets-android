@@ -27,20 +27,22 @@ abstract class SolutionArrays(private val db: FirebaseFirestore) {
         // [END example_array_post]
 
         // [START example_map_post]
-        val categories = hashMapOf<String, Boolean>()
-        categories["technology"] = true
-        categories["opinion"] = true
-        categories["cats"] = true
+        val categories = hashMapOf(
+                "technology" to true,
+                "opinion" to true,
+                "cats" to true
+        )
         val myMapPost = MapPost("My great post", categories)
         // [END example_map_post]
     }
 
     fun examplePosts_Advanced() {
         // [START example_map_post_advanced]
-        val categories = hashMapOf<String, Long>()
-        categories["technology"] = 1502144665L
-        categories["opinion"] = 1502144665L
-        categories["cats"] = 1502144665L
+        val categories = hashMapOf(
+                "technology" to 1502144665L,
+                "opinion" to 1502144665L,
+                "cats" to 1502144665L
+        )
 
         val myMapPostAdvanced = MapPostAdvanced("My great post", categories)
         // [END example_map_post_advanced]

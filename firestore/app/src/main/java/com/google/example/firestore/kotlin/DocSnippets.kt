@@ -190,7 +190,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         // snapshot each time there is a change in the results.
         db.collection("users")
                 .whereLessThan("born", 1900)
-                .addSnapshotListener{ snapshots, e ->
+                .addSnapshotListener { snapshots, e ->
                     if (e != null) {
                         Log.w(TAG, "Listen failed.", e)
                         return@addSnapshotListener
@@ -506,7 +506,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
     private fun listenToDocument() {
         // [START listen_document]
         val docRef = db.collection("cities").document("SF")
-        docRef.addSnapshotListener{ snapshot, e ->
+        docRef.addSnapshotListener { snapshot, e ->
             if (e != null) {
                 Log.w(TAG, "Listen failed.", e)
                 return@addSnapshotListener
@@ -524,7 +524,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
     private fun listenToDocumentLocal() {
         // [START listen_document_local]
         val docRef = db.collection("cities").document("SF")
-        docRef.addSnapshotListener{ snapshot, e ->
+        docRef.addSnapshotListener { snapshot, e ->
             if (e != null) {
                 Log.w(TAG, "Listen failed.", e)
                 return@addSnapshotListener
@@ -589,7 +589,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         // [START listen_multiple]
         db.collection("cities")
                 .whereEqualTo("state", "CA")
-                .addSnapshotListener{ value, e ->
+                .addSnapshotListener { value, e ->
                     if (e != null) {
                         Log.w(TAG, "Listen failed.", e)
                         return@addSnapshotListener
@@ -610,7 +610,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         // [START listen_diffs]
         db.collection("cities")
                 .whereEqualTo("state", "CA")
-                .addSnapshotListener{ snapshots, e ->
+                .addSnapshotListener { snapshots, e ->
                     if (e != null) {
                         Log.w(TAG, "listen:error", e)
                         return@addSnapshotListener
@@ -631,7 +631,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         // [START listen_state]
         db.collection("cities")
                 .whereEqualTo("state", "CA")
-                .addSnapshotListener{ snapshots, e ->
+                .addSnapshotListener { snapshots, e ->
                     if (e != null) {
                         Log.w(TAG, "listen:error", e)
                         return@addSnapshotListener
@@ -667,7 +667,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
     private fun handleListenErrors() {
         // [START handle_listen_errors]
         db.collection("cities")
-                .addSnapshotListener{ snapshots, e ->
+                .addSnapshotListener { snapshots, e ->
                     if (e != null) {
                         Log.w(TAG, "listen:error", e)
                         return@addSnapshotListener

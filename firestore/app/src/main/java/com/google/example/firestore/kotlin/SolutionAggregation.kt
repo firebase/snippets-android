@@ -12,14 +12,11 @@ abstract class SolutionAggregation(private val db: FirebaseFirestore) {
 
     // [START restaurant_class]
     data class Restaurant(
-        internal var name: String,
-        internal var avgRating: Double,
-        internal var numRatings: Int
-    ) {
-
-        // No-arg constructor required for use with "toObject"
-        constructor() : this("", 0.0, 0)
-    }
+        // default values required for use with "toObject"
+        internal var name: String = "",
+        internal var avgRating: Double = 0.0,
+        internal var numRatings: Int = 0
+    )
     // [END restaurant_class]
 
     fun exampleRestaurant() {
@@ -44,10 +41,10 @@ abstract class SolutionAggregation(private val db: FirebaseFirestore) {
 
         // In a transaction, add the new rating and update the aggregate totals
         return db.runTransaction { transaction ->
-            val restaurant = transaction.get(restaurantRef).toObject(Restaurant::class.java)
+            val restaurant = transaction.get(restaurantRef).toObject(Restaurant::class.java)!!
 
             // Compute new number of ratings
-            val newNumRatings = restaurant!!.numRatings + 1
+            val newNumRatings = restaurant.numRatings + 1
 
             // Compute new average rating
             val oldRatingTotal = restaurant.avgRating * restaurant.numRatings
@@ -61,8 +58,9 @@ abstract class SolutionAggregation(private val db: FirebaseFirestore) {
             transaction.set(restaurantRef, restaurant)
 
             // Update rating
-            val data = hashMapOf<String, Any>()
-            data["rating"] = rating
+            val data = hashMapOf<String, Any>(
+                    "rating" to rating
+            )
             transaction.set(ratingRef, data, SetOptions.merge())
 
             null

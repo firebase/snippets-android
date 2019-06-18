@@ -1,6 +1,6 @@
 package com.google.firebase.example.instanceid.kotlin
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import com.google.firebase.iid.FirebaseInstanceId
 

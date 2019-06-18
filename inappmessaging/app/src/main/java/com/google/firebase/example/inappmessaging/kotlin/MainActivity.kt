@@ -1,6 +1,6 @@
 package com.google.firebase.example.inappmessaging.kotlin
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.example.inappmessaging.MyClickListener
 import com.google.firebase.inappmessaging.FirebaseInAppMessaging
 

@@ -2,7 +2,7 @@ package com.google.firebase.example.messaging.kotlin
 
 import android.accounts.AccountManager
 import android.annotation.SuppressLint
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import com.google.android.gms.auth.GoogleAuthUtil
 import com.google.firebase.messaging.FirebaseMessaging

@@ -2,12 +2,12 @@ package com.google.firebase.dynamicinvites.kotlin.view
 
 import android.content.Context
 import android.os.Bundle
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.dynamicinvites.R
 import com.google.firebase.dynamicinvites.kotlin.presenter.CopyPresenter
 import com.google.firebase.dynamicinvites.kotlin.presenter.EmailPresenter
@@ -56,7 +56,7 @@ class ShareDialogFragment : BottomSheetDialogFragment() {
                 MorePresenter(true, content)
         )
 
-        recycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
+        recycler.layoutManager = LinearLayoutManager(context)
         recycler.adapter = ItemAdapter(presenters)
     }
 
@@ -80,7 +80,7 @@ class ShareDialogFragment : BottomSheetDialogFragment() {
     }
 
     private inner class ViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
-        androidx.recyclerview.widget.RecyclerView.ViewHolder(inflater.inflate(R.layout.item_share_method, parent, false)) {
+        RecyclerView.ViewHolder(inflater.inflate(R.layout.item_share_method, parent, false)) {
 
         internal fun bind(presenter: InvitePresenter) {
             itemView.itemName.text = presenter.name
@@ -94,7 +94,7 @@ class ShareDialogFragment : BottomSheetDialogFragment() {
     }
 
     private inner class ItemAdapter(private val items: List<InvitePresenter>) :
-        androidx.recyclerview.widget.RecyclerView.Adapter<ViewHolder>() {
+        RecyclerView.Adapter<ViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             return ViewHolder(LayoutInflater.from(parent.context), parent)

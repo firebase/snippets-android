@@ -5,7 +5,7 @@ package com.google.firebase.example.mlkit.kotlin
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Build
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.firebase.ml.common.FirebaseMLException

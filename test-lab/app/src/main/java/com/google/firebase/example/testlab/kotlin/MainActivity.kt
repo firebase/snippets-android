@@ -1,7 +1,7 @@
 package com.google.firebase.example.testlab.kotlin
 
 import android.provider.Settings
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import com.google.android.libraries.cloudtesting.screenshots.ScreenShotter
 import java.io.FileNotFoundException

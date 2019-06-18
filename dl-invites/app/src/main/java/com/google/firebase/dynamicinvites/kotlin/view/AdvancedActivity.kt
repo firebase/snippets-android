@@ -1,7 +1,7 @@
 package com.google.firebase.dynamicinvites.kotlin.view
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 
 import com.google.firebase.dynamicinvites.R
 import com.google.firebase.dynamicinvites.kotlin.presenter.InvitePresenter

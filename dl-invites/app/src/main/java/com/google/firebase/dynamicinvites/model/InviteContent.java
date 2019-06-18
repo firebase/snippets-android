@@ -1,8 +1,8 @@
 package com.google.firebase.dynamicinvites.model;
 
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 // [START ddl_invite_content]
 

@@ -1,7 +1,7 @@
 package com.google.firebase.example.appindexing;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.appindexing.Action;

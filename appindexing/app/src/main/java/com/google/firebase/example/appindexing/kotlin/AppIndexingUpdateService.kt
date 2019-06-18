@@ -17,7 +17,7 @@ class AppIndexingUpdateService : JobIntentService() {
         private const val UNIQUE_JOB_ID = 42
 
         fun enqueueWork(context: Context) {
-            JobIntentService.enqueueWork(context, AppIndexingUpdateService::class.java, UNIQUE_JOB_ID, Intent())
+            enqueueWork(context, AppIndexingUpdateService::class.java, UNIQUE_JOB_ID, Intent())
         }
     }
 

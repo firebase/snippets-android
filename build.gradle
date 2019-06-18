@@ -2,8 +2,8 @@
 buildscript {
     repositories {
         google()
-        mavenCentral()
         jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.4.1'
@@ -19,8 +19,8 @@ plugins {
 allprojects {
     repositories {
         google()
-        mavenLocal()
         jcenter()
+        mavenLocal()
     }
 
     // See: https://github.com/ben-manes/gradle-versions-plugin

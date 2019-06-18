@@ -20,8 +20,8 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import android.widget.ImageView;
 
 import com.google.android.gms.tasks.Continuation;
@@ -29,11 +29,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.referencecode.storage.interfaces.StorageActivityInterface;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnPausedListener;
 import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -45,7 +46,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class StorageActivity extends AppCompatActivity implements StorageActivityInterface {
+public class StorageActivity extends AppCompatActivity {
     // [START storage_field_declaration]
     // [END storage_field_declaration]
 
@@ -62,7 +63,6 @@ public class StorageActivity extends AppCompatActivity implements StorageActivit
         includesForCreateReference();
     }
 
-    @Override
     public void includesForCreateReference() {
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
@@ -145,7 +145,6 @@ public class StorageActivity extends AppCompatActivity implements StorageActivit
         // [END reference_full_example]
     }
 
-    @Override
     public void includesForUploadFiles() throws FileNotFoundException {
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
@@ -334,7 +333,6 @@ public class StorageActivity extends AppCompatActivity implements StorageActivit
         // [END upload_get_download_url]
     }
 
-    @Override
     public void includesForDownloadFiles() throws IOException {
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
@@ -417,7 +415,6 @@ public class StorageActivity extends AppCompatActivity implements StorageActivit
         // [END download_full_example]
     }
 
-    @Override
     public void includesForFileMetadata() {
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
@@ -468,7 +465,6 @@ public class StorageActivity extends AppCompatActivity implements StorageActivit
         // [END update_file_metadata]
     }
 
-    @Override
     public void includesForMetadata_delete() {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
@@ -497,7 +493,6 @@ public class StorageActivity extends AppCompatActivity implements StorageActivit
         // [END delete_file_metadata]
     }
 
-    @Override
     public void includesForMetadata_custom() {
         // [START custom_metadata]
         StorageMetadata metadata = new StorageMetadata.Builder()
@@ -507,7 +502,6 @@ public class StorageActivity extends AppCompatActivity implements StorageActivit
         // [END custom_metadata]
     }
 
-    @Override
     public void includesForDeleteFiles() {
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
@@ -532,5 +526,35 @@ public class StorageActivity extends AppCompatActivity implements StorageActivit
         });
         // [END delete_file]
     }
+
+    public void nonDefaultBucket() {
+        // [START storage_non_default_bucket]
+        // Get a non-default Storage bucket
+        FirebaseStorage storage = FirebaseStorage.getInstance("gs://my-custom-bucket");
+        // [END storage_non_default_bucket]
+    }
+
+    public void customApp() {
+        FirebaseApp customApp = FirebaseApp.initializeApp(this);
+
+        // [START storage_custom_app]
+        // Get the default bucket from a custom FirebaseApp
+        FirebaseStorage storage = FirebaseStorage.getInstance(customApp);
+
+        // Get a non-default bucket from a custom FirebaseApp
+        FirebaseStorage customStorage = FirebaseStorage.getInstance(customApp, "gs://my-custom-bucket");
+        // [END storage_custom_app]
+    }
+
+    // [START storage_custom_failure_listener]
+    class MyFailureListener implements OnFailureListener {
+        @Override
+        public void onFailure(@NonNull Exception exception) {
+            int errorCode = ((StorageException) exception).getErrorCode();
+            String errorMessage = exception.getMessage();
+            // test the errorCode and errorMessage, and handle accordingly
+        }
+    }
+    // [END storage_custom_failure_listener]
 
 }

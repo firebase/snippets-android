@@ -1,13 +1,15 @@
 package com.google.example.firestore;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,9 +22,9 @@ public class SolutionArrays {
     // [START array_post_class]
     public class ArrayPost {
         String title;
-        String[] categories;
+        List<String> categories;
 
-        public ArrayPost(String title, String[] categories) {
+        public ArrayPost(String title, List<String> categories) {
             this.title = title;
             this.categories = categories;
         }
@@ -57,9 +59,9 @@ public class SolutionArrays {
 
     public void examplePosts() {
         // [START example_array_post]
-        ArrayPost myArrayPost = new ArrayPost("My great post", new String[]{
+        ArrayPost myArrayPost = new ArrayPost("My great post", Arrays.asList(
                 "technology", "opinion", "cats"
-        });
+        ));
         // [END example_array_post]
 
         // [START example_map_post]

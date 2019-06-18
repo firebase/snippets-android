@@ -15,7 +15,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".KotlinMainActivity" />
+        <activity android:name=".kotlin.MainActivity" />
+        <activity android:name=".FirebaseUIActivity"></activity>
     </application>
 
 </manifest>

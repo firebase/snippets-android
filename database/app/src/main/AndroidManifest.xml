@@ -16,7 +16,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />
-        <activity android:name=".KotlinMainActivity" />
+        <activity android:name=".kotlin.MainActivity" />
+        <activity android:name=".OfflineActivity" />
+        <activity android:name=".ShardingActivity"></activity>
     </application>
 
 </manifest>

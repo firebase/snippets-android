@@ -1,16 +1,15 @@
 package com.google.example.firestore;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.Transaction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,18 +72,9 @@ public class SolutionCounters {
     // [START increment_counter]
     public Task<Void> incrementCounter(final DocumentReference ref, final int numShards) {
         int shardId = (int) Math.floor(Math.random() * numShards);
-        final DocumentReference shardRef = ref.collection("shards").document(String.valueOf(shardId));
-
-        return db.runTransaction(new Transaction.Function<Void>() {
-            @Override
-            public Void apply(Transaction transaction) throws FirebaseFirestoreException {
-                Shard shard = transaction.get(shardRef).toObject(Shard.class);
-                shard.count += 1;
-
-                transaction.set(shardRef, shard);
-                return null;
-            }
-        });
+        DocumentReference shardRef = ref.collection("shards").document(String.valueOf(shardId));
+        
+        return shardRef.update("count", FieldValue.increment(1));
     }
     // [END increment_counter]
 

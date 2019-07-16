@@ -423,6 +423,57 @@ abstract class StorageActivity : AppCompatActivity() {
         // [END storage_custom_app]
     }
 
+    fun listAllFiles() {
+        // [START storage_list_all]
+        val storage = FirebaseStorage.getInstance()
+        val listRef = storage.reference.child("files/uid")
+
+        listRef.listAll()
+                .addOnSuccessListener { listResult ->
+                    listResult.prefixes.forEach { prefix ->
+                        // All the prefixes under listRef.
+                        // You may call listAll() recursively on them.
+                    }
+
+                    listResult.items.forEach { item ->
+                        // All the items under listRef.
+                    }
+                }
+                .addOnFailureListener {
+                    // Uh-oh, an error occurred!
+                }
+        // [END storage_list_all]
+    }
+
+    // [START storage_list_paginated]
+    fun listAllPaginated(pageToken: String?) {
+        val storage = FirebaseStorage.getInstance()
+        val listRef = storage.reference.child("files/uid")
+
+        // Fetch the next page of results, using the pageToken if we have one.
+        val listPageTask = if (pageToken != null)
+            listRef.list(100, pageToken!!)
+        else
+            listRef.list(100)
+
+        listPageTask
+                .addOnSuccessListener { listResult ->
+                    val prefixes = listResult.prefixes
+                    val items = listResult.items
+
+                    // Process page of results
+                    // ...
+
+                    // Recurse onto next page
+                    listResult.pageToken?.let {
+                        listAllPaginated(it)
+                    }
+                }.addOnFailureListener {
+                    // Uh-oh, an error occurred.
+                }
+    }
+    // [END storage_list_paginated]
+
     // [START storage_custom_failure_listener]
     internal inner class MyFailureListener : OnFailureListener {
         override fun onFailure(exception: Exception) {

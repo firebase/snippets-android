@@ -451,10 +451,11 @@ abstract class StorageActivity : AppCompatActivity() {
         val listRef = storage.reference.child("files/uid")
 
         // Fetch the next page of results, using the pageToken if we have one.
-        val listPageTask = if (pageToken != null)
-            listRef.list(100, pageToken!!)
-        else
+        val listPageTask = if (pageToken != null) {
+            listRef.list(100, pageToken)
+        } else {
             listRef.list(100)
+        }
 
         listPageTask
                 .addOnSuccessListener { listResult ->

@@ -2,9 +2,9 @@ package com.google.firebase.quickstart.auth.kotlin
 
 import android.net.Uri
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.facebook.AccessToken
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -434,8 +434,8 @@ abstract class MainActivity : AppCompatActivity() {
                 this, object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
             override fun onCodeSent(
-                verificationId: String?,
-                forceResendingToken: PhoneAuthProvider.ForceResendingToken?
+                verificationId: String,
+                forceResendingToken: PhoneAuthProvider.ForceResendingToken
             ) {
                 // Save the verification id somewhere
                 // ...

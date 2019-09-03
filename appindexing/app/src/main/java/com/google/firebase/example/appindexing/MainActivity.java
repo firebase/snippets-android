@@ -93,4 +93,14 @@ public class MainActivity extends AppCompatActivity {
         return null;
     }
 
+public void indexNote(Recipe recipe) {
+    Note note = recipe.getNote();
+    Indexable noteToIndex = Indexables.noteDigitalDocumentBuilder()
+            .setName(recipe.getTitle())
+            .setText(note.getText())
+            .setUrl(recipe.getNoteUrl())
+            .build();
+
+    Task<Void> task = FirebaseAppIndex.getInstance().update(noteToIndex);
+    // ...
 }

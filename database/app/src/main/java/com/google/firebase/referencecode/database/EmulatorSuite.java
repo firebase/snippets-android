@@ -13,4 +13,12 @@ public class EmulatorSuite {
         // [END rtdb_emulator_connect]
     }
 
+    public void flushRealtimeDatabase(DatabaseReference anRTDBReference) {
+        // [START rtdb_emulator_flush]
+        // With a DatabaseReference, write null to the root node to delete the database.
+        anRTDBReference.child("/").setValue(null); 
+        // [END rtbd_emulator_flush]
+
+    }
+
 }

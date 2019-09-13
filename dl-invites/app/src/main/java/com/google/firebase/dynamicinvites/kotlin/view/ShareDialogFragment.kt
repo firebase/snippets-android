@@ -48,7 +48,7 @@ class ShareDialogFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val content = DynamicLinksUtil.generateInviteContent()
-        val presenters = Arrays.asList(
+        val presenters = listOf(
                 EmailPresenter(true, content),
                 SocialPresenter(true, content),
                 MessagePresenter(true, content),
@@ -63,10 +63,10 @@ class ShareDialogFragment : BottomSheetDialogFragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         val parent = parentFragment
-        if (parent != null) {
-            listener = parent as Listener
+        listener = if (parent != null) {
+            parent as Listener
         } else {
-            listener = context as Listener
+            context as Listener
         }
     }
 
@@ -105,9 +105,7 @@ class ShareDialogFragment : BottomSheetDialogFragment() {
             holder.bind(presenter)
         }
 
-        override fun getItemCount(): Int {
-            return items.size
-        }
+        override fun getItemCount() = items.size
     }
 
     companion object {

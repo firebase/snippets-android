@@ -60,7 +60,7 @@ class ShareDialogFragment : BottomSheetDialogFragment() {
         recycler.adapter = ItemAdapter(presenters)
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         val parent = parentFragment
         if (parent != null) {

@@ -3,7 +3,7 @@ package com.google.firebase.quickstart.dynamiclinks.kotlin
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.appinvite.AppInviteReferral
 import com.google.firebase.appinvite.FirebaseAppInvite
 import com.google.firebase.dynamiclinks.DynamicLink

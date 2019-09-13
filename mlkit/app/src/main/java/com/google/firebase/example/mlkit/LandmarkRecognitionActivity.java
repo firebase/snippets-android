@@ -1,8 +1,8 @@
 package com.google.firebase.example.mlkit;
 
 import android.graphics.Rect;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.google.android.gms.tasks.OnFailureListener;

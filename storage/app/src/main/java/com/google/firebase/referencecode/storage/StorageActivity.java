@@ -20,9 +20,11 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,6 +34,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.OnPausedListener;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageException;
@@ -45,6 +48,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 public class StorageActivity extends AppCompatActivity {
     // [START storage_field_declaration]
@@ -545,6 +549,68 @@ public class StorageActivity extends AppCompatActivity {
         FirebaseStorage customStorage = FirebaseStorage.getInstance(customApp, "gs://my-custom-bucket");
         // [END storage_custom_app]
     }
+
+    public void listAllFiles() {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        // [START storage_list_all]
+        StorageReference listRef = storage.getReference().child("files/uid");
+
+        listRef.listAll()
+                .addOnSuccessListener(new OnSuccessListener<ListResult>() {
+                    @Override
+                    public void onSuccess(ListResult listResult) {
+                        for (StorageReference prefix : listResult.getPrefixes()) {
+                            // All the prefixes under listRef.
+                            // You may call listAll() recursively on them.
+                        }
+
+                        for (StorageReference item : listResult.getItems()) {
+                            // All the items under listRef.
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Uh-oh, an error occurred!
+                    }
+                });
+        // [END storage_list_all]
+    }
+
+    // [START storage_list_paginated]
+    public void listAllPaginated(@Nullable String pageToken) {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference listRef = storage.getReference().child("files/uid");
+
+        // Fetch the next page of results, using the pageToken if we have one.
+        Task<ListResult> listPageTask = pageToken != null
+                ? listRef.list(100, pageToken)
+                : listRef.list(100);
+
+        listPageTask
+                .addOnSuccessListener(new OnSuccessListener<ListResult>() {
+                    @Override
+                    public void onSuccess(ListResult listResult) {
+                        List<StorageReference> prefixes = listResult.getPrefixes();
+                        List<StorageReference> items = listResult.getItems();
+
+                        // Process page of results
+                        // ...
+
+                        // Recurse onto next page
+                        if (listResult.getPageToken() != null) {
+                            listAllPaginated(listResult.getPageToken());
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Uh-oh, an error occurred.
+                    }
+                });
+    }
+    // [END storage_list_paginated]
 
     // [START storage_custom_failure_listener]
     class MyFailureListener implements OnFailureListener {

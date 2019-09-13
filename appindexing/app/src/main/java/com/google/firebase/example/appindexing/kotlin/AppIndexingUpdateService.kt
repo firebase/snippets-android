@@ -2,7 +2,7 @@ package com.google.firebase.example.appindexing.kotlin
 
 import android.content.Context
 import android.content.Intent
-import android.support.v4.app.JobIntentService
+import androidx.core.app.JobIntentService
 import com.google.firebase.appindexing.FirebaseAppIndex
 import com.google.firebase.appindexing.Indexable
 import com.google.firebase.appindexing.builders.Indexables
@@ -17,7 +17,7 @@ class AppIndexingUpdateService : JobIntentService() {
         private const val UNIQUE_JOB_ID = 42
 
         fun enqueueWork(context: Context) {
-            JobIntentService.enqueueWork(context, AppIndexingUpdateService::class.java, UNIQUE_JOB_ID, Intent())
+            enqueueWork(context, AppIndexingUpdateService::class.java, UNIQUE_JOB_ID, Intent())
         }
     }
 

@@ -13,7 +13,7 @@ public class EmulatorSuite {
         // [END rtdb_emulator_connect]
     }
 
-    public void flushRealtimeDatabase(DatabaseReference anRTDBReference) {
+    public void flushRealtimeDatabase(FirebaseDatabase) {
         // [START rtdb_emulator_flush]
         // With a DatabaseReference, write null to clear the database.
         FirebaseDatabase.getInstance().getReference().setValue(null);

@@ -8,15 +8,15 @@ public class EmulatorSuite {
         // [START rtdb_emulator_connect]
         // 10.0.2.2 is the special IP address to connect to the 'localhost' of
         // the host computer from an Android emulator.
-        // Here we provide the database  namespace 'foo'.
-        FirebaseDatabase database = FirebaseDatabase.getInstance("http://10.0.2.2:9000?ns=foo");
+        // In almost all cases the ns (namespace) is your project ID.
+        FirebaseDatabase database = FirebaseDatabase.getInstance("http://10.0.2.2:9000?ns=YOUR_DATABASE_NAMESPACE");
         // [END rtdb_emulator_connect]
     }
 
     public void flushRealtimeDatabase(DatabaseReference anRTDBReference) {
         // [START rtdb_emulator_flush]
-        // With a DatabaseReference, write null to the root node to delete the database.
-        anRTDBReference.child("/").setValue(null); 
+        // With a DatabaseReference, write null to clear the database.
+        FirebaseDatabase.getInstance().getReference().setValue(null);
         // [END rtbd_emulator_flush]
 
     }

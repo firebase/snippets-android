@@ -437,7 +437,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         val sfRef = db.collection("cities").document("SF")
         val laRef = db.collection("cities").document("LA")
 
-        // Get a new write batch and commit all writes operations
+        // Get a new write batch and commit all write operations
         db.runBatch { batch ->
             // Set the value of 'NYC'
             batch.set(nycRef, City())

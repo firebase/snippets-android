@@ -587,23 +587,24 @@ public class DocSnippets {
 
     public void writeBatch() {
         // [START write_batch]
-        // Get a new write batch
-        WriteBatch batch = db.batch();
+        final DocumentReference nycRef = db.collection("cities").document("NYC");
+        final DocumentReference sfRef = db.collection("cities").document("SF");
+        final DocumentReference laRef = db.collection("cities").document("LA");
 
-        // Set the value of 'NYC'
-        DocumentReference nycRef = db.collection("cities").document("NYC");
-        batch.set(nycRef, new City());
+        // Get a new write batch and commit all write operations
+        db.runBatch(new WriteBatch.Function() {
+            @Override
+            public void apply(@NonNull WriteBatch batch) {
+                // Set the value of 'NYC'
+                batch.set(nycRef, new City());
 
-        // Update the population of 'SF'
-        DocumentReference sfRef = db.collection("cities").document("SF");
-        batch.update(sfRef, "population", 1000000L);
+                // Update the population of 'SF'
+                batch.update(sfRef, "population", 1000000L);
 
-        // Delete the city 'LA'
-        DocumentReference laRef = db.collection("cities").document("LA");
-        batch.delete(laRef);
-
-        // Commit the batch
-        batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+                // Delete the city 'LA'
+                batch.delete(laRef);
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 // ...

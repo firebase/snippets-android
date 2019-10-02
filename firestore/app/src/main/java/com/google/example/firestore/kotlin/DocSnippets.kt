@@ -433,23 +433,21 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
 
     fun writeBatch() {
         // [START write_batch]
-        // Get a new write batch
-        val batch = db.batch()
-
-        // Set the value of 'NYC'
         val nycRef = db.collection("cities").document("NYC")
-        batch.set(nycRef, City())
-
-        // Update the population of 'SF'
         val sfRef = db.collection("cities").document("SF")
-        batch.update(sfRef, "population", 1000000L)
-
-        // Delete the city 'LA'
         val laRef = db.collection("cities").document("LA")
-        batch.delete(laRef)
 
-        // Commit the batch
-        batch.commit().addOnCompleteListener {
+        // Get a new write batch and commit all write operations
+        db.runBatch { batch ->
+            // Set the value of 'NYC'
+            batch.set(nycRef, City())
+
+            // Update the population of 'SF'
+            batch.update(sfRef, "population", 1000000L)
+
+            // Delete the city 'LA'
+            batch.delete(laRef)
+        }.addOnCompleteListener {
             // ...
         }
         // [END write_batch]

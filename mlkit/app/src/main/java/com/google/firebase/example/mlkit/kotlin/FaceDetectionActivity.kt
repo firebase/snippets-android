@@ -61,13 +61,10 @@ class FaceDetectionActivity : AppCompatActivity() {
                     // [END get_face_info]
                     // [END_EXCLUDE]
                 }
-                .addOnFailureListener(
-                        object : OnFailureListener {
-                            override fun onFailure(e: Exception) {
-                                // Task failed with an exception
-                                // ...
-                            }
-                        })
+                .addOnFailureListener { e ->
+                    // Task failed with an exception
+                    // ...
+                }
         // [END run_detector]
     }
 

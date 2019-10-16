@@ -41,7 +41,7 @@ class TextRecognitionActivity : AppCompatActivity() {
                     // [END get_text]
                     // [END_EXCLUDE]
                 }
-                .addOnFailureListener {
+                .addOnFailureListener { e ->
                     // Task failed with an exception
                     // ...
                 }
@@ -51,7 +51,7 @@ class TextRecognitionActivity : AppCompatActivity() {
     private fun recognizeTextCloud(image: FirebaseVisionImage) {
         // [START set_detector_options_cloud]
         val options = FirebaseVisionCloudTextRecognizerOptions.Builder()
-                .setLanguageHints(Arrays.asList("en", "hi"))
+                .setLanguageHints(listOf("en", "hi"))
                 .build()
         // [END set_detector_options_cloud]
 
@@ -82,7 +82,7 @@ class TextRecognitionActivity : AppCompatActivity() {
                     // [END get_text_cloud]
                     // [END_EXCLUDE]
                 }
-                .addOnFailureListener {
+                .addOnFailureListener { e ->
                     // Task failed with an exception
                     // ...
                 }
@@ -130,7 +130,7 @@ class TextRecognitionActivity : AppCompatActivity() {
         // Or, to provide language hints to assist with language detection:
         // See https://cloud.google.com/vision/docs/languages for supported languages
         val options = FirebaseVisionCloudDocumentRecognizerOptions.Builder()
-                .setLanguageHints(Arrays.asList("en", "hi"))
+                .setLanguageHints(listOf("en", "hi"))
                 .build()
         val detector = FirebaseVision.getInstance()
                 .getCloudDocumentTextRecognizer(options)
@@ -147,11 +147,11 @@ class TextRecognitionActivity : AppCompatActivity() {
 
         // [START mlkit_process_doc_image]
         detector.processImage(myImage)
-                .addOnSuccessListener {
+                .addOnSuccessListener { firebaseVisionDocumentText ->
                     // Task completed successfully
                     // ...
                 }
-                .addOnFailureListener {
+                .addOnFailureListener { e ->
                     // Task failed with an exception
                     // ...
                 }

@@ -46,7 +46,7 @@ class LandmarkRecognitionActivity : AppCompatActivity() {
                     // [END get_landmarks_cloud]
                     // [END_EXCLUDE]
                 }
-                .addOnFailureListener {
+                .addOnFailureListener { e ->
                     // Task failed with an exception
                     // ...
                 }

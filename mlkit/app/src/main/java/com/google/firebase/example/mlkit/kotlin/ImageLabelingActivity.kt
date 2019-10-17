@@ -45,13 +45,10 @@ class ImageLabelingActivity : AppCompatActivity() {
                     // [END get_labels]
                     // [END_EXCLUDE]
                 }
-                .addOnFailureListener(
-                        object : OnFailureListener {
-                            override fun onFailure(e: Exception) {
-                                // Task failed with an exception
-                                // ...
-                            }
-                        })
+                .addOnFailureListener { e ->
+                    // Task failed with an exception
+                    // ...
+                }
         // [END run_detector]
     }
 
@@ -73,28 +70,22 @@ class ImageLabelingActivity : AppCompatActivity() {
 
         // [START run_detector_cloud]
         val result = detector.processImage(image)
-                .addOnSuccessListener(
-                        object : OnSuccessListener<List<FirebaseVisionImageLabel>> {
-                            override fun onSuccess(labels: List<FirebaseVisionImageLabel>) {
-                                // Task completed successfully
-                                // [START_EXCLUDE]
-                                // [START get_labels_cloud]
-                                for (label in labels) {
-                                    val text = label.text
-                                    val entityId = label.entityId
-                                    val confidence = label.confidence
-                                }
-                                // [END get_labels_cloud]
-                                // [END_EXCLUDE]
-                            }
-                        })
-                .addOnFailureListener(
-                        object : OnFailureListener {
-                            override fun onFailure(e: Exception) {
-                                // Task failed with an exception
-                                // ...
-                            }
-                        })
+                .addOnSuccessListener { labels ->
+                    // Task completed successfully
+                    // [START_EXCLUDE]
+                    // [START get_labels_cloud]
+                    for (label in labels) {
+                        val text = label.text
+                        val entityId = label.entityId
+                        val confidence = label.confidence
+                    }
+                    // [END get_labels_cloud]
+                    // [END_EXCLUDE]
+                }
+                .addOnFailureListener { e ->
+                    // Task failed with an exception
+                    // ...
+                }
         // [END run_detector_cloud]
     }
 }

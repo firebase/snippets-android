@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.firebase.ml.common.FirebaseMLException
+import com.google.firebase.ml.common.modeldownload.FirebaseModelDownloadConditions
+import com.google.firebase.ml.common.modeldownload.FirebaseModelManager
 import com.google.firebase.ml.custom.FirebaseCustomLocalModel
 import com.google.firebase.ml.custom.FirebaseCustomRemoteModel
 import com.google.firebase.ml.custom.FirebaseModelInterpreterOptions
@@ -33,6 +35,18 @@ class CustomModelActivity : AppCompatActivity() {
         // [END mlkit_cloud_model_source]
     }
 
+    private fun startModelDownloadTask(remoteModel: FirebaseCustomRemoteModel) {
+        // [START mlkit_model_download_task]
+        val conditions = FirebaseModelDownloadConditions.Builder()
+                .requireWifi()
+                .build()
+        FirebaseModelManager.getInstance().download(remoteModel, conditions)
+                .addOnCompleteListener {
+                    // Success.
+                }
+        // [END mlkit_model_download_task]
+    }
+
     private fun configureLocalModelSource() {
         // [START mlkit_local_model_source]
         val localModel = FirebaseCustomLocalModel.Builder()
@@ -49,6 +63,34 @@ class CustomModelActivity : AppCompatActivity() {
         // [END mlkit_create_interpreter]
 
         return interpreter
+    }
+
+    private fun checkModelDownloadStatus(remoteModel: FirebaseCustomRemoteModel, localModel: FirebaseCustomLocalModel) {
+        // [START mlkit_check_download_status]
+        FirebaseModelManager.getInstance().isModelDownloaded(remoteModel)
+                .addOnSuccessListener { isDownloaded ->
+                    val options =
+                            if (isDownloaded) {
+                                FirebaseModelInterpreterOptions.Builder(remoteModel).build()
+                            } else {
+                                FirebaseModelInterpreterOptions.Builder(localModel).build()
+                            }
+                    val interpreter = FirebaseModelInterpreter.getInstance(options)
+                }
+        // [END mlkit_check_download_status]
+    }
+
+    private fun addDownloadListener(
+            remoteModel: FirebaseCustomRemoteModel,
+            conditions: FirebaseModelDownloadConditions
+    ) {
+        // [START mlkit_remote_model_download_listener]
+        FirebaseModelManager.getInstance().download(remoteModel, conditions)
+                .addOnCompleteListener {
+                    // Download complete. Depending on your app, you could enable the ML
+                    // feature, or switch from the local model to the remote model, etc.
+                }
+        // [END mlkit_remote_model_download_listener]
     }
 
     @Throws(FirebaseMLException::class)

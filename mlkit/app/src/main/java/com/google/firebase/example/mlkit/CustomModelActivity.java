@@ -6,9 +6,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.ml.common.FirebaseMLException;
+import com.google.firebase.ml.common.modeldownload.FirebaseModelDownloadConditions;
+import com.google.firebase.ml.common.modeldownload.FirebaseModelManager;
 import com.google.firebase.ml.custom.FirebaseCustomLocalModel;
 import com.google.firebase.ml.custom.FirebaseCustomRemoteModel;
 import com.google.firebase.ml.custom.FirebaseModelDataType;
@@ -29,6 +33,21 @@ public class CustomModelActivity extends AppCompatActivity {
         FirebaseCustomRemoteModel remoteModel =
                 new FirebaseCustomRemoteModel.Builder("your_model").build();
         // [END mlkit_cloud_model_source]
+    }
+
+    private void startModelDownloadTask(FirebaseCustomRemoteModel remoteModel) {
+        // [START mlkit_model_download_task]
+        FirebaseModelDownloadConditions conditions = new FirebaseModelDownloadConditions.Builder()
+                .requireWifi()
+                .build();
+        FirebaseModelManager.getInstance().download(remoteModel, conditions)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        // Success.
+                    }
+                });
+        // [END mlkit_model_download_task]
     }
 
     private void configureLocalModelSource() {
@@ -52,6 +71,47 @@ public class CustomModelActivity extends AppCompatActivity {
         // [END mlkit_create_interpreter]
 
         return interpreter;
+    }
+
+    private void checkModelDownloadStatus(
+            final FirebaseCustomRemoteModel remoteModel,
+            final FirebaseCustomLocalModel localModel) {
+        // [START mlkit_check_download_status]
+        FirebaseModelManager.getInstance().isModelDownloaded(remoteModel)
+                .addOnSuccessListener(new OnSuccessListener<Boolean>() {
+                    @Override
+                    public void onSuccess(Boolean isDownloaded) {
+                        FirebaseModelInterpreterOptions options;
+                        if (isDownloaded) {
+                            options = new FirebaseModelInterpreterOptions.Builder(remoteModel).build();
+                        } else {
+                            options = new FirebaseModelInterpreterOptions.Builder(localModel).build();
+                        }
+                        try {
+                            FirebaseModelInterpreter interpreter = FirebaseModelInterpreter.getInstance(options);
+                            // ...
+                        } catch (FirebaseMLException e) {
+
+                        }
+                    }
+                });
+        // [END mlkit_check_download_status]
+    }
+
+    private void addDownloadListener(
+            FirebaseCustomRemoteModel remoteModel,
+            FirebaseModelDownloadConditions conditions) {
+        // [START mlkit_remote_model_download_listener]
+        FirebaseModelManager.getInstance().download(remoteModel, conditions)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void v) {
+                        // Download complete. Depending on your app, you could enable
+                        // the ML feature, or switch from the local model to the remote
+                        // model, etc.
+                    }
+                });
+        // [END mlkit_remote_model_download_listener]
     }
 
     private FirebaseModelInputOutputOptions createInputOutputOptions() throws FirebaseMLException {

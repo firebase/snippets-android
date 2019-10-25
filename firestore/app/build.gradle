@@ -25,6 +25,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 repositories {
@@ -40,7 +45,7 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
 
     // Firestore
-    implementation "com.google.firebase:firebase-firestore:21.2.1"
+    implementation "com.google.firebase:firebase-firestore:21.2.0-SNAPSHOT"
 
     // Firebase / Play Services
     implementation "com.google.firebase:firebase-auth:19.1.0"

@@ -1,9 +1,10 @@
 package com.google.example.firestore;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
-import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -1030,6 +1031,26 @@ public class DocSnippets {
 
         citiesRef.whereArrayContains("regions", "west_coast");
         // [END array_contains_filter]
+    }
+
+    public void arrayContainsAnyQueries() {
+        // [START array_contains_any_filter]
+        CollectionReference citiesRef = db.collection("cities");
+
+        citiesRef.whereArrayContainsAny("region", Arrays.asList("west_coast", "east_coast"));
+        // [END array_contains_any_filter]
+    }
+
+    public void inQueries() {
+        // [START in_filter]
+        CollectionReference citiesRef = db.collection("cities");
+
+        citiesRef.whereIn("country", Arrays.asList("USA", "Japan"));
+        // [END in_filter]
+
+        // [START in_filter_with_array]
+        citiesRef.whereIn("regions", Arrays.asList(new String[]{"west_coast"}, new String[]{"east_coast"}));
+        // [END in_filter_with_array]
     }
 
     public void compoundQueries() {

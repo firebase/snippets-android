@@ -6,7 +6,6 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
-import com.google.android.gms.tasks.OnFailureListener
 import com.google.firebase.ml.common.FirebaseMLException
 import com.google.firebase.ml.common.modeldownload.FirebaseModelDownloadConditions
 import com.google.firebase.ml.common.modeldownload.FirebaseModelManager
@@ -81,8 +80,8 @@ class CustomModelActivity : AppCompatActivity() {
     }
 
     private fun addDownloadListener(
-            remoteModel: FirebaseCustomRemoteModel,
-            conditions: FirebaseModelDownloadConditions
+        remoteModel: FirebaseCustomRemoteModel,
+        conditions: FirebaseModelDownloadConditions
     ) {
         // [START mlkit_remote_model_download_listener]
         FirebaseModelManager.getInstance().download(remoteModel, conditions)

@@ -828,6 +828,26 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         // [END array_contains_filter]
     }
 
+    fun arrayContainsAnyQueries() {
+        // [START array_contains_any_filter]
+        val citiesRef = db.collection("cities")
+
+        citiesRef.whereArrayContainsAny("region", listOf("west_coast", "east_coast"))
+        // [END array_contains_any_filter]
+    }
+
+    fun inQueries() {
+        // [START in_filter]
+        val citiesRef = db.collection("cities")
+
+        citiesRef.whereIn("country", listOf("USA", "Japan"))
+        // [END in_filter]
+
+        // [START in_filter_with_array]
+        citiesRef.whereIn("regions", listOf(arrayOf("west_coast"), arrayOf("east_coast")))
+        // [END in_filter_with_array]
+    }
+
     private fun compoundQueries() {
         val citiesRef = db.collection("cities")
 

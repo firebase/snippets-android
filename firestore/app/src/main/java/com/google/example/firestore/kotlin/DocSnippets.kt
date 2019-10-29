@@ -2,8 +2,8 @@
 
 package com.google.example.firestore.kotlin
 
-import androidx.annotation.WorkerThread
 import android.util.Log
+import androidx.annotation.WorkerThread
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.Timestamp

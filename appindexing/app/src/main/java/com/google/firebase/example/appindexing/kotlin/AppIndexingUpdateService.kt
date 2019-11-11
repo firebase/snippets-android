@@ -3,6 +3,7 @@ package com.google.firebase.example.appindexing.kotlin
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.JobIntentService
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.appindexing.FirebaseAppIndex
 import com.google.firebase.appindexing.Indexable
 import com.google.firebase.appindexing.builders.Indexables
@@ -43,7 +44,13 @@ class AppIndexingUpdateService : JobIntentService() {
             val notesArr: Array<Indexable> = indexableNotes.toTypedArray()
 
             // batch insert indexable notes into index
-            FirebaseAppIndex.getInstance().update(*notesArr)
+            try {
+                Tasks.await(FirebaseAppIndex.getInstance().update(*notesArr))
+            } catch (ExecutionException e) {
+                // update failed
+            } catch (InterruptedException e) {
+                // await was interrupted
+            }
         }
     }
 

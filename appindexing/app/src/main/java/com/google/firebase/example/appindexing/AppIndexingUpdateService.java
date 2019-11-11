@@ -5,6 +5,7 @@ import android.content.Intent;
 import androidx.annotation.NonNull;
 import androidx.core.app.JobIntentService;
 
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.appindexing.FirebaseAppIndex;
 import com.google.firebase.appindexing.Indexable;
 import com.google.firebase.appindexing.builders.Indexables;
@@ -49,7 +50,13 @@ public class AppIndexingUpdateService extends JobIntentService {
             notesArr = indexableNotes.toArray(notesArr);
 
             // batch insert indexable notes into index
-            FirebaseAppIndex.getInstance().update(notesArr);
+            try {
+                Tasks.await(FirebaseAppIndex.getInstance().update(notesArr));
+            } catch (ExecutionException e) {
+                // update failed
+            } catch (InterruptedException e) {
+                // await was interrupted
+            }
         }
     }
 

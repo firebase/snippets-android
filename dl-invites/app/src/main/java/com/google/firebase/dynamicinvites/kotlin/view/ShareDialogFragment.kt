@@ -19,7 +19,6 @@ import com.google.firebase.dynamicinvites.kotlin.util.DynamicLinksUtil
 import kotlinx.android.synthetic.main.fragment_item_list_dialog.recycler
 import kotlinx.android.synthetic.main.item_share_method.view.itemIcon
 import kotlinx.android.synthetic.main.item_share_method.view.itemName
-import java.util.Arrays
 
 /**
  * A fragment that shows a list of items as a modal bottom sheet.

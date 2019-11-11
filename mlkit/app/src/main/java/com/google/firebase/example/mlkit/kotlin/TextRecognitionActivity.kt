@@ -9,6 +9,7 @@ import com.google.firebase.ml.vision.document.FirebaseVisionDocumentText
 import com.google.firebase.ml.vision.document.FirebaseVisionDocumentTextRecognizer
 import com.google.firebase.ml.vision.text.FirebaseVisionCloudTextRecognizerOptions
 import com.google.firebase.ml.vision.text.FirebaseVisionText
+import java.util.Arrays
 
 class TextRecognitionActivity : AppCompatActivity() {
 

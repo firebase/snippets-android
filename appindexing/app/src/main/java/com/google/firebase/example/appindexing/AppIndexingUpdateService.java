@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import java.util.concurrent.ExecutionException;
+
 // [START appindexing_update_service]
 public class AppIndexingUpdateService extends JobIntentService {
 

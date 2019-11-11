@@ -8,6 +8,7 @@ import com.google.firebase.appindexing.FirebaseAppIndex
 import com.google.firebase.appindexing.Indexable
 import com.google.firebase.appindexing.builders.Indexables
 import com.google.firebase.example.appindexing.model.Recipe
+import java.util.concurrent.ExecutionException
 
 // [START appindexing_update_service]
 class AppIndexingUpdateService : JobIntentService() {

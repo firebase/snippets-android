@@ -80,8 +80,8 @@ class CustomModelActivity : AppCompatActivity() {
     }
 
     private fun addDownloadListener(
-        remoteModel: FirebaseCustomRemoteModel,
-        conditions: FirebaseModelDownloadConditions
+            remoteModel: FirebaseCustomRemoteModel,
+            conditions: FirebaseModelDownloadConditions
     ) {
         // [START mlkit_remote_model_download_listener]
         FirebaseModelManager.getInstance().download(remoteModel, conditions)

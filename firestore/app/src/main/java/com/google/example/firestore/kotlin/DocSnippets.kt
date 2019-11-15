@@ -348,7 +348,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         // [START update_document_increment]
         val washingtonRef = db.collection("cities").document("DC")
 
-        // Atomically incrememnt the population of the city by 50.
+        // Atomically increment the population of the city by 50.
         washingtonRef.update("population", FieldValue.increment(50))
         // [END update_document_increment]
     }

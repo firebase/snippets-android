@@ -21,3 +21,20 @@ public class MyClickListener implements FirebaseInAppMessagingClickListener {
 
 }
 // [END fiam_click_listener]
+
+// [START fiam_click_listener_bundles]
+public class MyClickListener implements FirebaseInAppMessagingClickListener {
+
+    @Override
+    public void messageClicked(InAppMessage inAppMessage, Action action) {
+        // Determine which URL the user clicked
+        String url = action.getActionUrl();
+
+        // Get data bundle for the inapp message
+        Map<String, String> dataBundle = inAppMessage.getData();`
+
+        // ...
+    }
+
+}
+// [END fiam_click_listener_bundles]

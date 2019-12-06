@@ -2,23 +2,24 @@ package com.google.firebase.example.mlkit;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.ml.common.FirebaseMLException;
-import com.google.firebase.ml.common.modeldownload.FirebaseLocalModel;
 import com.google.firebase.ml.common.modeldownload.FirebaseModelDownloadConditions;
 import com.google.firebase.ml.common.modeldownload.FirebaseModelManager;
-import com.google.firebase.ml.common.modeldownload.FirebaseRemoteModel;
+import com.google.firebase.ml.custom.FirebaseCustomLocalModel;
+import com.google.firebase.ml.custom.FirebaseCustomRemoteModel;
 import com.google.firebase.ml.custom.FirebaseModelDataType;
 import com.google.firebase.ml.custom.FirebaseModelInputOutputOptions;
 import com.google.firebase.ml.custom.FirebaseModelInputs;
 import com.google.firebase.ml.custom.FirebaseModelInterpreter;
-import com.google.firebase.ml.custom.FirebaseModelOptions;
+import com.google.firebase.ml.custom.FirebaseModelInterpreterOptions;
 import com.google.firebase.ml.custom.FirebaseModelOutputs;
 
 import java.io.BufferedReader;
@@ -29,48 +30,88 @@ public class CustomModelActivity extends AppCompatActivity {
 
     private void configureHostedModelSource() {
         // [START mlkit_cloud_model_source]
-        FirebaseModelDownloadConditions.Builder conditionsBuilder =
-                new FirebaseModelDownloadConditions.Builder().requireWifi();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            // Enable advanced conditions on Android Nougat and newer.
-            conditionsBuilder = conditionsBuilder
-                    .requireCharging()
-                    .requireDeviceIdle();
-        }
-        FirebaseModelDownloadConditions conditions = conditionsBuilder.build();
-
-        // Build a remote model source object by specifying the name you assigned the model
-        // when you uploaded it in the Firebase console.
-        FirebaseRemoteModel cloudSource = new FirebaseRemoteModel.Builder("my_cloud_model")
-                .enableModelUpdates(true)
-                .setInitialDownloadConditions(conditions)
-                .setUpdatesDownloadConditions(conditions)
-                .build();
-        FirebaseModelManager.getInstance().registerRemoteModel(cloudSource);
+        FirebaseCustomRemoteModel remoteModel =
+                new FirebaseCustomRemoteModel.Builder("your_model").build();
         // [END mlkit_cloud_model_source]
+    }
+
+    private void startModelDownloadTask(FirebaseCustomRemoteModel remoteModel) {
+        // [START mlkit_model_download_task]
+        FirebaseModelDownloadConditions conditions = new FirebaseModelDownloadConditions.Builder()
+                .requireWifi()
+                .build();
+        FirebaseModelManager.getInstance().download(remoteModel, conditions)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        // Success.
+                    }
+                });
+        // [END mlkit_model_download_task]
     }
 
     private void configureLocalModelSource() {
         // [START mlkit_local_model_source]
-        FirebaseLocalModel localSource =
-                new FirebaseLocalModel.Builder("my_local_model")  // Assign a name to this model
-                        .setAssetFilePath("my_model.tflite")
-                        .build();
-        FirebaseModelManager.getInstance().registerLocalModel(localSource);
+        FirebaseCustomLocalModel localModel = new FirebaseCustomLocalModel.Builder()
+                .setAssetFilePath("your_model.tflite")
+                .build();
         // [END mlkit_local_model_source]
     }
 
-    private FirebaseModelInterpreter createInterpreter() throws FirebaseMLException {
+    private FirebaseModelInterpreter createInterpreter(FirebaseCustomLocalModel localModel) throws FirebaseMLException {
         // [START mlkit_create_interpreter]
-        FirebaseModelOptions options = new FirebaseModelOptions.Builder()
-                .setRemoteModelName("my_cloud_model")
-                .setLocalModelName("my_local_model")
-                .build();
-        FirebaseModelInterpreter firebaseInterpreter =
-                FirebaseModelInterpreter.getInstance(options);
+        FirebaseModelInterpreter interpreter = null;
+        try {
+            FirebaseModelInterpreterOptions options =
+                    new FirebaseModelInterpreterOptions.Builder(localModel).build();
+            interpreter = FirebaseModelInterpreter.getInstance(options);
+        } catch (FirebaseMLException e) {
+            // ...
+        }
         // [END mlkit_create_interpreter]
 
-        return firebaseInterpreter;
+        return interpreter;
+    }
+
+    private void checkModelDownloadStatus(
+            final FirebaseCustomRemoteModel remoteModel,
+            final FirebaseCustomLocalModel localModel) {
+        // [START mlkit_check_download_status]
+        FirebaseModelManager.getInstance().isModelDownloaded(remoteModel)
+                .addOnSuccessListener(new OnSuccessListener<Boolean>() {
+                    @Override
+                    public void onSuccess(Boolean isDownloaded) {
+                        FirebaseModelInterpreterOptions options;
+                        if (isDownloaded) {
+                            options = new FirebaseModelInterpreterOptions.Builder(remoteModel).build();
+                        } else {
+                            options = new FirebaseModelInterpreterOptions.Builder(localModel).build();
+                        }
+                        try {
+                            FirebaseModelInterpreter interpreter = FirebaseModelInterpreter.getInstance(options);
+                            // ...
+                        } catch (FirebaseMLException e) {
+
+                        }
+                    }
+                });
+        // [END mlkit_check_download_status]
+    }
+
+    private void addDownloadListener(
+            FirebaseCustomRemoteModel remoteModel,
+            FirebaseModelDownloadConditions conditions) {
+        // [START mlkit_remote_model_download_listener]
+        FirebaseModelManager.getInstance().download(remoteModel, conditions)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void v) {
+                        // Download complete. Depending on your app, you could enable
+                        // the ML feature, or switch from the local model to the remote
+                        // model, etc.
+                    }
+                });
+        // [END mlkit_remote_model_download_listener]
     }
 
     private FirebaseModelInputOutputOptions createInputOutputOptions() throws FirebaseMLException {
@@ -109,7 +150,8 @@ public class CustomModelActivity extends AppCompatActivity {
     }
 
     private void runInference() throws FirebaseMLException {
-        FirebaseModelInterpreter firebaseInterpreter = createInterpreter();
+        FirebaseCustomLocalModel localModel = new FirebaseCustomLocalModel.Builder().build();
+        FirebaseModelInterpreter firebaseInterpreter = createInterpreter(localModel);
         float[][][][] input = bitmapToInputArray();
         FirebaseModelInputOutputOptions inputOutputOptions = createInputOutputOptions();
 

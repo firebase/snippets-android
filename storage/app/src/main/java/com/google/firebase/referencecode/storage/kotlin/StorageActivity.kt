@@ -5,16 +5,13 @@ import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.OnFailureListener
-import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseApp
 import com.google.firebase.referencecode.storage.R
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageException
 import com.google.firebase.storage.StorageMetadata
 import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.UploadTask
 import kotlinx.android.synthetic.main.activity_storage.imageView
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -208,9 +205,9 @@ abstract class StorageActivity : AppCompatActivity() {
         // Observe state change events such as progress, pause, and resume
         uploadTask.addOnProgressListener { taskSnapshot ->
             val progress = (100.0 * taskSnapshot.bytesTransferred) / taskSnapshot.totalByteCount
-            System.out.println("Upload is $progress% done")
+            println("Upload is $progress% done")
         }.addOnPausedListener {
-            System.out.println("Upload is paused")
+            println("Upload is paused")
         }
         // [END monitor_upload_progress]
 
@@ -229,9 +226,9 @@ abstract class StorageActivity : AppCompatActivity() {
         // Listen for state changes, errors, and completion of the upload.
         uploadTask.addOnProgressListener { taskSnapshot ->
             val progress = (100.0 * taskSnapshot.bytesTransferred) / taskSnapshot.totalByteCount
-            System.out.println("Upload is $progress% done")
+            println("Upload is $progress% done")
         }.addOnPausedListener {
-            System.out.println("Upload is paused")
+            println("Upload is paused")
         }.addOnFailureListener {
             // Handle unsuccessful uploads
         }.addOnSuccessListener {
@@ -244,14 +241,14 @@ abstract class StorageActivity : AppCompatActivity() {
         val ref = storageRef.child("images/mountains.jpg")
         uploadTask = ref.putFile(file)
 
-        val urlTask = uploadTask.continueWithTask(Continuation<UploadTask.TaskSnapshot, Task<Uri>> { task ->
+        val urlTask = uploadTask.continueWithTask { task ->
             if (!task.isSuccessful) {
                 task.exception?.let {
                     throw it
                 }
             }
-            return@Continuation ref.downloadUrl
-        }).addOnCompleteListener { task ->
+            ref.downloadUrl
+        }.addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 val downloadUri = task.result
             } else {

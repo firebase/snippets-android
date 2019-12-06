@@ -4,20 +4,19 @@ package com.google.firebase.example.mlkit.kotlin
 
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.firebase.ml.common.FirebaseMLException
-import com.google.firebase.ml.common.modeldownload.FirebaseLocalModel
 import com.google.firebase.ml.common.modeldownload.FirebaseModelDownloadConditions
 import com.google.firebase.ml.common.modeldownload.FirebaseModelManager
-import com.google.firebase.ml.common.modeldownload.FirebaseRemoteModel
-import com.google.firebase.ml.custom.FirebaseModelDataType
+import com.google.firebase.ml.custom.FirebaseCustomLocalModel
+import com.google.firebase.ml.custom.FirebaseCustomRemoteModel
+import com.google.firebase.ml.custom.FirebaseModelInterpreterOptions
+import com.google.firebase.ml.custom.FirebaseModelInterpreter
 import com.google.firebase.ml.custom.FirebaseModelInputOutputOptions
 import com.google.firebase.ml.custom.FirebaseModelInputs
-import com.google.firebase.ml.custom.FirebaseModelInterpreter
-import com.google.firebase.ml.custom.FirebaseModelOptions
+import com.google.firebase.ml.custom.FirebaseModelDataType
 
 import java.io.BufferedReader
 import java.io.IOException
@@ -32,47 +31,66 @@ class CustomModelActivity : AppCompatActivity() {
 
     private fun configureHostedModelSource() {
         // [START mlkit_cloud_model_source]
-        var conditionsBuilder: FirebaseModelDownloadConditions.Builder =
-                FirebaseModelDownloadConditions.Builder().requireWifi()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            // Enable advanced conditions on Android Nougat and newer.
-            conditionsBuilder = conditionsBuilder
-                    .requireCharging()
-                    .requireDeviceIdle()
-        }
-        val conditions = conditionsBuilder.build()
-
-        // Build a remote model object by specifying the name you assigned the model
-        // when you uploaded it in the Firebase console.
-        val cloudSource = FirebaseRemoteModel.Builder("my_cloud_model")
-                .enableModelUpdates(true)
-                .setInitialDownloadConditions(conditions)
-                .setUpdatesDownloadConditions(conditions)
-                .build()
-        FirebaseModelManager.getInstance().registerRemoteModel(cloudSource)
+        val remoteModel = FirebaseCustomRemoteModel.Builder("your_model").build()
         // [END mlkit_cloud_model_source]
+    }
+
+    private fun startModelDownloadTask(remoteModel: FirebaseCustomRemoteModel) {
+        // [START mlkit_model_download_task]
+        val conditions = FirebaseModelDownloadConditions.Builder()
+                .requireWifi()
+                .build()
+        FirebaseModelManager.getInstance().download(remoteModel, conditions)
+                .addOnCompleteListener {
+                    // Success.
+                }
+        // [END mlkit_model_download_task]
     }
 
     private fun configureLocalModelSource() {
         // [START mlkit_local_model_source]
-        val localSource = FirebaseLocalModel.Builder("my_local_model") // Assign a name to this model
-                .setAssetFilePath("my_model.tflite")
+        val localModel = FirebaseCustomLocalModel.Builder()
+                .setAssetFilePath("your_model.tflite")
                 .build()
-        FirebaseModelManager.getInstance().registerLocalModel(localSource)
         // [END mlkit_local_model_source]
     }
 
     @Throws(FirebaseMLException::class)
-    private fun createInterpreter(): FirebaseModelInterpreter? {
+    private fun createInterpreter(localModel: FirebaseCustomLocalModel): FirebaseModelInterpreter? {
         // [START mlkit_create_interpreter]
-        val options = FirebaseModelOptions.Builder()
-                .setRemoteModelName("my_cloud_model")
-                .setLocalModelName("my_local_model")
-                .build()
+        val options = FirebaseModelInterpreterOptions.Builder(localModel).build()
         val interpreter = FirebaseModelInterpreter.getInstance(options)
         // [END mlkit_create_interpreter]
 
         return interpreter
+    }
+
+    private fun checkModelDownloadStatus(remoteModel: FirebaseCustomRemoteModel, localModel: FirebaseCustomLocalModel) {
+        // [START mlkit_check_download_status]
+        FirebaseModelManager.getInstance().isModelDownloaded(remoteModel)
+                .addOnSuccessListener { isDownloaded ->
+                    val options =
+                            if (isDownloaded) {
+                                FirebaseModelInterpreterOptions.Builder(remoteModel).build()
+                            } else {
+                                FirebaseModelInterpreterOptions.Builder(localModel).build()
+                            }
+                    val interpreter = FirebaseModelInterpreter.getInstance(options)
+                }
+        // [END mlkit_check_download_status]
+    }
+
+    private fun addDownloadListener(
+            remoteModel: FirebaseCustomRemoteModel,
+            conditions: FirebaseModelDownloadConditions
+    ) {
+        // [START mlkit_remote_model_download_listener]
+        FirebaseModelManager.getInstance().download(remoteModel, conditions)
+                .addOnCompleteListener {
+                    // Download complete. Depending on your app, you could enable the ML
+                    // feature, or switch from the local model to the remote model, etc.
+                }
+        // [END mlkit_remote_model_download_listener]
     }
 
     @Throws(FirebaseMLException::class)
@@ -109,7 +127,8 @@ class CustomModelActivity : AppCompatActivity() {
 
     @Throws(FirebaseMLException::class)
     private fun runInference() {
-        val firebaseInterpreter = createInterpreter()!!
+        val localModel = FirebaseCustomLocalModel.Builder().build()
+        val firebaseInterpreter = createInterpreter(localModel)!!
         val input = bitmapToInputArray()
         val inputOutputOptions = createInputOutputOptions()
 
@@ -126,13 +145,10 @@ class CustomModelActivity : AppCompatActivity() {
                     // [END mlkit_read_result]
                     // [END_EXCLUDE]
                 }
-                .addOnFailureListener(
-                        object : OnFailureListener {
-                            override fun onFailure(e: Exception) {
-                                // Task failed with an exception
-                                // ...
-                            }
-                        })
+                .addOnFailureListener { e ->
+                    // Task failed with an exception
+                    // ...
+                }
         // [END mlkit_run_inference]
     }
 

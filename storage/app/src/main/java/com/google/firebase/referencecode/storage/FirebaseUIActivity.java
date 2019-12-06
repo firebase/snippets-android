@@ -4,6 +4,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -25,7 +26,7 @@ public class FirebaseUIActivity extends AppCompatActivity {
 
         // Download directly from StorageReference using Glide
         // (See MyAppGlideModule for Loader registration)
-        GlideApp.with(this /* context */)
+        Glide.with(this /* context */)
                 .load(storageReference)
                 .into(imageView);
         // [END storage_load_with_glide]

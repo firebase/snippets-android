@@ -12,6 +12,7 @@ class EmulatorSuite {
         val settings = FirebaseFirestoreSettings.Builder()
                 .setHost("10.0.2.2:8080")
                 .setSslEnabled(false)
+                .setPersistenceEnabled(false)
                 .build()
 
         val firestore = FirebaseFirestore.getInstance()

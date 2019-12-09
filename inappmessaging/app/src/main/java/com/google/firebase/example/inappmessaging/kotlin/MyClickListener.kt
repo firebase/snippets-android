@@ -27,7 +27,7 @@ class MyClickListener : FirebaseInAppMessagingClickListener {
         val url = action.actionUrl
 
         // Get data bundle for the inapp message
-        val dataBundle = inAppMessage.getData();`
+        val dataBundle = inAppMessage.getData()
         // ...
     }
 }

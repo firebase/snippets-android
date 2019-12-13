@@ -1037,7 +1037,7 @@ public class DocSnippets {
         // [START array_contains_any_filter]
         CollectionReference citiesRef = db.collection("cities");
 
-        citiesRef.whereArrayContainsAny("region", Arrays.asList("west_coast", "east_coast"));
+        citiesRef.whereArrayContainsAny("regions", Arrays.asList("west_coast", "east_coast"));
         // [END array_contains_any_filter]
     }
 

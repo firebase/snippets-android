@@ -832,7 +832,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         // [START array_contains_any_filter]
         val citiesRef = db.collection("cities")
 
-        citiesRef.whereArrayContainsAny("region", listOf("west_coast", "east_coast"))
+        citiesRef.whereArrayContainsAny("regions", listOf("west_coast", "east_coast"))
         // [END array_contains_any_filter]
     }
 

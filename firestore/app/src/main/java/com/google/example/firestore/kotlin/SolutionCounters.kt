@@ -1,10 +1,13 @@
 package com.google.example.firestore.kotlin
 
-import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.toObject
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.tasks.asDeferred
+import kotlinx.coroutines.tasks.await
+import kotlin.math.floor
 
 /**
  * https://firebase.google.com/docs/firestore/solutions/counters
@@ -20,51 +23,40 @@ class SolutionCounters(val db: FirebaseFirestore) {
     // [END counter_classes]
 
     // [START create_counter]
-    fun createCounter(ref: DocumentReference, numShards: Int): Task<Void> {
+    suspend fun createCounter(ref: DocumentReference, numShards: Int) {
         // Initialize the counter document, then initialize each shard.
-        return ref.set(Counter(numShards))
-                .continueWithTask { task ->
-                    if (!task.isSuccessful) {
-                        throw task.exception!!
-                    }
+        ref.set(Counter(numShards)).await()
 
-                    val tasks = arrayListOf<Task<Void>>()
+        (0 until numShards).map {
+            // Initialize each shard with count=0
+            ref.collection("shards")
+                    .document(it.toString())
+                    .set(Shard(0))
+                    .asDeferred()
 
-                    // Initialize each shard with count=0
-                    for (i in 0 until numShards) {
-                        val makeShard = ref.collection("shards")
-                                .document(i.toString())
-                                .set(Shard(0))
-
-                        tasks.add(makeShard)
-                    }
-
-                    Tasks.whenAll(tasks)
-                }
+        }.awaitAll()
     }
     // [END create_counter]
 
     // [START increment_counter]
-    fun incrementCounter(ref: DocumentReference, numShards: Int): Task<Void> {
-        val shardId = Math.floor(Math.random() * numShards).toInt()
+    suspend fun incrementCounter(ref: DocumentReference, numShards: Int) {
+        val shardId = floor(Math.random() * numShards).toInt()
         val shardRef = ref.collection("shards").document(shardId.toString())
 
-        return shardRef.update("count", FieldValue.increment(1))
+        shardRef.update("count", FieldValue.increment(1)).await()
     }
     // [END increment_counter]
 
     // [START get_count]
-    fun getCount(ref: DocumentReference): Task<Int> {
+    suspend fun getCount(ref: DocumentReference): Int {
         // Sum the count of each shard in the subcollection
-        return ref.collection("shards").get()
-                .continueWith { task ->
-                    var count = 0
-                    for (snap in task.result!!) {
-                        val shard = snap.toObject(Shard::class.java)
-                        count += shard.count
-                    }
-                    count
-                }
+        val result = ref.collection("shards").get().await()
+        var count = 0
+        for (snap in result!!) {
+            val shard = snap.toObject<Shard>()
+            count += shard.count
+        }
+        return count
     }
     // [END get_count]
 }

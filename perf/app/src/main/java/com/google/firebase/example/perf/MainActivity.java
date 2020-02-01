@@ -4,6 +4,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.example.perf.kotlin.model.Item;
@@ -77,25 +78,34 @@ public class MainActivity extends AppCompatActivity {
     public void disableWithConfig() {
         // [START perf_disable_with_config]
         // Setup remote config
-        FirebaseRemoteConfig config = FirebaseRemoteConfig.getInstance();
+        final FirebaseRemoteConfig config = FirebaseRemoteConfig.getInstance();
 
         // You can uncomment the following two statements to permit more fetches when
         // validating your app, but you should comment out or delete these lines before
         // distributing your app in production.
         // FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
-        //       .setDeveloperModeEnabled(BuildConfig.DEBUG)
+        //       .setMinimumFetchIntervalInSeconds(3600)
         //       .build();
-        // mFirebaseRemoteConfig.setConfigSettings(configSettings);
+        // config.setConfigSettingsAsync(configSettings);
         // Load in-app defaults from an XML file that sets perf_disable to false until you update
         // values in the Firebase Console
 
         //Observe the remote config parameter "perf_disable" and disable Performance Monitoring if true
-        config.setDefaults(R.xml.remote_config_defaults);
-        if (config.getBoolean("perf_disable")) {
-            FirebasePerformance.getInstance().setPerformanceCollectionEnabled(false);
-        } else {
-            FirebasePerformance.getInstance().setPerformanceCollectionEnabled(true);
-        }
+        config.setDefaultsAsync(R.xml.remote_config_defaults)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            if (config.getBoolean("perf_disable")) {
+                                FirebasePerformance.getInstance().setPerformanceCollectionEnabled(false);
+                            } else {
+                                FirebasePerformance.getInstance().setPerformanceCollectionEnabled(true);
+                            }
+                        } else {
+                            // An error occurred while setting default parameters
+                        }
+                    }
+                });
         // [END perf_disable_with_config]
     }
 
@@ -104,13 +114,23 @@ public class MainActivity extends AppCompatActivity {
         //Remote Config fetches and activates parameter values from the service
         final FirebaseRemoteConfig config = FirebaseRemoteConfig.getInstance();
         config.fetch(3600)
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                .continueWithTask(new Continuation<Void, Task<Boolean>>() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
+                    public Task<Boolean> then(@NonNull Task<Void> task) throws Exception {
+                        if (!task.isSuccessful()) {
+                            throw task.getException();
+                        }
+                        return config.activate();
+                    }
+                })
+                .addOnCompleteListener(new OnCompleteListener<Boolean>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Boolean> task) {
                         if (task.isSuccessful()) {
-                            config.activateFetched();
-                        } else {
+                            // Parameter values successfully activated
                             // ...
+                        } else {
+                            // Handle errors
                         }
                     }
                 });

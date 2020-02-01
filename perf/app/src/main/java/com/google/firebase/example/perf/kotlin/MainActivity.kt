@@ -71,16 +71,23 @@ class MainActivity : AppCompatActivity() {
         // You can uncomment the following two statements to permit more fetches when
         // validating your app, but you should comment out or delete these lines before
         // distributing your app in production.
-        // FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
-        //       .setDeveloperModeEnabled(BuildConfig.DEBUG)
-        //       .build();
-        // mFirebaseRemoteConfig.setConfigSettings(configSettings);
+        // val configSettings = FirebaseRemoteConfigSettings.Builder()
+        //         .setMinimumFetchIntervalInSeconds(3600)
+        //         .build()
+        // config.setConfigSettingsAsync(configSettings)
         // Load in-app defaults from an XML file that sets perf_disable to false until you update
         // values in the Firebase Console
 
         // Observe the remote config parameter "perf_disable" and disable Performance Monitoring if true
-        config.setDefaults(R.xml.remote_config_defaults)
-        FirebasePerformance.getInstance().isPerformanceCollectionEnabled = !config.getBoolean("perf_disable")
+        config.setDefaultsAsync(R.xml.remote_config_defaults)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        FirebasePerformance.getInstance()
+                                .isPerformanceCollectionEnabled = !config.getBoolean("perf_disable")
+                    } else {
+                        // An error occurred while setting default parameters
+                    }
+                }
         // [END perf_disable_with_config]
     }
 
@@ -89,11 +96,20 @@ class MainActivity : AppCompatActivity() {
         // Remote Config fetches and activates parameter values from the service
         val config = FirebaseRemoteConfig.getInstance()
         config.fetch(3600)
+                .continueWithTask { task ->
+                    if (!task.isSuccessful) {
+                        task.exception?.let {
+                            throw it
+                        }
+                    }
+                    config.activate()
+                }
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
-                        config.activateFetched()
-                    } else {
+                        // Parameter values successfully activated
                         // ...
+                    } else {
+                        // Handle errors
                     }
                 }
         // [END perf_activate_config]

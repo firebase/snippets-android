@@ -13,7 +13,7 @@ buildscript {
 }
 
 plugins {
-    id 'com.github.ben-manes.versions' version '0.17.0'
+    id 'com.github.ben-manes.versions' version '0.27.0'
 }
 
 allprojects {
@@ -23,17 +23,25 @@ allprojects {
         mavenLocal()
     }
 
-    // See: https://github.com/ben-manes/gradle-versions-plugin
-    dependencyUpdates.resolutionStrategy = {
-        componentSelection { rules ->
-            rules.all { selection ->
-                boolean rejected = ['alpha', 'beta', 'rc', 'cr', 'm'].any { qualifier ->
-                    selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*/
-                }
-                if (rejected) {
-                    selection.reject('Release candidate')
-                }
-            }
+    def isNonStable = { candidate -> 
+        return ['alpha', 'beta', 'rc', 'SNAPSHOT'].any { word ->
+            return candidate.version.contains(word)
+        }
+    }
+
+    def isBlackListed = { candidate ->
+        def blacklist = [
+            'androidx.browser:browser',
+            'com.facebook.android:facebook-android-sdk'
+        ]
+        return blacklist.any { word ->
+            return candidate.toString().contains(word)
+        }
+    }
+
+    dependencyUpdates {
+        rejectVersionIf {
+            isNonStable(it.candidate) || isBlackListed(it.candidate)
         }
     }
 }

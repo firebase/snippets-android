@@ -7,7 +7,7 @@ class MainActivity : AppCompatActivity() {
 
     fun emulatorSettings() {
         // [START functions_emulator_connect]
-        FirebaseFunctions.getInstance().useFunctionsEmulator("10.0.2.2:5001")
+        FirebaseFunctions.getInstance().useFunctionsEmulator("http://10.0.2.2:5001")
         // [END functions_emulator_connect]
     }
 }

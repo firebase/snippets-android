@@ -16,8 +16,6 @@ import java.util.Map;
 
 public class ConditionalAdsActivity extends AppCompatActivity {
 
-    private static final long CACHE_EXPIRATION = 60 * 1000;
-
     private FirebaseRemoteConfig mFirebaseRemoteConfig;
 
     @Override
@@ -30,29 +28,39 @@ public class ConditionalAdsActivity extends AppCompatActivity {
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
 
         Map<String, Object> remoteConfigDefaults = new HashMap<>();
-        remoteConfigDefaults.put("ads_enabled", "true");
-        mFirebaseRemoteConfig.setDefaults(remoteConfigDefaults);
+        remoteConfigDefaults.put("ads_enabled", true);
+        mFirebaseRemoteConfig.setDefaultsAsync(remoteConfigDefaults)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            // Default value successfully set
+                        } else {
+                            // Failed to set default value
+                        }
+                    }
+                });
         // [END pred_conditional_ads_init]
     }
 
     public void fetchRemoteConfig() {
         // [START pred_conditional_ads_fetch]
-        mFirebaseRemoteConfig.fetch(CACHE_EXPIRATION)
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    mFirebaseRemoteConfig.activateFetched();
-                }
+        mFirebaseRemoteConfig.fetchAndActivate()
+                .addOnCompleteListener(new OnCompleteListener<Boolean>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Boolean> task) {
+                        if (task.isSuccessful()) {
+                            // Act on the retrieved parameters
 
-                // Act on the retrieved parameters
+                            // Show ads based on the ad policy retrieved with Remote Config
+                            executeAdsPolicy();
 
-                // Show ads based on the ad policy retrieved with Remote Config
-                executeAdsPolicy();
-
-                // ...
-            }
-        });
+                            // ...
+                        } else {
+                            // Handle errors
+                        }
+                    }
+                });
         // [END pred_conditional_ads_fetch]
     }
 

@@ -16,26 +16,34 @@ class ConditionalAdsActivity : AppCompatActivity() {
         // [START pred_conditional_ads_init]
         firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
 
-        val remoteConfigDefaults = HashMap<String, Any>()
-        remoteConfigDefaults["ads_enabled"] = "true"
-        firebaseRemoteConfig.setDefaults(remoteConfigDefaults)
+        val remoteConfigDefaults = hashMapOf<String, Any>(
+                "ads_enabled" to true
+        )
+        firebaseRemoteConfig.setDefaultsAsync(remoteConfigDefaults)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        // Default value successfully set
+                    } else {
+                        // Failed to set default value
+                    }
+                }
         // [END pred_conditional_ads_init]
     }
 
     fun fetchRemoteConfig() {
         // [START pred_conditional_ads_fetch]
-        firebaseRemoteConfig.fetch(CACHE_EXPIRATION)
+        firebaseRemoteConfig.fetchAndActivate()
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
-                        firebaseRemoteConfig.activateFetched()
+                        // Act on the retrieved parameters
+
+                        // Show ads based on the ad policy retrieved with Remote Config
+                        executeAdsPolicy()
+
+                        // ...
+                    } else {
+                        // Handle errors
                     }
-
-                    // Act on the retrieved parameters
-
-                    // Show ads based on the ad policy retrieved with Remote Config
-                    executeAdsPolicy()
-
-                    // ...
                 }
         // [END pred_conditional_ads_fetch]
     }
@@ -54,8 +62,4 @@ class ConditionalAdsActivity : AppCompatActivity() {
         }
     }
     // [END pred_conditional_ads_policy]
-
-    companion object {
-        private val CACHE_EXPIRATION = 60 * 1000L
-    }
 }

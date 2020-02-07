@@ -11,29 +11,32 @@ import kotlinx.android.synthetic.main.activity_main.adView
 class MainActivity : AppCompatActivity() {
 
     fun configShowAds() {
-        val cacheExpiration = 60L
-
         // [START pred_config_show_ads]
         val config = FirebaseRemoteConfig.getInstance()
 
-        val remoteConfigDefaults = HashMap<String, Any>()
-        remoteConfigDefaults["ads_policy"] = "ads_never"
-        config.setDefaults(remoteConfigDefaults)
-
-        // ...
-
-        config.fetch(cacheExpiration)
+        val remoteConfigDefaults = hashMapOf<String, Any>(
+                "ads_policy" to "ads_never"
+        )
+        config.setDefaultsAsync(remoteConfigDefaults)
+                .continueWithTask { task ->
+                    if (!task.isSuccessful) {
+                        task.exception?.let {
+                            throw it
+                        }
+                    }
+                    config.fetchAndActivate()
+                }
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
-                        config.activateFetched()
+                        // Act on the retrieved parameters
+
+                        // Show ads based on the ad policy retrieved with Remote Config
+                        executeAdsPolicy()
+
+                        // ...
+                    } else {
+                        // Handle errors
                     }
-
-                    // Act on the retrieved parameters
-
-                    // Show ads based on the ad policy retrieved with Remote Config
-                    executeAdsPolicy()
-
-                    // ...
                 }
         // [END pred_config_show_ads]
     }
@@ -57,26 +60,32 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun configPromoStrategy() {
-        val cacheExpiration = 60L
-
         // [START config_promo_strategy]
         val config = FirebaseRemoteConfig.getInstance()
 
-        val remoteConfigDefaults = HashMap<String, Any>()
-        remoteConfigDefaults["promoted_bundle"] = "basic"
-        config.setDefaults(remoteConfigDefaults)
-
-        // ...
-
-        config.fetch(cacheExpiration)
+        val remoteConfigDefaults = hashMapOf<String, Any>(
+                "promoted_bundle" to "basic"
+        )
+        config.setDefaultsAsync(remoteConfigDefaults)
+                .continueWithTask { task ->
+                    if (!task.isSuccessful) {
+                        task.exception?.let {
+                            throw it
+                        }
+                    }
+                    config.fetchAndActivate()
+                }
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
-                        config.activateFetched()
-                    }
+                        // Act on the retrieved parameters
 
-                    // Act on the retrieved parameters
-                    val promotedBundle = getPromotedBundle()
-                    // ...
+                        // Show ads based on the ad policy retrieved with Remote Config
+                        executeAdsPolicy()
+
+                        // ...
+                    } else {
+                        // Handle errors
+                    }
                 }
         // [END config_promo_strategy]
     }
@@ -98,26 +107,29 @@ class MainActivity : AppCompatActivity() {
     // [END pred_get_promoted_bundle]
 
     fun configPreventChurn() {
-        val cacheExpiration = 60L
-
         // [START pred_config_prevent_churn]
         val config = FirebaseRemoteConfig.getInstance()
 
-        val remoteConfigDefaults = hashMapOf<String, Any>()
-        remoteConfigDefaults["gift_policy"] = "gift_never"
-        config.setDefaults(remoteConfigDefaults)
-
-        // ...
-
-        config.fetch(cacheExpiration)
-                .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        config.activateFetched()
+        val remoteConfigDefaults = hashMapOf<String, Any>(
+                "gift_policy" to "gift_never"
+        )
+        config.setDefaultsAsync(remoteConfigDefaults)
+                .continueWithTask { task ->
+                    if (!task.isSuccessful) {
+                        task.exception?.let {
+                            throw it
+                        }
                     }
-
-                    // Act on the retrieved parameters
-                    executeGiftPolicy()
-                    // ...
+                    config.fetchAndActivate()
+                }
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        // Act on the retrieved parameters
+                        executeGiftPolicy()
+                        // ...
+                    } else {
+                        // Handle errors
+                    }
                 }
         // [END pred_config_prevent_churn]
     }

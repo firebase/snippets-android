@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -23,31 +24,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void configShowAds() {
-        long cacheExpiration = 60L;
-
         // [START pred_config_show_ads]
         final FirebaseRemoteConfig config = FirebaseRemoteConfig.getInstance();
 
-        Map remoteConfigDefaults = new HashMap<String, Object>();
+        Map<String, Object> remoteConfigDefaults = new HashMap<>();
         remoteConfigDefaults.put("ads_policy", "ads_never");
-        config.setDefaults(remoteConfigDefaults);
-
-        // ...
-
-        config.fetch(cacheExpiration)
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+        config.setDefaultsAsync(remoteConfigDefaults)
+                .continueWithTask(new Continuation<Void, Task<Boolean>>() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            config.activateFetched();
+                    public Task<Boolean> then(@NonNull Task<Void> task) throws Exception {
+                        if (!task.isSuccessful()) {
+                            throw task.getException();
                         }
+                        return config.fetchAndActivate();
+                    }
+                })
+                .addOnCompleteListener(new OnCompleteListener<Boolean>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Boolean> task) {
+                        if (task.isSuccessful()) {
+                            // Act on the retrieved parameters
 
-                        // Act on the retrieved parameters
+                            // Show ads based on the ad policy retrieved with Remote Config
+                            executeAdsPolicy();
 
-                        // Show ads based on the ad policy retrieved with Remote Config
-                        executeAdsPolicy();
-
-                        // ...
+                            // ...
+                        } else {
+                            // Handle errors
+                        }
                     }
                 });
         // [END pred_config_show_ads]
@@ -74,28 +78,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void configPromoStrategy() {
-        long cacheExpiration = 60L;
-
         // [START config_promo_strategy]
         final FirebaseRemoteConfig config = FirebaseRemoteConfig.getInstance();
 
-        Map remoteConfigDefaults = new HashMap<String, Object>();
+        Map<String, Object> remoteConfigDefaults = new HashMap<>();
         remoteConfigDefaults.put("promoted_bundle", "basic");
-        config.setDefaults(remoteConfigDefaults);
-
-        // ...
-
-        config.fetch(cacheExpiration)
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+        config.setDefaultsAsync(remoteConfigDefaults)
+                .continueWithTask(new Continuation<Void, Task<Boolean>>() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            config.activateFetched();
+                    public Task<Boolean> then(@NonNull Task<Void> task) throws Exception {
+                        if (!task.isSuccessful()) {
+                            throw task.getException();
                         }
-
-                        // Act on the retrieved parameters
-                        String promotedBundle =  getPromotedBundle();
-                        // ...
+                        return config.fetchAndActivate();
+                    }
+                })
+                .addOnCompleteListener(this, new OnCompleteListener<Boolean>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Boolean> task) {
+                        if (task.isSuccessful()) {
+                            // Act on the retrieved parameters
+                            String promotedBundle =  getPromotedBundle();
+                            // ...
+                        } else {
+                            // Handle errors
+                        }
                     }
                 });
         // [END config_promo_strategy]
@@ -118,28 +125,31 @@ public class MainActivity extends AppCompatActivity {
     // [END pred_get_promoted_bundle]
 
     public void configPreventChurn() {
-        long cacheExpiration = 60L;
-
         // [START pred_config_prevent_churn]
         final FirebaseRemoteConfig config = FirebaseRemoteConfig.getInstance();
 
-        Map remoteConfigDefaults = new HashMap<String, Object>();
+        Map<String, Object> remoteConfigDefaults = new HashMap<>();
         remoteConfigDefaults.put("gift_policy", "gift_never");
-        config.setDefaults(remoteConfigDefaults);
-
-        // ...
-
-        config.fetch(cacheExpiration)
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+        config.setDefaultsAsync(remoteConfigDefaults)
+                .continueWithTask(new Continuation<Void, Task<Boolean>>() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            config.activateFetched();
+                    public Task<Boolean> then(@NonNull Task<Void> task) throws Exception {
+                        if (!task.isSuccessful()) {
+                            throw task.getException();
                         }
-
-                        // Act on the retrieved parameters
-                        executeGiftPolicy();
-                        // ...
+                        return config.fetchAndActivate();
+                    }
+                })
+                .addOnCompleteListener(this, new OnCompleteListener<Boolean>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Boolean> task) {
+                        if (task.isSuccessful()) {
+                            // Act on the retrieved parameters
+                            executeGiftPolicy();
+                            // ...
+                        } else {
+                            // Handle errors
+                        }
                     }
                 });
         // [END pred_config_prevent_churn]

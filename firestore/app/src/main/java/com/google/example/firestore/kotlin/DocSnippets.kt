@@ -20,6 +20,9 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ServerTimestamp
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.Source
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.ktx.Firebase
 import java.util.ArrayList
 import java.util.Date
 import java.util.HashMap
@@ -102,7 +105,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
 
     private fun setup() {
         // [START get_firestore_instance]
-        val db = FirebaseFirestore.getInstance()
+        val db = Firebase.firestore
         // [END get_firestore_instance]
 
         // [START set_firestore_settings]
@@ -494,7 +497,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         // [START custom_objects]
         val docRef = db.collection("cities").document("BJ")
         docRef.get().addOnSuccessListener { documentSnapshot ->
-            val city = documentSnapshot.toObject(City::class.java)
+            val city = documentSnapshot.toObject<City>()
         }
         // [END custom_objects]
     }

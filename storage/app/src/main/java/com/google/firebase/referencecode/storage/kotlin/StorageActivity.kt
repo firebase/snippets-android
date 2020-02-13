@@ -6,8 +6,8 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.tasks.OnFailureListener
-import com.google.firebase.FirebaseApp
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.ktx.initialize
 import com.google.firebase.referencecode.storage.R
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageException
@@ -411,7 +411,7 @@ abstract class StorageActivity : AppCompatActivity() {
     }
 
     fun customApp() {
-        val customApp = FirebaseApp.initializeApp(this)
+        val customApp = Firebase.initialize(this)
 
         // [START storage_custom_app]
         // Get the default bucket from a custom FirebaseApp

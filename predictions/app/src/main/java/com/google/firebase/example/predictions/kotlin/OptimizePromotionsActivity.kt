@@ -1,8 +1,10 @@
 package com.google.firebase.example.predictions.kotlin
 
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import java.util.HashMap
+import com.google.firebase.remoteconfig.ktx.get
+import com.google.firebase.remoteconfig.ktx.remoteConfig
 
 class OptimizePromotionsActivity : AppCompatActivity() {
 
@@ -11,7 +13,7 @@ class OptimizePromotionsActivity : AppCompatActivity() {
 
     private fun initConfig() {
         // [START pred_optimize_promotions_init]
-        config = FirebaseRemoteConfig.getInstance()
+        config = Firebase.remoteConfig
 
         val remoteConfigDefaults = hashMapOf<String, Any>(
                 "promoted_bundle" to "basic"
@@ -38,7 +40,7 @@ class OptimizePromotionsActivity : AppCompatActivity() {
                         // Remote Config. This depends entirely on your app, but for
                         // example, you might retrieve and use image assets based on the
                         // specified bundle name.
-                        promotedBundle = config.getString("promoted_bundle")
+                        promotedBundle = config["promoted_bundle"].asString()
                         // ...
                     }
                 }

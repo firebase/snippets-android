@@ -1,18 +1,20 @@
 package com.google.firebase.example.predictions.kotlin
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.ads.AdRequest
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.ktx.get
+import com.google.firebase.remoteconfig.ktx.remoteConfig
 import kotlinx.android.synthetic.main.activity_main.adView
 
 class MainActivity : AppCompatActivity() {
 
     fun configShowAds() {
         // [START pred_config_show_ads]
-        val config = FirebaseRemoteConfig.getInstance()
+        val config = Firebase.remoteConfig
 
         val remoteConfigDefaults = hashMapOf<String, Any>(
                 "ads_policy" to "ads_never"
@@ -43,9 +45,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun executeAdsPolicy() {
         // [START pred_ads_policy]
-        val config = FirebaseRemoteConfig.getInstance()
-        val adPolicy = config.getString("ads_policy")
-        val willNotSpend = config.getBoolean("will_not_spend")
+        val config = Firebase.remoteConfig
+        val adPolicy = config["ads_policy"].asString()
+        val willNotSpend = config["will_not_spend"].asBoolean()
 
         if (adPolicy == "ads_always" || adPolicy == "ads_nonspenders" && willNotSpend) {
             val adRequest = AdRequest.Builder().build()
@@ -61,7 +63,7 @@ class MainActivity : AppCompatActivity() {
 
     fun configPromoStrategy() {
         // [START config_promo_strategy]
-        val config = FirebaseRemoteConfig.getInstance()
+        val config = Firebase.remoteConfig
 
         val remoteConfigDefaults = hashMapOf<String, Any>(
                 "promoted_bundle" to "basic"
@@ -94,9 +96,9 @@ class MainActivity : AppCompatActivity() {
     private fun getPromotedBundle(): String {
         FirebaseAnalytics.getInstance(this).logEvent("promotion_set", Bundle())
 
-        val config = FirebaseRemoteConfig.getInstance()
-        val promotedBundle = config.getString("promoted_bundle")
-        val willSpend = config.getBoolean("predicted_will_spend")
+        val config = Firebase.remoteConfig
+        val promotedBundle = config["promoted_bundle"].asString()
+        val willSpend = config["predicted_will_spend"].asBoolean()
 
         return if (promotedBundle == "predicted" && willSpend) {
             "premium"
@@ -108,7 +110,7 @@ class MainActivity : AppCompatActivity() {
 
     fun configPreventChurn() {
         // [START pred_config_prevent_churn]
-        val config = FirebaseRemoteConfig.getInstance()
+        val config = Firebase.remoteConfig
 
         val remoteConfigDefaults = hashMapOf<String, Any>(
                 "gift_policy" to "gift_never"
@@ -136,9 +138,9 @@ class MainActivity : AppCompatActivity() {
 
     // [START pred_execute_gift_policy]
     private fun executeGiftPolicy() {
-        val config = FirebaseRemoteConfig.getInstance()
-        val giftPolicy = config.getString("gift_policy")
-        val willChurn = config.getBoolean("will_churn")
+        val config = Firebase.remoteConfig
+        val giftPolicy = config["gift_policy"].asString()
+        val willChurn = config["will_churn"].asBoolean()
 
         if (giftPolicy == "gift_achievement") {
             grantGiftOnLevel2()

@@ -4,9 +4,10 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.example.perf.kotlin.model.ItemCache
 import com.google.firebase.example.perf.kotlin.model.User
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.perf.FirebasePerformance
 import com.google.firebase.perf.metrics.AddTrace
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.ktx.remoteConfig
 import devrel.firebase.google.com.firebaseoptions.R
 import java.io.DataOutputStream
 import java.io.IOException
@@ -66,14 +67,14 @@ class MainActivity : AppCompatActivity() {
     fun disableWithConfig() {
         // [START perf_disable_with_config]
         // Setup remote config
-        val config = FirebaseRemoteConfig.getInstance()
-
+        val config = Firebase.remoteConfig
+        
         // You can uncomment the following two statements to permit more fetches when
         // validating your app, but you should comment out or delete these lines before
         // distributing your app in production.
-        // val configSettings = FirebaseRemoteConfigSettings.Builder()
-        //         .setMinimumFetchIntervalInSeconds(3600)
-        //         .build()
+        // val configSettings = remoteConfigSettings {
+        //     minimumFetchIntervalInSeconds = 3600
+        // }
         // config.setConfigSettingsAsync(configSettings)
         // Load in-app defaults from an XML file that sets perf_disable to false until you update
         // values in the Firebase Console
@@ -94,7 +95,7 @@ class MainActivity : AppCompatActivity() {
     fun activateConfig() {
         // [START perf_activate_config]
         // Remote Config fetches and activates parameter values from the service
-        val config = FirebaseRemoteConfig.getInstance()
+        val config = Firebase.remoteConfig
         config.fetch(3600)
                 .continueWithTask { task ->
                     if (!task.isSuccessful) {

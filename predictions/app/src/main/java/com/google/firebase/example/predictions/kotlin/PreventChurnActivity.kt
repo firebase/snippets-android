@@ -1,14 +1,15 @@
 package com.google.firebase.example.predictions.kotlin
 
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import java.util.HashMap
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.ktx.get
+import com.google.firebase.remoteconfig.ktx.remoteConfig
 
 class PreventChurnActivity : AppCompatActivity() {
 
     private fun preventChurn() {
         // [START pred_prevent_churn]
-        val config = FirebaseRemoteConfig.getInstance()
+        val config = Firebase.remoteConfig
 
         val remoteConfigDefaults = hashMapOf<String, Any>(
                 "grant_retention_gift" to false
@@ -26,7 +27,7 @@ class PreventChurnActivity : AppCompatActivity() {
                     if (task.isSuccessful) {
                         // Act on the retrieved parameters. For example, grant the
                         // retention gift to players who haven't yet received one.
-                        val shouldGrantGift = config.getBoolean("grant_retention_gift")
+                        val shouldGrantGift = config["grant_retention_gift"].asBoolean()
                         if (shouldGrantGift && !playerAlreadyReceivedGift()) {
                             grantGiftToPlayer()
                         }

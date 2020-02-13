@@ -1,12 +1,14 @@
 package com.google.firebase.referencecode.database.kotlin
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.database.ktx.getValue
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.referencecode.database.R
 
 abstract class MainActivity : AppCompatActivity() {
@@ -24,7 +26,7 @@ abstract class MainActivity : AppCompatActivity() {
     fun basicReadWrite() {
         // [START write_message]
         // Write a message to the database
-        val database = FirebaseDatabase.getInstance()
+        val database = Firebase.database
         val myRef = database.getReference("message")
 
         myRef.setValue("Hello, World!")
@@ -36,7 +38,7 @@ abstract class MainActivity : AppCompatActivity() {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                val value = dataSnapshot.getValue(String::class.java)
+                val value = dataSnapshot.getValue<String>()
                 Log.d(TAG, "Value is: $value")
             }
 

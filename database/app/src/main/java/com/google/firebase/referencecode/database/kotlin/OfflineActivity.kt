@@ -1,25 +1,27 @@
 package com.google.firebase.referencecode.database.kotlin
 
-import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ServerValue
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.database.ktx.getValue
+import com.google.firebase.ktx.Firebase
 
 class OfflineActivity : AppCompatActivity() {
 
     private fun enablePersistence() {
         // [START rtdb_enable_persistence]
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
+        Firebase.database.setPersistenceEnabled(true)
         // [END rtdb_enable_persistence]
     }
 
     private fun keepSynced() {
         // [START rtdb_keep_synced]
-        val scoresRef = FirebaseDatabase.getInstance().getReference("scores")
+        val scoresRef = Firebase.database.getReference("scores")
         scoresRef.keepSynced(true)
         // [END rtdb_keep_synced]
 
@@ -30,7 +32,7 @@ class OfflineActivity : AppCompatActivity() {
 
     private fun queryRecentScores() {
         // [START rtdb_query_recent_scores]
-        val scoresRef = FirebaseDatabase.getInstance().getReference("scores")
+        val scoresRef = Firebase.database.getReference("scores")
         scoresRef.orderByValue().limitToLast(4).addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChild: String?) {
                 Log.d(TAG, "The ${snapshot.key} dinosaur's score is ${snapshot.value}")
@@ -69,7 +71,7 @@ class OfflineActivity : AppCompatActivity() {
 
     private fun onDisconnect() {
         // [START rtdb_on_disconnect_set]
-        val presenceRef = FirebaseDatabase.getInstance().getReference("disconnectmessage")
+        val presenceRef = Firebase.database.getReference("disconnectmessage")
         // Write a string when this client loses connection
         presenceRef.onDisconnect().setValue("I disconnected!")
         // [END rtdb_on_disconnect_set]
@@ -94,7 +96,7 @@ class OfflineActivity : AppCompatActivity() {
 
     private fun getConnectionState() {
         // [START rtdb_listen_connected]
-        val connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected")
+        val connectedRef = Firebase.database.getReference(".info/connected")
         connectedRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val connected = snapshot.getValue(Boolean::class.java) ?: false
@@ -114,14 +116,14 @@ class OfflineActivity : AppCompatActivity() {
 
     private fun disconnectionTimestamp() {
         // [START rtdb_on_disconnect_timestamp]
-        val userLastOnlineRef = FirebaseDatabase.getInstance().getReference("users/joe/lastOnline")
+        val userLastOnlineRef = Firebase.database.getReference("users/joe/lastOnline")
         userLastOnlineRef.onDisconnect().setValue(ServerValue.TIMESTAMP)
         // [END rtdb_on_disconnect_timestamp]
     }
 
     private fun getServerTimeOffset() {
         // [START rtdb_server_time_offset]
-        val offsetRef = FirebaseDatabase.getInstance().getReference(".info/serverTimeOffset")
+        val offsetRef = Firebase.database.getReference(".info/serverTimeOffset")
         offsetRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val offset = snapshot.getValue(Double::class.java) ?: 0.0
@@ -139,7 +141,7 @@ class OfflineActivity : AppCompatActivity() {
         // [START rtdb_full_connection_example]
         // Since I can connect from multiple devices, we store each connection instance separately
         // any time that connectionsRef's value is null (i.e. has no children) I am offline
-        val database = FirebaseDatabase.getInstance()
+        val database = Firebase.database
         val myConnectionsRef = database.getReference("users/joe/connections")
 
         // Stores the timestamp of my last disconnect (the last time I was seen online)
@@ -148,7 +150,7 @@ class OfflineActivity : AppCompatActivity() {
         val connectedRef = database.getReference(".info/connected")
         connectedRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val connected = snapshot.getValue(Boolean::class.java) ?: false
+                val connected = snapshot.getValue<Boolean>() ?: false
                 if (connected) {
                     val con = myConnectionsRef.push()
 

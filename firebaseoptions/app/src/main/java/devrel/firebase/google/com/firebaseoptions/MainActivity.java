@@ -17,7 +17,6 @@ package devrel.firebase.google.com.firebaseoptions;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
-import com.google.firebase.database.FirebaseDatabase;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -30,22 +29,25 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // [START firebase_options]
-        // Manually configure Firebase Options
+        // Manually configure Firebase Options. The following fields are REQUIRED:
+        //   - Project ID
+        //   - App ID
+        //   - API Key
         FirebaseOptions options = new FirebaseOptions.Builder()
-                .setApplicationId("1:27992087142:android:ce3b6448250083d1") // Required for Analytics.
-                .setApiKey("AIzaSyADUe90ULnQDuGShD9W23RDP0xmeDc6Mvw") // Required for Auth.
-                .setDatabaseUrl("https://myproject.firebaseio.com") // Required for RTDB.
+                .setProjectId("<PROJECT_ID>")
+                .setApplicationId("<APP_ID>")
+                .setApiKey("<API_KEY>")
+                // setDatabaseURL(...)
+                // setStorageBucket(...)
                 .build();
         // [END firebase_options]
 
         // [START firebase_secondary]
-        // Initialize with secondary app.
+        // Initialize with secondary app
         FirebaseApp.initializeApp(this /* Context */, options, "secondary");
 
-        // Retrieve secondary app.
+        // Retrieve secondary FirebaseApp
         FirebaseApp secondary = FirebaseApp.getInstance("secondary");
-        // Get the database for the other app.
-        FirebaseDatabase secondaryDatabase = FirebaseDatabase.getInstance(secondary);
         // [END firebase_secondary]
     }
 }

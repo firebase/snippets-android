@@ -18,9 +18,9 @@ class MainActivity : AppCompatActivity() {
         //   - App ID
         //   - API Key
         val options = FirebaseOptions.Builder()
-                .setProjectId("<PROJECT_ID>")
-                .setApplicationId("<APP_ID>")
-                .setApiKey("<API_KEY>")
+                .setProjectId("my-firebase-project")
+                .setApplicationId("1:27992087142:android:ce3b6448250083d1")
+                .setApiKey("AIzaSyADUe90ULnQDuGShD9W23RDP0xmeDc6Mvw")
                 // setDatabaseURL(...)
                 // setStorageBucket(...)
                 .build()

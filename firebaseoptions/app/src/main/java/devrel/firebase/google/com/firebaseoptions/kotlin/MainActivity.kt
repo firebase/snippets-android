@@ -16,11 +16,16 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // [START firebase_options]
-        // Manually configure Firebase Options
+        // Manually configure Firebase Options. The following fields are REQUIRED:
+        //   - Project ID
+        //   - App ID
+        //   - API Key
         val options = FirebaseOptions.Builder()
-                .setApplicationId("1:27992087142:android:ce3b6448250083d1") // Required for Analytics.
-                .setApiKey("AIzaSyADUe90ULnQDuGShD9W23RDP0xmeDc6Mvw") // Required for Auth.
-                .setDatabaseUrl("https://myproject.firebaseio.com") // Required for RTDB.
+                .setProjectId("my-firebase-project")
+                .setApplicationId("1:27992087142:android:ce3b6448250083d1")
+                .setApiKey("AIzaSyADUe90ULnQDuGShD9W23RDP0xmeDc6Mvw")
+                // setDatabaseURL(...)
+                // setStorageBucket(...)
                 .build()
         // [END firebase_options]
 

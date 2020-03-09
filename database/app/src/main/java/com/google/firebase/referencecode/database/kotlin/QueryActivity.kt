@@ -1,15 +1,17 @@
 package com.google.firebase.referencecode.database.kotlin
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.Query
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.database.ktx.getValue
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.referencecode.database.R
 import com.google.firebase.referencecode.database.models.Message
 
@@ -35,7 +37,7 @@ abstract class QueryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_query)
 
-        databaseReference = FirebaseDatabase.getInstance().reference
+        databaseReference = Firebase.database.reference
     }
 
     private fun basicListen() {
@@ -51,7 +53,7 @@ abstract class QueryActivity : AppCompatActivity() {
                 Log.d(TAG, "Number of messages: ${dataSnapshot.childrenCount}")
                 dataSnapshot.children.forEach { child ->
                     // Extract Message object from the DataSnapshot
-                    val message: Message? = child.getValue(Message::class.java)
+                    val message: Message? = child.getValue<Message>()
 
                     // Use the message
                     // [START_EXCLUDE]

@@ -5,6 +5,7 @@ import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.toObject
 
 /**
  * https://firebase.google.com/docs/firestore/solutions/counters
@@ -60,7 +61,7 @@ class SolutionCounters(val db: FirebaseFirestore) {
                 .continueWith { task ->
                     var count = 0
                     for (snap in task.result!!) {
-                        val shard = snap.toObject(Shard::class.java)
+                        val shard = snap.toObject<Shard>()
                         count += shard.count
                     }
                     count

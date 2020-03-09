@@ -1,12 +1,14 @@
 package com.google.firebase.example.predictions.kotlin
 
-import androidx.appcompat.app.AppCompatActivity
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.firebase.example.predictions.R
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import java.util.HashMap
+import com.google.firebase.remoteconfig.ktx.get
+import com.google.firebase.remoteconfig.ktx.remoteConfig
 
 class ConditionalAdsActivity : AppCompatActivity() {
 
@@ -14,7 +16,7 @@ class ConditionalAdsActivity : AppCompatActivity() {
 
     fun initRemoteConfig() {
         // [START pred_conditional_ads_init]
-        firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
+        firebaseRemoteConfig = Firebase.remoteConfig
 
         val remoteConfigDefaults = hashMapOf<String, Any>(
                 "ads_enabled" to true
@@ -50,7 +52,7 @@ class ConditionalAdsActivity : AppCompatActivity() {
 
     // [START pred_conditional_ads_policy]
     private fun executeAdsPolicy() {
-        val showAds = firebaseRemoteConfig.getBoolean("ads_enabled")
+        val showAds = firebaseRemoteConfig["ads_enabled"].asBoolean()
         val adView = findViewById<AdView>(R.id.adView)
 
         if (showAds) {

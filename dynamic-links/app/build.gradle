@@ -26,13 +26,13 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation "com.google.firebase:firebase-auth:19.2.0"
     implementation "com.google.firebase:firebase-invites:17.0.0"
-    implementation "com.google.firebase:firebase-dynamic-links:19.1.0"
+    implementation "com.google.firebase:firebase-dynamic-links-ktx:19.1.0"
 
     // For an optimal experience using Dynamic Links, add the Firebase SDK
     // for Google Analytics. This is recommended, but not required.
     implementation 'com.google.firebase:firebase-analytics:17.2.2'
 
-    implementation "com.google.firebase:firebase-database:19.2.1"
+    implementation "com.google.firebase:firebase-database-ktx:19.2.1"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.61"
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
 }

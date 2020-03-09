@@ -1,6 +1,8 @@
 package com.google.firebase.referencecode.database.kotlin
 
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 class EmulatorSuite {
 
@@ -9,7 +11,7 @@ class EmulatorSuite {
         // 10.0.2.2 is the special IP address to connect to the 'localhost' of
         // the host computer from an Android emulator.
         // In almost all cases the ns (namespace) is your project ID.
-        val database = FirebaseDatabase.getInstance("http://10.0.2.2:9000?ns=YOUR_DATABASE_NAMESPACE")
+        val database = Firebase.database("http://10.0.2.2:9000?ns=YOUR_DATABASE_NAMESPACE")
         // [END rtdb_emulator_connect]
     }
 

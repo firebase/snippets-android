@@ -7,10 +7,13 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ServerValue
-import com.google.firebase.dynamiclinks.DynamicLink
-import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
+import com.google.firebase.database.ktx.database
+import com.google.firebase.dynamiclinks.ktx.androidParameters
+import com.google.firebase.dynamiclinks.ktx.dynamicLinks
+import com.google.firebase.dynamiclinks.ktx.iosParameters
+import com.google.firebase.dynamiclinks.ktx.shortLinkAsync
+import com.google.firebase.ktx.Firebase
 
 /**
  * Snippets for the "rewarded referral" use case.
@@ -23,24 +26,21 @@ abstract class ReferralActivity : AppCompatActivity() {
         // [START ddl_referral_create_link]
         val user = FirebaseAuth.getInstance().currentUser
         val uid = user!!.uid
-        val link = "https://mygame.example.com/?invitedby=$uid"
-        FirebaseDynamicLinks.getInstance().createDynamicLink()
-                .setLink(Uri.parse(link))
-                .setDomainUriPrefix("https://example.page.link")
-                .setAndroidParameters(
-                        DynamicLink.AndroidParameters.Builder("com.example.android")
-                                .setMinimumVersion(125)
-                                .build())
-                .setIosParameters(
-                        DynamicLink.IosParameters.Builder("com.example.ios")
-                                .setAppStoreId("123456789")
-                                .setMinimumVersion("1.0.1")
-                                .build())
-                .buildShortDynamicLink()
-                .addOnSuccessListener { shortDynamicLink ->
-                    mInvitationUrl = shortDynamicLink.shortLink
-                    // ...
-                }
+        val invitationLink = "https://mygame.example.com/?invitedby=$uid"
+        Firebase.dynamicLinks.shortLinkAsync {
+            link = Uri.parse(invitationLink)
+            domainUriPrefix = "https://example.page.link"
+            androidParameters("com.example.android") {
+                minimumVersion = 125
+            }
+            iosParameters("com.example.ios") {
+                appStoreId = "123456789"
+                minimumVersion = "1.0.1"
+            }
+        }.addOnSuccessListener { shortDynamicLink ->
+            mInvitationUrl = shortDynamicLink.shortLink
+            // ...
+        }
         // [END ddl_referral_create_link]
     }
 
@@ -70,7 +70,7 @@ abstract class ReferralActivity : AppCompatActivity() {
 
         // ...
 
-        FirebaseDynamicLinks.getInstance()
+        Firebase.dynamicLinks
                 .getDynamicLink(intent)
                 .addOnSuccessListener(this) { pendingDynamicLinkData ->
                     // Get deep link from result (may be null if no link is found)
@@ -100,7 +100,7 @@ abstract class ReferralActivity : AppCompatActivity() {
                     // Keep track of the referrer in the RTDB. Database calls
                     // will depend on the structure of your app's RTDB.
                     val user = FirebaseAuth.getInstance().currentUser
-                    val userRecord = FirebaseDatabase.getInstance().reference
+                    val userRecord = Firebase.database.reference
                             .child("users")
                             .child(user!!.uid)
                     userRecord.child("referred_by").setValue(referrerUid)
@@ -136,7 +136,7 @@ abstract class ReferralActivity : AppCompatActivity() {
                     // you would also update this field in the success listeners of
                     // your Firebase Authentication signIn calls.)
                     val user = FirebaseAuth.getInstance().currentUser
-                    val userRecord = FirebaseDatabase.getInstance().reference
+                    val userRecord = Firebase.database.reference
                             .child("users")
                             .child(user!!.uid)
                     userRecord.child("last_signin_at").setValue(ServerValue.TIMESTAMP)

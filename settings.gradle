@@ -17,5 +17,6 @@ include ':auth:app',
         ':mlkit:app',
         ':perf:app',
         ':test-lab:app',
-        ':predictions:app'
+        ':predictions:app',
+        ':analytics:app'
 

@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
                 new Parcelable[]{ itemJegginsWishlist });
 
         analytics.logEvent(FirebaseAnalytics.Event.ADD_TO_WISHLIST, addToWishlistParams);
-        // [END add_to_card_wishlist]
+        // [END add_to_cart_wishlist]
 
         // [START view_cart]
         Bundle itemJeggingsCart = new Bundle(itemJeggings);

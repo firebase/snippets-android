@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
         addToWishlistParams.putParcelableArray(FirebaseAnalytics.Param.ITEMS, arrayOf<Parcelable>(itemJegginsWishlist))
 
         analytics.logEvent(FirebaseAnalytics.Event.ADD_TO_WISHLIST, addToWishlistParams)
-        // [END add_to_card_wishlist]
+        // [END add_to_cart_wishlist]
 
         // [START view_cart]
         val itemJeggingsCart = Bundle(itemJeggings)

@@ -65,10 +65,10 @@ public class MainActivity extends AppCompatActivity {
         Bundle itemJeggingsWithIndex = new Bundle(itemJeggings);
         itemJeggingsWithIndex.putLong(FirebaseAnalytics.Param.INDEX, 1);
 
-        Bundle itemBootsWithIndex = new Bundle(itemJeggings);
+        Bundle itemBootsWithIndex = new Bundle(itemBoots);
         itemBootsWithIndex.putLong(FirebaseAnalytics.Param.INDEX, 2);
 
-        Bundle itemSocksWithIndex = new Bundle(itemJeggings);
+        Bundle itemSocksWithIndex = new Bundle(itemSocks);
         itemSocksWithIndex.putLong(FirebaseAnalytics.Param.INDEX, 3);
 
         Bundle viewItemListParams = new Bundle();

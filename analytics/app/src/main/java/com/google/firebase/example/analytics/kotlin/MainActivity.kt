@@ -91,13 +91,13 @@ class MainActivity : AppCompatActivity() {
         // [END view_product_details]
 
         // [START add_to_cart_wishlist]
-        val itemJegginsWishlist = Bundle(itemJeggings).apply {
+        val itemJeggingsWishlist = Bundle(itemJeggings).apply {
             putLong(FirebaseAnalytics.Param.QUANTITY, 2)
         }
         val addToWishlistParams = Bundle().apply {
             putString(FirebaseAnalytics.Param.CURRENCY, "USD")
             putDouble(FirebaseAnalytics.Param.VALUE, 2 * 9.99)
-            putParcelableArray(FirebaseAnalytics.Param.ITEMS, arrayOf<Parcelable>(itemJegginsWishlist))
+            putParcelableArray(FirebaseAnalytics.Param.ITEMS, arrayOf<Parcelable>(itemJeggingsWishlist))
         }
 
         analytics.logEvent(FirebaseAnalytics.Event.ADD_TO_WISHLIST, addToWishlistParams)

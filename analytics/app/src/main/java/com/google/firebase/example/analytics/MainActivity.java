@@ -99,14 +99,14 @@ public class MainActivity extends AppCompatActivity {
         // [END view_product_details]
 
         // [START add_to_cart_wishlist]
-        Bundle itemJegginsWishlist = new Bundle(itemJeggings);
-        itemJegginsWishlist.putLong(FirebaseAnalytics.Param.QUANTITY, 2);
+        Bundle itemJeggingsWishlist = new Bundle(itemJeggings);
+        itemJeggingsWishlist.putLong(FirebaseAnalytics.Param.QUANTITY, 2);
 
         Bundle addToWishlistParams = new Bundle();
         addToWishlistParams.putString(FirebaseAnalytics.Param.CURRENCY, "USD");
         addToWishlistParams.putDouble(FirebaseAnalytics.Param.VALUE, 2 * 9.99);
         addToWishlistParams.putParcelableArray(FirebaseAnalytics.Param.ITEMS,
-                new Parcelable[]{ itemJegginsWishlist });
+                new Parcelable[]{ itemJeggingsWishlist });
 
         analytics.logEvent(FirebaseAnalytics.Event.ADD_TO_WISHLIST, addToWishlistParams);
         // [END add_to_cart_wishlist]

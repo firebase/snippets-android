@@ -13,14 +13,16 @@ import com.google.firebase.auth.ActionCodeSettings
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FacebookAuthProvider
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GithubAuthProvider
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.auth.PlayGamesAuthProvider
-import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.auth.ktx.actionCodeSettings
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.ktx.userProfileChangeRequest
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.quickstart.auth.R
 import java.util.concurrent.TimeUnit
 
@@ -38,7 +40,7 @@ abstract class MainActivity : AppCompatActivity() {
 
     private fun checkCurrentUser() {
         // [START check_current_user]
-        val user = FirebaseAuth.getInstance().currentUser
+        val user = Firebase.auth.currentUser
         if (user != null) {
             // User is signed in
         } else {
@@ -49,7 +51,7 @@ abstract class MainActivity : AppCompatActivity() {
 
     private fun getUserProfile() {
         // [START get_user_profile]
-        val user = FirebaseAuth.getInstance().currentUser
+        val user = Firebase.auth.currentUser
         user?.let {
             // Name, email address, and profile photo Url
             val name = user.displayName
@@ -69,7 +71,7 @@ abstract class MainActivity : AppCompatActivity() {
 
     private fun getProviderData() {
         // [START get_provider_data]
-        val user = FirebaseAuth.getInstance().currentUser
+        val user = Firebase.auth.currentUser
         user?.let {
             for (profile in it.providerData) {
                 // Id of the provider (ex: google.com)
@@ -89,15 +91,15 @@ abstract class MainActivity : AppCompatActivity() {
 
     private fun updateProfile() {
         // [START update_profile]
-        val user = FirebaseAuth.getInstance().currentUser
+        val user = Firebase.auth.currentUser
 
-        val profileUpdates = UserProfileChangeRequest.Builder()
-                .setDisplayName("Jane Q. User")
-                .setPhotoUri(Uri.parse("https://example.com/jane-q-user/profile.jpg"))
-                .build()
+        val profileUpdates = userProfileChangeRequest {
+            displayName = "Jane Q. User"
+            photoUri = Uri.parse("https://example.com/jane-q-user/profile.jpg")
+        }
 
-        user?.updateProfile(profileUpdates)
-                ?.addOnCompleteListener { task ->
+        user!!.updateProfile(profileUpdates)
+                .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         Log.d(TAG, "User profile updated.")
                     }
@@ -107,10 +109,10 @@ abstract class MainActivity : AppCompatActivity() {
 
     private fun updateEmail() {
         // [START update_email]
-        val user = FirebaseAuth.getInstance().currentUser
+        val user = Firebase.auth.currentUser
 
-        user?.updateEmail("user@example.com")
-                ?.addOnCompleteListener { task ->
+        user!!.updateEmail("user@example.com")
+                .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         Log.d(TAG, "User email address updated.")
                     }
@@ -120,11 +122,11 @@ abstract class MainActivity : AppCompatActivity() {
 
     private fun updatePassword() {
         // [START update_password]
-        val user = FirebaseAuth.getInstance().currentUser
+        val user = Firebase.auth.currentUser
         val newPassword = "SOME-SECURE-PASSWORD"
 
-        user?.updatePassword(newPassword)
-                ?.addOnCompleteListener { task ->
+        user!!.updatePassword(newPassword)
+                .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         Log.d(TAG, "User password updated.")
                     }
@@ -134,11 +136,10 @@ abstract class MainActivity : AppCompatActivity() {
 
     private fun sendEmailVerification() {
         // [START send_email_verification]
-        val auth = FirebaseAuth.getInstance()
-        val user = auth.currentUser
+        val user = Firebase.auth.currentUser
 
-        user?.sendEmailVerification()
-                ?.addOnCompleteListener { task ->
+        user!!.sendEmailVerification()
+                .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         Log.d(TAG, "Email sent.")
                     }
@@ -148,10 +149,10 @@ abstract class MainActivity : AppCompatActivity() {
 
     private fun sendEmailVerificationWithContinueUrl() {
         // [START send_email_verification_with_continue_url]
-        val auth = FirebaseAuth.getInstance()
-        val user = auth.currentUser
+        val auth = Firebase.auth
+        val user = auth.currentUser!!
 
-        val url = "http://www.example.com/verify?uid=" + user?.uid
+        val url = "http://www.example.com/verify?uid=" + user.uid
         val actionCodeSettings = ActionCodeSettings.newBuilder()
                 .setUrl(url)
                 .setIOSBundleId("com.example.ios")
@@ -159,8 +160,8 @@ abstract class MainActivity : AppCompatActivity() {
                 .setAndroidPackageName("com.example.android", false, null)
                 .build()
 
-        user?.sendEmailVerification(actionCodeSettings)
-                ?.addOnCompleteListener { task ->
+        user.sendEmailVerification(actionCodeSettings)
+                .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         Log.d(TAG, "Email sent.")
                     }
@@ -176,10 +177,9 @@ abstract class MainActivity : AppCompatActivity() {
 
     private fun sendPasswordReset() {
         // [START send_password_reset]
-        val auth = FirebaseAuth.getInstance()
         val emailAddress = "user@example.com"
 
-        auth.sendPasswordResetEmail(emailAddress)
+        Firebase.auth.sendPasswordResetEmail(emailAddress)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         Log.d(TAG, "Email sent.")
@@ -190,10 +190,10 @@ abstract class MainActivity : AppCompatActivity() {
 
     private fun deleteUser() {
         // [START delete_user]
-        val user = FirebaseAuth.getInstance().currentUser
+        val user = Firebase.auth.currentUser!!
 
-        user?.delete()
-                ?.addOnCompleteListener { task ->
+        user.delete()
+                .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         Log.d(TAG, "User account deleted.")
                     }
@@ -203,7 +203,7 @@ abstract class MainActivity : AppCompatActivity() {
 
     private fun reauthenticate() {
         // [START reauthenticate]
-        val user = FirebaseAuth.getInstance().currentUser
+        val user = Firebase.auth.currentUser!!
 
         // Get auth credentials from the user for re-authentication. The example below shows
         // email and password credentials but there are multiple possible providers,
@@ -212,18 +212,17 @@ abstract class MainActivity : AppCompatActivity() {
                 .getCredential("user@example.com", "password1234")
 
         // Prompt the user to re-provide their sign-in credentials
-        user?.reauthenticate(credential)
-                ?.addOnCompleteListener { Log.d(TAG, "User re-authenticated.") }
+        user.reauthenticate(credential)
+                .addOnCompleteListener { Log.d(TAG, "User re-authenticated.") }
         // [END reauthenticate]
     }
 
     private fun authWithGithub() {
-        val mAuth = FirebaseAuth.getInstance()
 
         // [START auth_with_github]
         val token = "<GITHUB-ACCESS-TOKEN>"
         val credential = GithubAuthProvider.getCredential(token)
-        mAuth.signInWithCredential(credential)
+        Firebase.auth.signInWithCredential(credential)
                 .addOnCompleteListener(this) { task ->
                     Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful)
 
@@ -242,11 +241,11 @@ abstract class MainActivity : AppCompatActivity() {
     }
 
     private fun linkAndMerge(credential: AuthCredential) {
-        val mAuth = FirebaseAuth.getInstance()
+        val auth = Firebase.auth
 
         // [START auth_link_and_merge]
-        val prevUser = FirebaseAuth.getInstance().currentUser
-        mAuth.signInWithCredential(credential)
+        val prevUser = auth.currentUser
+        auth.signInWithCredential(credential)
                 .addOnSuccessListener { result ->
                     val currentUser = result.user
                     // Merge prevUser and currentUser accounts and data
@@ -259,10 +258,9 @@ abstract class MainActivity : AppCompatActivity() {
     }
 
     private fun unlink(providerId: String) {
-        val mAuth = FirebaseAuth.getInstance()
 
         // [START auth_unlink]
-        mAuth.currentUser!!.unlink(providerId)
+        Firebase.auth.currentUser!!.unlink(providerId)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         // Auth provider unlinked from account
@@ -274,25 +272,24 @@ abstract class MainActivity : AppCompatActivity() {
 
     private fun buildActionCodeSettings() {
         // [START auth_build_action_code_settings]
-        val actionCodeSettings = ActionCodeSettings.newBuilder()
-                // URL you want to redirect back to. The domain (www.example.com) for this
-                // URL must be whitelisted in the Firebase Console.
-                .setUrl("https://www.example.com/finishSignUp?cartId=1234")
-                // This must be true
-                .setHandleCodeInApp(true)
-                .setIOSBundleId("com.example.ios")
-                .setAndroidPackageName(
-                        "com.example.android",
-                        true, /* installIfNotAvailable */
-                        "12" /* minimumVersion */)
-                .build()
+        val actionCodeSettings = actionCodeSettings {
+            // URL you want to redirect back to. The domain (www.example.com) for this
+            // URL must be whitelisted in the Firebase Console.
+            url = "https://www.example.com/finishSignUp?cartId=1234"
+            // This must be true
+            handleCodeInApp = true
+            iosBundleId = "com.example.ios"
+            setAndroidPackageName(
+                    "com.example.android",
+                    true, /* installIfNotAvailable */
+                    "12" /* minimumVersion */)
+        }
         // [END auth_build_action_code_settings]
     }
 
     private fun sendSignInLink(email: String, actionCodeSettings: ActionCodeSettings) {
         // [START auth_send_sign_in_link]
-        val auth = FirebaseAuth.getInstance()
-        auth.sendSignInLinkToEmail(email, actionCodeSettings)
+        Firebase.auth.sendSignInLinkToEmail(email, actionCodeSettings)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         Log.d(TAG, "Email sent.")
@@ -303,9 +300,9 @@ abstract class MainActivity : AppCompatActivity() {
 
     private fun verifySignInLink() {
         // [START auth_verify_sign_in_link]
-        val auth = FirebaseAuth.getInstance()
+        val auth = Firebase.auth
         val intent = intent
-        val emailLink = intent.data!!.toString()
+        val emailLink = intent.data.toString()
 
         // Confirm the link is a sign-in with email link.
         if (auth.isSignInWithEmailLink(emailLink)) {
@@ -332,14 +329,13 @@ abstract class MainActivity : AppCompatActivity() {
     }
 
     private fun linkWithSignInLink(email: String, emailLink: String) {
-        val auth = FirebaseAuth.getInstance()
 
         // [START auth_link_with_link]
         // Construct the email link credential from the current URL.
         val credential = EmailAuthProvider.getCredentialWithLink(email, emailLink)
 
         // Link the credential to the current user.
-        auth.currentUser!!.linkWithCredential(credential)
+        Firebase.auth.currentUser!!.linkWithCredential(credential)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         Log.d(TAG, "Successfully linked emailLink credential!")
@@ -357,14 +353,13 @@ abstract class MainActivity : AppCompatActivity() {
     }
 
     private fun reauthWithLink(email: String, emailLink: String) {
-        val auth = FirebaseAuth.getInstance()
 
         // [START auth_reauth_with_link]
         // Construct the email link credential from the current URL.
         val credential = EmailAuthProvider.getCredentialWithLink(email, emailLink)
 
         // Re-authenticate the user with this credential.
-        auth.currentUser!!.reauthenticateAndRetrieveData(credential)
+        Firebase.auth.currentUser!!.reauthenticateAndRetrieveData(credential)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         // User is now successfully reauthenticated
@@ -376,13 +371,12 @@ abstract class MainActivity : AppCompatActivity() {
     }
 
     private fun differentiateLink(email: String) {
-        val auth = FirebaseAuth.getInstance()
 
         // [START auth_differentiate_link]
-        auth.fetchSignInMethodsForEmail(email)
+        Firebase.auth.fetchSignInMethodsForEmail(email)
                 .addOnSuccessListener { result ->
-                    val signInMethods = result.signInMethods
-                    if (signInMethods!!.contains(EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD)) {
+                    val signInMethods = result.signInMethods!!
+                    if (signInMethods.contains(EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD)) {
                         // User can sign in with email/password
                     } else if (signInMethods.contains(EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD)) {
                         // User can sign in with email/link
@@ -418,7 +412,7 @@ abstract class MainActivity : AppCompatActivity() {
 
     private fun signOut() {
         // [START auth_sign_out]
-        FirebaseAuth.getInstance().signOut()
+        Firebase.auth.signOut()
         // [END auth_sign_out]
     }
 
@@ -466,7 +460,7 @@ abstract class MainActivity : AppCompatActivity() {
         val phoneNumber = "+16505554567"
         val smsCode = "123456"
 
-        val firebaseAuth = FirebaseAuth.getInstance()
+        val firebaseAuth = Firebase.auth
         val firebaseAuthSettings = firebaseAuth.firebaseAuthSettings
 
         // Configure faking the auto-retrieval with the whitelisted numbers.
@@ -506,7 +500,7 @@ abstract class MainActivity : AppCompatActivity() {
     private fun firebaseAuthWithPlayGames(acct: GoogleSignInAccount) {
         Log.d(TAG, "firebaseAuthWithPlayGames:" + acct.id!!)
 
-        val auth = FirebaseAuth.getInstance()
+        val auth = Firebase.auth
         val credential = PlayGamesAuthProvider.getCredential(acct.serverAuthCode!!)
         auth.signInWithCredential(credential)
                 .addOnCompleteListener(this) { task ->
@@ -529,7 +523,7 @@ abstract class MainActivity : AppCompatActivity() {
     // [END games_auth_with_firebase]
 
     private fun gamesGetUserInfo() {
-        val auth = FirebaseAuth.getInstance()
+        val auth = Firebase.auth
 
         // [START games_get_user_info]
         val user = auth.currentUser

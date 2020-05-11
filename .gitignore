@@ -8,3 +8,6 @@ build/
 *.aar
 *.zip
 .vscode
+.project
+.settings
+.classpath

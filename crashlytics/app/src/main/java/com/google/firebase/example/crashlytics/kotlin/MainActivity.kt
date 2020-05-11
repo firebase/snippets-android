@@ -10,13 +10,18 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
     }
 
-    fun setKeysBasic(key: String?) {
+    fun setKeysBasic(key: String) {
         // [START crash_set_keys_basic]
         val crashlytics = FirebaseCrashlytics.getInstance()
-        crashlytics.setCustomKey(key!!, "foo" /* string value */)
+
+        crashlytics.setCustomKey(key, "foo" /* string value */)
+
         crashlytics.setCustomKey(key, true /* boolean value */)
+
         crashlytics.setCustomKey(key, 1.0 /* double value */)
+
         crashlytics.setCustomKey(key, 1.0f /* float value */)
+
         crashlytics.setCustomKey(key, 1 /* int value */)
         // [END crash_set_keys_basic]
     }
@@ -43,8 +48,7 @@ class MainActivity : AppCompatActivity() {
 
     fun enableAtRuntime() {
         // [START crash_enable_at_runtime]
-        val crashlytics = FirebaseCrashlytics.getInstance()
-        crashlytics.setCrashlyticsCollectionEnabled(true)
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true)
         // [END crash_enable_at_runtime]
     }
 

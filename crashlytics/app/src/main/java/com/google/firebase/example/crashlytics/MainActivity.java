@@ -55,8 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void enableAtRuntime() {
         // [START crash_enable_at_runtime]
-        FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
-        crashlytics.setCrashlyticsCollectionEnabled(true);
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
         // [END crash_enable_at_runtime]
     }
 

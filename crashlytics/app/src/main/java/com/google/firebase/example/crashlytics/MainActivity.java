@@ -79,4 +79,20 @@ public class MainActivity extends AppCompatActivity {
         }
         // [END crash_log_caught_ex]
     }
+
+    public void forceACrash() {
+        // [START crash_force_crash]
+        Button crashButton = new Button(this);
+        crashButton.setText("Crash!");
+        crashButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                throw new RuntimeException(); // Force a crash
+            }
+        });
+
+        addContentView(crashButton, new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
+        // [END crash_force_crash]
+    }
 }

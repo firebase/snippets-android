@@ -1,6 +1,8 @@
 package com.google.firebase.example.crashlytics.kotlin
 
 import android.os.Bundle
+import android.view.ViewGroup
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 
@@ -72,5 +74,19 @@ class MainActivity : AppCompatActivity() {
             // handle your exception here
         }
         // [END crash_log_caught_ex]
+    }
+
+    fun forceACrash() {
+        // [START crash_force_crash]
+        val crashButton = Button(this)
+        crashButton.text = "Crash!"
+        crashButton.setOnClickListener {
+            throw RuntimeException() // Force a crash
+        }
+
+        addContentView(crashButton, ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT))
+        // [END crash_force_crash]
     }
 }

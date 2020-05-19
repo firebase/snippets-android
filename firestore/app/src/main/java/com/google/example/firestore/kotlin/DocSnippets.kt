@@ -21,6 +21,7 @@ import com.google.firebase.firestore.ServerTimestamp
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.Source
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import java.util.ArrayList
@@ -109,18 +110,18 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         // [END get_firestore_instance]
 
         // [START set_firestore_settings]
-        val settings = FirebaseFirestoreSettings.Builder()
-                .setPersistenceEnabled(true)
-                .build()
+        val settings = firestoreSettings {
+            isPersistenceEnabled = true
+        }
         db.firestoreSettings = settings
         // [END set_firestore_settings]
     }
 
     private fun setupCacheSize() {
         // [START fs_setup_cache]
-        val settings = FirebaseFirestoreSettings.Builder()
-                .setCacheSizeBytes(FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED)
-                .build()
+        val settings = firestoreSettings {
+            cacheSizeBytes = FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED
+        }
         db.firestoreSettings = settings
         // [END fs_setup_cache]
     }

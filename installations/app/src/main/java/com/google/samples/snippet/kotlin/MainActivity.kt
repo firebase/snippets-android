@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun logInstallationAuthToken() {
         // [START get_installation_token]
-        FirebaseInstallations.getInstance().getToken(true)
+        FirebaseInstallations.getInstance().getToken(/* forceRefresh */ true)
             .addOnCompleteListener {task ->
                 if (task.isComplete) {
                     Log.d("Installations", "Installation auth token: " + task.result?.token)

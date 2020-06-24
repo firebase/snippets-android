@@ -18,7 +18,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void logInstallationAuthToken() {
-        FirebaseInstallations.getInstance().getToken(/* forceRefresh */ true)
+        // [START get_installation_token]
+        FirebaseInstallations.getInstance().getToken(/* forceRefresh */true)
                 .addOnCompleteListener(new OnCompleteListener<InstallationTokenResult>() {
             @Override
             public void onComplete(@NonNull Task<InstallationTokenResult> task) {
@@ -27,5 +28,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        // [END get_installation_token]
     }
 }

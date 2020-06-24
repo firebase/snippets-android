@@ -10,7 +10,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        logInstallationAuthToken();
+        logInstallationAuthToken()
+        logInstallationID()
     }
 
     private fun logInstallationAuthToken() {
@@ -22,5 +23,15 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         // [END get_installation_token]
+    }
+
+    private fun logInstallationID() {
+        // [START get_installation_id]
+        FirebaseInstallations.getInstance().id.addOnCompleteListener { task ->
+            if (task.isComplete) {
+                Log.d("Installations", "Installation ID: " + task.result)
+            }
+        }
+        // [END get_installation_id]
     }
 }

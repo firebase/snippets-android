@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void logInstallationAuthToken() {
-        FirebaseInstallations.getInstance().getToken(true)
+        FirebaseInstallations.getInstance().getToken(/* forceRefresh */ true)
                 .addOnCompleteListener(new OnCompleteListener<InstallationTokenResult>() {
             @Override
             public void onComplete(@NonNull Task<InstallationTokenResult> task) {

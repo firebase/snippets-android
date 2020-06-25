@@ -16,19 +16,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
     }
 
-    public void setKeysBasic(String key) {
+    public void setKeysBasic() {
         // [START crash_set_keys_basic]
         FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
 
-        crashlytics.setCustomKey(key, "foo" /* string value */);
+        crashlytics.setCustomKey("my_string_key", "foo" /* string value */);
 
-        crashlytics.setCustomKey(key, true /* boolean value */);
+        crashlytics.setCustomKey("my_bool_key", true /* boolean value */);
 
-        crashlytics.setCustomKey(key, 1.0 /* double value */);
+        crashlytics.setCustomKey("my_double_key", 1.0 /* double value */);
 
-        crashlytics.setCustomKey(key, 1.0f /* float value */);
+        crashlytics.setCustomKey("my_float_key", 1.0f /* float value */);
 
-        crashlytics.setCustomKey(key, 1 /* int value */);
+        crashlytics.setCustomKey("my_int_key", 1 /* int value */);
         // [END crash_set_keys_basic]
     }
 

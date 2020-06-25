@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.google.firebase.crashlytics.ktx.crashlytics
+import com.google.firebase.crashlytics.ktx.setCustomKeys
+import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
 
@@ -12,51 +14,50 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
     }
 
-    fun setKeysBasic(key: String) {
+    fun setKeysBasic() {
         // [START crash_set_keys_basic]
-        val crashlytics = FirebaseCrashlytics.getInstance()
-
-        crashlytics.setCustomKey(key, "foo" /* string value */)
-
-        crashlytics.setCustomKey(key, true /* boolean value */)
-
-        crashlytics.setCustomKey(key, 1.0 /* double value */)
-
-        crashlytics.setCustomKey(key, 1.0f /* float value */)
-
-        crashlytics.setCustomKey(key, 1 /* int value */)
+        val crashlytics = Firebase.crashlytics
+        crashlytics.setCustomKeys {
+            key("my_string_key", "foo") // String value
+            key("my_bool_key", true)    // boolean value
+            key("my_double_key", 1.0)   // double value
+            key("my_float_key", 1.0f)   // float value
+            key("my_int_key", 1)        // int value
+        }
         // [END crash_set_keys_basic]
     }
 
     fun resetKey() {
         // [START crash_re_set_key]
-        val crashlytics = FirebaseCrashlytics.getInstance()
-        crashlytics.setCustomKey("current_level", 3)
-        crashlytics.setCustomKey("last_UI_action", "logged_in")
+        val crashlytics = Firebase.crashlytics
+        crashlytics.setCustomKeys {
+            key("current_level", 3)
+            key("last_UI_action", "logged_in")
+        }
         // [END crash_re_set_key]
     }
 
     fun logReportAndPrint() {
         // [START crash_log_report_and_print]
-        FirebaseCrashlytics.getInstance().log("message")
+        Firebase.crashlytics.log("message")
         // [END crash_log_report_and_print]
     }
 
     fun logReportOnly() {
         // [START crash_log_report_only]
-        FirebaseCrashlytics.getInstance().log("message")
+        Firebase.crashlytics.log("message")
         // [END crash_log_report_only]
     }
 
     fun enableAtRuntime() {
         // [START crash_enable_at_runtime]
-        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true)
+        Firebase.crashlytics.setCrashlyticsCollectionEnabled(true)
         // [END crash_enable_at_runtime]
     }
 
     fun setUserId() {
         // [START crash_set_user_id]
-        FirebaseCrashlytics.getInstance().setUserId("user123456789")
+        Firebase.crashlytics.setUserId("user123456789")
         // [END crash_set_user_id]
     }
 
@@ -70,7 +71,7 @@ class MainActivity : AppCompatActivity() {
         try {
             methodThatThrows()
         } catch (e: Exception) {
-            FirebaseCrashlytics.getInstance().recordException(e)
+            Firebase.crashlytics.recordException(e)
             // handle your exception here
         }
         // [END crash_log_caught_ex]

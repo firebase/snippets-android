@@ -23,7 +23,7 @@ class LandmarkRecognitionActivity : AppCompatActivity() {
         //         .getVisionCloudLandmarkDetector(options)
         // [END get_detector_cloud]
 
-        // [START run_detector_cloud]
+        // [START firebase_run_detector_cloud]
         val result = detector.detectInImage(image)
                 .addOnSuccessListener { firebaseVisionCloudLandmarks ->
                     // Task completed successfully
@@ -50,6 +50,6 @@ class LandmarkRecognitionActivity : AppCompatActivity() {
                     // Task failed with an exception
                     // ...
                 }
-        // [END run_detector_cloud]
+        // [END firebase_run_detector_cloud]
     }
 }

@@ -44,7 +44,7 @@ public class ImageLabelingActivity extends AppCompatActivity {
         // [END get_detector_options]
         */
 
-        // [START run_detector]
+        // [START firebase_run_detector]
         Task<List<FirebaseVisionImageLabel>> result =
                 detector.processImage(image)
                         .addOnSuccessListener(
@@ -71,7 +71,7 @@ public class ImageLabelingActivity extends AppCompatActivity {
                                         // ...
                                     }
                                 });
-        // [END run_detector]
+        // [END firebase_run_detector]
     }
 
     private void labelImagesCloud(FirebaseVisionImage image) {
@@ -91,7 +91,7 @@ public class ImageLabelingActivity extends AppCompatActivity {
         //                .getCloudImageLabeler(options);
         // [END get_detector_cloud]
 
-        // [START run_detector_cloud]
+        // [START firebase_run_detector_cloud]
         Task<List<FirebaseVisionImageLabel>> result =
                 detector.processImage(image)
                         .addOnSuccessListener(
@@ -118,6 +118,6 @@ public class ImageLabelingActivity extends AppCompatActivity {
                                         // ...
                                     }
                                 });
-        // [END run_detector_cloud]
+        // [END firebase_run_detector_cloud]
     }
 }

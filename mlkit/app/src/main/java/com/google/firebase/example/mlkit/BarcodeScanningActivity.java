@@ -42,7 +42,7 @@ public class BarcodeScanningActivity extends AppCompatActivity {
         //        .getVisionBarcodeDetector(options);
         // [END get_detector]
 
-        // [START run_detector]
+        // [START firebase_run_detector]
         Task<List<FirebaseVisionBarcode>> result = detector.detectInImage(image)
                 .addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionBarcode>>() {
                     @Override
@@ -81,7 +81,7 @@ public class BarcodeScanningActivity extends AppCompatActivity {
                         // ...
                     }
                         });
-        // [END run_detector]
+        // [END firebase_run_detector]
     }
 
 }

@@ -37,7 +37,7 @@ public class TextRecognitionActivity extends AppCompatActivity {
                 .getOnDeviceTextRecognizer();
         // [END get_detector_default]
 
-        // [START run_detector]
+        // [START firebase_run_detector]
         Task<FirebaseVisionText> result =
                 detector.processImage(image)
                         .addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
@@ -70,7 +70,7 @@ public class TextRecognitionActivity extends AppCompatActivity {
                                         // ...
                                     }
                                 });
-        // [END run_detector]
+        // [END firebase_run_detector]
     }
 
     private void recognizeTextCloud(FirebaseVisionImage image) {
@@ -88,7 +88,7 @@ public class TextRecognitionActivity extends AppCompatActivity {
         //          .getCloudTextRecognizer(options);
         // [END get_detector_cloud]
 
-        // [START run_detector_cloud]
+        // [START firebase_run_detector_cloud]
         Task<FirebaseVisionText> result = detector.processImage(image)
                 .addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
                     @Override
@@ -119,7 +119,7 @@ public class TextRecognitionActivity extends AppCompatActivity {
                         // ...
                     }
                 });
-        // [END run_detector_cloud]
+        // [END firebase_run_detector_cloud]
     }
 
     private void processTextBlock(FirebaseVisionText result) {

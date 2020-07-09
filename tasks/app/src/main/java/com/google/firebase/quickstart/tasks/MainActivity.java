@@ -114,14 +114,14 @@ public class MainActivity extends AppCompatActivity {
                 60L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
         // [END create_handler_and_executor]
 
-        // [START run_task_executor]
+        // [START firebase_run_task_executor]
         task.addOnCompleteListener(executor, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 // ...
             }
         });
-        // [END run_task_executor]
+        // [END firebase_run_task_executor]
     }
 
     public void activityScopedTask() {

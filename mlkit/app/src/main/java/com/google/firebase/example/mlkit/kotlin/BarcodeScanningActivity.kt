@@ -25,7 +25,7 @@ class BarcodeScanningActivity : AppCompatActivity() {
         //        .getVisionBarcodeDetector(options)
         // [END get_detector]
 
-        // [START firebase_run_detector]
+        // [START fml_run_detector]
         val result = detector.detectInImage(image)
                 .addOnSuccessListener { barcodes ->
                     // Task completed successfully
@@ -58,6 +58,6 @@ class BarcodeScanningActivity : AppCompatActivity() {
                     // Task failed with an exception
                     // ...
                 }
-        // [END firebase_run_detector]
+        // [END fml_run_detector]
     }
 }

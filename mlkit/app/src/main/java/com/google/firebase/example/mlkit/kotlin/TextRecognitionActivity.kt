@@ -20,7 +20,7 @@ class TextRecognitionActivity : AppCompatActivity() {
                 .onDeviceTextRecognizer
         // [END get_detector_default]
 
-        // [START firebase_run_detector]
+        // [START fml_run_detector]
         val result = detector.processImage(image)
                 .addOnSuccessListener { firebaseVisionText ->
                     // Task completed successfully
@@ -45,7 +45,7 @@ class TextRecognitionActivity : AppCompatActivity() {
                     // Task failed with an exception
                     // ...
                 }
-        // [END firebase_run_detector]
+        // [END fml_run_detector]
     }
 
     private fun recognizeTextCloud(image: FirebaseVisionImage) {
@@ -61,7 +61,7 @@ class TextRecognitionActivity : AppCompatActivity() {
         // val detector = FirebaseVision.getInstance().getCloudTextRecognizer(options)
         // [END get_detector_cloud]
 
-        // [START firebase_run_detector_cloud]
+        // [START fml_run_detector_cloud]
         val result = detector.processImage(image)
                 .addOnSuccessListener { firebaseVisionText ->
                     // Task completed successfully
@@ -86,7 +86,7 @@ class TextRecognitionActivity : AppCompatActivity() {
                     // Task failed with an exception
                     // ...
                 }
-        // [END firebase_run_detector_cloud]
+        // [END fml_run_detector_cloud]
     }
 
     private fun processTextBlock(result: FirebaseVisionText) {

@@ -81,11 +81,11 @@ abstract class MainActivity : AppCompatActivity() {
                 60L, TimeUnit.SECONDS, LinkedBlockingQueue<Runnable>())
         // [END create_handler_and_executor]
 
-        // [START firebase_run_task_executor]
+        // [START tasks_run_task_executor]
         task.addOnCompleteListener(executor, OnCompleteListener {
             // ...
         })
-        // [END firebase_run_task_executor]
+        // [END tasks_run_task_executor]
     }
 
     private fun activityScopedTask() {

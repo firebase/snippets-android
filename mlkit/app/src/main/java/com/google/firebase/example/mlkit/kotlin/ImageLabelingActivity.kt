@@ -31,7 +31,7 @@ class ImageLabelingActivity : AppCompatActivity() {
         // [END get_detector_options]
         */
 
-        // [START firebase_run_detector]
+        // [START fml_run_detector]
         val result = detector.processImage(image)
                 .addOnSuccessListener { labels ->
                     // Task completed successfully
@@ -49,7 +49,7 @@ class ImageLabelingActivity : AppCompatActivity() {
                     // Task failed with an exception
                     // ...
                 }
-        // [END firebase_run_detector]
+        // [END fml_run_detector]
     }
 
     private fun labelImagesCloud(image: FirebaseVisionImage) {
@@ -68,7 +68,7 @@ class ImageLabelingActivity : AppCompatActivity() {
         //         .getCloudImageLabeler(options)
         // [END get_detector_cloud]
 
-        // [START firebase_run_detector_cloud]
+        // [START fml_run_detector_cloud]
         val result = detector.processImage(image)
                 .addOnSuccessListener { labels ->
                     // Task completed successfully
@@ -86,6 +86,6 @@ class ImageLabelingActivity : AppCompatActivity() {
                     // Task failed with an exception
                     // ...
                 }
-        // [END firebase_run_detector_cloud]
+        // [END fml_run_detector_cloud]
     }
 }

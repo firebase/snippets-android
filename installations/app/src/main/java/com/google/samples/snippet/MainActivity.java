@@ -23,8 +23,10 @@ public class MainActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<InstallationTokenResult>() {
             @Override
             public void onComplete(@NonNull Task<InstallationTokenResult> task) {
-                if (task.isComplete() && task.getResult() != null) {
+                if (task.isSuccessful() && task.getResult() != null) {
                     Log.d("Installations", "Installation auth token: " + task.getResult().getToken());
+                } else {
+                    Log.e("Installations", "Unable to get Installation auth token");
                 }
             }
         });
@@ -37,11 +39,29 @@ public class MainActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
             public void onComplete(@NonNull Task<String> task) {
-                if (task.isComplete()) {
+                if (task.isSuccessful()) {
                     Log.d("Installations", "Installation ID: " + task.getResult());
+                } else {
+                    Log.e("Installations", "Unable to get Installation ID");
                 }
             }
         });
         // [END get_installation_id]
+    }
+
+    private void deleteInstallation() {
+        // [START delete_installation]
+        FirebaseInstallations.getInstance().delete()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Log.d("Installations", "Installation deleted");
+                } else {
+                    Log.e("Installations", "Unable to delete Installation");
+                }
+            }
+        });
+        // [END delete_installation]
     }
 }

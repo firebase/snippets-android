@@ -24,8 +24,8 @@ class MainActivity : AppCompatActivity() {
                 .setProjectId("my-firebase-project")
                 .setApplicationId("1:27992087142:android:ce3b6448250083d1")
                 .setApiKey("AIzaSyADUe90ULnQDuGShD9W23RDP0xmeDc6Mvw")
-                // setDatabaseURL(...)
-                // setStorageBucket(...)
+                // .setDatabaseUrl(...)
+                // .setStorageBucket(...)
                 .build()
         // [END firebase_options]
 

@@ -32,6 +32,12 @@ dependencies {
     implementation "com.google.firebase:firebase-ml-common:22.1.2"
     implementation "com.google.firebase:firebase-ml-model-interpreter:22.0.4"
     implementation "com.google.firebase:firebase-ml-vision:24.1.0"
+
+    // Needed to fix a temporary issue with duplicate class com.google.android.gms.internal.vision.* errors
+    // Image Labeling model.
+    implementation 'com.google.android.gms:play-services-vision:20.1.1'
+    implementation 'com.google.android.gms:play-services-vision-common:19.1.1'
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.0"
 }
 

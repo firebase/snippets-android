@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.firebase.ktx.Firebase
@@ -12,12 +13,17 @@ import com.google.firebase.referencecode.storage.R
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageException
 import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.ktx.component1
+import com.google.firebase.storage.ktx.component2
+import com.google.firebase.storage.ktx.component3
 import com.google.firebase.storage.ktx.storage
 import com.google.firebase.storage.ktx.storageMetadata
 import kotlinx.android.synthetic.main.activity_storage.imageView
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
+
+private const val TAG = "kotlin.StorageActivity"
 
 abstract class StorageActivity : AppCompatActivity() {
 
@@ -148,7 +154,7 @@ abstract class StorageActivity : AppCompatActivity() {
         var uploadTask = mountainsRef.putBytes(data)
         uploadTask.addOnFailureListener {
             // Handle unsuccessful uploads
-        }.addOnSuccessListener {
+        }.addOnSuccessListener { taskSnapshot ->
             // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
             // ...
         }
@@ -160,7 +166,7 @@ abstract class StorageActivity : AppCompatActivity() {
         uploadTask = mountainsRef.putStream(stream)
         uploadTask.addOnFailureListener {
             // Handle unsuccessful uploads
-        }.addOnSuccessListener {
+        }.addOnSuccessListener { taskSnapshot ->
             // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
             // ...
         }
@@ -174,7 +180,7 @@ abstract class StorageActivity : AppCompatActivity() {
         // Register observers to listen for when the download is done or if it fails
         uploadTask.addOnFailureListener {
             // Handle unsuccessful uploads
-        }.addOnSuccessListener {
+        }.addOnSuccessListener { taskSnapshot ->
             // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
             // ...
         }
@@ -205,11 +211,11 @@ abstract class StorageActivity : AppCompatActivity() {
 
         // [START monitor_upload_progress]
         // Observe state change events such as progress, pause, and resume
-        uploadTask.addOnProgressListener { taskSnapshot ->
-            val progress = (100.0 * taskSnapshot.bytesTransferred) / taskSnapshot.totalByteCount
-            println("Upload is $progress% done")
+        uploadTask.addOnProgressListener { (bytesTransferred, totalByteCount) ->
+            val progress = (100.0 * bytesTransferred) / totalByteCount
+            Log.d(TAG, "Upload is $progress% done")
         }.addOnPausedListener {
-            println("Upload is paused")
+            Log.d(TAG, "Upload is paused")
         }
         // [END monitor_upload_progress]
 
@@ -226,11 +232,11 @@ abstract class StorageActivity : AppCompatActivity() {
         uploadTask = storageRef.child("images/${file.lastPathSegment}").putFile(file, metadata)
 
         // Listen for state changes, errors, and completion of the upload.
-        uploadTask.addOnProgressListener { taskSnapshot ->
-            val progress = (100.0 * taskSnapshot.bytesTransferred) / taskSnapshot.totalByteCount
-            println("Upload is $progress% done")
+        uploadTask.addOnProgressListener { (bytesTransferred, totalByteCount) ->
+            val progress = (100.0 * bytesTransferred) / totalByteCount
+            Log.d(TAG, "Upload is $progress% done")
         }.addOnPausedListener {
-            println("Upload is paused")
+            Log.d(TAG, "Upload is paused")
         }.addOnFailureListener {
             // Handle unsuccessful uploads
         }.addOnSuccessListener {
@@ -332,7 +338,7 @@ abstract class StorageActivity : AppCompatActivity() {
         // [END metadata_get_storage_reference]
 
         // [START get_file_metadata]
-        forestRef.metadata.addOnSuccessListener {
+        forestRef.metadata.addOnSuccessListener { metadata ->
             // Metadata now contains the metadata for 'images/forest.jpg'
         }.addOnFailureListener {
             // Uh-oh, an error occurred!
@@ -347,8 +353,8 @@ abstract class StorageActivity : AppCompatActivity() {
         }
 
         // Update metadata properties
-        forestRef.updateMetadata(metadata).addOnSuccessListener {
-            // Updated metadata is in storageMetadata
+        forestRef.updateMetadata(metadata).addOnSuccessListener { updatedMetadata ->
+            // Updated metadata is in updatedMetadata
         }.addOnFailureListener {
             // Uh-oh, an error occurred!
         }
@@ -367,8 +373,8 @@ abstract class StorageActivity : AppCompatActivity() {
         }
 
         // Delete the metadata property
-        forestRef.updateMetadata(metadata).addOnSuccessListener {
-            // metadata.contentType should be null
+        forestRef.updateMetadata(metadata).addOnSuccessListener { updatedMetadata ->
+            // updatedMetadata.contentType should be null
         }.addOnFailureListener {
             // Uh-oh, an error occurred!
         }
@@ -428,13 +434,13 @@ abstract class StorageActivity : AppCompatActivity() {
         val listRef = storage.reference.child("files/uid")
 
         listRef.listAll()
-                .addOnSuccessListener { listResult ->
-                    listResult.prefixes.forEach { prefix ->
+                .addOnSuccessListener { (items, prefixes) ->
+                    prefixes.forEach { prefix ->
                         // All the prefixes under listRef.
                         // You may call listAll() recursively on them.
                     }
 
-                    listResult.items.forEach { item ->
+                    items.forEach { item ->
                         // All the items under listRef.
                     }
                 }
@@ -442,6 +448,10 @@ abstract class StorageActivity : AppCompatActivity() {
                     // Uh-oh, an error occurred!
                 }
         // [END storage_list_all]
+    }
+
+    private fun processResults(items: List<StorageReference>, prefixes: List<StorageReference>) {
+
     }
 
     // [START storage_list_paginated]
@@ -457,15 +467,12 @@ abstract class StorageActivity : AppCompatActivity() {
         }
 
         listPageTask
-                .addOnSuccessListener { listResult ->
-                    val prefixes = listResult.prefixes
-                    val items = listResult.items
-
+                .addOnSuccessListener { (items, prefixes, pageToken) ->
                     // Process page of results
-                    // ...
+                    processResults(items, prefixes)
 
                     // Recurse onto next page
-                    listResult.pageToken?.let {
+                    pageToken?.let {
                         listAllPaginated(it)
                     }
                 }.addOnFailureListener {

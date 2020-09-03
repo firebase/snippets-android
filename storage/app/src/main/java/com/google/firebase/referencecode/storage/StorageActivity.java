@@ -20,6 +20,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -51,6 +52,7 @@ import java.io.InputStream;
 import java.util.List;
 
 public class StorageActivity extends AppCompatActivity {
+    private final String TAG = "java.StorageActivity";
     // [START storage_field_declaration]
     // [END storage_field_declaration]
 
@@ -261,12 +263,12 @@ public class StorageActivity extends AppCompatActivity {
             @Override
             public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                 double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                System.out.println("Upload is " + progress + "% done");
+                Log.d(TAG, "Upload is " + progress + "% done");
             }
         }).addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onPaused(UploadTask.TaskSnapshot taskSnapshot) {
-                System.out.println("Upload is paused");
+                Log.d(TAG, "Upload is paused");
             }
         });
         // [END monitor_upload_progress]
@@ -288,12 +290,12 @@ public class StorageActivity extends AppCompatActivity {
             @Override
             public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                 double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                System.out.println("Upload is " + progress + "% done");
+                Log.d(TAG, "Upload is " + progress + "% done");
             }
         }).addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onPaused(UploadTask.TaskSnapshot taskSnapshot) {
-                System.out.println("Upload is paused");
+                Log.d(TAG, "Upload is paused");
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

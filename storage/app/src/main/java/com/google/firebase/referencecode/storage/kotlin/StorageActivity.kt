@@ -23,8 +23,6 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
 
-private const val TAG = "kotlin.StorageActivity"
-
 abstract class StorageActivity : AppCompatActivity() {
 
     // [START storage_field_declaration]
@@ -490,4 +488,8 @@ abstract class StorageActivity : AppCompatActivity() {
         }
     }
     // [END storage_custom_failure_listener]
+
+    companion object {
+        const val TAG = "kotlin.StorageActivity"
+    }
 }

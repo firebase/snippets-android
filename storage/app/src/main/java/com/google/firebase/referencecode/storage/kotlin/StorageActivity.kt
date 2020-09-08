@@ -464,6 +464,8 @@ abstract class StorageActivity : AppCompatActivity() {
             listRef.list(100)
         }
 
+        // You'll need to import com.google.firebase.storage.ktx.component1 and 
+        // com.google.firebase.storage.ktx.component2
         listPageTask
                 .addOnSuccessListener { (items, prefixes, pageToken) ->
                     // Process page of results

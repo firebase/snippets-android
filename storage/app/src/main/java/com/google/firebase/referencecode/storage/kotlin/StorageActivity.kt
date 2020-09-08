@@ -209,6 +209,8 @@ abstract class StorageActivity : AppCompatActivity() {
 
         // [START monitor_upload_progress]
         // Observe state change events such as progress, pause, and resume
+        // You'll need to import com.google.firebase.storage.ktx.component1 and 
+        // com.google.firebase.storage.ktx.component2
         uploadTask.addOnProgressListener { (bytesTransferred, totalByteCount) ->
             val progress = (100.0 * bytesTransferred) / totalByteCount
             Log.d(TAG, "Upload is $progress% done")
@@ -230,6 +232,8 @@ abstract class StorageActivity : AppCompatActivity() {
         uploadTask = storageRef.child("images/${file.lastPathSegment}").putFile(file, metadata)
 
         // Listen for state changes, errors, and completion of the upload.
+        // You'll need to import com.google.firebase.storage.ktx.component1 and 
+        // com.google.firebase.storage.ktx.component2
         uploadTask.addOnProgressListener { (bytesTransferred, totalByteCount) ->
             val progress = (100.0 * bytesTransferred) / totalByteCount
             Log.d(TAG, "Upload is $progress% done")
@@ -430,7 +434,9 @@ abstract class StorageActivity : AppCompatActivity() {
         // [START storage_list_all]
         val storage = Firebase.storage
         val listRef = storage.reference.child("files/uid")
-
+                
+        // You'll need to import com.google.firebase.storage.ktx.component1 and 
+        // com.google.firebase.storage.ktx.component2
         listRef.listAll()
                 .addOnSuccessListener { (items, prefixes) ->
                     prefixes.forEach { prefix ->

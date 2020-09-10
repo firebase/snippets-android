@@ -38,7 +38,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-vision:20.1.2'
     implementation 'com.google.android.gms:play-services-vision-common:19.1.2'
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.10"
 }
 
 apply plugin: 'com.google.gms.google-services'

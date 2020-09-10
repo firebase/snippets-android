@@ -30,5 +30,5 @@ dependencies {
     implementation "com.google.firebase:firebase-ads:19.3.0"
     implementation "com.google.firebase:firebase-analytics:17.5.0"
     implementation "com.google.firebase:firebase-config-ktx:19.2.0"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.10"
 }

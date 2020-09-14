@@ -43,7 +43,7 @@ dependencies {
     implementation "com.google.firebase:firebase-firestore-ktx:21.6.0"
 
     // Firebase / Play Services
-    implementation "com.google.firebase:firebase-auth:19.3.2"
+    implementation "com.google.firebase:firebase-auth:19.4.0"
     implementation "com.google.android.gms:play-services-auth:18.1.0"
     implementation "com.google.firebase:firebase-functions-ktx:19.1.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.10"

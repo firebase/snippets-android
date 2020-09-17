@@ -43,7 +43,7 @@ public class FaceDetectionActivity extends AppCompatActivity {
                 .getVisionFaceDetector(options);
         // [END get_detector]
 
-        // [START run_detector]
+        // [START fml_run_detector]
         Task<List<FirebaseVisionFace>> result =
                 detector.detectInImage(image)
                         .addOnSuccessListener(
@@ -90,7 +90,7 @@ public class FaceDetectionActivity extends AppCompatActivity {
                                         // ...
                                     }
                                 });
-        // [END run_detector]
+        // [END fml_run_detector]
     }
 
     private void faceOptionsExamples() {

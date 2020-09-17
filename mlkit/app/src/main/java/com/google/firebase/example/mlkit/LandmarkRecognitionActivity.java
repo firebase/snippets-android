@@ -41,7 +41,7 @@ public class LandmarkRecognitionActivity extends AppCompatActivity {
         //         .getVisionCloudLandmarkDetector(options);
         // [END get_detector_cloud]
 
-        // [START run_detector_cloud]
+        // [START fml_run_detector_cloud]
         Task<List<FirebaseVisionCloudLandmark>> result = detector.detectInImage(image)
                 .addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionCloudLandmark>>() {
                     @Override
@@ -74,6 +74,6 @@ public class LandmarkRecognitionActivity extends AppCompatActivity {
                         // ...
                     }
                 });
-        // [END run_detector_cloud]
+        // [END fml_run_detector_cloud]
     }
 }

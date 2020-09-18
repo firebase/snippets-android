@@ -72,8 +72,10 @@ public class MainActivity extends AppCompatActivity {
                 + "1262xxx48712-9qs6n32447mcj9dirtnkyrejt82saa52.apps.googleusercontent.com";
 
         String idToken = null;
+        Account account;
         try {
-            idToken = GoogleAuthUtil.getToken(this, accountName, scope);
+            account = new Account(accountName, GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE);
+            idToken = GoogleAuthUtil.getToken(this, account, scope);
         } catch (Exception e) {
             Log.w(TAG, "Exception while getting idToken: " + e);
         }

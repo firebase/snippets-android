@@ -1,5 +1,6 @@
 package com.google.firebase.example.messaging.kotlin
 
+import android.accounts.Account
 import android.accounts.AccountManager
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
@@ -60,7 +61,8 @@ class MainActivity : AppCompatActivity() {
 
         var idToken: String? = null
         try {
-            idToken = GoogleAuthUtil.getToken(this, accountName, scope)
+            val account = Account(accountName, GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE)
+            idToken = GoogleAuthUtil.getToken(this, account, scope)
         } catch (e: Exception) {
             Log.w(TAG, "Exception while getting idToken: $e")
         }

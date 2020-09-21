@@ -822,6 +822,10 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         citiesRef.whereLessThan("population", 100000)
         citiesRef.whereGreaterThanOrEqualTo("name", "San Francisco")
         // [END example_filters]
+
+        // [START simple_query_not_equal]
+        citiesRef.whereNotEqualTo("capital", false)
+        // [END simple_query_not_equal]
     }
 
     fun arrayContainsQueries() {
@@ -846,6 +850,10 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
 
         citiesRef.whereIn("country", listOf("USA", "Japan"))
         // [END in_filter]
+
+        // [START not_in_filter]
+        citiesRef.whereNotIn("country", Arrays.asList("USA", "Japan"))
+        // [END not_in_filter]
 
         // [START in_filter_with_array]
         citiesRef.whereIn("regions", listOf(arrayOf("west_coast"), arrayOf("east_coast")))

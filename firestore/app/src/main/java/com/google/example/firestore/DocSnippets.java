@@ -1023,6 +1023,10 @@ public class DocSnippets {
         citiesRef.whereLessThan("population", 100000);
         citiesRef.whereGreaterThanOrEqualTo("name", "San Francisco");
         // [END example_filters]
+
+        // [START simple_query_not_equal]
+        citiesRef.whereNotEqualTo("capital", false);
+        // [END simple_query_not_equal]
     }
 
     public void arrayContainsQueries() {
@@ -1047,6 +1051,10 @@ public class DocSnippets {
 
         citiesRef.whereIn("country", Arrays.asList("USA", "Japan"));
         // [END in_filter]
+
+        // [START not_in_filter]
+        citiesRef.whereNotIn("country", Arrays.asList("USA", "Japan"));
+        // [END not_in_filter]
 
         // [START in_filter_with_array]
         citiesRef.whereIn("regions", Arrays.asList(new String[]{"west_coast"}, new String[]{"east_coast"}));

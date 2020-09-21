@@ -852,7 +852,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         // [END in_filter]
 
         // [START not_in_filter]
-        citiesRef.whereNotIn("country", Arrays.asList("USA", "Japan"))
+        citiesRef.whereNotIn("country", listOf("USA", "Japan"))
         // [END not_in_filter]
 
         // [START in_filter_with_array]

@@ -23,7 +23,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void emulatorSettings() {
         // [START functions_emulator_connect]
-        FirebaseFunctions.getInstance().useFunctionsEmulator("http://10.0.2.2:5001");
+        // 10.0.2.2 is the special IP address to connect to the 'localhost' of
+        // the host computer from an Android emulator.
+        FirebaseFunctions functions = FirebaseFunctions.getInstance();
+        functions.useEmulator("10.0.2.2.", 5001);
         // [END functions_emulator_connect]
     }
 

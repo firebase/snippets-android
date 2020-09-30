@@ -11,9 +11,9 @@ class EmulatorSuite {
         // 10.0.2.2 is the special IP address to connect to the 'localhost' of
         // the host computer from an Android emulator.
         val firestore = Firebase.firestore
+        firestore.useEmulator("10.0.0.2", 8080)
+
         firestore.firestoreSettings = firestoreSettings {
-            host = "http://10.0.0.2:8080"
-            isSslEnabled = false
             isPersistenceEnabled = false
         }
         // [END fs_emulator_connect]

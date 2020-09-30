@@ -17,11 +17,11 @@ class MainActivity : AppCompatActivity() {
     private fun logInstallationAuthToken() {
         // [START get_installation_token]
         FirebaseInstallations.getInstance().getToken(/* forceRefresh */ true)
-            .addOnCompleteListener {task ->
+            .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Log.d("Installations", "Installation auth token: " + task.result?.token)
                 } else {
-                    Log.e("Installations", "Unable to get Installation auth token");
+                    Log.e("Installations", "Unable to get Installation auth token")
                 }
             }
         // [END get_installation_token]
@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
             if (task.isSuccessful) {
                 Log.d("Installations", "Installation ID: " + task.result)
             } else {
-                Log.e("Installations", "Unable to get Installation ID");
+                Log.e("Installations", "Unable to get Installation ID")
             }
         }
         // [END get_installation_id]
@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
             if (task.isComplete) {
                 Log.d("Installations", "Installation deleted")
             }  else {
-                Log.e("Installations", "Unable to delete Installation");
+                Log.e("Installations", "Unable to delete Installation")
             }
         }
         // [END delete_installation]

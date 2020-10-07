@@ -32,7 +32,7 @@ dependencies {
     kapt 'com.github.bumptech.glide:compiler:4.11.0'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.10"
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
 }
 
 apply plugin: 'com.google.gms.google-services'

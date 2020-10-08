@@ -960,7 +960,7 @@ public class DocSnippets {
 
         Map<String, Object> lohData = new HashMap<>();
         lohData.put("name", "Legion of Honor");
-        lohData.put("type", "musuem");
+        lohData.put("type", "museum");
         citiesRef.document("SF").collection("landmarks").add(lohData);
 
         Map<String, Object> gpData = new HashMap<>();
@@ -979,7 +979,7 @@ public class DocSnippets {
         citiesRef.document("DC").collection("landmarks").add(lmData);
 
         Map<String, Object> nasaData = new HashMap<>();
-        nasaData.put("name", "National Air and Space Musuem");
+        nasaData.put("name", "National Air and Space Museum");
         nasaData.put("type", "museum");
         citiesRef.document("DC").collection("landmarks").add(nasaData);
 
@@ -989,7 +989,7 @@ public class DocSnippets {
         citiesRef.document("TOK").collection("landmarks").add(upData);
 
         Map<String, Object> nmData = new HashMap<>();
-        nmData.put("name", "National Musuem of Nature and Science");
+        nmData.put("name", "National Museum of Nature and Science");
         nmData.put("type", "museum");
         citiesRef.document("TOK").collection("landmarks").add(nmData);
 

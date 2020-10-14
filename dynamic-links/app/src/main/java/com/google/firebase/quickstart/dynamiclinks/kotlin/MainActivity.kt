@@ -8,6 +8,8 @@ import com.google.android.gms.appinvite.AppInviteReferral
 import com.google.firebase.appinvite.FirebaseAppInvite
 import com.google.firebase.dynamiclinks.ShortDynamicLink
 import com.google.firebase.dynamiclinks.ktx.androidParameters
+import com.google.firebase.dynamiclinks.ktx.component1
+import com.google.firebase.dynamiclinks.ktx.component2
 import com.google.firebase.dynamiclinks.ktx.dynamicLink
 import com.google.firebase.dynamiclinks.ktx.dynamicLinks
 import com.google.firebase.dynamiclinks.ktx.googleAnalyticsParameters
@@ -69,6 +71,10 @@ abstract class MainActivity : AppCompatActivity() {
         // [END create_link_advanced]
     }
 
+    private fun processShortLink(shortLink: Uri?, previewLink: Uri?) {
+
+    }
+
     fun createShortLink() {
         // [START create_short_link]
         val shortLinkTask = Firebase.dynamicLinks.shortLinkAsync {
@@ -76,10 +82,12 @@ abstract class MainActivity : AppCompatActivity() {
             domainUriPrefix = "https://example.page.link"
             // Set parameters
             // ...
-        }.addOnSuccessListener { result ->
+        }.addOnSuccessListener { (shortLink, flowchartLink) ->
+            // You'll need to import com.google.firebase.dynamiclinks.ktx.component1 and
+            // com.google.firebase.dynamiclinks.ktx.component2
+
             // Short link created
-            val shortLink = result.shortLink
-            val flowchartLink = result.previewLink
+            processShortLink(shortLink, flowchartLink)
         }.addOnFailureListener {
             // Error
             // ...
@@ -92,10 +100,12 @@ abstract class MainActivity : AppCompatActivity() {
         val shortLinkTask = Firebase.dynamicLinks.shortLinkAsync {
             longLink = Uri.parse("https://example.page.link/?link=" +
                     "https://www.example.com/&apn=com.example.android&ibn=com.example.ios")
-        }.addOnSuccessListener { result ->
+        }.addOnSuccessListener { (shortLink, flowChartLink) ->
+            // You'll need to import com.google.firebase.dynamiclinks.ktx.component1 and
+            // com.google.firebase.dynamiclinks.ktx.component2
+
             // Short link created
-            val shortLink = result.shortLink
-            val flowchartLink = result.previewLink
+            processShortLink(shortLink, flowChartLink)
         }.addOnFailureListener {
             // Error
             // ...

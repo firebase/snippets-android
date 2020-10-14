@@ -163,7 +163,7 @@ abstract class MainActivity : AppCompatActivity() {
         // [START ddl_onboarding_share]
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
-            putExtra(Intent.EXTRA_TEXT, "Try this amazing app: " + dl.shortLink)
+            putExtra(Intent.EXTRA_TEXT, "Try this amazing app: ${dl.shortLink}")
         }
         startActivity(Intent.createChooser(intent, "Share using"))
         // [END ddl_onboarding_share]

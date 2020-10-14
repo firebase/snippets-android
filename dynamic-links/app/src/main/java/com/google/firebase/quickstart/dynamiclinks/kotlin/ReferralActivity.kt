@@ -53,12 +53,13 @@ abstract class ReferralActivity : AppCompatActivity() {
         val msgHtml = String.format("<p>Let's play MyExampleGame together! Use my " +
                 "<a href=\"%s\">referrer link</a>!</p>", invitationLink)
 
-        val intent = Intent(Intent.ACTION_SENDTO)
-        intent.data = Uri.parse("mailto:") // only email apps should handle this
-        intent.putExtra(Intent.EXTRA_SUBJECT, subject)
-        intent.putExtra(Intent.EXTRA_TEXT, msg)
-        intent.putExtra(Intent.EXTRA_HTML_TEXT, msgHtml)
-        if (intent.resolveActivity(packageManager) != null) {
+        val intent = Intent(Intent.ACTION_SENDTO).apply {
+            data = Uri.parse("mailto:") // only email apps should handle this
+            putExtra(Intent.EXTRA_SUBJECT, subject)
+            putExtra(Intent.EXTRA_TEXT, msg)
+            putExtra(Intent.EXTRA_HTML_TEXT, msgHtml)
+        }
+        intent.resolveActivity(packageManager)?.let {
             startActivity(intent)
         }
         // [END ddl_referral_send]

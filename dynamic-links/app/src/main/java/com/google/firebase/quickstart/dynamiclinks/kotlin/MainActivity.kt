@@ -124,11 +124,12 @@ abstract class MainActivity : AppCompatActivity() {
 
     fun shareLink(myDynamicLink: Uri) {
         // [START ddl_share_link]
-        val sendIntent = Intent()
-        val msg = "Hey, check this out: $myDynamicLink"
-        sendIntent.action = Intent.ACTION_SEND
-        sendIntent.putExtra(Intent.EXTRA_TEXT, msg)
-        sendIntent.type = "text/plain"
+        val sendIntent = Intent().apply {
+            val msg = "Hey, check this out: $myDynamicLink"
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, msg)
+            type = "text/plain"
+        }
         startActivity(sendIntent)
         // [END ddl_share_link]
     }
@@ -160,9 +161,10 @@ abstract class MainActivity : AppCompatActivity() {
 
     fun onboardingShare(dl: ShortDynamicLink) {
         // [START ddl_onboarding_share]
-        val intent = Intent(Intent.ACTION_SEND)
-        intent.type = "text/plain"
-        intent.putExtra(Intent.EXTRA_TEXT, "Try this amazing app: " + dl.shortLink)
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, "Try this amazing app: " + dl.shortLink)
+        }
         startActivity(Intent.createChooser(intent, "Share using"))
         // [END ddl_onboarding_share]
     }

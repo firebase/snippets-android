@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GithubAuthProvider
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.PhoneAuthCredential
+import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.auth.PlayGamesAuthProvider
 import com.google.firebase.auth.ktx.actionCodeSettings
@@ -423,30 +424,34 @@ abstract class MainActivity : AppCompatActivity() {
 
         // Whenever verification is triggered with the whitelisted number,
         // provided it is not set for auto-retrieval, onCodeSent will be triggered.
-        PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                phoneNum, 30L /*timeout*/, TimeUnit.SECONDS,
-                this, object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+        val options = PhoneAuthOptions.newBuilder(Firebase.auth)
+                .setPhoneNumber(phoneNum)
+                .setTimeout(30L, TimeUnit.SECONDS)
+                .setActivity(this)
+                .setCallbacks(object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
-            override fun onCodeSent(
-                verificationId: String,
-                forceResendingToken: PhoneAuthProvider.ForceResendingToken
-            ) {
-                // Save the verification id somewhere
-                // ...
+                    override fun onCodeSent(
+                            verificationId: String,
+                            forceResendingToken: PhoneAuthProvider.ForceResendingToken
+                    ) {
+                        // Save the verification id somewhere
+                        // ...
 
-                // The corresponding whitelisted code above should be used to complete sign-in.
-                this@MainActivity.enableUserManuallyInputCode()
-            }
+                        // The corresponding whitelisted code above should be used to complete sign-in.
+                        this@MainActivity.enableUserManuallyInputCode()
+                    }
 
-            override fun onVerificationCompleted(phoneAuthCredential: PhoneAuthCredential) {
-                // Sign in with the credential
-                // ...
-            }
+                    override fun onVerificationCompleted(phoneAuthCredential: PhoneAuthCredential) {
+                        // Sign in with the credential
+                        // ...
+                    }
 
-            override fun onVerificationFailed(e: FirebaseException) {
-                // ...
-            }
-        })
+                    override fun onVerificationFailed(e: FirebaseException) {
+                        // ...
+                    }
+                })
+                .build()
+        PhoneAuthProvider.verifyPhoneNumber(options)
         // [END auth_test_phone_verify]
     }
 
@@ -466,13 +471,11 @@ abstract class MainActivity : AppCompatActivity() {
         // Configure faking the auto-retrieval with the whitelisted numbers.
         firebaseAuthSettings.setAutoRetrievedSmsCodeForPhoneNumber(phoneNumber, smsCode)
 
-        val phoneAuthProvider = PhoneAuthProvider.getInstance()
-        phoneAuthProvider.verifyPhoneNumber(
-                phoneNumber,
-                60L,
-                TimeUnit.SECONDS,
-                this, /* activity */
-                object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+        val options = PhoneAuthOptions.newBuilder(firebaseAuth)
+                .setPhoneNumber(phoneNumber)
+                .setTimeout(60L, TimeUnit.SECONDS)
+                .setActivity(this)
+                .setCallbacks(object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                     override fun onVerificationCompleted(credential: PhoneAuthCredential) {
                         // Instant verification is applied and a credential is directly returned.
                         // ...
@@ -483,6 +486,8 @@ abstract class MainActivity : AppCompatActivity() {
                     }
                     // [END_EXCLUDE]
                 })
+                .build()
+        PhoneAuthProvider.verifyPhoneNumber(options)
         // [END auth_test_phone_auto]
     }
 

@@ -41,6 +41,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GithubAuthProvider;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.auth.PlayGamesAuthProvider;
 import com.google.firebase.auth.SignInMethodQueryResult;
@@ -508,10 +509,12 @@ public class MainActivity extends AppCompatActivity {
 
         // Whenever verification is triggered with the whitelisted number,
         // provided it is not set for auto-retrieval, onCodeSent will be triggered.
-        PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                phoneNum, 30L /*timeout*/, TimeUnit.SECONDS,
-                this, new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        PhoneAuthOptions options = PhoneAuthOptions.newBuilder(auth)
+                .setPhoneNumber(phoneNum)
+                .setTimeout(60L, TimeUnit.SECONDS)
+                .setActivity(this)
+                .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                     @Override
                     public void onCodeSent(String verificationId,
                                            PhoneAuthProvider.ForceResendingToken forceResendingToken) {
@@ -530,10 +533,11 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onVerificationFailed(FirebaseException e) {
-                         // ...
+                        // ...
                     }
-
-                });
+                })
+                .build();
+        PhoneAuthProvider.verifyPhoneNumber(options);
         // [END auth_test_phone_verify]
     }
 
@@ -553,13 +557,11 @@ public class MainActivity extends AppCompatActivity {
         // Configure faking the auto-retrieval with the whitelisted numbers.
         firebaseAuthSettings.setAutoRetrievedSmsCodeForPhoneNumber(phoneNumber, smsCode);
 
-        PhoneAuthProvider phoneAuthProvider = PhoneAuthProvider.getInstance();
-        phoneAuthProvider.verifyPhoneNumber(
-                phoneNumber,
-                60L,
-                TimeUnit.SECONDS,
-                this, /* activity */
-                new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+        PhoneAuthOptions options = PhoneAuthOptions.newBuilder(firebaseAuth)
+                .setPhoneNumber(phoneNumber)
+                .setTimeout(60L, TimeUnit.SECONDS)
+                .setActivity(this)
+                .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                     @Override
                     public void onVerificationCompleted(PhoneAuthCredential credential) {
                         // Instant verification is applied and a credential is directly returned.
@@ -572,7 +574,9 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                     // [END_EXCLUDE]
-                });
+                })
+                .build();
+        PhoneAuthProvider.verifyPhoneNumber(options);
         // [END auth_test_phone_auto]
     }
 

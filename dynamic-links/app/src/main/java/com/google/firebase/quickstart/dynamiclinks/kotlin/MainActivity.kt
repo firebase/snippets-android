@@ -153,12 +153,6 @@ abstract class MainActivity : AppCompatActivity() {
         // [END ddl_get_invitation]
     }
 
-    fun getDeepLink() {
-        // [START ddl_get_deep_link]
-        val link = AppInviteReferral.getDeepLink(intent)
-        // [END ddl_get_deep_link]
-    }
-
     fun onboardingShare(dl: ShortDynamicLink) {
         // [START ddl_onboarding_share]
         val intent = Intent(Intent.ACTION_SEND).apply {

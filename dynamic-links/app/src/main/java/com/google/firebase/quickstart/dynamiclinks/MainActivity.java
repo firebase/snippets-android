@@ -174,13 +174,6 @@ public class MainActivity extends AppCompatActivity {
         // [END ddl_get_invitation]
     }
 
-    public void getDeepLink() {
-        Intent intent = getIntent();
-        // [START ddl_get_deep_link]
-        String link = AppInviteReferral.getDeepLink(intent);
-        // [END ddl_get_deep_link]
-    }
-
     public void onboardingShare(ShortDynamicLink dl) {
         // [START ddl_onboarding_share]
         Intent intent = new Intent(Intent.ACTION_SEND);

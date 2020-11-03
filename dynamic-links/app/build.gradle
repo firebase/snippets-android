@@ -33,6 +33,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics:18.0.0'
 
     implementation "com.google.firebase:firebase-database-ktx:19.5.1"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.10"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.20-RC"
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
 }

@@ -9,8 +9,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import java.util.*
 
-object SolutionGeoqueries {
+class SolutionGeoqueries {
+
     private val db = FirebaseFirestore.getInstance()
+
     fun addGeoHash() {
         // [START fs_geo_add_hash]
         // Compute the GeoHash for a lat/lng point

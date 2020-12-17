@@ -41,7 +41,7 @@ class SolutionGeoqueries {
         val radiusInKm = 50.0
 
         // Each item in 'bounds' represents a startAt/endAt pair. We have to issue
-        // a separate query for each pair. There can be up to 9 pais of bounds
+        // a separate query for each pair. There can be up to 9 pairs of bounds
         // depending on overlap, but in most cases there are 4.
         val bounds = GeoFireUtils.getGeoHashQueryBounds(center, radiusInKm)
         val tasks: MutableList<Task<QuerySnapshot>> = ArrayList()

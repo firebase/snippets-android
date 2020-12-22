@@ -66,8 +66,9 @@ class SolutionGeoqueries {
                             // We have to filter out a few false positives due to GeoHash
                             // accuracy, but most will match
                             val docLocation = GeoLocation(lat, lng)
-                            val distance = GeoFireUtils.getDistanceBetween(docLocation, center)
-                            if (distance <= radiusInKm) {
+                            val distanceInM = GeoFireUtils.getDistanceBetween(docLocation, center)
+                            val distanceInKm = distanceInM / 1000
+                            if (distanceInKm <= radiusInKm) {
                                 matchingDocs.add(doc)
                             }
                         }

@@ -84,8 +84,9 @@ public class SolutionGeoqueries {
                                 // We have to filter out a few false positives due to GeoHash
                                 // accuracy, but most will match
                                 GeoLocation docLocation = new GeoLocation(lat, lng);
-                                double distance = GeoFireUtils.getDistanceBetween(docLocation, center);
-                                if (distance <= radiusInKm) {
+                                double distanceInM = GeoFireUtils.getDistanceBetween(docLocation, center);
+                                double distanceInKm = distanceInM / 1000;
+                                if (distanceInKm <= radiusInKm) {
                                     matchingDocs.add(doc);
                                 }
                             }

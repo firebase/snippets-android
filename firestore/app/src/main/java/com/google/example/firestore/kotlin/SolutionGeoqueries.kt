@@ -67,7 +67,7 @@ class SolutionGeoqueries {
                             // accuracy, but most will match
                             val docLocation = GeoLocation(lat, lng)
                             val distanceInM = GeoFireUtils.getDistanceBetween(docLocation, center)
-                            if (distanceInKm <= radiusInM) {
+                            if (distanceInM <= radiusInM) {
                                 matchingDocs.add(doc)
                             }
                         }

@@ -52,12 +52,12 @@ public class SolutionGeoqueries {
         // [START fs_geo_query_hashes]
         // Find cities within 50km of London
         final GeoLocation center = new GeoLocation(51.5074, 0.1278);
-        final double radiusInKm = 50;
+        final double radiusInM = 50 * 1000;
 
         // Each item in 'bounds' represents a startAt/endAt pair. We have to issue
         // a separate query for each pair. There can be up to 9 pairs of bounds
         // depending on overlap, but in most cases there are 4.
-        List<GeoQueryBounds> bounds = GeoFireUtils.getGeoHashQueryBounds(center, radiusInKm);
+        List<GeoQueryBounds> bounds = GeoFireUtils.getGeoHashQueryBounds(center, radiusInM);
         final List<Task<QuerySnapshot>> tasks = new ArrayList<>();
         for (GeoQueryBounds b : bounds) {
             Query q = db.collection("cities")
@@ -85,8 +85,7 @@ public class SolutionGeoqueries {
                                 // accuracy, but most will match
                                 GeoLocation docLocation = new GeoLocation(lat, lng);
                                 double distanceInM = GeoFireUtils.getDistanceBetween(docLocation, center);
-                                double distanceInKm = distanceInM / 1000;
-                                if (distanceInKm <= radiusInKm) {
+                                if (distanceInM <= radiusInM) {
                                     matchingDocs.add(doc);
                                 }
                             }

@@ -38,12 +38,12 @@ class SolutionGeoqueries {
         // [START fs_geo_query_hashes]
         // Find cities within 50km of London
         val center = GeoLocation(51.5074, 0.1278)
-        val radiusInKm = 50.0
+        val radiusInM = 50.0 * 1000.0
 
         // Each item in 'bounds' represents a startAt/endAt pair. We have to issue
         // a separate query for each pair. There can be up to 9 pairs of bounds
         // depending on overlap, but in most cases there are 4.
-        val bounds = GeoFireUtils.getGeoHashQueryBounds(center, radiusInKm)
+        val bounds = GeoFireUtils.getGeoHashQueryBounds(center, radiusInM)
         val tasks: MutableList<Task<QuerySnapshot>> = ArrayList()
         for (b in bounds) {
             val q = db.collection("cities")
@@ -67,8 +67,7 @@ class SolutionGeoqueries {
                             // accuracy, but most will match
                             val docLocation = GeoLocation(lat, lng)
                             val distanceInM = GeoFireUtils.getDistanceBetween(docLocation, center)
-                            val distanceInKm = distanceInM / 1000
-                            if (distanceInKm <= radiusInKm) {
+                            if (distanceInKm <= radiusInM) {
                                 matchingDocs.add(doc)
                             }
                         }

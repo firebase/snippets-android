@@ -8,7 +8,12 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.functions.ktx.functions
 import com.google.firebase.ktx.Firebase
-import com.google.gson.*
+import com.google.gson.Gson
+import com.google.gson.JsonArray
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
+import com.google.gson.JsonPrimitive
 import java.io.ByteArrayOutputStream
 
 
@@ -194,9 +199,12 @@ class MainActivity : AppCompatActivity() {
                         var wordText = ""
                         for (symbol in word.asJsonObject["symbols"].asJsonArray) {
                             wordText += symbol.asJsonObject["text"].asString
-                            System.out.format("Symbol text: %s (confidence: %f)%n", symbol.asJsonObject["text"].asString, symbol.asJsonObject["confidence"].asFloat)
+                            System.out.format("Symbol text: %s (confidence: %f)%n",
+                                              symbol.asJsonObject["text"].asString,
+                                              symbol.asJsonObject["confidence"].asFloat)
                         }
-                        System.out.format("Word text: %s (confidence: %f)%n%n", wordText, word.asJsonObject["confidence"].asFloat)
+                        System.out.format("Word text: %s (confidence: %f)%n%n", wordText,
+                                          word.asJsonObject["confidence"].asFloat)
                         System.out.format("Word bounding box: %s%n", word.asJsonObject["boundingBox"])
                         paraText = String.format("%s%s ", paraText, wordText)
                     }

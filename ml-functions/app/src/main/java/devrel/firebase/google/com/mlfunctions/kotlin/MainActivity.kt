@@ -200,11 +200,10 @@ class MainActivity : AppCompatActivity() {
                         for (symbol in word.asJsonObject["symbols"].asJsonArray) {
                             wordText += symbol.asJsonObject["text"].asString
                             System.out.format("Symbol text: %s (confidence: %f)%n",
-                                              symbol.asJsonObject["text"].asString,
-                                              symbol.asJsonObject["confidence"].asFloat)
+                                symbol.asJsonObject["text"].asString, symbol.asJsonObject["confidence"].asFloat)
                         }
                         System.out.format("Word text: %s (confidence: %f)%n%n", wordText,
-                                          word.asJsonObject["confidence"].asFloat)
+                            word.asJsonObject["confidence"].asFloat)
                         System.out.format("Word bounding box: %s%n", word.asJsonObject["boundingBox"])
                         paraText = String.format("%s%s ", paraText, wordText)
                     }

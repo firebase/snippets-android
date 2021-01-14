@@ -32,23 +32,32 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         // ...
         MobileAds.initialize(this);
-        // [END ads_on_create]
+    }
+    // [END ads_on_create]
+
+    private void loadBannerAd() {
+        // [SNIPPET load_banner_ad]
+        // Load an ad into the AdView.
+        // [START load_banner_ad]
 
         // Initialize the Google Mobile Ads SDK
         MobileAds.initialize(context);
 
-        // [START load_banner_ad]
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
         // [END load_banner_ad]
+    }
 
+    private void initInterstitialAd() {
         // [START instantiate_interstitial_ad]
         // Create an InterstitialAd object. This same object can be re-used whenever you want to
         // show an interstitial.
         mInterstitialAd = new InterstitialAd(context);
         mInterstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
         // [END instantiate_interstitial_ad]
+    }
 
+    private void createInterstitialAdListener() {
         // [START create_interstitial_ad_listener]
         mInterstitialAd.setAdListener(new AdListener() {
             @Override
@@ -69,7 +78,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         // [END create_interstitial_ad_listener]
+    }
 
+    private void displayInterstitialAd() {
         // [START display_interstitial_ad]
         mLoadInterstitialButton = findViewById(R.id.loadInterstitialButton);
         mLoadInterstitialButton.setOnClickListener(new View.OnClickListener() {

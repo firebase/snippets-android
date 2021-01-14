@@ -24,8 +24,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         // ...
         MobileAds.initialize(this)
-        // [END ads_on_create]
+    }
+    // [END ads_on_create]
 
+    private fun loadAdBanner() {
         // [SNIPPET load_banner_ad]
         // Load an ad into the AdView.
         // [START load_banner_ad]
@@ -37,14 +39,18 @@ class MainActivity : AppCompatActivity() {
 
         adView.loadAd(adRequest)
         // [END load_banner_ad]
+    }
 
+    private fun initInterstitialAd() {
         // [START instantiate_interstitial_ad]
         // Create an InterstitialAd object. This same object can be re-used whenever you want to
         // show an interstitial.
         interstitialAd = InterstitialAd(context)
         interstitialAd.adUnitId = getString(R.string.interstitial_ad_unit_id)
         // [END instantiate_interstitial_ad]
+    }
 
+    private fun createAdListener() {
         // [START create_interstitial_ad_listener]
         interstitialAd.adListener = object : AdListener() {
             override fun onAdClosed() {
@@ -62,7 +68,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
         // [END create_interstitial_ad_listener]
+    }
 
+    private fun displayInterstitialAd() {
         // [START display_interstitial_ad]
         loadInterstitialButton.setOnClickListener {
             if (interstitialAd.isLoaded) {

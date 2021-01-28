@@ -5,14 +5,19 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.referencecode.database.models.User;
 
 public class ReadAndWriteSnippets {
 
+    // [START initialize_database_ref]
     private DatabaseReference mDatabase;
-
+    // ...
+        // [START_EXCLUDE]
     public ReadAndWriteSnippets(DatabaseReference database) {
-        mDatabase = database;
+        // [END_EXCLUDE]
+    mDatabase = FirebaseDatabase.getInstance().getReference();
+    // [END initialize_database_ref]
     }
 
     // [START rtdb_write_new_user]

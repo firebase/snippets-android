@@ -17,14 +17,14 @@ abstract class ReadAndWriteSnippets {
 
     private val TAG = "ReadAndWriteSnippets"
 
-    // [START initialize_database_ref]
+    // [START declare_database_ref]
     private lateinit var database: DatabaseReference
-    // ...
-    // [START_EXCLUDE]
+    // [END declare_database_ref]
+
     fun initializeDbRef() {
-    // [END_EXCLUDE]
-    database = Firebase.database.reference
-    // [END initialize_database_ref]
+        // [START initialize_database_ref]
+        database = Firebase.database.reference
+        // [END initialize_database_ref]
     }
 
     // [START rtdb_write_new_user]

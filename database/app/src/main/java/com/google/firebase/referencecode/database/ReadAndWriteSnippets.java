@@ -23,14 +23,14 @@ public class ReadAndWriteSnippets {
 
     private static final String TAG = "ReadAndWriteSnippets";
 
-    // [START initialize_database_ref]
+    // [START declare_database_ref]
     private DatabaseReference mDatabase;
-    // ...
-        // [START_EXCLUDE]
+    // [END declare_database_ref]
+
     public ReadAndWriteSnippets(DatabaseReference database) {
-        // [END_EXCLUDE]
-    mDatabase = FirebaseDatabase.getInstance().getReference();
-    // [END initialize_database_ref]
+        // [START initialize_database_ref]
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        // [END initialize_database_ref]
     }
 
     // [START rtdb_write_new_user]

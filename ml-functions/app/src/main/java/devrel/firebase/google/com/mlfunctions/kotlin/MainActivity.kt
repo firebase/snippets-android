@@ -189,6 +189,11 @@ class MainActivity : AppCompatActivity() {
     private fun getRecognizedTexts(task: Task<JsonElement?>) {
         // [START function_getRecognizedTexts]
         val annotation = task.result!!.asJsonArray[0].asJsonObject["fullTextAnnotation"].asJsonObject
+        System.out.format("%nComplete annotation:")
+        System.out.format("%n%s", annotation["text"].asString)
+        // [END function_getRecognizedTexts]
+
+        // [START function_getRecognizedTexts_details]
         for (page in annotation["pages"].asJsonArray) {
             var pageText = ""
             for (block in page.asJsonObject["blocks"].asJsonArray) {
@@ -215,8 +220,6 @@ class MainActivity : AppCompatActivity() {
                 pageText += blockText
             }
         }
-        System.out.format("%nComplete annotation:")
-        System.out.format("%n%s", annotation["text"].asString)
+        // [END function_getRecognizedTexts_details]
     }
-    // [END function_getRecognizedTexts]
 }

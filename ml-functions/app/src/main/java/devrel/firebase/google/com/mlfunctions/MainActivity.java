@@ -222,6 +222,11 @@ public class MainActivity extends AppCompatActivity {
     private void getRecognizedTexts(Task<JsonElement> task) {
         // [START function_getRecognizedTexts]
         JsonObject annotation = task.getResult().getAsJsonArray().get(0).getAsJsonObject().get("fullTextAnnotation").getAsJsonObject();
+        System.out.format("%nComplete annotation:%n");
+        System.out.format("%s%n", annotation.get("text").getAsString());
+        // [END function_getRecognizedTexts]
+
+        // [START function_getRecognizedTexts_details]
         for (JsonElement page : annotation.get("pages").getAsJsonArray()) {
             StringBuilder pageText = new StringBuilder();
             for (JsonElement block : page.getAsJsonObject().get("blocks").getAsJsonArray()) {
@@ -246,8 +251,6 @@ public class MainActivity extends AppCompatActivity {
                 pageText.append(blockText);
             }
         }
-        System.out.format("%nComplete annotation:%n");
-        System.out.format("%s%n", annotation.get("text").getAsString());
+        // [END function_getRecognizedTexts_details]
     }
-    // [END function_getRecognizedTexts]
 }

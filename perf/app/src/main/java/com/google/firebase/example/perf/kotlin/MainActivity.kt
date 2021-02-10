@@ -6,6 +6,8 @@ import com.google.firebase.example.perf.kotlin.model.ItemCache
 import com.google.firebase.example.perf.kotlin.model.User
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.perf.FirebasePerformance
+import com.google.firebase.perf.ktx.performance
+import com.google.firebase.perf.ktx.trace
 import com.google.firebase.perf.metrics.AddTrace
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import devrel.firebase.google.com.firebaseoptions.R
@@ -28,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         val cache = ItemCache()
 
         // [START perf_basic_trace_start]
-        val myTrace = FirebasePerformance.getInstance().newTrace("test_trace")
+        val myTrace = Firebase.performance.newTrace("test_trace")
         myTrace.start()
         // [END perf_basic_trace_start]
 
@@ -48,19 +50,19 @@ class MainActivity : AppCompatActivity() {
 
     fun traceCustomAttributes() {
         // [START perf_trace_custom_attrs]
-        val trace = FirebasePerformance.getInstance().newTrace("test_trace")
+        Firebase.performance.newTrace("test_trace").trace {
+            // Update scenario.
+            putAttribute("experiment", "A")
 
-        // Update scenario.
-        trace.putAttribute("experiment", "A")
+            // Reading scenario.
+            val experimentValue = getAttribute("experiment")
 
-        // Reading scenario.
-        val experimentValue = trace.getAttribute("experiment")
+            // Delete scenario.
+            removeAttribute("experiment")
 
-        // Delete scenario.
-        trace.removeAttribute("experiment")
-
-        // Read attributes.
-        val traceAttributes = trace.attributes
+            // Read attributes.
+            val traceAttributes = this.attributes
+        }
         // [END perf_trace_custom_attrs]
     }
 
@@ -83,8 +85,7 @@ class MainActivity : AppCompatActivity() {
         config.setDefaultsAsync(R.xml.remote_config_defaults)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        FirebasePerformance.getInstance()
-                                .isPerformanceCollectionEnabled = !config.getBoolean("perf_disable")
+                        Firebase.performance.isPerformanceCollectionEnabled = !config.getBoolean("perf_disable")
                     } else {
                         // An error occurred while setting default parameters
                     }
@@ -121,30 +122,32 @@ class MainActivity : AppCompatActivity() {
         val data = "badgerbadgerbadgerbadgerMUSHROOM!".toByteArray()
 
         // [START perf_manual_network_trace]
-        val metric = FirebasePerformance.getInstance().newHttpMetric("https://www.google.com",
-                FirebasePerformance.HttpMethod.GET)
         val url = URL("https://www.google.com")
-        metric.start()
-        val conn = url.openConnection() as HttpURLConnection
-        conn.doOutput = true
-        conn.setRequestProperty("Content-Type", "application/json")
-        try {
-            val outputStream = DataOutputStream(conn.outputStream)
-            outputStream.write(data)
-        } catch (ignored: IOException) {
+        val metric = Firebase.performance.newHttpMetric("https://www.google.com",
+                FirebasePerformance.HttpMethod.GET)
+        metric.trace {
+            val conn = url.openConnection() as HttpURLConnection
+            conn.doOutput = true
+            conn.setRequestProperty("Content-Type", "application/json")
+            try {
+                val outputStream = DataOutputStream(conn.outputStream)
+                outputStream.write(data)
+            } catch (ignored: IOException) {
+            }
+
+            // Set HttpMetric attributes
+            setRequestPayloadSize(data.size.toLong())
+            setHttpResponseCode(conn.responseCode)
+
+            printStreamContent(conn.inputStream)
+
+            conn.disconnect()
         }
-
-        metric.setRequestPayloadSize(data.size.toLong())
-        metric.setHttpResponseCode(conn.responseCode)
-        printStreamContent(conn.inputStream)
-
-        conn.disconnect()
-        metric.stop()
         // [END perf_manual_network_trace]
     }
 
     fun piiExamples() {
-        val trace = FirebasePerformance.getInstance().newTrace("trace")
+        val trace = Firebase.performance.newTrace("trace")
         val user = User()
 
         // [START perf_attr_no_pii]

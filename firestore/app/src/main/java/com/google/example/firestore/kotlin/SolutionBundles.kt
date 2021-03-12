@@ -42,10 +42,10 @@ abstract class SolutionBundles(private val db: FirebaseFirestore) {
             // Get the named query from the bundle cache
             db.getNamedQuery("latest-stories-query")
         }.continueWithTask { task ->
-            val query = task.getResult(Exception::class.java)
+            val query = task.getResult(Exception::class.java)!!
 
             // get() the query results from the cache
-            query!!.get(Source.CACHE)
+            query.get(Source.CACHE)
         }.addOnCompleteListener { task ->
             if (!task.isSuccessful) {
                 Log.w(TAG, "Bundle loading failed", task.exception)
@@ -65,4 +65,3 @@ abstract class SolutionBundles(private val db: FirebaseFirestore) {
         private const val TAG = "SolutionBundles"
     }
 }
-

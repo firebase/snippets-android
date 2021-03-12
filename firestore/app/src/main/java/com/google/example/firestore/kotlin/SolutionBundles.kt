@@ -37,12 +37,12 @@ abstract class SolutionBundles(private val db: FirebaseFirestore) {
             bundleStream.close()
 
             // Calling .result propagates errors
-            val progress = task.result
+            val progress = task.getResult(Exception::class.java)
 
             // Get the named query from the bundle cache
             db.getNamedQuery("latest-stories-query")
         }.continueWithTask { task ->
-            val query = task.result
+            val query = task.getResult(Exception::class.java)
 
             // get() the query results from the cache
             query!!.get(Source.CACHE)

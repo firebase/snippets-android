@@ -50,7 +50,7 @@ public class SolutionBundles {
                 bundleStream.close();
 
                 // Calling getResult() propagates errors
-                LoadBundleTaskProgress progress = task.getResult();
+                LoadBundleTaskProgress progress = task.getResult(Exception.class);
 
                 // Get the named query from the bundle cache
                 return db.getNamedQuery("latest-stories-query");
@@ -58,7 +58,7 @@ public class SolutionBundles {
         }).continueWithTask(new Continuation<Query, Task<QuerySnapshot>>() {
             @Override
             public Task<QuerySnapshot> then(@NonNull Task<Query> task) throws Exception {
-                Query query = task.getResult();
+                Query query = task.getResult(Exception.class);
 
                 // get() the query results from the cache
                 return query.get(Source.CACHE);

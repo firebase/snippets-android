@@ -58,7 +58,8 @@ abstract class SolutionBundles(private val db: FirebaseFirestore) {
             // Use the results
             // ...
         }
-    } // [END fs_bundle_load]
+    }
+    // [END fs_bundle_load]
 
     companion object {
         private const val TAG = "SolutionBundles"

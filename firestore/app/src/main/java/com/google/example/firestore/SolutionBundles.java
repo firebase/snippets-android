@@ -35,7 +35,7 @@ public class SolutionBundles {
         return connection.getInputStream();
     }
 
-    public void fetchBunldeFrom() throws IOException {
+    public void fetchBundleFrom() throws IOException {
         final InputStream bundleStream = getBundleStream("https://example.com/createBundle");
         LoadBundleTask loadTask = db.loadBundle(bundleStream);
 

@@ -7,11 +7,13 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.MutableData
 import com.google.firebase.database.Transaction
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ServerValue
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.referencecode.database.kotlin.models.Post
 import com.google.firebase.referencecode.database.models.User
+import java.util.HashMap
 
 abstract class ReadAndWriteSnippets {
 
@@ -128,4 +130,15 @@ abstract class ReadAndWriteSnippets {
         })
     }
     // [END post_stars_transaction]
+
+    // [START post_stars_increment]
+    private fun onStarClicked(uid: String, key: String) {
+        val updates: MutableMap<String, Any> = HashMap()
+        updates["posts/$key/stars/$uid"] = true
+        updates["posts/$key/starCount"] = ServerValue.increment(1)
+        updates["user-posts/$uid/$key/stars/$uid"] = true
+        updates["user-posts/$uid/$key/starCount"] = ServerValue.increment(1)
+        database.updateChildren(updates)
+    }
+    // [END post_stars_increment]
 }

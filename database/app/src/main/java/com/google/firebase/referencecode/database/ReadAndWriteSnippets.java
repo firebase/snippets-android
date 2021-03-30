@@ -11,6 +11,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.referencecode.database.models.Post;
@@ -138,5 +139,15 @@ public class ReadAndWriteSnippets {
     }
     // [END post_stars_transaction]
 
+    // [START post_stars_increment]
+    private void onStarClicked(String uid, String key) {
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("posts/"+key+"/stars/"+uid, true);
+        updates.put("posts/"+key+"/starCount", ServerValue.increment(1));
+        updates.put("user-posts/"+uid+"/"+key+"/stars/"+uid, true);
+        updates.put("user-posts/"+uid+"/"+key+"/starCount", ServerValue.increment(1));
+        mDatabase.updateChildren(updates);
+    }
+    // [END post_stars_increment]
 
 }

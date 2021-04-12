@@ -24,10 +24,10 @@ android {
 dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.31"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.32"
 
-    implementation "com.google.firebase:firebase-analytics:18.0.2"
-    implementation "com.google.firebase:firebase-analytics-ktx:18.0.2"
+    implementation "com.google.firebase:firebase-analytics:18.0.3"
+    implementation "com.google.firebase:firebase-analytics-ktx:18.0.3"
 }
 
 apply plugin: 'com.google.gms.google-services'

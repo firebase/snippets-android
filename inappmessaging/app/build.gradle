@@ -32,7 +32,7 @@ dependencies {
     implementation "com.google.firebase:firebase-inappmessaging-display-ktx:19.1.5"
 
     // The Firebase SDK for Google Analytics is required to use In-App Messaging.
-    implementation 'com.google.firebase:firebase-analytics:18.0.2'
+    implementation 'com.google.firebase:firebase-analytics:18.0.3'
     
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.31"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.32"
 }

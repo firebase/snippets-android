@@ -29,8 +29,8 @@ android {
 dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation "com.google.firebase:firebase-database-ktx:19.6.0"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.31"
+    implementation "com.google.firebase:firebase-database-ktx:19.7.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.32"
 }
 
 apply plugin: 'com.google.gms.google-services'

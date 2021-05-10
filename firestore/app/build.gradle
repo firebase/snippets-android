@@ -46,7 +46,6 @@ dependencies {
     implementation "com.google.firebase:firebase-auth:20.0.4"
     implementation "com.google.android.gms:play-services-auth:19.0.0"
     implementation "com.google.firebase:firebase-functions-ktx:19.2.0"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.32"
 
     // GeoFire (for Geoqueries solution)
     implementation "com.firebase:geofire-android-common:3.1.0"

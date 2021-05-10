@@ -26,7 +26,6 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation "com.google.firebase:firebase-common-ktx:19.5.0"
     implementation "com.google.firebase:firebase-database-ktx:19.7.0"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.32"
 }
 
 apply plugin: 'com.google.gms.google-services'

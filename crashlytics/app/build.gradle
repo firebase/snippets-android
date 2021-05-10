@@ -31,8 +31,6 @@ dependencies {
     // For an optimal experience using Crashlytics, add the Firebase SDK
     // for Google Analytics. This is recommended, but not required.
     implementation 'com.google.firebase:firebase-analytics:18.0.3'
-
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.32"
 }
 
 apply plugin: 'com.google.gms.google-services'

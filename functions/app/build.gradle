@@ -25,7 +25,7 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.2.0'
 
-    implementation "com.google.firebase:firebase-functions-ktx:19.2.0"
+    implementation "com.google.firebase:firebase-functions-ktx:20.0.0"
 }
 
 apply plugin: 'com.google.gms.google-services'

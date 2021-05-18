@@ -279,7 +279,7 @@ abstract class MainActivity : AppCompatActivity() {
             url = "https://www.example.com/finishSignUp?cartId=1234"
             // This must be true
             handleCodeInApp = true
-            iosBundleId = "com.example.ios"
+            setIOSBundleId("com.example.ios")
             setAndroidPackageName(
                     "com.example.android",
                     true, /* installIfNotAvailable */

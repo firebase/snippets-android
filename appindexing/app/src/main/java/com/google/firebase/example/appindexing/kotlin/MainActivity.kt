@@ -19,11 +19,11 @@ class MainActivity : AppCompatActivity() {
         // add it first.
         // See <a href="https://firebase.google.com/docs/app-indexing/android/personal-content#update-the-index">https://firebase.google.com/docs/app-indexing/android/personal-content#update-the-index</a>.
 
-        FirebaseUserActions.getInstance().start(getRecipeViewAction())
+        FirebaseUserActions.getInstance(this).start(getRecipeViewAction())
     }
 
     override fun onStop() {
-        FirebaseUserActions.getInstance().end(getRecipeViewAction())
+        FirebaseUserActions.getInstance(this).end(getRecipeViewAction())
         super.onStop()
     }
     // [END appindexing_onstart_onstop]
@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         // add it first.
         // See <a href="https://firebase.google.com/docs/app-indexing/android/personal-content#update-the-index">https://firebase.google.com/docs/app-indexing/android/personal-content#update-the-index</a>.
 
-        FirebaseUserActions.getInstance().end(getNoteCommentAction())
+        FirebaseUserActions.getInstance(this).end(getNoteCommentAction())
         // ...
     }
 
@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
                 .setUrl(recipe.noteUrl)
                 .build()
 
-        val task = FirebaseAppIndex.getInstance().update(noteToIndex)
+        val task = FirebaseAppIndex.getInstance(this).update(noteToIndex)
         // ...
     }
     // [END appindexing_update]
@@ -67,18 +67,18 @@ class MainActivity : AppCompatActivity() {
         // [START appindexing_remove_one]
         // Deletes or removes the corresponding notes from index.
         val noteUrl = recipe.noteUrl
-        FirebaseAppIndex.getInstance().remove(noteUrl)
+        FirebaseAppIndex.getInstance(this).remove(noteUrl)
         // [END appindexing_remove_one]
     }
 
     private fun removeAll() {
         // [START appindexing_remove_all]
-        FirebaseAppIndex.getInstance().removeAll()
+        FirebaseAppIndex.getInstance(this).removeAll()
         // [END appindexing_remove_all]
     }
 
-    private fun getRecipeViewAction(): Action? {
+    private fun getRecipeViewAction(): Action {
         // This is just to make some things compile.
-        return null
+        return Action.Builder("recipe-view").build();
     }
 }

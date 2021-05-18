@@ -46,7 +46,7 @@ class AppIndexingUpdateService : JobIntentService() {
 
             // batch insert indexable notes into index
             try {
-                Tasks.await(FirebaseAppIndex.getInstance().update(*notesArr))
+                Tasks.await(FirebaseAppIndex.getInstance(this).update(*notesArr))
             } catch (e: ExecutionException) {
                 // update failed
             } catch (e: InterruptedException) {

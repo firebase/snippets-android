@@ -3,10 +3,14 @@ package com.google.firebase.quickstart.auth.kotlin
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.firebase.ui.auth.AuthUI
+import com.firebase.ui.auth.AuthUI.IdpConfig
+import com.firebase.ui.auth.AuthUI.IdpConfig.EmailBuilder
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
+import com.google.firebase.auth.ActionCodeSettings
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.quickstart.auth.R
+import java.util.*
 
 abstract class FirebaseUIActivity : AppCompatActivity() {
 
@@ -105,5 +109,30 @@ abstract class FirebaseUIActivity : AppCompatActivity() {
                 .build()
         signInLauncher.launch(signInIntent)
         // [END auth_fui_pp_tos]
+    }
+
+    open fun emailLink() {
+        // [START auth_fui_email_link]
+        val actionCodeSettings = ActionCodeSettings.newBuilder()
+                .setAndroidPackageName( /* yourPackageName= */
+                        "...",  /* installIfNotAvailable= */
+                        true,  /* minimumVersion= */
+                        null)
+                .setHandleCodeInApp(true) // This must be set to true
+                .setUrl("https://google.com") // This URL needs to be whitelisted
+                .build()
+
+        val providers = listOf(
+                EmailBuilder()
+                        .enableEmailLinkSignIn()
+                        .setActionCodeSettings(actionCodeSettings)
+                        .build()
+        )
+        val signInIntent = AuthUI.getInstance()
+                .createSignInIntentBuilder()
+                .setAvailableProviders(providers)
+                .build()
+        signInLauncher.launch(signInIntent)
+        // [END auth_fui_email_link]
     }
 }

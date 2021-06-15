@@ -14,6 +14,7 @@ import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -128,5 +129,30 @@ public class FirebaseUIActivity extends AppCompatActivity {
                 .build();
         signInLauncher.launch(signInIntent);
         // [END auth_fui_pp_tos]
+    }
+
+    public void emailLink() {
+        // [START auth_fui_email_link]
+        ActionCodeSettings actionCodeSettings = ActionCodeSettings.newBuilder()
+                .setAndroidPackageName(
+                        /* yourPackageName= */ "...",
+                        /* installIfNotAvailable= */ true,
+                        /* minimumVersion= */ null)
+                .setHandleCodeInApp(true) // This must be set to true
+                .setUrl("https://google.com") // This URL needs to be whitelisted
+                .build();
+
+        List<AuthUI.IdpConfig> providers = Arrays.asList(
+                new AuthUI.IdpConfig.EmailBuilder()
+                        .enableEmailLinkSignIn()
+                        .setActionCodeSettings(actionCodeSettings)
+                        .build()
+        );
+        Intent signInIntent = AuthUI.getInstance()
+                .createSignInIntentBuilder()
+                .setAvailableProviders(providers)
+                .build();
+        signInLauncher.launch(signInIntent);
+        // [END auth_fui_email_link]
     }
 }

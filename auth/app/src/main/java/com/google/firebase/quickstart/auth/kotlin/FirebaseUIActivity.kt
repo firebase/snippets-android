@@ -7,10 +7,10 @@ import com.firebase.ui.auth.AuthUI.IdpConfig
 import com.firebase.ui.auth.AuthUI.IdpConfig.EmailBuilder
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
+import com.firebase.ui.auth.util.ExtraConstants
 import com.google.firebase.auth.ActionCodeSettings
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.quickstart.auth.R
-import java.util.*
 
 abstract class FirebaseUIActivity : AppCompatActivity() {
 
@@ -134,5 +134,24 @@ abstract class FirebaseUIActivity : AppCompatActivity() {
                 .build()
         signInLauncher.launch(signInIntent)
         // [END auth_fui_email_link]
+    }
+
+    open fun catchEmailLink() {
+        val providers: List<IdpConfig> = emptyList()
+
+        // [START auth_fui_email_link_catch]
+        if (AuthUI.canHandleIntent(intent)) {
+            val extras = intent.extras ?: return
+            val link = extras.getString(ExtraConstants.EMAIL_LINK_SIGN_IN)
+            if (link != null) {
+                val signInIntent = AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setEmailLink(link)
+                        .setAvailableProviders(providers)
+                        .build()
+                signInLauncher.launch(signInIntent)
+            }
+        }
+        // [END auth_fui_email_link_catch]
     }
 }

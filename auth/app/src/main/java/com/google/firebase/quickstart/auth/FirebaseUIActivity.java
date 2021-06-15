@@ -12,6 +12,7 @@ import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
+import com.firebase.ui.auth.util.ExtraConstants;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.ActionCodeSettings;
@@ -119,6 +120,7 @@ public class FirebaseUIActivity extends AppCompatActivity {
 
     public void privacyAndTerms() {
         List<AuthUI.IdpConfig> providers = Collections.emptyList();
+
         // [START auth_fui_pp_tos]
         Intent signInIntent = AuthUI.getInstance()
                 .createSignInIntentBuilder()
@@ -154,5 +156,26 @@ public class FirebaseUIActivity extends AppCompatActivity {
                 .build();
         signInLauncher.launch(signInIntent);
         // [END auth_fui_email_link]
+    }
+
+    public void catchEmailLink() {
+        List<AuthUI.IdpConfig> providers = Collections.emptyList();
+
+        // [START auth_fui_email_link_catch]
+        if (AuthUI.canHandleIntent(getIntent())) {
+            if (getIntent().getExtras() == null) {
+                return;
+            }
+            String link = getIntent().getExtras().getString(ExtraConstants.EMAIL_LINK_SIGN_IN);
+            if (link != null) {
+                Intent signInIntent = AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setEmailLink(link)
+                        .setAvailableProviders(providers)
+                        .build();
+                signInLauncher.launch(signInIntent);
+            }
+        }
+        // [END auth_fui_email_link_catch]
     }
 }

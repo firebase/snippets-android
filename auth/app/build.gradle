@@ -32,7 +32,7 @@ dependencies {
     implementation "com.google.firebase:firebase-auth-ktx:21.0.1"
     
     // [START gradle_firebase_ui_auth]
-    implementation "com.firebaseui:firebase-ui-auth:7.1.1"
+    implementation "com.firebaseui:firebase-ui-auth:7.2.0"
 
     // Required only if Facebook login support is required
     // Find the latest Facebook SDK releases here: https://goo.gl/Ce5L94

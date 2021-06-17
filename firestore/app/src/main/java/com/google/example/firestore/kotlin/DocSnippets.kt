@@ -819,13 +819,13 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         // [END simple_query_capital]
 
         // [START example_filters]
-        citiesRef.whereEqualTo("state", "CA")
-        citiesRef.whereLessThan("population", 100000)
-        citiesRef.whereGreaterThanOrEqualTo("name", "San Francisco")
+        val stateQuery = citiesRef.whereEqualTo("state", "CA")
+        val populationQuery = citiesRef.whereLessThan("population", 100000)
+        val nameQuery = citiesRef.whereGreaterThanOrEqualTo("name", "San Francisco")
         // [END example_filters]
 
         // [START simple_query_not_equal]
-        citiesRef.whereNotEqualTo("capital", false)
+        val notCapitalQuery = citiesRef.whereNotEqualTo("capital", false)
         // [END simple_query_not_equal]
     }
 

@@ -12,7 +12,7 @@ class MainActivity : AppCompatActivity() {
         // 10.0.2.2 is the special IP address to connect to the 'localhost' of
         // the host computer from an Android emulator.
         val functions = Firebase.functions
-        functions.useEmulator("10.0.2.2.", 5001)
+        functions.useEmulator("10.0.2.2", 5001)
         // [END functions_emulator_connect]
     }
 }

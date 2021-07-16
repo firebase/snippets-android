@@ -62,11 +62,7 @@ class ShareDialogFragment : BottomSheetDialogFragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         val parent = parentFragment
-        listener = if (parent != null) {
-            parent as Listener
-        } else {
-            context as Listener
-        }
+        listener = (parent ?: context) as Listener
     }
 
     override fun onDetach() {

@@ -5,6 +5,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.firebase.ktx.Firebase
@@ -18,7 +19,6 @@ import com.google.firebase.storage.ktx.component2
 import com.google.firebase.storage.ktx.component3
 import com.google.firebase.storage.ktx.storage
 import com.google.firebase.storage.ktx.storageMetadata
-import kotlinx.android.synthetic.main.activity_storage.imageView
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
@@ -140,6 +140,7 @@ abstract class StorageActivity : AppCompatActivity() {
         mountainsRef.path == mountainImagesRef.path // false
         // [END upload_create_reference]
 
+        val imageView = findViewById<ImageView>(R.id.imageView)
         // [START upload_memory]
         // Get the data from an ImageView as bytes
         imageView.isDrawingCacheEnabled = true

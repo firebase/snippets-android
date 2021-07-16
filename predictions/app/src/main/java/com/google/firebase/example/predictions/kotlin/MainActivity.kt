@@ -4,11 +4,12 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.example.predictions.R
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ktx.get
 import com.google.firebase.remoteconfig.ktx.remoteConfig
-import kotlinx.android.synthetic.main.activity_main.adView
 
 class MainActivity : AppCompatActivity() {
 
@@ -44,6 +45,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun executeAdsPolicy() {
+        val adView = findViewById<AdView>(R.id.adView)
         // [START pred_ads_policy]
         val config = Firebase.remoteConfig
         val adPolicy = config["ads_policy"].asString()

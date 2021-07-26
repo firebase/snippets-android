@@ -17,11 +17,12 @@ import retrofit2.http.Header;
 public class ApiWithAppCheckExample {
     private interface YourExampleBackendService {
         @GET("yourExampleEndpoint")
-        Call<List<String>> exampleData(@Header("X-Firebase-AppCheck") String appCheckToken);
+        Call<List<String>> exampleData(
+                @Header("X-Firebase-AppCheck") String appCheckToken);
     }
 
     YourExampleBackendService yourExampleBackendService = new Retrofit.Builder()
-            .baseUrl("https://yourbackend.example.com/yourApiEndpoint")
+            .baseUrl("https://yourbackend.example.com/")
             .build()
             .create(YourExampleBackendService.class);
 
@@ -32,7 +33,8 @@ public class ApiWithAppCheckExample {
                     @Override
                     public void onSuccess(@NonNull AppCheckToken tokenResponse) {
                         String appCheckToken = tokenResponse.getToken();
-                        Call<List<String>> apiCall = yourExampleBackendService.exampleData(appCheckToken);
+                        Call<List<String>> apiCall =
+                                yourExampleBackendService.exampleData(appCheckToken);
                         // ...
                     }
                 });

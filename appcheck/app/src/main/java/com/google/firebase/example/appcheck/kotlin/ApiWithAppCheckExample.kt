@@ -17,7 +17,7 @@ class ApiWithAppCheckExample {
     }
 
     var yourExampleBackendService: YourExampleBackendService = Retrofit.Builder()
-        .baseUrl("https://yourbackend.example.com/yourApiEndpoint")
+        .baseUrl("https://yourbackend.example.com/")
         .build()
         .create(YourExampleBackendService::class.java)
 

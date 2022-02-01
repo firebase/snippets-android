@@ -28,7 +28,7 @@ android {
 
 repositories {
     google()
-    jcenter()
+    mavenCentral()
     mavenLocal()
 }
 
@@ -48,6 +48,9 @@ dependencies {
 
     // GeoFire (for Geoqueries solution)
     implementation "com.firebase:geofire-android-common:3.1.0"
+
+    // OkHttp (for Android 11+)
+    implementation "io.grpc:grpc-okhttp:1.32.2"
 }
 
 apply plugin: 'com.google.gms.google-services'

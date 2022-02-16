@@ -277,17 +277,25 @@ public class DocSnippets {
     // [START city_class]
     public class City {
 
-
         private String name;
         private String state;
         private String country;
-        private boolean capital;
-        private long population;
+        private Boolean capital;
+        private Long population;
         private List<String> regions;
 
-        public City() {}
+        public City() {
+          // Must have a public no-argument constructor
+        }
 
-        public City(String name, String state, String country, boolean capital, long population, List<String> regions) {
+        public City(
+            String name, 
+            String state, 
+            String country, 
+            Boolean capital, 
+            Long population, 
+            List<String> regions) {
+            // Initialize all fields of a city
             // [START_EXCLUDE]
             this.name = name;
             this.state = state;
@@ -298,29 +306,56 @@ public class DocSnippets {
             // [END_EXCLUDE]
         }
 
+        // public getters and setters for all fields
+        // [START_EXCLUDE]
         public String getName() {
             return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
         }
 
         public String getState() {
             return state;
         }
 
+        public void setState(String state) {
+            this.state = state;
+        }
+
         public String getCountry() {
             return country;
         }
 
-        public boolean isCapital() {
+        public void setCountry(String country) {
+            this.country = country;
+        }
+
+        public Boolean getCapital() {
             return capital;
         }
 
-        public long getPopulation() {
+        public void setCapital(Boolean capital) {
+            this.capital = capital;
+        }
+
+        public Long getPopulation() {
             return population;
+        }
+
+        public void setPopulation(Long population) {
+            this.population = population;
         }
 
         public List<String> getRegions() {
             return regions;
         }
+
+        public void setRegions(List<String> regions) {
+            this.regions = regions;
+        }
+        // [END_EXCLUDE]
 
     }
     // [END city_class]

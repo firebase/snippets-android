@@ -15,6 +15,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentChange.Type;
+import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -277,6 +278,8 @@ public class DocSnippets {
     // [START city_class]
     public class City {
 
+        @DocumentId
+        private String id;
         private String name;
         private String state;
         private String country;
@@ -308,6 +311,14 @@ public class DocSnippets {
 
         // public getters and setters for all fields
         // [START_EXCLUDE]
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+  
         public String getName() {
             return name;
         }

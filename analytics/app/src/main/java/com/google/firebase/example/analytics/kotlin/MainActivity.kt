@@ -193,4 +193,63 @@ class MainActivity : AppCompatActivity() {
         analytics.logEvent(FirebaseAnalytics.Event.SELECT_PROMOTION, promoParams)
         // [END apply_promo]
     }
+    // [START ad_Impression_moPub]
+    @Override
+    public void onImpression(@NonNull final String adUnitId, @Nullable final ImpressionData impressionData) {
+
+    if (impressionData != null) {
+        // Feed impression data into internal tools or send to third-party analytics
+        FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(context);
+
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.AD_IMPRESSION) {
+        param(FirebaseAnalytics.Param.AD_PLATFORM, "MoPub")
+        param(FirebaseAnalytics.Param.AD_SOURCE, impressionData.network_name)
+        param(FirebaseAnalytics.Param.AD_FORMAT, impressionData.adunit_format)
+        param(FirebaseAnalytics.Param.AD_UNIT_NAME, impressionData.adunit_name)
+        param(FirebaseAnalytics.Param.VALUE, impressionData.publisher_revenue)
+        param(FirebaseAnalytics.Param.CURRENCY, impressionData.currency)
+        param("precision", impressionData.precision)
+        }
+    }
+
+    }
+    // [END ad_Impression_moPub]
+
+    // [START ad_Impression_applovin]
+    override fun onAdRevenuePaid(impressionData: MaxAd)
+{
+    if (impressionData != null) {
+    // Feed impression data into internal tools or send to third-party analytics
+    FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(context);
+
+    firebaseAnalytics.logEvent(FirebaseAnalytics.Event.AD_IMPRESSION
+) {
+      param(FirebaseAnalytics.Param.AD_PLATFORM, "AppLovin")
+      param(FirebaseAnalytics.Param.AD_UNIT_NAME, impressionData.adUnitId)
+      param(FirebaseAnalytics.Param.AD_FORMAT, impressionData.format)
+      param(FirebaseAnalytics.Param.AD_SOURCE, impressionData.networkName)
+      param(FirebaseAnalytics.Param.VALUE, impressionData.revenue) 
+      param(FirebaseAnalytics.Param.CURRENCY, "USD") // All Applovin revenue is sent in USD 
+    }
+  }
+}
+    // [END ad_Impression_applovin]
+
+
+    // [START ad_Impression_ironsource]
+    @Override
+    public void onImpressionSuccess(ImpressionData impressionData) {
+        // The onImpressionSuccess will be reported when the rewarded video and interstitial ad is opened.
+        // For banners, the impression is reported on load success. Log.d(TAG, "onImpressionSuccess" + impressionData);
+        if (impressionData != null) {
+            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.AD_IMPRESSION) {
+            param(FirebaseAnalytics.Param.AD_PLATFORM, "ironSource")
+            param(FirebaseAnalytics.Param.AD_SOURCE, impressionData.adNetwork())
+            param(FirebaseAnalytics.Param.AD_FORMAT, impressionData.getAdUnit())
+            param(FirebaseAnalytics.Param.AD_UNIT_NAME, impressionData.getAdUnit())
+            param(FirebaseAnalytics.Param.CURRENCY, "USD")
+            param(FirebaseAnalytics.Param.VALUE, impressionData.getRevenue())
+        }
+    }
+    // [END ad_Impression_ironsource]
 }

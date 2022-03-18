@@ -221,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
         analytics.logEvent(FirebaseAnalytics.Event.SELECT_PROMOTION, promoParams);
         // [END apply_promo]
     }
-        // [START ad_Impression_moPub]
+        // [START ad_impression_moPub]
     @Override
     public void onImpression(@NonNull final String adUnitId, @Nullable final ImpressionData impressionData) {
 
@@ -240,9 +240,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-        // [END ad_Impression_moPub]
+        // [END ad_impression_moPub]
 
-        // [START ad_Impression_applovin]
+        // [START ad_impression_applovin]
     @Override
     public void onAdRevenuePaid(final MaxAd impressionData) {
         double revenue = impressionData.getRevenue(); // In USD
@@ -260,10 +260,9 @@ public class MainActivity extends AppCompatActivity {
                 mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.AD_IMPRESSION, params);
         }
     }
-        // [END ad_Impression_applovin]
+        // [END ad_impression_applovin]
 
-        // [START ad_Impression_ironsource]
-        // Invoked when the ad was displayed successfully and the impression data was recorded
+        // [START ad_impression_ironsource]
     @Override
     public void onImpressionSuccess(ImpressionData impressionData) {
         // The onImpressionSuccess will be reported when the rewarded video and interstitial ad is opened.
@@ -279,5 +278,5 @@ public class MainActivity extends AppCompatActivity {
                 mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.AD_IMPRESSION, bundle);
         }
     }
-        // [END ad_Impression_ironsource]
+        // [END ad_impression_ironsource]
 }

@@ -214,7 +214,7 @@ class MainActivity : AppCompatActivity() {
     // [START ad_Impression_applovin]
     override fun onAdRevenuePaid(impressionData: MaxAd) {
         if (impressionData != null) {
-           FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(context);
+           val firebaseAnalytics = Firebase.analytics(context);
 
            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.AD_IMPRESSION) {
                 param(FirebaseAnalytics.Param.AD_PLATFORM, "AppLovin")

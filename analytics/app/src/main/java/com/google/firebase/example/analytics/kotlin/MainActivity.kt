@@ -231,7 +231,7 @@ class MainActivity : AppCompatActivity() {
     // [START ad_Impression_ironsource]
     override fun onImpression(adUnitId: String, impressionData: ImpressionData?) {
 
-        if (impressionData != null) {
+        impressionData?.let {
             // Feed impression data into internal tools or send to third-party analytics
             FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(context);
 

@@ -229,8 +229,7 @@ class MainActivity : AppCompatActivity() {
     // [END ad_Impression_applovin]
 
     // [START ad_Impression_ironsource]
-    @Override
-    public void onImpression(@NonNull final String adUnitId, @Nullable final ImpressionData impressionData) {
+    override fun onImpression(adUnitId: String, impressionData: ImpressionData?) {
 
         if (impressionData != null) {
             // Feed impression data into internal tools or send to third-party analytics

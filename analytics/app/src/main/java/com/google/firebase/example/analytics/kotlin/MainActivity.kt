@@ -245,5 +245,5 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-    // [END ad_Impression_ironsource]
+    // [END ad_impression_ironsource]
 }

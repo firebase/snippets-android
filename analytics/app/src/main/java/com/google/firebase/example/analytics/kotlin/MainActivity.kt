@@ -198,7 +198,7 @@ class MainActivity : AppCompatActivity() {
     override fun onImpressionSuccess(impressionData: ImpressionData?) {
         // The onImpressionSuccess will be reported when the rewarded video and interstitial ad is opened.
         // For banners, the impression is reported on load success. Log.d(TAG, "onImpressionSuccess" + impressionData);
-        if (impressionData != null) {
+        impressionData?.let {
             firebaseAnalytics.logEvent(FirebaseAnalytics.Event.AD_IMPRESSION) {
                 param(FirebaseAnalytics.Param.AD_PLATFORM, "ironSource")
                 param(FirebaseAnalytics.Param.AD_SOURCE, impressionData.adNetwork())

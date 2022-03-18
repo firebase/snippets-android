@@ -233,7 +233,7 @@ class MainActivity : AppCompatActivity() {
 
         impressionData?.let {
             // Feed impression data into internal tools or send to third-party analytics
-            FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(context);
+            val firebaseAnalytics = Firebase.analytics(context);
 
             firebaseAnalytics.logEvent(FirebaseAnalytics.Event.AD_IMPRESSION) {
             param(FirebaseAnalytics.Param.AD_PLATFORM, "MoPub")

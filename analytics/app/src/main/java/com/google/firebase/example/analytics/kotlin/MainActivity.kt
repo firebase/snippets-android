@@ -195,8 +195,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // [START ad_Impression_moPub]
-    @Override
-    public void onImpressionSuccess(ImpressionData impressionData) {
+    override fun onImpressionSuccess(impressionData: ImpressionData?) {
         // The onImpressionSuccess will be reported when the rewarded video and interstitial ad is opened.
         // For banners, the impression is reported on load success. Log.d(TAG, "onImpressionSuccess" + impressionData);
         if (impressionData != null) {

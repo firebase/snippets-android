@@ -164,11 +164,42 @@ class MainActivity : AppCompatActivity() {
         analytics.logEvent(FirebaseAnalytics.Event.SELECT_PROMOTION, promoParams)
         // [END apply_promo]
     }
+    // Simulated ad_impression structures from mediation platforms to ensure that this project compiles
+    // Mopub simulated ad impression
+    val adUnitId = ""
+    class ImpressionData {
+        val network_name: String = ""
+        val adunit_format: String = ""
+        val adunit_name: String = ""
+        val currency: String = ""
+        val publisher_revenue: Double = 0.00
+        val precision = ""
+
+        //ironsource also uses ImpressionData so have added their methods below
+        fun adNetwork(): String {
+            return ""
+        }
+        fun getAdUnit(): String {
+            return ""
+        }
+        fun getRevenue(): Double {
+            return 0.00
+        }
+
+    }
+    // AppLovin simulated ad impression
+    class MaxAd {
+        val adUnitId: String = ""
+        val format: String = ""
+        val networkName: String = ""
+        val revenue: Double = 0.00
+    }
+
     // [START ad_impression_moPub]
     override fun onImpression(adUnitId: String, impressionData: ImpressionData?) {
         impressionData?.let {
-            val firebaseAnalytics = FirebaseAnalytics.getInstance(context)
-            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.AD_IMPRESSION) {
+            val analytics = Firebase.analytics
+            analytics.logEvent(FirebaseAnalytics.Event.AD_IMPRESSION) {
                 param(FirebaseAnalytics.Param.AD_PLATFORM, "MoPub")
                 param(FirebaseAnalytics.Param.AD_SOURCE, impressionData.network_name)
                 param(FirebaseAnalytics.Param.AD_FORMAT, impressionData.adunit_format)
@@ -183,8 +214,8 @@ class MainActivity : AppCompatActivity() {
     // [START ad_impression_applovin]
     override fun onAdRevenuePaid(impressionData: MaxAd) {
         impressionData?.let {
-            val firebaseAnalytics = FirebaseAnalytics.getInstance(context)
-            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.AD_IMPRESSION) {
+            val analytics = Firebase.analytics
+            analytics.logEvent(FirebaseAnalytics.Event.AD_IMPRESSION) {
                 param(FirebaseAnalytics.Param.AD_PLATFORM, "AppLovin")
                 param(FirebaseAnalytics.Param.AD_UNIT_NAME, impressionData.adUnitId)
                 param(FirebaseAnalytics.Param.AD_FORMAT, impressionData.format)
@@ -201,9 +232,9 @@ class MainActivity : AppCompatActivity() {
         // opened.
         // For banners, the impression is reported on load success. Log.d(TAG, "onImpressionSuccess" +
         // impressionData);
-        val firebaseAnalytics = FirebaseAnalytics.getInstance(context)
+        val analytics = Firebase.analytics
         impressionData?.let {
-            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.AD_IMPRESSION) {
+            analytics.logEvent(FirebaseAnalytics.Event.AD_IMPRESSION) {
                 param(FirebaseAnalytics.Param.AD_PLATFORM, "ironSource")
                 param(FirebaseAnalytics.Param.AD_SOURCE, impressionData.adNetwork())
                 param(FirebaseAnalytics.Param.AD_FORMAT, impressionData.getAdUnit())

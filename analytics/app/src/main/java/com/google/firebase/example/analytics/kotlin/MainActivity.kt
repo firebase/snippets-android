@@ -8,9 +8,15 @@ import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.example.analytics.R
 import com.google.firebase.ktx.Firebase
+//  Disregard the below 5 lines which replicate ad_impression data being sent from 3rd parties and are not required for Firebase implementations.
+// Added 3rd party imports to support ad_impression snippets
+import com.ironsource.mediationsdk.impressionData.ImpressionDataListener
+import com.ironsource.mediationsdk.impressionData.ImpressionData
+import com.applovin.mediation.MaxAd
+import com.applovin.mediation.MaxAdRevenueListener
 
-class MainActivity : AppCompatActivity() {
 
+class MainActivity : AppCompatActivity(), MaxAdRevenueListener, ImpressionDataListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -193,4 +199,37 @@ class MainActivity : AppCompatActivity() {
         analytics.logEvent(FirebaseAnalytics.Event.SELECT_PROMOTION, promoParams)
         // [END apply_promo]
     }
+    // [START ad_impression_applovin]
+    override fun onAdRevenuePaid(impressionData: MaxAd?) {
+        impressionData?.let {
+            val analytics = Firebase.analytics
+            analytics.logEvent(FirebaseAnalytics.Event.AD_IMPRESSION) {
+                param(FirebaseAnalytics.Param.AD_PLATFORM, "appLovin")
+                param(FirebaseAnalytics.Param.AD_UNIT_NAME, impressionData.adUnitId)
+                param(FirebaseAnalytics.Param.AD_FORMAT, impressionData.format.displayName)
+                param(FirebaseAnalytics.Param.AD_SOURCE, impressionData.networkName)
+                param(FirebaseAnalytics.Param.VALUE, impressionData.revenue)
+                param(FirebaseAnalytics.Param.CURRENCY, "USD") // All Applovin revenue is sent in USD
+            }
+        }
+    }
+    // [END ad_impression_applovin]
+
+    // [START ad_impression_ironsource]
+    override fun onImpressionSuccess(impressionData: ImpressionData) {
+        // The onImpressionSuccess will be reported when the rewarded video and interstitial ad is
+        // opened.
+        // For banners, the impression is reported on load success. Log.d(TAG, "onImpressionSuccess" +
+        // impressionData);
+        val analytics = Firebase.analytics
+        analytics.logEvent(FirebaseAnalytics.Event.AD_IMPRESSION) {
+            param(FirebaseAnalytics.Param.AD_PLATFORM, "ironSource")
+            param(FirebaseAnalytics.Param.AD_SOURCE, impressionData.adNetwork)
+            param(FirebaseAnalytics.Param.AD_FORMAT, impressionData.adUnit)
+            param(FirebaseAnalytics.Param.AD_UNIT_NAME, impressionData.adUnit)
+            param(FirebaseAnalytics.Param.CURRENCY, "USD")
+            param(FirebaseAnalytics.Param.VALUE, impressionData.revenue)
+        }
+    }
+    // [END ad_impression_ironsource]
 }

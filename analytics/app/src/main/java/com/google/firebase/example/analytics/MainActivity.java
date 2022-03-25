@@ -19,10 +19,19 @@ import android.os.Bundle;
 import android.os.Parcelable;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.firebase.analytics.FirebaseAnalytics;
 
-public class MainActivity extends AppCompatActivity {
+//  Disregard the below 5 lines which replicate ad_impression data being sent from 3rd parties and are not required for Firebase implementations.
+// Added 3rd party imports to support ad_impression snippets
+import com.applovin.mediation.MaxAd;
+import com.applovin.mediation.MaxAdRevenueListener;
+import com.ironsource.mediationsdk.impressionData.ImpressionData;
+import com.ironsource.mediationsdk.impressionData.ImpressionDataListener;
+
+
+public class MainActivity extends AppCompatActivity
+        //  Disregard the line below as its used to replicate ad_impression data being sent from 3rd parties and is not required for Firebase implementations.
+        implements MaxAdRevenueListener, ImpressionDataListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -221,4 +230,42 @@ public class MainActivity extends AppCompatActivity {
         analytics.logEvent(FirebaseAnalytics.Event.SELECT_PROMOTION, promoParams);
         // [END apply_promo]
     }
+
+        // [START ad_impression_applovin]
+        @Override
+        public void onAdRevenuePaid(MaxAd impressionData) {
+
+            double revenue = impressionData.getRevenue(); // In USD
+
+            FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(this);
+            Bundle params = new Bundle();
+            params.putString(FirebaseAnalytics.Param.AD_PLATFORM, "appLovin");
+            params.putString(FirebaseAnalytics.Param.AD_SOURCE, impressionData.getNetworkName());
+            params.putString(FirebaseAnalytics.Param.AD_FORMAT, impressionData.getFormat().getDisplayName());
+            params.putString(FirebaseAnalytics.Param.AD_UNIT_NAME, impressionData.getAdUnitId());
+            params.putDouble(FirebaseAnalytics.Param.VALUE, revenue);
+            params.putString(FirebaseAnalytics.Param.CURRENCY, "USD"); // All Applovin revenue is sent in USD
+            analytics.logEvent(FirebaseAnalytics.Event.AD_IMPRESSION, params);
+        }
+        // [END ad_impression_applovin]
+
+        // [START ad_impression_ironsource]
+    @Override
+    public void onImpressionSuccess(ImpressionData impressionData) {
+        // The onImpressionSuccess will be reported when the rewarded video and interstitial ad is opened.
+        // For banners, the impression is reported on load success. Log.d(TAG, "onImpressionSuccess" + impressionData);
+        FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(this);
+        if (impressionData != null) {
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.AD_PLATFORM, "ironSource");
+                bundle.putString(FirebaseAnalytics.Param.AD_SOURCE, impressionData.getAdNetwork());
+                bundle.putString(FirebaseAnalytics.Param.AD_FORMAT, impressionData.getAdUnit());
+                bundle.putString(FirebaseAnalytics.Param.AD_UNIT_NAME, impressionData.getAdUnit());
+                bundle.putString(FirebaseAnalytics.Param.CURRENCY, "USD");
+                bundle.putDouble(FirebaseAnalytics.Param.VALUE, impressionData.getRevenue());
+                analytics.logEvent(FirebaseAnalytics.Event.AD_IMPRESSION, bundle);
+        }
+    }
+
+    // [END ad_impression_ironsource]
 }

@@ -21,8 +21,7 @@ import android.os.Parcelable;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
-//  Disregard the below 5 lines which replicate ad_impression data being sent from 3rd parties and are not required for Firebase implementations.
-// Added 3rd party imports to support ad_impression snippets
+// importing libraries to support 3rd party ad_impression snippets
 import com.applovin.mediation.MaxAd;
 import com.applovin.mediation.MaxAdRevenueListener;
 import com.ironsource.mediationsdk.impressionData.ImpressionData;
@@ -30,7 +29,7 @@ import com.ironsource.mediationsdk.impressionData.ImpressionDataListener;
 
 
 public class MainActivity extends AppCompatActivity
-        //  Disregard the line below as its used to replicate ad_impression data being sent from 3rd parties and is not required for Firebase implementations.
+// importing libraries to support 3rd party ad_impression snippets
         implements MaxAdRevenueListener, ImpressionDataListener {
 
     @Override

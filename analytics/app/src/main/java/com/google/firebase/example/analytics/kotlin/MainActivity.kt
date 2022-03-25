@@ -8,15 +8,16 @@ import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.example.analytics.R
 import com.google.firebase.ktx.Firebase
-//  Disregard the below 5 lines which replicate ad_impression data being sent from 3rd parties and are not required for Firebase implementations.
-// Added 3rd party imports to support ad_impression snippets
+// importing libraries to support 3rd party ad_impression snippets
 import com.ironsource.mediationsdk.impressionData.ImpressionDataListener
 import com.ironsource.mediationsdk.impressionData.ImpressionData
 import com.applovin.mediation.MaxAd
 import com.applovin.mediation.MaxAdRevenueListener
 
 
-class MainActivity : AppCompatActivity(), MaxAdRevenueListener, ImpressionDataListener {
+class MainActivity : AppCompatActivity(),
+    // importing libraries to support 3rd party ad_impression snippets
+    MaxAdRevenueListener, ImpressionDataListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)

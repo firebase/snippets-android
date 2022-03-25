@@ -1,1 +1,10 @@
 include ':app'
+
+// Ironsource library used for ad_impression snippets
+dependencyResolutionManagement {
+    repositories {
+        maven {
+            url 'https://android-sdk.is.com/'
+        }
+    }
+}

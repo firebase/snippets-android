@@ -227,7 +227,7 @@ class MainActivity : AppCompatActivity(),
             param(FirebaseAnalytics.Param.AD_PLATFORM, "ironSource")
             param(FirebaseAnalytics.Param.AD_SOURCE, impressionData.adNetwork)
             param(FirebaseAnalytics.Param.AD_FORMAT, impressionData.adUnit)
-            param(FirebaseAnalytics.Param.AD_UNIT_NAME, impressionData.adUnit)
+            param(FirebaseAnalytics.Param.AD_UNIT_NAME, impressionData.instanceName)
             param(FirebaseAnalytics.Param.CURRENCY, "USD")
             param(FirebaseAnalytics.Param.VALUE, impressionData.revenue)
         }

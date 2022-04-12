@@ -259,7 +259,7 @@ public class MainActivity extends AppCompatActivity
                 bundle.putString(FirebaseAnalytics.Param.AD_PLATFORM, "ironSource");
                 bundle.putString(FirebaseAnalytics.Param.AD_SOURCE, impressionData.getAdNetwork());
                 bundle.putString(FirebaseAnalytics.Param.AD_FORMAT, impressionData.getAdUnit());
-                bundle.putString(FirebaseAnalytics.Param.AD_UNIT_NAME, impressionData.getAdUnit());
+                bundle.putString(FirebaseAnalytics.Param.AD_UNIT_NAME, impressionData.getInstanceName());
                 bundle.putString(FirebaseAnalytics.Param.CURRENCY, "USD");
                 bundle.putDouble(FirebaseAnalytics.Param.VALUE, impressionData.getRevenue());
                 analytics.logEvent(FirebaseAnalytics.Event.AD_IMPRESSION, bundle);

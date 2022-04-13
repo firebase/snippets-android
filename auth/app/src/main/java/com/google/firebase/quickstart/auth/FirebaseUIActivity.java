@@ -166,7 +166,7 @@ public class FirebaseUIActivity extends AppCompatActivity {
             if (getIntent().getExtras() == null) {
                 return;
             }
-            String link = getIntent().getExtras().getString(ExtraConstants.EMAIL_LINK_SIGN_IN);
+            String link = getIntent().getExtras().getString("email_link_sign_in");
             if (link != null) {
                 Intent signInIntent = AuthUI.getInstance()
                         .createSignInIntentBuilder()

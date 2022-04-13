@@ -142,7 +142,7 @@ abstract class FirebaseUIActivity : AppCompatActivity() {
         // [START auth_fui_email_link_catch]
         if (AuthUI.canHandleIntent(intent)) {
             val extras = intent.extras ?: return
-            val link = extras.getString(ExtraConstants.EMAIL_LINK_SIGN_IN)
+            val link = extras.getString("email_link_sign_in")
             if (link != null) {
                 val signInIntent = AuthUI.getInstance()
                         .createSignInIntentBuilder()

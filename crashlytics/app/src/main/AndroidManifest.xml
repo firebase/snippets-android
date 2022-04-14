@@ -15,7 +15,8 @@
             android:value="false" />
         <!-- [END crash_disable_collection] -->
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

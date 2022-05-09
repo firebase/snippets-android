@@ -31,5 +31,5 @@ dependencies {
 
     // For an optimal experience using Crashlytics, add the Firebase SDK
     // for Google Analytics. This is recommended, but not required.
-    implementation 'com.google.firebase:firebase-analytics:20.1.2'
+    implementation 'com.google.firebase:firebase-analytics:21.0.0'
 }

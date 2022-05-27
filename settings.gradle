@@ -10,13 +10,11 @@ include ':auth:app',
         ':tasks:app',
         ':inappmessaging:app',
         ':admob:app',
-        ':appindexing:app',
         ':messaging:app',
         ':crashlytics:app',
         ':mlkit:app',
         ':perf:app',
         ':test-lab:app',
-        ':predictions:app',
         ':analytics:app',
         ':installations:app'
 

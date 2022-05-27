@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 // importing libraries to support 3rd party ad_impression snippets
@@ -83,7 +84,7 @@ public class MainActivity extends AppCompatActivity
         viewItemListParams.putString(FirebaseAnalytics.Param.ITEM_LIST_ID, "L001");
         viewItemListParams.putString(FirebaseAnalytics.Param.ITEM_LIST_NAME, "Related products");
         viewItemListParams.putParcelableArray(FirebaseAnalytics.Param.ITEMS,
-                new Parcelable[]{ itemJeggingsWithIndex, itemBootsWithIndex, itemSocksWithIndex });
+                new Parcelable[]{itemJeggingsWithIndex, itemBootsWithIndex, itemSocksWithIndex});
         analytics.logEvent(FirebaseAnalytics.Event.VIEW_ITEM_LIST, viewItemListParams);
         // [END view_item_list]
 
@@ -92,7 +93,7 @@ public class MainActivity extends AppCompatActivity
         selectItemParams.putString(FirebaseAnalytics.Param.ITEM_LIST_ID, "L001");
         selectItemParams.putString(FirebaseAnalytics.Param.ITEM_LIST_NAME, "Related products");
         selectItemParams.putParcelableArray(FirebaseAnalytics.Param.ITEMS,
-                new Parcelable[]{ itemJeggings });
+                new Parcelable[]{itemJeggings});
         analytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, selectItemParams);
         // [END select_item]
 
@@ -101,7 +102,7 @@ public class MainActivity extends AppCompatActivity
         viewItemParams.putString(FirebaseAnalytics.Param.CURRENCY, "USD");
         viewItemParams.putDouble(FirebaseAnalytics.Param.VALUE, 9.99);
         viewItemParams.putParcelableArray(FirebaseAnalytics.Param.ITEMS,
-                new Parcelable[] { itemJeggings });
+                new Parcelable[]{itemJeggings});
 
         analytics.logEvent(FirebaseAnalytics.Event.VIEW_ITEM, viewItemParams);
         // [END view_product_details]
@@ -114,7 +115,7 @@ public class MainActivity extends AppCompatActivity
         addToWishlistParams.putString(FirebaseAnalytics.Param.CURRENCY, "USD");
         addToWishlistParams.putDouble(FirebaseAnalytics.Param.VALUE, 2 * 9.99);
         addToWishlistParams.putParcelableArray(FirebaseAnalytics.Param.ITEMS,
-                new Parcelable[]{ itemJeggingsWishlist });
+                new Parcelable[]{itemJeggingsWishlist});
 
         analytics.logEvent(FirebaseAnalytics.Event.ADD_TO_WISHLIST, addToWishlistParams);
         // [END add_to_cart_wishlist]
@@ -130,7 +131,7 @@ public class MainActivity extends AppCompatActivity
         viewCartParams.putString(FirebaseAnalytics.Param.CURRENCY, "USD");
         viewCartParams.putDouble(FirebaseAnalytics.Param.VALUE, (2 * 9.99) + (1 * 24.99));
         viewCartParams.putParcelableArray(FirebaseAnalytics.Param.ITEMS,
-                new Parcelable[]{ itemJeggingsCart, itemBootsCart });
+                new Parcelable[]{itemJeggingsCart, itemBootsCart});
 
         analytics.logEvent(FirebaseAnalytics.Event.VIEW_CART, viewCartParams);
         // [END view_cart]
@@ -140,7 +141,7 @@ public class MainActivity extends AppCompatActivity
         removeCartParams.putString(FirebaseAnalytics.Param.CURRENCY, "USD");
         removeCartParams.putDouble(FirebaseAnalytics.Param.VALUE, (1 * 24.99));
         removeCartParams.putParcelableArray(FirebaseAnalytics.Param.ITEMS,
-                new Parcelable[]{ itemBootsCart });
+                new Parcelable[]{itemBootsCart});
 
         analytics.logEvent(FirebaseAnalytics.Event.REMOVE_FROM_CART, removeCartParams);
         // [END remove_from_cart]
@@ -151,7 +152,7 @@ public class MainActivity extends AppCompatActivity
         beginCheckoutParams.putDouble(FirebaseAnalytics.Param.VALUE, 14.98);
         beginCheckoutParams.putString(FirebaseAnalytics.Param.COUPON, "SUMMER_FUN");
         beginCheckoutParams.putParcelableArray(FirebaseAnalytics.Param.ITEMS,
-                new Parcelable[]{ itemJeggingsCart });
+                new Parcelable[]{itemJeggingsCart});
 
         analytics.logEvent(FirebaseAnalytics.Event.BEGIN_CHECKOUT, beginCheckoutParams);
         // [END start_checkout]
@@ -163,7 +164,7 @@ public class MainActivity extends AppCompatActivity
         addShippingParams.putString(FirebaseAnalytics.Param.COUPON, "SUMMER_FUN");
         addShippingParams.putString(FirebaseAnalytics.Param.SHIPPING_TIER, "Ground");
         addShippingParams.putParcelableArray(FirebaseAnalytics.Param.ITEMS,
-                new Parcelable[]{ itemJeggingsCart });
+                new Parcelable[]{itemJeggingsCart});
 
         analytics.logEvent(FirebaseAnalytics.Event.ADD_SHIPPING_INFO, addShippingParams);
         // [END add_shipping]
@@ -175,7 +176,7 @@ public class MainActivity extends AppCompatActivity
         addPaymentParams.putString(FirebaseAnalytics.Param.COUPON, "SUMMER_FUN");
         addPaymentParams.putString(FirebaseAnalytics.Param.PAYMENT_TYPE, "Visa");
         addPaymentParams.putParcelableArray(FirebaseAnalytics.Param.ITEMS,
-                new Parcelable[]{ itemJeggingsCart });
+                new Parcelable[]{itemJeggingsCart});
 
         analytics.logEvent(FirebaseAnalytics.Event.ADD_PAYMENT_INFO, addPaymentParams);
         // [END add_payment]
@@ -190,8 +191,8 @@ public class MainActivity extends AppCompatActivity
         purchaseParams.putDouble(FirebaseAnalytics.Param.SHIPPING, 5.34);
         purchaseParams.putString(FirebaseAnalytics.Param.COUPON, "SUMMER_FUN");
         purchaseParams.putParcelableArray(FirebaseAnalytics.Param.ITEMS,
-                new Parcelable[]{ itemJeggingsCart });
-        
+                new Parcelable[]{itemJeggingsCart});
+
         analytics.logEvent(FirebaseAnalytics.Event.PURCHASE, purchaseParams);
         // [END log_purchase]
 
@@ -207,7 +208,7 @@ public class MainActivity extends AppCompatActivity
         refundParams.putLong(FirebaseAnalytics.Param.QUANTITY, 1);
 
         refundParams.putParcelableArray(FirebaseAnalytics.Param.ITEMS,
-                new Parcelable[]{ itemJeggings });
+                new Parcelable[]{itemJeggings});
 
         analytics.logEvent(FirebaseAnalytics.Event.REFUND, refundParams);
         // [END log_refund]
@@ -220,7 +221,7 @@ public class MainActivity extends AppCompatActivity
         promoParams.putString(FirebaseAnalytics.Param.CREATIVE_SLOT, "featured_app_1");
         promoParams.putString(FirebaseAnalytics.Param.LOCATION_ID, "HERO_BANNER");
         promoParams.putParcelableArray(FirebaseAnalytics.Param.ITEMS,
-                new Parcelable[]{ itemJeggings });
+                new Parcelable[]{itemJeggings});
 
         // Promotion displayed
         analytics.logEvent(FirebaseAnalytics.Event.VIEW_PROMOTION, promoParams);
@@ -230,39 +231,39 @@ public class MainActivity extends AppCompatActivity
         // [END apply_promo]
     }
 
-        // [START ad_impression_applovin]
-        @Override
-        public void onAdRevenuePaid(MaxAd impressionData) {
+    // [START ad_impression_applovin]
+    @Override
+    public void onAdRevenuePaid(MaxAd impressionData) {
 
-            double revenue = impressionData.getRevenue(); // In USD
+        double revenue = impressionData.getRevenue(); // In USD
 
-            FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(this);
-            Bundle params = new Bundle();
-            params.putString(FirebaseAnalytics.Param.AD_PLATFORM, "appLovin");
-            params.putString(FirebaseAnalytics.Param.AD_SOURCE, impressionData.getNetworkName());
-            params.putString(FirebaseAnalytics.Param.AD_FORMAT, impressionData.getFormat().getDisplayName());
-            params.putString(FirebaseAnalytics.Param.AD_UNIT_NAME, impressionData.getAdUnitId());
-            params.putDouble(FirebaseAnalytics.Param.VALUE, revenue);
-            params.putString(FirebaseAnalytics.Param.CURRENCY, "USD"); // All Applovin revenue is sent in USD
-            analytics.logEvent(FirebaseAnalytics.Event.AD_IMPRESSION, params);
-        }
-        // [END ad_impression_applovin]
+        FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(this);
+        Bundle params = new Bundle();
+        params.putString(FirebaseAnalytics.Param.AD_PLATFORM, "appLovin");
+        params.putString(FirebaseAnalytics.Param.AD_SOURCE, impressionData.getNetworkName());
+        params.putString(FirebaseAnalytics.Param.AD_FORMAT, impressionData.getFormat().getDisplayName());
+        params.putString(FirebaseAnalytics.Param.AD_UNIT_NAME, impressionData.getAdUnitId());
+        params.putDouble(FirebaseAnalytics.Param.VALUE, revenue);
+        params.putString(FirebaseAnalytics.Param.CURRENCY, "USD"); // All Applovin revenue is sent in USD
+        analytics.logEvent(FirebaseAnalytics.Event.AD_IMPRESSION, params);
+    }
+    // [END ad_impression_applovin]
 
-        // [START ad_impression_ironsource]
+    // [START ad_impression_ironsource]
     @Override
     public void onImpressionSuccess(ImpressionData impressionData) {
         // The onImpressionSuccess will be reported when the rewarded video and interstitial ad is opened.
         // For banners, the impression is reported on load success. Log.d(TAG, "onImpressionSuccess" + impressionData);
         FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(this);
         if (impressionData != null) {
-                Bundle bundle = new Bundle();
-                bundle.putString(FirebaseAnalytics.Param.AD_PLATFORM, "ironSource");
-                bundle.putString(FirebaseAnalytics.Param.AD_SOURCE, impressionData.getAdNetwork());
-                bundle.putString(FirebaseAnalytics.Param.AD_FORMAT, impressionData.getAdUnit());
-                bundle.putString(FirebaseAnalytics.Param.AD_UNIT_NAME, impressionData.getInstanceName());
-                bundle.putString(FirebaseAnalytics.Param.CURRENCY, "USD");
-                bundle.putDouble(FirebaseAnalytics.Param.VALUE, impressionData.getRevenue());
-                analytics.logEvent(FirebaseAnalytics.Event.AD_IMPRESSION, bundle);
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.AD_PLATFORM, "ironSource");
+            bundle.putString(FirebaseAnalytics.Param.AD_SOURCE, impressionData.getAdNetwork());
+            bundle.putString(FirebaseAnalytics.Param.AD_FORMAT, impressionData.getAdUnit());
+            bundle.putString(FirebaseAnalytics.Param.AD_UNIT_NAME, impressionData.getInstanceName());
+            bundle.putString(FirebaseAnalytics.Param.CURRENCY, "USD");
+            bundle.putDouble(FirebaseAnalytics.Param.VALUE, impressionData.getRevenue());
+            analytics.logEvent(FirebaseAnalytics.Event.AD_IMPRESSION, bundle);
         }
     }
 

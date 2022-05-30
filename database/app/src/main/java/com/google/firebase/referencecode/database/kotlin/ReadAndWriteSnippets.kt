@@ -133,11 +133,12 @@ abstract class ReadAndWriteSnippets {
 
     // [START post_stars_increment]
     private fun onStarClicked(uid: String, key: String) {
-        val updates: MutableMap<String, Any> = HashMap()
-        updates["posts/$key/stars/$uid"] = true
-        updates["posts/$key/starCount"] = ServerValue.increment(1)
-        updates["user-posts/$uid/$key/stars/$uid"] = true
-        updates["user-posts/$uid/$key/starCount"] = ServerValue.increment(1)
+        val updates: MutableMap<String, Any> = hashMapOf(
+            "posts/$key/stars/$uid" to true,
+            "posts/$key/starCount" to ServerValue.increment(1),
+            "user-posts/$uid/$key/stars/$uid" to true,
+            "user-posts/$uid/$key/starCount" to ServerValue.increment(1)
+        )
         database.updateChildren(updates)
     }
     // [END post_stars_increment]

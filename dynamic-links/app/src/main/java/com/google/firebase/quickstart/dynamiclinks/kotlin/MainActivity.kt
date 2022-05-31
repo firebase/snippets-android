@@ -3,8 +3,8 @@ package com.google.firebase.quickstart.dynamiclinks.kotlin
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.appinvite.AppInviteReferral
 import com.google.firebase.appinvite.FirebaseAppInvite
 import com.google.firebase.dynamiclinks.ShortDynamicLink
 import com.google.firebase.dynamiclinks.ktx.androidParameters
@@ -22,10 +22,35 @@ import com.google.firebase.quickstart.dynamiclinks.R
 
 abstract class MainActivity : AppCompatActivity() {
 
+    private val TAG = "fdl.MainActivity"
+
+    // [START on_create]
     override fun onCreate(savedInstanceState: Bundle?) {
+        // [START_EXCLUDE]
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        // [END_EXCLUDE]
+
+        // [START get_deep_link]
+        Firebase.dynamicLinks
+            .getDynamicLink(intent)
+            .addOnSuccessListener(this) { pendingDynamicLinkData ->
+                // Get deep link from result (may be null if no link is found)
+                var deepLink: Uri? = null
+                if (pendingDynamicLinkData != null) {
+                    deepLink = pendingDynamicLinkData.link
+                }
+
+                // Handle the deep link. For example, open the linked
+                // content, or apply promotional credit to the user's
+                // account.
+                // ...
+
+            }
+            .addOnFailureListener(this) { e -> Log.w(TAG, "getDynamicLink:onFailure", e) }
+        // [END get_deep_link]
     }
+    // [END on_create]
 
     fun createDynamicLink_Basic() {
         // [START create_link_basic]
@@ -161,5 +186,27 @@ abstract class MainActivity : AppCompatActivity() {
         }
         startActivity(Intent.createChooser(intent, "Share using"))
         // [END ddl_onboarding_share]
+    }
+
+    fun buildDeepLink(deepLink: Uri, minVersion: Int): Uri {
+        val uriPrefix = "https://YOUR_APP.page.link"
+
+        // Set dynamic link parameters:
+        //  * URI prefix (required)
+        //  * Android Parameters (required)
+        //  * Deep link
+        // [START build_dynamic_link]
+        // Build the dynamic link
+        val link = Firebase.dynamicLinks.dynamicLink {
+            domainUriPrefix = uriPrefix
+            androidParameters {
+                minimumVersion = minVersion
+            }
+            link = deepLink
+        }
+        // [END build_dynamic_link]
+
+        // Return the dynamic link as a URI
+        return link.uri
     }
 }

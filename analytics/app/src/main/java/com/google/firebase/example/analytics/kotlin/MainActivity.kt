@@ -18,15 +18,33 @@ import com.applovin.mediation.MaxAdRevenueListener
 class MainActivity : AppCompatActivity(),
     // importing libraries to support 3rd party ad_impression snippets
     MaxAdRevenueListener, ImpressionDataListener {
+
+    // [START declare_analytics]
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
+    // [END declare_analytics]
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
+        // [START shared_app_measurement]
+        // Obtain the FirebaseAnalytics instance.
+        firebaseAnalytics = Firebase.analytics
+        // [END shared_app_measurement]
+
         enhancedEcommerce()
+
+        setUserFavoriteFood("pizza")
+
+        recordImageView()
+
+        recordScreenView()
+
+        logCustomEvent()
     }
 
     fun enhancedEcommerce() {
-        val analytics = Firebase.analytics
-
         // [START create_items]
         val itemJeggings = Bundle().apply {
             putString(FirebaseAnalytics.Param.ITEM_ID, "SKU_123")
@@ -67,7 +85,7 @@ class MainActivity : AppCompatActivity(),
             putLong(FirebaseAnalytics.Param.INDEX, 3)
         }
 
-        analytics.logEvent(FirebaseAnalytics.Event.VIEW_ITEM_LIST) {
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.VIEW_ITEM_LIST) {
             param(FirebaseAnalytics.Param.ITEM_LIST_ID, "L001")
             param(FirebaseAnalytics.Param.ITEM_LIST_NAME, "Related products")
             param(FirebaseAnalytics.Param.ITEMS,
@@ -76,7 +94,7 @@ class MainActivity : AppCompatActivity(),
         // [END view_item_list]
 
         // [START select_item]
-        analytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM) {
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM) {
             param(FirebaseAnalytics.Param.ITEM_LIST_ID, "L001")
             param(FirebaseAnalytics.Param.ITEM_LIST_NAME, "Related products")
             param(FirebaseAnalytics.Param.ITEMS, arrayOf(itemJeggings))
@@ -84,7 +102,7 @@ class MainActivity : AppCompatActivity(),
         // [END select_item]
 
         // [START view_product_details]
-        analytics.logEvent(FirebaseAnalytics.Event.VIEW_ITEM) {
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.VIEW_ITEM) {
             param(FirebaseAnalytics.Param.CURRENCY, "USD")
             param(FirebaseAnalytics.Param.VALUE, 9.99)
             param(FirebaseAnalytics.Param.ITEMS, arrayOf(itemJeggings))
@@ -96,7 +114,7 @@ class MainActivity : AppCompatActivity(),
             putLong(FirebaseAnalytics.Param.QUANTITY, 2)
         }
 
-        analytics.logEvent(FirebaseAnalytics.Event.ADD_TO_WISHLIST) {
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.ADD_TO_WISHLIST) {
             param(FirebaseAnalytics.Param.CURRENCY, "USD")
             param(FirebaseAnalytics.Param.VALUE, 2 * 9.99)
             param(FirebaseAnalytics.Param.ITEMS, arrayOf(itemJeggingsWishlist))
@@ -111,7 +129,7 @@ class MainActivity : AppCompatActivity(),
             putLong(FirebaseAnalytics.Param.QUANTITY, 1)
         }
 
-        analytics.logEvent(FirebaseAnalytics.Event.VIEW_CART) {
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.VIEW_CART) {
             param(FirebaseAnalytics.Param.CURRENCY, "USD")
             param(FirebaseAnalytics.Param.VALUE, 2 * 9.99 + 1 * 24.99)
             param(FirebaseAnalytics.Param.ITEMS, arrayOf(itemJeggingsCart, itemBootsCart))
@@ -119,7 +137,7 @@ class MainActivity : AppCompatActivity(),
         // [END view_cart]
 
         // [START remove_from_cart]
-        analytics.logEvent(FirebaseAnalytics.Event.REMOVE_FROM_CART) {
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.REMOVE_FROM_CART) {
             param(FirebaseAnalytics.Param.CURRENCY, "USD")
             param(FirebaseAnalytics.Param.VALUE, 1 * 24.99)
             param(FirebaseAnalytics.Param.ITEMS, arrayOf(itemBootsCart))
@@ -127,7 +145,7 @@ class MainActivity : AppCompatActivity(),
         // [END remove_from_cart]
 
         // [START start_checkout]
-        analytics.logEvent(FirebaseAnalytics.Event.BEGIN_CHECKOUT) {
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.BEGIN_CHECKOUT) {
             param(FirebaseAnalytics.Param.CURRENCY, "USD")
             param(FirebaseAnalytics.Param.VALUE, 14.98)
             param(FirebaseAnalytics.Param.COUPON, "SUMMER_FUN")
@@ -136,7 +154,7 @@ class MainActivity : AppCompatActivity(),
         // [END start_checkout]
 
         // [START add_shipping]
-        analytics.logEvent(FirebaseAnalytics.Event.ADD_SHIPPING_INFO) {
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.ADD_SHIPPING_INFO) {
             param(FirebaseAnalytics.Param.CURRENCY, "USD")
             param(FirebaseAnalytics.Param.VALUE, 14.98)
             param(FirebaseAnalytics.Param.COUPON, "SUMMER_FUN")
@@ -146,7 +164,7 @@ class MainActivity : AppCompatActivity(),
         // [END add_shipping]
 
         // [START add_payment]
-        analytics.logEvent(FirebaseAnalytics.Event.ADD_PAYMENT_INFO) {
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.ADD_PAYMENT_INFO) {
             param(FirebaseAnalytics.Param.CURRENCY, "USD")
             param(FirebaseAnalytics.Param.VALUE, 14.98)
             param(FirebaseAnalytics.Param.COUPON, "SUMMER_FUN")
@@ -156,7 +174,7 @@ class MainActivity : AppCompatActivity(),
         // [END add_payment]
 
         // [START log_purchase]
-        analytics.logEvent(FirebaseAnalytics.Event.PURCHASE) {
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE) {
             param(FirebaseAnalytics.Param.TRANSACTION_ID, "T12345")
             param(FirebaseAnalytics.Param.AFFILIATION, "Google Store")
             param(FirebaseAnalytics.Param.CURRENCY, "USD")
@@ -169,7 +187,7 @@ class MainActivity : AppCompatActivity(),
         // [END log_purchase]
 
         // [START log_refund]
-        analytics.logEvent(FirebaseAnalytics.Event.REFUND) {
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.REFUND) {
             param(FirebaseAnalytics.Param.TRANSACTION_ID, "T12345")
             param(FirebaseAnalytics.Param.AFFILIATION, "Google Store")
             param(FirebaseAnalytics.Param.CURRENCY, "USD")
@@ -194,17 +212,60 @@ class MainActivity : AppCompatActivity(),
         }
 
         // Promotion displayed
-        analytics.logEvent(FirebaseAnalytics.Event.VIEW_PROMOTION, promoParams)
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.VIEW_PROMOTION, promoParams)
 
         // Promotion selected
-        analytics.logEvent(FirebaseAnalytics.Event.SELECT_PROMOTION, promoParams)
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_PROMOTION, promoParams)
         // [END apply_promo]
     }
+
+    private fun setUserFavoriteFood(food: String) {
+        // [START user_property]
+        firebaseAnalytics.setUserProperty("favorite_food", food)
+        // [END user_property]
+    }
+
+    private fun recordImageView() {
+        val id = "imageId"
+        val name = "imageTitle"
+
+        // [START image_view_event]
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM) {
+            param(FirebaseAnalytics.Param.ITEM_ID, id)
+            param(FirebaseAnalytics.Param.ITEM_NAME, name)
+            param(FirebaseAnalytics.Param.CONTENT_TYPE, "image")
+        }
+        // [END image_view_event]
+    }
+
+    private fun recordScreenView() {
+        val screenName = "Home Page"
+
+        // [START set_current_screen]
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
+            param(FirebaseAnalytics.Param.SCREEN_NAME, screenName)
+            param(FirebaseAnalytics.Param.SCREEN_CLASS, "MainActivity")
+        }
+        // [END set_current_screen]
+    }
+
+    private fun logCustomEvent() {
+        val name = "customImage"
+        val text = "I'd love to hear more about $name"
+
+        // [START custom_event]
+        firebaseAnalytics.logEvent("share_image") {
+            param("image_name", name)
+            param("full_text", text)
+        }
+        // [END custom_event]
+    }
+
     // [START ad_impression_applovin]
     override fun onAdRevenuePaid(impressionData: MaxAd?) {
         impressionData?.let {
-            val analytics = Firebase.analytics
-            analytics.logEvent(FirebaseAnalytics.Event.AD_IMPRESSION) {
+            firebaseAnalytics = Firebase.analytics
+            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.AD_IMPRESSION) {
                 param(FirebaseAnalytics.Param.AD_PLATFORM, "appLovin")
                 param(FirebaseAnalytics.Param.AD_UNIT_NAME, impressionData.adUnitId)
                 param(FirebaseAnalytics.Param.AD_FORMAT, impressionData.format.displayName)
@@ -222,8 +283,8 @@ class MainActivity : AppCompatActivity(),
         // opened.
         // For banners, the impression is reported on load success. Log.d(TAG, "onImpressionSuccess" +
         // impressionData);
-        val analytics = Firebase.analytics
-        analytics.logEvent(FirebaseAnalytics.Event.AD_IMPRESSION) {
+        firebaseAnalytics = Firebase.analytics
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.AD_IMPRESSION) {
             param(FirebaseAnalytics.Param.AD_PLATFORM, "ironSource")
             param(FirebaseAnalytics.Param.AD_SOURCE, impressionData.adNetwork)
             param(FirebaseAnalytics.Param.AD_FORMAT, impressionData.adUnit)

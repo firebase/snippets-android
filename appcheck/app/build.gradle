@@ -28,8 +28,8 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'com.google.android.material:material:1.6.0'
+    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
     implementation 'com.google.firebase:firebase-appcheck:16.0.0'
@@ -38,6 +38,6 @@ dependencies {
 
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
 
-    implementation "androidx.core:core-ktx:1.7.0"
+    implementation "androidx.core:core-ktx:1.8.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }

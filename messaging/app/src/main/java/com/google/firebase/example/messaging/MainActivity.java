@@ -6,6 +6,8 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -110,8 +112,20 @@ public class MainActivity extends AppCompatActivity {
         // [END log_reg_token]
     }
 
-    @RequiresApi(33)
     // [START ask_post_notifications]
+    // Declare the launcher at the top of your Activity/Fragment:
+    private ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    // FCM SDK (and your app) can post notifications.
+                } else {
+                    // TODO: Inform user that that your app will not show notifications.
+                }
+            });
+
+    // [START_EXCLUDE]
+    @RequiresApi(33)
+    // [END_EXCLUDE]
     private void askNotificationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
                 PackageManager.PERMISSION_GRANTED) {
@@ -123,27 +137,8 @@ public class MainActivity extends AppCompatActivity {
             //       If the user selects "No thanks," allow the user to continue without notifications.
         } else {
             // Directly ask for the permission
-            requestPermissions(new String[] { Manifest.permission.POST_NOTIFICATIONS }, NOTIFICATION_REQUEST_CODE);
+            requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
         }
     }
     // [END ask_post_notifications]
-
-    // [START handle_ask_post_notifications_request]
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                           int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case NOTIFICATION_REQUEST_CODE:
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 &&
-                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // FCM SDK (and your app) can post notifications.
-                } else {
-                    // TODO: Inform user that that your app will not show notifications.
-                }
-                return;
-        }
-    }
-    // [END handle_ask_post_notifications_request]
 }

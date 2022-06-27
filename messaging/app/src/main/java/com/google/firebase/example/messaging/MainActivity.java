@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
 
     // [START ask_post_notifications]
     // Declare the launcher at the top of your Activity/Fragment:
-    private ActivityResultLauncher<String> requestPermissionLauncher =
+    private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
                     // FCM SDK (and your app) can post notifications.

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.appinvite.FirebaseAppInvite
+import com.google.firebase.dynamiclinks.PendingDynamicLinkData
 import com.google.firebase.dynamiclinks.ShortDynamicLink
 import com.google.firebase.dynamiclinks.ktx.androidParameters
 import com.google.firebase.dynamiclinks.ktx.component1
@@ -34,7 +35,7 @@ abstract class MainActivity : AppCompatActivity() {
         // [START get_deep_link]
         Firebase.dynamicLinks
             .getDynamicLink(intent)
-            .addOnSuccessListener(this) { pendingDynamicLinkData ->
+            .addOnSuccessListener(this) { pendingDynamicLinkData: PendingDynamicLinkData? ->
                 // Get deep link from result (may be null if no link is found)
                 var deepLink: Uri? = null
                 if (pendingDynamicLinkData != null) {

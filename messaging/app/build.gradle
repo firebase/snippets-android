@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 32
 
     defaultConfig {
         applicationId "com.google.firebase.example.messaging"
@@ -27,7 +27,7 @@ dependencies {
 
     // For an optimal experience using FCM, add the Firebase SDK
     // for Google Analytics. This is recommended, but not required.
-    implementation 'com.google.firebase:firebase-analytics:21.0.0'
+    implementation 'com.google.firebase:firebase-analytics:21.1.0'
 
     implementation "com.google.android.gms:play-services-auth:20.2.0"
     implementation 'androidx.work:work-runtime-ktx:2.7.1'

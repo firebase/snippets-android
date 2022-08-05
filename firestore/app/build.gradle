@@ -39,10 +39,10 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
 
     // Firestore
-    implementation "com.google.firebase:firebase-firestore-ktx:24.2.1"
+    implementation "com.google.firebase:firebase-firestore-ktx:24.2.2"
 
     // Firebase / Play Services
-    implementation "com.google.firebase:firebase-auth:21.0.6"
+    implementation "com.google.firebase:firebase-auth:21.0.7"
     implementation "com.google.android.gms:play-services-auth:20.2.0"
     implementation "com.google.firebase:firebase-functions-ktx:20.1.0"
 
@@ -50,7 +50,7 @@ dependencies {
     implementation "com.firebase:geofire-android-common:3.2.0"
 
     // OkHttp (for Android 11+)
-    implementation "io.grpc:grpc-okhttp:1.47.0"
+    implementation "io.grpc:grpc-okhttp:1.48.1"
 }
 
 apply plugin: 'com.google.gms.google-services'

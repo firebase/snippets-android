@@ -8,8 +8,8 @@ public class EmulatorSuite {
         // [START rtdb_emulator_connect]
         // 10.0.2.2 is the special IP address to connect to the 'localhost' of
         // the host computer from an Android emulator.
-        // In almost all cases the ns (namespace) is your project ID.
-        FirebaseDatabase database = FirebaseDatabase.getInstance("http://10.0.2.2:9000?ns=YOUR_DATABASE_NAMESPACE");
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        database.useEmulator("10.0.2.2", 9000);
         // [END rtdb_emulator_connect]
     }
 

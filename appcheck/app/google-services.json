@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "948708767782",
+    "project_id": "app-check-snippets",
+    "storage_bucket": "app-check-snippets.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:948708767782:android:2e694ab930ef4c3b4c4ee7",
+        "android_client_info": {
+          "package_name": "com.google.firebase.example.appcheck"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "948708767782-2e42ddfu4rcsbe5nv9qat94q6v9c12bf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABXlodP5O5vv9d0nObDcgNHSmWpcA5wLc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "948708767782-2e42ddfu4rcsbe5nv9qat94q6v9c12bf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

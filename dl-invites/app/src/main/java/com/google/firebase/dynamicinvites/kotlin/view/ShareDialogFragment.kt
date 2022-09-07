@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -16,9 +18,6 @@ import com.google.firebase.dynamicinvites.kotlin.presenter.MessagePresenter
 import com.google.firebase.dynamicinvites.kotlin.presenter.MorePresenter
 import com.google.firebase.dynamicinvites.kotlin.presenter.SocialPresenter
 import com.google.firebase.dynamicinvites.kotlin.util.DynamicLinksUtil
-import kotlinx.android.synthetic.main.fragment_item_list_dialog.recycler
-import kotlinx.android.synthetic.main.item_share_method.view.itemIcon
-import kotlinx.android.synthetic.main.item_share_method.view.itemName
 
 /**
  * A fragment that shows a list of items as a modal bottom sheet.
@@ -55,6 +54,7 @@ class ShareDialogFragment : BottomSheetDialogFragment() {
                 MorePresenter(true, content)
         )
 
+        val recycler = view.findViewById<RecyclerView>(R.id.recycler)
         recycler.layoutManager = LinearLayoutManager(context)
         recycler.adapter = ItemAdapter(presenters)
     }
@@ -62,11 +62,7 @@ class ShareDialogFragment : BottomSheetDialogFragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         val parent = parentFragment
-        listener = if (parent != null) {
-            parent as Listener
-        } else {
-            context as Listener
-        }
+        listener = (parent ?: context) as Listener
     }
 
     override fun onDetach() {
@@ -81,9 +77,9 @@ class ShareDialogFragment : BottomSheetDialogFragment() {
     private inner class ViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
         RecyclerView.ViewHolder(inflater.inflate(R.layout.item_share_method, parent, false)) {
 
-        internal fun bind(presenter: InvitePresenter) {
-            itemView.itemName.text = presenter.name
-            itemView.itemIcon.setImageResource(presenter.icon)
+        fun bind(presenter: InvitePresenter) {
+            itemView.findViewById<TextView>(R.id.itemName).text = presenter.name
+            itemView.findViewById<ImageView>(R.id.itemIcon).setImageResource(presenter.icon)
 
             itemView.setOnClickListener {
                 listener?.onItemClicked(presenter)

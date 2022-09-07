@@ -960,7 +960,7 @@ public class DocSnippets {
 
         Map<String, Object> lohData = new HashMap<>();
         lohData.put("name", "Legion of Honor");
-        lohData.put("type", "musuem");
+        lohData.put("type", "museum");
         citiesRef.document("SF").collection("landmarks").add(lohData);
 
         Map<String, Object> gpData = new HashMap<>();
@@ -979,7 +979,7 @@ public class DocSnippets {
         citiesRef.document("DC").collection("landmarks").add(lmData);
 
         Map<String, Object> nasaData = new HashMap<>();
-        nasaData.put("name", "National Air and Space Musuem");
+        nasaData.put("name", "National Air and Space Museum");
         nasaData.put("type", "museum");
         citiesRef.document("DC").collection("landmarks").add(nasaData);
 
@@ -989,7 +989,7 @@ public class DocSnippets {
         citiesRef.document("TOK").collection("landmarks").add(upData);
 
         Map<String, Object> nmData = new HashMap<>();
-        nmData.put("name", "National Musuem of Nature and Science");
+        nmData.put("name", "National Museum of Nature and Science");
         nmData.put("type", "museum");
         citiesRef.document("TOK").collection("landmarks").add(nmData);
 
@@ -1019,10 +1019,14 @@ public class DocSnippets {
         // [END simple_query_capital]
 
         // [START example_filters]
-        citiesRef.whereEqualTo("state", "CA");
-        citiesRef.whereLessThan("population", 100000);
-        citiesRef.whereGreaterThanOrEqualTo("name", "San Francisco");
+        Query stateQuery = citiesRef.whereEqualTo("state", "CA");
+        Query populationQuery = citiesRef.whereLessThan("population", 100000);
+        Query nameQuery = citiesRef.whereGreaterThanOrEqualTo("name", "San Francisco");
         // [END example_filters]
+
+        // [START simple_query_not_equal]
+        Query notCapitalQuery = citiesRef.whereNotEqualTo("capital", false);
+        // [END simple_query_not_equal]
     }
 
     public void arrayContainsQueries() {
@@ -1047,6 +1051,10 @@ public class DocSnippets {
 
         citiesRef.whereIn("country", Arrays.asList("USA", "Japan"));
         // [END in_filter]
+
+        // [START not_in_filter]
+        citiesRef.whereNotIn("country", Arrays.asList("USA", "Japan"));
+        // [END not_in_filter]
 
         // [START in_filter_with_array]
         citiesRef.whereIn("regions", Arrays.asList(new String[]{"west_coast"}, new String[]{"east_coast"}));

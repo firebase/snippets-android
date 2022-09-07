@@ -1,30 +1,43 @@
 package com.google.firebase.example.messaging.kotlin
 
-import android.accounts.AccountManager
-import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import android.os.Bundle
 import android.util.Log
-import com.google.android.gms.auth.GoogleAuthUtil
-import com.google.firebase.messaging.FirebaseMessaging
-import com.google.firebase.messaging.RemoteMessage
-import org.json.JSONArray
-import org.json.JSONException
-import org.json.JSONObject
-import java.io.IOException
-import java.net.HttpURLConnection
-import java.net.URL
-import java.util.Scanner
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import com.google.firebase.example.messaging.MainActivity
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.messaging
+import com.google.firebase.messaging.ktx.remoteMessage
 import java.util.concurrent.atomic.AtomicInteger
 
 class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "MainActivity"
+        private const val NOTIFICATION_REQUEST_CODE = 1234
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // [START handle_data_extras]
+        intent.extras?.let {
+            for (key in it.keySet()) {
+                val value = intent.extras?.get(key)
+                Log.d(TAG, "Key: $key Value: $value")
+            }
+        }
+        // [END handle_data_extras]
     }
 
     fun runtimeEnableAutoInit() {
         // [START fcm_runtime_enable_auto_init]
-        FirebaseMessaging.getInstance().isAutoInitEnabled = true
+        Firebase.messaging.isAutoInitEnabled = true
         // [END fcm_runtime_enable_auto_init]
     }
 
@@ -32,105 +45,89 @@ class MainActivity : AppCompatActivity() {
         // [START fcm_device_group_upstream]
         val to = "a_unique_key" // the notification key
         val msgId = AtomicInteger()
-        FirebaseMessaging.getInstance().send(RemoteMessage.Builder(to)
-                .setMessageId(msgId.get().toString())
-                .addData("hello", "world")
-                .build())
+        Firebase.messaging.send(remoteMessage(to) {
+            setMessageId(msgId.get().toString())
+            addData("hello", "world")
+        })
         // [END fcm_device_group_upstream]
-    }
-
-    // [START fcm_get_account]
-    @SuppressLint("MissingPermission")
-    fun getAccount(): String {
-        // This call requires the Android GET_ACCOUNTS permission
-        val accounts = AccountManager.get(this /* activity */).getAccountsByType("com.google")
-        return if (accounts.isEmpty()) {
-            ""
-        } else accounts[0].name
-    }
-    // [END fcm_get_account]
-
-    fun getAuthToken() {
-        // [START fcm_get_token]
-        val accountName = getAccount()
-
-        // Initialize the scope using the client ID you got from the Console.
-        val scope = "audience:server:client_id:" +
-                "1262xxx48712-9qs6n32447mcj9dirtnkyrejt82saa52.apps.googleusercontent.com"
-
-        var idToken: String? = null
-        try {
-            idToken = GoogleAuthUtil.getToken(this, accountName, scope)
-        } catch (e: Exception) {
-            Log.w(TAG, "Exception while getting idToken: $e")
-        }
-
-        // [END fcm_get_token]
-    }
-
-    // [START fcm_add_to_group]
-    @Throws(IOException::class, JSONException::class)
-    fun addToGroup(
-        senderId: String,
-        userEmail: String,
-        registrationId: String,
-        idToken: String
-    ): String {
-        val url = URL("https://fcm.googleapis.com/fcm/googlenotification")
-        val con = url.openConnection() as HttpURLConnection
-        con.doOutput = true
-
-        // HTTP request header
-        con.setRequestProperty("project_id", senderId)
-        con.setRequestProperty("Content-Type", "application/json")
-        con.setRequestProperty("Accept", "application/json")
-        con.requestMethod = "POST"
-        con.connect()
-
-        // HTTP request
-        val data = JSONObject()
-        data.put("operation", "add")
-        data.put("notification_key_name", userEmail)
-        data.put("registration_ids", JSONArray(arrayListOf(registrationId)))
-        data.put("id_token", idToken)
-
-        val os = con.outputStream
-        os.write(data.toString().toByteArray(charset("UTF-8")))
-        os.close()
-
-        // Read the response into a string
-        val `is` = con.inputStream
-        val responseString = Scanner(`is`, "UTF-8").useDelimiter("\\A").next()
-        `is`.close()
-
-        // Parse the JSON string and return the notification key
-        val response = JSONObject(responseString)
-        return response.getString("notification_key")
-    }
-    // [END fcm_add_to_group]
-
-    @Throws(JSONException::class)
-    fun removeFromGroup(userEmail: String, registrationId: String, idToken: String) {
-        // [START fcm_remove_from_group]
-        // HTTP request
-        val data = JSONObject()
-        data.put("operation", "remove")
-        data.put("notification_key_name", userEmail)
-        data.put("registration_ids", JSONArray(arrayListOf(registrationId)))
-        data.put("id_token", idToken)
-        // [END fcm_remove_from_group]
     }
 
     fun sendUpstream() {
         val SENDER_ID = "YOUR_SENDER_ID"
         val messageId = 0 // Increment for each
         // [START fcm_send_upstream]
-        val fm = FirebaseMessaging.getInstance()
-        fm.send(RemoteMessage.Builder("$SENDER_ID@fcm.googleapis.com")
-                .setMessageId(Integer.toString(messageId))
-                .addData("my_message", "Hello World")
-                .addData("my_action", "SAY_HELLO")
-                .build())
+        val fm = Firebase.messaging
+        fm.send(remoteMessage("$SENDER_ID@fcm.googleapis.com") {
+            setMessageId(messageId.toString())
+            addData("my_message", "Hello World")
+            addData("my_action", "SAY_HELLO")
+        })
         // [END fcm_send_upstream]
     }
+
+    fun subscribeTopics() {
+        // [START subscribe_topics]
+        Firebase.messaging.subscribeToTopic("weather")
+            .addOnCompleteListener { task ->
+                var msg = "Subscribed"
+                if (!task.isSuccessful) {
+                    msg = "Subscribe failed"
+                }
+                Log.d(TAG, msg)
+                Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+            }
+        // [END subscribe_topics]
+    }
+
+    fun logRegToken() {
+        // [START log_reg_token]
+        Firebase.messaging.getToken().addOnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                return@addOnCompleteListener
+            }
+
+            // Get new FCM registration token
+            val token = task.result
+
+            // Log and toast
+            val msg = "FCM Registration token: $token"
+            Log.d(TAG, msg)
+            Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+        }
+        // [END log_reg_token]
+    }
+
+    // [START ask_post_notifications]
+    // Declare the launcher at the top of your Activity/Fragment:
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            // FCM SDK (and your app) can post notifications.
+        } else {
+            // TODO: Inform user that that your app will not show notifications.
+        }
+    }
+
+    private fun askNotificationPermission() {
+        // This is only necessary for API level >= 33 (TIRAMISU)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
+                PackageManager.PERMISSION_GRANTED
+            ) {
+                // FCM SDK (and your app) can post notifications.
+            } else if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
+                // TODO: display an educational UI explaining to the user the features that will be enabled
+                //       by them granting the POST_NOTIFICATION permission. This UI should provide the user
+                //       "OK" and "No thanks" buttons. If the user selects "OK," directly request the permission.
+                //       If the user selects "No thanks," allow the user to continue without notifications.
+            } else {
+                // Directly ask for the permission
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+    }
+    // [END ask_post_notifications]
+
 }

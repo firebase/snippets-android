@@ -6,8 +6,9 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.quickstart.tasks.R
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.LinkedBlockingQueue
@@ -18,7 +19,7 @@ import java.util.concurrent.TimeoutException
 abstract class MainActivity : AppCompatActivity() {
 
     // [START basic_sign_in_task]
-    private val task = FirebaseAuth.getInstance().signInAnonymously()
+    private val task = Firebase.auth.signInAnonymously()
     // [END basic_sign_in_task]
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,7 +55,7 @@ abstract class MainActivity : AppCompatActivity() {
         // [END completion_listener]
 
         // [START listener_try_catch]
-        val signInTask = FirebaseAuth.getInstance().signInWithEmailAndPassword(
+        val signInTask = Firebase.auth.signInWithEmailAndPassword(
                 "email@example.com", "mypassword1234")
         signInTask.addOnCompleteListener { task ->
             try {
@@ -80,11 +81,11 @@ abstract class MainActivity : AppCompatActivity() {
                 60L, TimeUnit.SECONDS, LinkedBlockingQueue<Runnable>())
         // [END create_handler_and_executor]
 
-        // [START run_task_executor]
+        // [START tasks_run_task_executor]
         task.addOnCompleteListener(executor, OnCompleteListener {
             // ...
         })
-        // [END run_task_executor]
+        // [END tasks_run_task_executor]
     }
 
     private fun activityScopedTask() {
@@ -106,7 +107,7 @@ abstract class MainActivity : AppCompatActivity() {
 
     private fun taskChaining() {
         // [START task_chaining]
-        val signInTask = FirebaseAuth.getInstance().signInAnonymously()
+        val signInTask = Firebase.auth.signInAnonymously()
 
         signInTask.continueWithTask { task ->
             // Take the result from the first task and start the second one

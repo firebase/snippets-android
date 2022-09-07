@@ -20,6 +20,10 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ServerTimestamp
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.Source
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.firestoreSettings
+import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.ktx.Firebase
 import java.util.ArrayList
 import java.util.Date
 import java.util.HashMap
@@ -102,22 +106,22 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
 
     private fun setup() {
         // [START get_firestore_instance]
-        val db = FirebaseFirestore.getInstance()
+        val db = Firebase.firestore
         // [END get_firestore_instance]
 
         // [START set_firestore_settings]
-        val settings = FirebaseFirestoreSettings.Builder()
-                .setPersistenceEnabled(true)
-                .build()
+        val settings = firestoreSettings {
+            isPersistenceEnabled = true
+        }
         db.firestoreSettings = settings
         // [END set_firestore_settings]
     }
 
     private fun setupCacheSize() {
         // [START fs_setup_cache]
-        val settings = FirebaseFirestoreSettings.Builder()
-                .setCacheSizeBytes(FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED)
-                .build()
+        val settings = firestoreSettings {
+            cacheSizeBytes = FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED
+        }
         db.firestoreSettings = settings
         // [END fs_setup_cache]
     }
@@ -230,6 +234,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         val name: String? = null,
         val state: String? = null,
         val country: String? = null,
+        @field:JvmField // use this annotation if your Boolean field is prefixed with 'is'
         val isCapital: Boolean? = null,
         val population: Long? = null,
         val regions: List<String>? = null
@@ -494,7 +499,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         // [START custom_objects]
         val docRef = db.collection("cities").document("BJ")
         docRef.get().addOnSuccessListener { documentSnapshot ->
-            val city = documentSnapshot.toObject(City::class.java)
+            val city = documentSnapshot.toObject<City>()
         }
         // [END custom_objects]
     }
@@ -814,10 +819,14 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         // [END simple_query_capital]
 
         // [START example_filters]
-        citiesRef.whereEqualTo("state", "CA")
-        citiesRef.whereLessThan("population", 100000)
-        citiesRef.whereGreaterThanOrEqualTo("name", "San Francisco")
+        val stateQuery = citiesRef.whereEqualTo("state", "CA")
+        val populationQuery = citiesRef.whereLessThan("population", 100000)
+        val nameQuery = citiesRef.whereGreaterThanOrEqualTo("name", "San Francisco")
         // [END example_filters]
+
+        // [START simple_query_not_equal]
+        val notCapitalQuery = citiesRef.whereNotEqualTo("capital", false)
+        // [END simple_query_not_equal]
     }
 
     fun arrayContainsQueries() {
@@ -842,6 +851,10 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
 
         citiesRef.whereIn("country", listOf("USA", "Japan"))
         // [END in_filter]
+
+        // [START not_in_filter]
+        citiesRef.whereNotIn("country", listOf("USA", "Japan"))
+        // [END not_in_filter]
 
         // [START in_filter_with_array]
         citiesRef.whereIn("regions", listOf(arrayOf("west_coast"), arrayOf("east_coast")))

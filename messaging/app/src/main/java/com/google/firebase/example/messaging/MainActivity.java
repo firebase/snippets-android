@@ -1,37 +1,45 @@
 package com.google.firebase.example.messaging;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import android.util.Log;
 
-import com.google.android.gms.auth.GoogleAuthUtil;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
+import android.util.Log;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @SuppressLint("MissingPermission")
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
+    private static final int NOTIFICATION_REQUEST_CODE = 1234;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // [START handle_data_extras]
+        if (getIntent().getExtras() != null) {
+            for (String key : getIntent().getExtras().keySet()) {
+                Object value = getIntent().getExtras().get(key);
+                Log.d(TAG, "Key: " + key + " Value: " + value);
+            }
+        }
+        // [END handle_data_extras]
     }
 
     public void runtimeEnableAutoInit() {
@@ -51,83 +59,6 @@ public class MainActivity extends AppCompatActivity {
         // [END fcm_device_group_upstream]
     }
 
-    // [START fcm_get_account]
-    public String getAccount() {
-        // This call requires the Android GET_ACCOUNTS permission
-        Account[] accounts = AccountManager.get(this /* activity */).
-                getAccountsByType("com.google");
-        if (accounts.length == 0) {
-            return null;
-        }
-        return accounts[0].name;
-    }
-    // [END fcm_get_account]
-
-    public void getAuthToken() {
-        // [START fcm_get_token]
-        String accountName = getAccount();
-
-        // Initialize the scope using the client ID you got from the Console.
-        final String scope = "audience:server:client_id:"
-                + "1262xxx48712-9qs6n32447mcj9dirtnkyrejt82saa52.apps.googleusercontent.com";
-
-        String idToken = null;
-        try {
-            idToken = GoogleAuthUtil.getToken(this, accountName, scope);
-        } catch (Exception e) {
-            Log.w(TAG, "Exception while getting idToken: " + e);
-        }
-        // [END fcm_get_token]
-    }
-
-    // [START fcm_add_to_group]
-    public String addToGroup(
-            String senderId, String userEmail, String registrationId, String idToken)
-            throws IOException, JSONException {
-        URL url = new URL("https://fcm.googleapis.com/fcm/googlenotification");
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setDoOutput(true);
-
-        // HTTP request header
-        con.setRequestProperty("project_id", senderId);
-        con.setRequestProperty("Content-Type", "application/json");
-        con.setRequestProperty("Accept", "application/json");
-        con.setRequestMethod("POST");
-        con.connect();
-
-        // HTTP request
-        JSONObject data = new JSONObject();
-        data.put("operation", "add");
-        data.put("notification_key_name", userEmail);
-        data.put("registration_ids", new JSONArray(Arrays.asList(registrationId)));
-        data.put("id_token", idToken);
-
-        OutputStream os = con.getOutputStream();
-        os.write(data.toString().getBytes("UTF-8"));
-        os.close();
-
-        // Read the response into a string
-        InputStream is = con.getInputStream();
-        String responseString = new Scanner(is, "UTF-8").useDelimiter("\\A").next();
-        is.close();
-
-        // Parse the JSON string and return the notification key
-        JSONObject response = new JSONObject(responseString);
-        return response.getString("notification_key");
-    }
-    // [END fcm_add_to_group]
-
-    public void removeFromGroup(String userEmail, String registrationId, String idToken) throws JSONException {
-        // [START fcm_remove_from_group]
-        // HTTP request
-        JSONObject data = new JSONObject();
-        data.put("operation", "remove");
-        data.put("notification_key_name", userEmail);
-        data.put("registration_ids", new JSONArray(Arrays.asList(registrationId)));
-        data.put("id_token", idToken);
-        // [END fcm_remove_from_group]
-    }
-
     public void sendUpstream() {
         final String SENDER_ID = "YOUR_SENDER_ID";
         final int messageId = 0; // Increment for each
@@ -141,4 +72,73 @@ public class MainActivity extends AppCompatActivity {
         // [END fcm_send_upstream]
     }
 
+    private void subscribeTopics() {
+        // [START subscribe_topics]
+        FirebaseMessaging.getInstance().subscribeToTopic("weather")
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        String msg = "Subscribed";
+                        if (!task.isSuccessful()) {
+                            msg = "Subscribe failed";
+                        }
+                        Log.d(TAG, msg);
+                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
+        // [END subscribe_topics]
+    }
+
+    private void logRegToken() {
+        // [START log_reg_token]
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+
+                        // Get new FCM registration token
+                        String token = task.getResult();
+
+                        // Log and toast
+                        String msg = "FCM Registration token: " + token;
+                        Log.d(TAG, msg);
+                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
+        // [END log_reg_token]
+    }
+
+    // [START ask_post_notifications]
+    // Declare the launcher at the top of your Activity/Fragment:
+    private final ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    // FCM SDK (and your app) can post notifications.
+                } else {
+                    // TODO: Inform user that that your app will not show notifications.
+                }
+            });
+
+    private void askNotificationPermission() {
+        // This is only necessary for API level >= 33 (TIRAMISU)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
+                    PackageManager.PERMISSION_GRANTED) {
+                // FCM SDK (and your app) can post notifications.
+            } else if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
+                // TODO: display an educational UI explaining to the user the features that will be enabled
+                //       by them granting the POST_NOTIFICATION permission. This UI should provide the user
+                //       "OK" and "No thanks" buttons. If the user selects "OK," directly request the permission.
+                //       If the user selects "No thanks," allow the user to continue without notifications.
+            } else {
+                // Directly ask for the permission
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+            }
+        }
+    }
+    // [END ask_post_notifications]
 }

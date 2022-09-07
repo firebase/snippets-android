@@ -1,6 +1,7 @@
 package com.google.example.firestore.kotlin
 
-import com.google.firebase.functions.FirebaseFunctions
+import com.google.firebase.functions.ktx.functions
+import com.google.firebase.ktx.Firebase
 
 class SolutionDeletes {
 
@@ -10,7 +11,7 @@ class SolutionDeletes {
      * a server-side delete.
      */
     fun deleteAtPath(path: String) {
-        val deleteFn = FirebaseFunctions.getInstance().getHttpsCallable("recursiveDelete")
+        val deleteFn = Firebase.functions.getHttpsCallable("recursiveDelete")
         deleteFn.call(hashMapOf("path" to path))
                 .addOnSuccessListener {
                     // Delete Success

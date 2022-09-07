@@ -8,4 +8,7 @@ on [firebase.google.com](https://firebase.google.com/docs/).
 We love contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
 
 
-[![Build Status](https://travis-ci.org/firebase/snippets-android.svg?branch=master)](https://travis-ci.org/firebase/snippets-android)
+[![Actions Status][gh-actions-badge]][gh-actions]
+
+[gh-actions]: https://github.com/firebase/snippets-android/actions
+[gh-actions-badge]: https://github.com/firebase/snippets-android/workflows/Android%20CI/badge.svg

@@ -18,11 +18,14 @@ package com.google.firebase.quickstart.dynamiclinks;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.appinvite.AppInviteReferral;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.appinvite.FirebaseAppInvite;
 import com.google.firebase.dynamiclinks.DynamicLink;
@@ -32,11 +35,45 @@ import com.google.firebase.dynamiclinks.ShortDynamicLink;
 
 public class MainActivity extends AppCompatActivity {
 
+    private final String TAG = "fdl.MainActivity";
+
+    // [START on_create]
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // [START_EXCLUDE]
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // [END_EXCLUDE]
+
+        // [START get_deep_link]
+        FirebaseDynamicLinks.getInstance()
+                .getDynamicLink(getIntent())
+                .addOnSuccessListener(this, new OnSuccessListener<PendingDynamicLinkData>() {
+                    @Override
+                    public void onSuccess(PendingDynamicLinkData pendingDynamicLinkData) {
+                        // Get deep link from result (may be null if no link is found)
+                        Uri deepLink = null;
+                        if (pendingDynamicLinkData != null) {
+                            deepLink = pendingDynamicLinkData.getLink();
+                        }
+
+
+                        // Handle the deep link. For example, open the linked
+                        // content, or apply promotional credit to the user's
+                        // account.
+                        // ...
+
+                    }
+                })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "getDynamicLink:onFailure", e);
+                    }
+                });
+        // [END get_deep_link]
     }
+    // [END on_create]
 
     public void createDynamicLink_Basic() {
         // [START create_link_basic]
@@ -174,13 +211,6 @@ public class MainActivity extends AppCompatActivity {
         // [END ddl_get_invitation]
     }
 
-    public void getDeepLink() {
-        Intent intent = getIntent();
-        // [START ddl_get_deep_link]
-        String link = AppInviteReferral.getDeepLink(intent);
-        // [END ddl_get_deep_link]
-    }
-
     public void onboardingShare(ShortDynamicLink dl) {
         // [START ddl_onboarding_share]
         Intent intent = new Intent(Intent.ACTION_SEND);
@@ -188,6 +218,30 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(Intent.EXTRA_TEXT, "Try this amazing app: " + dl.getShortLink());
         startActivity(Intent.createChooser(intent, "Share using"));
         // [END ddl_onboarding_share]
+    }
+
+    public Uri buildDeepLink(@NonNull Uri deepLink, int minVersion) {
+        String uriPrefix = "https://YOUR_APP.page.link";
+
+        // Set dynamic link parameters:
+        //  * URI prefix (required)
+        //  * Android Parameters (required)
+        //  * Deep link
+        // [START build_dynamic_link]
+        DynamicLink.Builder builder = FirebaseDynamicLinks.getInstance()
+                .createDynamicLink()
+                .setDomainUriPrefix(uriPrefix)
+                .setAndroidParameters(new DynamicLink.AndroidParameters.Builder()
+                        .setMinimumVersion(minVersion)
+                        .build())
+                .setLink(deepLink);
+
+        // Build the dynamic link
+        DynamicLink link = builder.buildDynamicLink();
+        // [END build_dynamic_link]
+
+        // Return the dynamic link as a URI
+        return link.getUri();
     }
 
 }

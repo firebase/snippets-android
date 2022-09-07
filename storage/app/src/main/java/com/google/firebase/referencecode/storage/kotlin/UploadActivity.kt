@@ -3,11 +3,12 @@ package com.google.firebase.referencecode.storage.kotlin
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.referencecode.storage.R
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageMetadata
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
+import com.google.firebase.storage.ktx.storage
+import com.google.firebase.storage.ktx.storageMetadata
 
 abstract class UploadActivity : AppCompatActivity() {
 
@@ -25,9 +26,7 @@ abstract class UploadActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
 
         // If there's an upload in progress, save the reference so you can query it later
-        storageRef?.let {
-            outState.putString("reference", it.toString())
-        }
+        outState.putString("reference", storageRef.toString())
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
@@ -36,7 +35,7 @@ abstract class UploadActivity : AppCompatActivity() {
         // If there was an upload in progress, get its reference and create a new StorageReference
         val stringRef = savedInstanceState.getString("reference") ?: return
 
-        storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(stringRef)
+        storageRef = Firebase.storage.getReferenceFromUrl(stringRef)
 
         // Find all UploadTasks under this StorageReference (in this example, there should be one)
 
@@ -76,7 +75,7 @@ abstract class UploadActivity : AppCompatActivity() {
         // resume the upload task from where it left off when the process died.
         // to do this, pass the sessionUri as the last parameter
         uploadTask = storageRef.putFile(localFile,
-                StorageMetadata.Builder().build(), sessionUri)
+                storageMetadata {  }, sessionUri)
         // [END restore_after_restart]
     }
 }

@@ -1,11 +1,12 @@
 package com.google.firebase.referencecode.storage.kotlin
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.referencecode.storage.R
-import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
 
 abstract class FirebaseUIActivity : AppCompatActivity() {
 
@@ -17,7 +18,7 @@ abstract class FirebaseUIActivity : AppCompatActivity() {
     fun loadWithGlide() {
         // [START storage_load_with_glide]
         // Reference to an image file in Cloud Storage
-        val storageReference = FirebaseStorage.getInstance().reference
+        val storageReference = Firebase.storage.reference
 
         // ImageView in your Activity
         val imageView = findViewById<ImageView>(R.id.imageView)

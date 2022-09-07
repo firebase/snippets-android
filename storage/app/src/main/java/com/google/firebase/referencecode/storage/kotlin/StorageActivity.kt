@@ -4,15 +4,21 @@ import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.tasks.OnFailureListener
-import com.google.firebase.FirebaseApp
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.ktx.initialize
 import com.google.firebase.referencecode.storage.R
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageException
-import com.google.firebase.storage.StorageMetadata
 import com.google.firebase.storage.StorageReference
-import kotlinx.android.synthetic.main.activity_storage.imageView
+import com.google.firebase.storage.ktx.component1
+import com.google.firebase.storage.ktx.component2
+import com.google.firebase.storage.ktx.component3
+import com.google.firebase.storage.ktx.storage
+import com.google.firebase.storage.ktx.storageMetadata
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
@@ -28,14 +34,14 @@ abstract class StorageActivity : AppCompatActivity() {
         setContentView(R.layout.activity_storage)
 
         // [START storage_field_initialization]
-        storage = FirebaseStorage.getInstance()
+        storage = Firebase.storage
         // [END storage_field_initialization]
 
         includesForCreateReference()
     }
 
     private fun includesForCreateReference() {
-        val storage = FirebaseStorage.getInstance()
+        val storage = Firebase.storage
 
         // ## Create a Reference
 
@@ -117,7 +123,7 @@ abstract class StorageActivity : AppCompatActivity() {
     }
 
     fun includesForUploadFiles() {
-        val storage = FirebaseStorage.getInstance()
+        val storage = Firebase.storage
 
         // [START upload_create_reference]
         // Create a storage reference from our app
@@ -134,6 +140,7 @@ abstract class StorageActivity : AppCompatActivity() {
         mountainsRef.path == mountainImagesRef.path // false
         // [END upload_create_reference]
 
+        val imageView = findViewById<ImageView>(R.id.imageView)
         // [START upload_memory]
         // Get the data from an ImageView as bytes
         imageView.isDrawingCacheEnabled = true
@@ -146,7 +153,7 @@ abstract class StorageActivity : AppCompatActivity() {
         var uploadTask = mountainsRef.putBytes(data)
         uploadTask.addOnFailureListener {
             // Handle unsuccessful uploads
-        }.addOnSuccessListener {
+        }.addOnSuccessListener { taskSnapshot ->
             // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
             // ...
         }
@@ -158,7 +165,7 @@ abstract class StorageActivity : AppCompatActivity() {
         uploadTask = mountainsRef.putStream(stream)
         uploadTask.addOnFailureListener {
             // Handle unsuccessful uploads
-        }.addOnSuccessListener {
+        }.addOnSuccessListener { taskSnapshot ->
             // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
             // ...
         }
@@ -172,7 +179,7 @@ abstract class StorageActivity : AppCompatActivity() {
         // Register observers to listen for when the download is done or if it fails
         uploadTask.addOnFailureListener {
             // Handle unsuccessful uploads
-        }.addOnSuccessListener {
+        }.addOnSuccessListener { taskSnapshot ->
             // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
             // ...
         }
@@ -180,9 +187,9 @@ abstract class StorageActivity : AppCompatActivity() {
 
         // [START upload_with_metadata]
         // Create file metadata including the content type
-        var metadata = StorageMetadata.Builder()
-                .setContentType("image/jpg")
-                .build()
+        var metadata = storageMetadata {
+            contentType = "image/jpg"
+        }
 
         // Upload the file and metadata
         uploadTask = storageRef.child("images/mountains.jpg").putFile(file, metadata)
@@ -203,11 +210,13 @@ abstract class StorageActivity : AppCompatActivity() {
 
         // [START monitor_upload_progress]
         // Observe state change events such as progress, pause, and resume
-        uploadTask.addOnProgressListener { taskSnapshot ->
-            val progress = (100.0 * taskSnapshot.bytesTransferred) / taskSnapshot.totalByteCount
-            println("Upload is $progress% done")
+        // You'll need to import com.google.firebase.storage.ktx.component1 and 
+        // com.google.firebase.storage.ktx.component2
+        uploadTask.addOnProgressListener { (bytesTransferred, totalByteCount) ->
+            val progress = (100.0 * bytesTransferred) / totalByteCount
+            Log.d(TAG, "Upload is $progress% done")
         }.addOnPausedListener {
-            println("Upload is paused")
+            Log.d(TAG, "Upload is paused")
         }
         // [END monitor_upload_progress]
 
@@ -216,19 +225,21 @@ abstract class StorageActivity : AppCompatActivity() {
         file = Uri.fromFile(File("path/to/mountains.jpg"))
 
         // Create the file metadata
-        metadata = StorageMetadata.Builder()
-                .setContentType("image/jpeg")
-                .build()
+        metadata = storageMetadata {
+            contentType = "image/jpeg"
+        }
 
         // Upload file and metadata to the path 'images/mountains.jpg'
         uploadTask = storageRef.child("images/${file.lastPathSegment}").putFile(file, metadata)
 
         // Listen for state changes, errors, and completion of the upload.
-        uploadTask.addOnProgressListener { taskSnapshot ->
-            val progress = (100.0 * taskSnapshot.bytesTransferred) / taskSnapshot.totalByteCount
-            println("Upload is $progress% done")
+        // You'll need to import com.google.firebase.storage.ktx.component1 and 
+        // com.google.firebase.storage.ktx.component2
+        uploadTask.addOnProgressListener { (bytesTransferred, totalByteCount) ->
+            val progress = (100.0 * bytesTransferred) / totalByteCount
+            Log.d(TAG, "Upload is $progress% done")
         }.addOnPausedListener {
-            println("Upload is paused")
+            Log.d(TAG, "Upload is paused")
         }.addOnFailureListener {
             // Handle unsuccessful uploads
         }.addOnSuccessListener {
@@ -260,7 +271,7 @@ abstract class StorageActivity : AppCompatActivity() {
     }
 
     fun includesForDownloadFiles() {
-        val storage = FirebaseStorage.getInstance()
+        val storage = Firebase.storage
 
         // [START download_create_reference]
         // Create a storage reference from our app
@@ -319,7 +330,7 @@ abstract class StorageActivity : AppCompatActivity() {
     }
 
     fun includesForFileMetadata() {
-        val storage = FirebaseStorage.getInstance()
+        val storage = Firebase.storage
 
         // [START metadata_get_storage_reference]
         // Create a storage reference from our app
@@ -330,7 +341,7 @@ abstract class StorageActivity : AppCompatActivity() {
         // [END metadata_get_storage_reference]
 
         // [START get_file_metadata]
-        forestRef.metadata.addOnSuccessListener {
+        forestRef.metadata.addOnSuccessListener { metadata ->
             // Metadata now contains the metadata for 'images/forest.jpg'
         }.addOnFailureListener {
             // Uh-oh, an error occurred!
@@ -339,14 +350,14 @@ abstract class StorageActivity : AppCompatActivity() {
 
         // [START update_file_metadata]
         // Create file metadata including the content type
-        val metadata = StorageMetadata.Builder()
-                .setContentType("image/jpg")
-                .setCustomMetadata("myCustomProperty", "myValue")
-                .build()
+        val metadata = storageMetadata {
+            contentType = "image/jpg"
+            setCustomMetadata("myCustomProperty", "myValue")
+        }
 
         // Update metadata properties
-        forestRef.updateMetadata(metadata).addOnSuccessListener {
-            // Updated metadata is in storageMetadata
+        forestRef.updateMetadata(metadata).addOnSuccessListener { updatedMetadata ->
+            // Updated metadata is in updatedMetadata
         }.addOnFailureListener {
             // Uh-oh, an error occurred!
         }
@@ -354,19 +365,19 @@ abstract class StorageActivity : AppCompatActivity() {
     }
 
     fun includesForMetadata_delete() {
-        val storage = FirebaseStorage.getInstance()
+        val storage = Firebase.storage
         val storageRef = storage.reference
         val forestRef = storageRef.child("images/forest.jpg")
 
         // [START delete_file_metadata]
         // Create file metadata with property to delete
-        val metadata = StorageMetadata.Builder()
-                .setContentType(null)
-                .build()
+        val metadata = storageMetadata {
+            contentType = null
+        }
 
         // Delete the metadata property
-        forestRef.updateMetadata(metadata).addOnSuccessListener {
-            // metadata.contentType should be null
+        forestRef.updateMetadata(metadata).addOnSuccessListener { updatedMetadata ->
+            // updatedMetadata.contentType should be null
         }.addOnFailureListener {
             // Uh-oh, an error occurred!
         }
@@ -375,15 +386,15 @@ abstract class StorageActivity : AppCompatActivity() {
 
     fun includesForMetadata_custom() {
         // [START custom_metadata]
-        val metadata = StorageMetadata.Builder()
-                .setCustomMetadata("location", "Yosemite, CA, USA")
-                .setCustomMetadata("activity", "Hiking")
-                .build()
+        val metadata = storageMetadata {
+            setCustomMetadata("location", "Yosemite, CA, USA")
+            setCustomMetadata("activity", "Hiking")
+        }
         // [END custom_metadata]
     }
 
     fun includesForDeleteFiles() {
-        val storage = FirebaseStorage.getInstance()
+        val storage = Firebase.storage
 
         // [START delete_file]
         // Create a storage reference from our app
@@ -404,35 +415,37 @@ abstract class StorageActivity : AppCompatActivity() {
     fun nonDefaultBucket() {
         // [START storage_non_default_bucket]
         // Get a non-default Storage bucket
-        val storage = FirebaseStorage.getInstance("gs://my-custom-bucket")
+        val storage = Firebase.storage("gs://my-custom-bucket")
         // [END storage_non_default_bucket]
     }
 
     fun customApp() {
-        val customApp = FirebaseApp.initializeApp(this)
+        val customApp = Firebase.initialize(this)
 
         // [START storage_custom_app]
         // Get the default bucket from a custom FirebaseApp
-        val storage = FirebaseStorage.getInstance(customApp!!)
+        val storage = Firebase.storage(customApp!!)
 
         // Get a non-default bucket from a custom FirebaseApp
-        val customStorage = FirebaseStorage.getInstance(customApp, "gs://my-custom-bucket")
+        val customStorage = Firebase.storage(customApp, "gs://my-custom-bucket")
         // [END storage_custom_app]
     }
 
     fun listAllFiles() {
         // [START storage_list_all]
-        val storage = FirebaseStorage.getInstance()
+        val storage = Firebase.storage
         val listRef = storage.reference.child("files/uid")
-
+                
+        // You'll need to import com.google.firebase.storage.ktx.component1 and 
+        // com.google.firebase.storage.ktx.component2
         listRef.listAll()
-                .addOnSuccessListener { listResult ->
-                    listResult.prefixes.forEach { prefix ->
+                .addOnSuccessListener { (items, prefixes) ->
+                    prefixes.forEach { prefix ->
                         // All the prefixes under listRef.
                         // You may call listAll() recursively on them.
                     }
 
-                    listResult.items.forEach { item ->
+                    items.forEach { item ->
                         // All the items under listRef.
                     }
                 }
@@ -442,9 +455,13 @@ abstract class StorageActivity : AppCompatActivity() {
         // [END storage_list_all]
     }
 
+    private fun processResults(items: List<StorageReference>, prefixes: List<StorageReference>) {
+
+    }
+
     // [START storage_list_paginated]
     fun listAllPaginated(pageToken: String?) {
-        val storage = FirebaseStorage.getInstance()
+        val storage = Firebase.storage
         val listRef = storage.reference.child("files/uid")
 
         // Fetch the next page of results, using the pageToken if we have one.
@@ -454,16 +471,15 @@ abstract class StorageActivity : AppCompatActivity() {
             listRef.list(100)
         }
 
+        // You'll need to import com.google.firebase.storage.ktx.component1 and 
+        // com.google.firebase.storage.ktx.component2
         listPageTask
-                .addOnSuccessListener { listResult ->
-                    val prefixes = listResult.prefixes
-                    val items = listResult.items
-
+                .addOnSuccessListener { (items, prefixes, pageToken) ->
                     // Process page of results
-                    // ...
+                    processResults(items, prefixes)
 
                     // Recurse onto next page
-                    listResult.pageToken?.let {
+                    pageToken?.let {
                         listAllPaginated(it)
                     }
                 }.addOnFailureListener {
@@ -481,4 +497,8 @@ abstract class StorageActivity : AppCompatActivity() {
         }
     }
     // [END storage_custom_failure_listener]
+
+    companion object {
+        const val TAG = "kotlin.StorageActivity"
+    }
 }

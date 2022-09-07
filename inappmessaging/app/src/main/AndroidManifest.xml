@@ -17,7 +17,8 @@
             android:value="false" />
         <!-- [END fiam_disable_data_collection] -->
 
-        <activity android:name="com.google.firebase.example.inappmessaging.MainActivity">
+        <activity android:name="com.google.firebase.example.inappmessaging.MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

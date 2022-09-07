@@ -7,9 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.crashlytics.android.Crashlytics;
-
-import io.fabric.sdk.android.Fabric;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,48 +16,52 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
     }
 
-    public void setKeysBasic(String key) {
+    public void setKeysBasic() {
         // [START crash_set_keys_basic]
-        Crashlytics.setString(key, "foo" /* string value */);
+        FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
 
-        Crashlytics.setBool(key, true /* boolean value */);
+        crashlytics.setCustomKey("my_string_key", "foo" /* string value */);
 
-        Crashlytics.setDouble(key, 1.0 /* double value */);
+        crashlytics.setCustomKey("my_bool_key", true /* boolean value */);
 
-        Crashlytics.setFloat(key, 1.0f /* float value */);
+        crashlytics.setCustomKey("my_double_key", 1.0 /* double value */);
 
-        Crashlytics.setInt(key, 1 /* int value */);
+        crashlytics.setCustomKey("my_float_key", 1.0f /* float value */);
+
+        crashlytics.setCustomKey("my_int_key", 1 /* int value */);
         // [END crash_set_keys_basic]
     }
 
     public void resetKey() {
         // [START crash_re_set_key]
-        Crashlytics.setInt("current_level", 3);
-        Crashlytics.setString("last_UI_action", "logged_in");
+        FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
+
+        crashlytics.setCustomKey("current_level", 3);
+        crashlytics.setCustomKey("last_UI_action", "logged_in");
         // [END crash_re_set_key]
     }
 
     public void logReportAndPrint() {
         // [START crash_log_report_and_print]
-        Crashlytics.log(Log.DEBUG, "tag", "message");
+        FirebaseCrashlytics.getInstance().log("message");
         // [END crash_log_report_and_print]
     }
 
     public void logReportOnly() {
         // [START crash_log_report_only]
-        Crashlytics.log("message");
+        FirebaseCrashlytics.getInstance().log("message");
         // [END crash_log_report_only]
     }
 
     public void enableAtRuntime() {
         // [START crash_enable_at_runtime]
-        Fabric.with(this, new Crashlytics());
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
         // [END crash_enable_at_runtime]
     }
 
     public void setUserId() {
         // [START crash_set_user_id]
-        Crashlytics.setUserIdentifier("user123456789");
+        FirebaseCrashlytics.getInstance().setUserId("user123456789");
         // [END crash_set_user_id]
     }
 
@@ -72,20 +74,10 @@ public class MainActivity extends AppCompatActivity {
         try {
             methodThatThrows();
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
             // handle your exception here
         }
         // [END crash_log_caught_ex]
-    }
-
-    public void enableDebugMode() {
-        // [START crash_enable_debug_mode]
-        final Fabric fabric = new Fabric.Builder(this)
-                .kits(new Crashlytics())
-                .debuggable(true)  // Enables Crashlytics debugger
-                .build();
-        Fabric.with(fabric);
-        // [END crash_enable_debug_mode]
     }
 
     public void forceACrash() {
@@ -94,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         crashButton.setText("Crash!");
         crashButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Crashlytics.getInstance().crash(); // Force a crash
+                throw new RuntimeException(); // Force a crash
             }
         });
 
@@ -103,5 +95,4 @@ public class MainActivity extends AppCompatActivity {
                 ViewGroup.LayoutParams.WRAP_CONTENT));
         // [END crash_force_crash]
     }
-
 }

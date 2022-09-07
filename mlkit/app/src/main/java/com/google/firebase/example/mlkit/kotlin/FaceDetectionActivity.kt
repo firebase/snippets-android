@@ -27,7 +27,7 @@ class FaceDetectionActivity : AppCompatActivity() {
                 .getVisionFaceDetector(options)
         // [END get_detector]
 
-        // [START run_detector]
+        // [START fml_run_detector]
         val result = detector.detectInImage(image)
                 .addOnSuccessListener { faces ->
                     // Task completed successfully
@@ -65,7 +65,7 @@ class FaceDetectionActivity : AppCompatActivity() {
                     // Task failed with an exception
                     // ...
                 }
-        // [END run_detector]
+        // [END fml_run_detector]
     }
 
     private fun faceOptionsExamples() {

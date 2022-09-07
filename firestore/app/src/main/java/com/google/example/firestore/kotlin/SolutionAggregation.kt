@@ -4,6 +4,7 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
+import com.google.firebase.firestore.ktx.toObject
 
 /**
  * https://firebase.google.com/docs/firestore/solutions/aggregation
@@ -41,7 +42,7 @@ abstract class SolutionAggregation(private val db: FirebaseFirestore) {
 
         // In a transaction, add the new rating and update the aggregate totals
         return db.runTransaction { transaction ->
-            val restaurant = transaction.get(restaurantRef).toObject(Restaurant::class.java)!!
+            val restaurant = transaction.get(restaurantRef).toObject<Restaurant>()!!
 
             // Compute new number of ratings
             val newNumRatings = restaurant.numRatings + 1

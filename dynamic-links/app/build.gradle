@@ -22,7 +22,7 @@ android {
 
 dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.5.0'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation "com.google.firebase:firebase-auth-ktx:21.0.8"
     implementation "com.google.firebase:firebase-invites:17.0.0"
     implementation "com.google.firebase:firebase-dynamic-links-ktx:21.0.2"

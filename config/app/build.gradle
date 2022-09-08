@@ -4,12 +4,12 @@ plugins {
 }
 
 android {
-    compileSdk 32
+    compileSdkVersion 33
 
     defaultConfig {
         applicationId "com.google.firebase.quickstart.config"
-        minSdk 19
-        targetSdk 32
+        minSdkVersion 19
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
         multiDexEnabled true

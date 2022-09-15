@@ -1361,4 +1361,13 @@ public class DocSnippets {
         });
         // [END update_delete_field]
     }
+
+    public void countAggregateQuery() {
+        // [START count_aggregate_query]
+        Query query = db.collection("games/chess/players").whereEqualTo("online", true);
+        AggregateQuery countQuery = query.count();
+        AggregateQuerySnapshot snapshot = countQuery.get(AggregateSource.SERVER).getResult();
+        Log.d(TAG, "Count: " + snapshot.getCount());
+        // [END count_aggregate_query]
+    }
 }

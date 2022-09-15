@@ -1130,4 +1130,13 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         docRef.update(updates).addOnCompleteListener { }
         // [END update_delete_field]
     }
+
+    fun countAggregateQuery() {
+        // [START count_aggregate_query]
+        val query = db.collection("games/halo/players").whereEqualTo("online", true)
+        val countQuery = query.count()
+        val snapshot = countQuery.get(AggregateSource.SERVER).result
+        Log.d(TAG, "Count: ${snapshot.count}");
+        // [END count_aggregate_query]
+    }
 }

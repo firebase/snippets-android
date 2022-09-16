@@ -7,6 +7,7 @@ import android.os.Bundle;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.appcheck.FirebaseAppCheck;
 import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory;
+import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory;
 import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory;
 
 public class MainActivity extends AppCompatActivity {
@@ -21,17 +22,30 @@ public class MainActivity extends AppCompatActivity {
         // [START appcheck_initialize]
         FirebaseApp.initializeApp(/*context=*/ this);
         FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
-        firebaseAppCheck.installAppCheckProviderFactory(
-                SafetyNetAppCheckProviderFactory.getInstance());
         // [END appcheck_initialize]
     }
 
-    private void initDebug() {
-        // [START appcheck_initialize_debug]
-        FirebaseApp.initializeApp(/*context=*/ this);
+    private void installSafetyNet() {
         FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
+        // [START appcheck_initialize_safetynet]
+        firebaseAppCheck.installAppCheckProviderFactory(
+                SafetyNetAppCheckProviderFactory.getInstance());
+        // [END appcheck_initialize_safetynet]
+    }
+
+    private void installDebug() {
+        FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
+        // [START appcheck_initialize_debug]
         firebaseAppCheck.installAppCheckProviderFactory(
                 DebugAppCheckProviderFactory.getInstance());
+        // [END appcheck_initialize_debug]
+    }
+
+    private void installPlayIntegrity() {
+        FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
+        // [START appcheck_initialize_debug]
+        firebaseAppCheck.installAppCheckProviderFactory(
+                PlayIntegrityAppCheckProviderFactory.getInstance());
         // [END appcheck_initialize_debug]
     }
 }

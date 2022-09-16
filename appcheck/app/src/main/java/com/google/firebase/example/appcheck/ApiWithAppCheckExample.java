@@ -28,7 +28,7 @@ public class ApiWithAppCheckExample {
 
     public void callApiExample() {
         FirebaseAppCheck.getInstance()
-                .getAppCheckToken(false)
+                .getAppCheckToken(/*forceRefresh=*/false)
                 .addOnSuccessListener(new OnSuccessListener<AppCheckToken>() {
                     @Override
                     public void onSuccess(@NonNull AppCheckToken tokenResponse) {

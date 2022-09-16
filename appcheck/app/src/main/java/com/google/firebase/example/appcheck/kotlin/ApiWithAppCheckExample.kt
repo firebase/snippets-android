@@ -1,6 +1,7 @@
 package com.google.firebase.example.appcheck.kotlin
 
-import com.google.firebase.appcheck.FirebaseAppCheck
+import com.google.firebase.appcheck.ktx.appCheck
+import com.google.firebase.ktx.Firebase
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.http.GET
@@ -22,8 +23,8 @@ class ApiWithAppCheckExample {
         .create(YourExampleBackendService::class.java)
 
     fun callApiExample() {
-        FirebaseAppCheck.getInstance()
-            .getAppCheckToken(false)
+        Firebase.appCheck
+            .getAppCheckToken(/*forceRefresh=*/ false)
             .addOnSuccessListener { tokenResponse ->
                 val appCheckToken = tokenResponse.token
                 val apiCall = yourExampleBackendService.exampleData(appCheckToken)

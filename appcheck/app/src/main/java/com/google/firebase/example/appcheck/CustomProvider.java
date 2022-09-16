@@ -74,9 +74,8 @@ public class CustomProvider {
     // [END appcheck_custom_provider_factory]
 
     private void init(Context context) {
-        // [START appcheck_initialize_custom_provider]
-        FirebaseApp.initializeApp(/*context=*/ context);
         FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
+        // [START appcheck_initialize_custom_provider]
         firebaseAppCheck.installAppCheckProviderFactory(
                 new YourCustomAppCheckProviderFactory());
         // [END appcheck_initialize_custom_provider]

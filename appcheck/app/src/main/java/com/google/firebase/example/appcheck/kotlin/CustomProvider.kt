@@ -7,7 +7,8 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.appcheck.AppCheckProvider
 import com.google.firebase.appcheck.AppCheckProviderFactory
 import com.google.firebase.appcheck.AppCheckToken
-import com.google.firebase.appcheck.FirebaseAppCheck
+import com.google.firebase.appcheck.ktx.appCheck
+import com.google.firebase.ktx.Firebase
 
 class CustomProvider {
     // [START appcheck_custom_provider]
@@ -48,9 +49,8 @@ class CustomProvider {
     // [END appcheck_custom_provider_factory]
 
     private fun init(context: Context) {
+        val firebaseAppCheck = Firebase.appCheck
         // [START appcheck_initialize_custom_provider]
-        FirebaseApp.initializeApp(/*context=*/ context)
-        val firebaseAppCheck = FirebaseAppCheck.getInstance()
         firebaseAppCheck.installAppCheckProviderFactory(
             YourCustomAppCheckProviderFactory()
         )

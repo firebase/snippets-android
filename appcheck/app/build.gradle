@@ -32,9 +32,10 @@ dependencies {
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
-    implementation 'com.google.firebase:firebase-appcheck:16.0.1'
-    implementation 'com.google.firebase:firebase-appcheck-debug:16.0.1'
-    implementation 'com.google.firebase:firebase-appcheck-safetynet:16.0.1'
+    implementation 'com.google.firebase:firebase-appcheck-ktx:16.0.2'
+    implementation 'com.google.firebase:firebase-appcheck-debug:16.0.2'
+    implementation 'com.google.firebase:firebase-appcheck-safetynet:16.0.2'
+    implementation 'com.google.firebase:firebase-appcheck-playintegrity:16.0.2'
 
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
 

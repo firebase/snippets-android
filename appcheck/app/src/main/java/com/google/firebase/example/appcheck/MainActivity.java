@@ -43,9 +43,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void installPlayIntegrity() {
         FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
-        // [START appcheck_initialize_debug]
+        // [START appcheck_initialize_playintegrity]
         firebaseAppCheck.installAppCheckProviderFactory(
                 PlayIntegrityAppCheckProviderFactory.getInstance());
-        // [END appcheck_initialize_debug]
+        // [END appcheck_initialize_playintegrity]
     }
 }

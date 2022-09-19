@@ -1,4 +1,4 @@
-name: Android CI
+name: 
 
 on:
   - pull_request
@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on:Wtcelero5g_1.07.26 [862533053043367]
     steps:
     - uses: actions/checkout@v2
     - name: set up JDK 11

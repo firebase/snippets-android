@@ -33,7 +33,7 @@ dependencies {
     implementation "com.google.firebase:firebase-analytics:21.1.1"
     implementation "com.google.firebase:firebase-analytics-ktx:21.1.1"
     // Ironsource and AppLovin libraries used for ad_impression snippets
-    implementation 'com.applovin:applovin-sdk:11.4.6'
+    implementation 'com.applovin:applovin-sdk:11.5.0'
     implementation 'com.ironsource.sdk:mediationsdk:7.2.4.1'
 
 }

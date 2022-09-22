@@ -1135,8 +1135,16 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         // [START count_aggregate_query]
         val query = db.collection("games/halo/players").whereEqualTo("online", true)
         val countQuery = query.count()
-        val snapshot = countQuery.get(AggregateSource.SERVER).result
-        Log.d(TAG, "Count: ${snapshot.count}");
+        countQuery.get(AggregateSource.SERVER).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                // Count fetched successfully
+                val snapshot = task.result
+                Log.d(TAG, "Count: ${snapshot.count}")
+            } else {
+                Log.d(TAG, "Count failed: ", task.getException())
+            }
+        }
+        
         // [END count_aggregate_query]
     }
 }

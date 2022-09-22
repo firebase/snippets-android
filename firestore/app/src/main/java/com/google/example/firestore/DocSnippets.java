@@ -1366,8 +1366,18 @@ public class DocSnippets {
         // [START count_aggregate_query]
         Query query = db.collection("games/chess/players").whereEqualTo("online", true);
         AggregateQuery countQuery = query.count();
-        AggregateQuerySnapshot snapshot = countQuery.get(AggregateSource.SERVER).getResult();
-        Log.d(TAG, "Count: " + snapshot.getCount());
+        countQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
+    @Override
+    public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
+        if (task.isSuccessful()) {
+            // Count fetched successfully
+            AggregateQuerySnapshot snapshot = task.getResult();
+            Log.d(TAG, "Count: " + snapshot.getCount());
+        } else {
+            Log.d(TAG, "Count failed: ", task.getException());
+        }
+    }
+});;
         // [END count_aggregate_query]
     }
 }

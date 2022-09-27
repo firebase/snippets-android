@@ -31,7 +31,9 @@ allprojects {
     def isBlocked = { candidate ->
         def blocklist = [
             'androidx.browser:browser',
-            'com.facebook.android:facebook-android-sdk'
+            'com.facebook.android:facebook-android-sdk',
+            'com.applovin:applovin-sdk',
+            'com.ironsource.sdk:mediationsdk'
         ]
         return blocklist.any { word ->
             return candidate.toString().contains(word)

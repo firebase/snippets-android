@@ -1362,9 +1362,28 @@ public class DocSnippets {
         // [END update_delete_field]
     }
 
+    public void countAggregateCollection() {
+        // [START count_aggregate_collection]
+        Query query = db.collection("cities")
+        AggregateQuery countQuery = query.count();
+        countQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    // Count fetched successfully
+                    AggregateQuerySnapshot snapshot = task.getResult();
+                    Log.d(TAG, "Count: " + snapshot.getCount());
+                } else {
+                    Log.d(TAG, "Count failed: ", task.getException());
+                }
+            }
+        });
+        // [END count_aggregate_collection]
+    }
+
     public void countAggregateQuery() {
         // [START count_aggregate_query]
-        Query query = db.collection("games/chess/players").whereEqualTo("online", true);
+        Query query = db.collection("cities").whereEqualTo("state", "CA");
         AggregateQuery countQuery = query.count();
         countQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
             @Override

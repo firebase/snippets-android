@@ -1131,9 +1131,26 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         // [END update_delete_field]
     }
 
+    fun countAggregateCollection() {
+        // [START count_aggregate_collection]
+        val query = db.collection("cities")
+        val countQuery = query.count()
+        countQuery.get(AggregateSource.SERVER).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                // Count fetched successfully
+                val snapshot = task.result
+                Log.d(TAG, "Count: ${snapshot.count}")
+            } else {
+                Log.d(TAG, "Count failed: ", task.getException())
+            }
+        }
+        
+        // [END count_aggregate_collection]
+    }
+
     fun countAggregateQuery() {
         // [START count_aggregate_query]
-        val query = db.collection("games/halo/players").whereEqualTo("online", true)
+        val query = db.collection("cities").whereEqualTo("state", "CA")
         val countQuery = query.count()
         countQuery.get(AggregateSource.SERVER).addOnCompleteListener { task ->
             if (task.isSuccessful) {

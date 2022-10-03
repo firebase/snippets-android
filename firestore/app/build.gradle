@@ -50,7 +50,7 @@ dependencies {
     implementation "com.firebase:geofire-android-common:3.2.0"
 
     // OkHttp (for Android 11+)
-    implementation "io.grpc:grpc-okhttp:1.49.1"
+    implementation "io.grpc:grpc-okhttp:1.49.2"
 }
 
 apply plugin: 'com.google.gms.google-services'

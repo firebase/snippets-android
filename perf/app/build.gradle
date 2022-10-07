@@ -20,6 +20,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    namespace 'devrel.firebase.google.com.firebaseoptions'
 }
 
 dependencies {

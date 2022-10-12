@@ -7,6 +7,7 @@ import androidx.annotation.WorkerThread
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.DocumentSnapshot
@@ -1129,5 +1130,37 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
 
         docRef.update(updates).addOnCompleteListener { }
         // [END update_delete_field]
+    }
+
+    fun countAggregateCollection() {
+        // [START count_aggregate_collection]
+        val query = db.collection("cities")
+        val countQuery = query.count()
+        countQuery.get(AggregateSource.SERVER).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                // Count fetched successfully
+                val snapshot = task.result
+                Log.d(TAG, "Count: ${snapshot.count}")
+            } else {
+                Log.d(TAG, "Count failed: ", task.getException())
+            }
+        }
+        // [END count_aggregate_collection]
+    }
+
+    fun countAggregateQuery() {
+        // [START count_aggregate_query]
+        val query = db.collection("cities").whereEqualTo("state", "CA")
+        val countQuery = query.count()
+        countQuery.get(AggregateSource.SERVER).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                // Count fetched successfully
+                val snapshot = task.result
+                Log.d(TAG, "Count: ${snapshot.count}")
+            } else {
+                Log.d(TAG, "Count failed: ", task.getException())
+            }
+        }
+        // [END count_aggregate_query]
     }
 }

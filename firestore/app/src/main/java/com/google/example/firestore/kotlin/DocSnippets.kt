@@ -7,6 +7,7 @@ import androidx.annotation.WorkerThread
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.DocumentSnapshot
@@ -1144,7 +1145,6 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
                 Log.d(TAG, "Count failed: ", task.getException())
             }
         }
-        
         // [END count_aggregate_collection]
     }
 
@@ -1161,7 +1161,6 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
                 Log.d(TAG, "Count failed: ", task.getException())
             }
         }
-        
         // [END count_aggregate_query]
     }
 }

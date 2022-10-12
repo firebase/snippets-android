@@ -39,7 +39,7 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
 
     // Firestore
-    implementation "com.google.firebase:firebase-firestore-ktx:24.3.0"
+    implementation "com.google.firebase:firebase-firestore-ktx:24.4.0"
 
     // Firebase / Play Services
     implementation "com.google.firebase:firebase-auth:21.0.8"

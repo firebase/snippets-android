@@ -5,9 +5,9 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.2.2'
-        classpath 'com.google.gms:google-services:4.3.13'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10"
+        classpath 'com.android.tools.build:gradle:7.3.0'
+        classpath 'com.google.gms:google-services:4.3.14'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.20"
     }
 }
 
@@ -31,7 +31,9 @@ allprojects {
     def isBlocked = { candidate ->
         def blocklist = [
             'androidx.browser:browser',
-            'com.facebook.android:facebook-android-sdk'
+            'com.facebook.android:facebook-android-sdk',
+            'com.applovin:applovin-sdk',
+            'com.ironsource.sdk:mediationsdk'
         ]
         return blocklist.any { word ->
             return candidate.toString().contains(word)

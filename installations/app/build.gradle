@@ -21,6 +21,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    namespace 'com.google.samples.snippet'
 }
 
 dependencies {
@@ -29,5 +30,5 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
-    implementation 'com.google.firebase:firebase-installations:17.0.2'
+    implementation 'com.google.firebase:firebase-installations:17.0.3'
 }

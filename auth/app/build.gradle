@@ -18,6 +18,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    namespace 'com.google.firebase.quickstart.auth'
 }
 
 dependencies {
@@ -27,12 +28,12 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'com.google.android.material:material:1.6.1'
-    implementation 'androidx.activity:activity:1.5.1'
+    implementation 'androidx.activity:activity:1.6.0'
 
     implementation "com.google.firebase:firebase-auth-ktx:21.0.8"
     
     // [START gradle_firebase_ui_auth]
-    implementation "com.firebaseui:firebase-ui-auth:8.0.1"
+    implementation "com.firebaseui:firebase-ui-auth:8.0.2"
 
     // Required only if Facebook login support is required
     // Find the latest Facebook SDK releases here: https://goo.gl/Ce5L94

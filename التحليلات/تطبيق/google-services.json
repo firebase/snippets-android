@@ -1,11 +1,11 @@
-{
+{مقتطفات الروبوت/التحليلات/تطبيق/ google-services.json
   "project_info": {
     "project_id": "mockproject-1234",
     "project_number": "123456789000",
     "name": "FirebaseQuickstarts",
     "firebase_url": "https://mockproject-1234.firebaseio.com"
   },
-  "client": [
+  "client": [مقتطفات الروبوت/التحليلات/تطبيق/ google-services.json
     {
       "client_info": {
         "mobilesdk_app_id": "1:123456789000:android:f1bf012572b04063",

@@ -39,9 +39,12 @@ class MainActivity : AppCompatActivity(),
 
         recordImageView()
 
-        recordScreenView()
-
         logCustomEvent()
+    }
+
+    public override fun onResume() {
+        super.onResume()
+        recordScreenView()
     }
 
     fun enhancedEcommerce() {

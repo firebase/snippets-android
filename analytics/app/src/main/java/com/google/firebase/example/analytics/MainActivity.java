@@ -53,9 +53,13 @@ public class MainActivity extends AppCompatActivity
 
         recordImageView();
 
-        recordScreenView();
-
         logCustomEvent();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        recordScreenView();
     }
 
     public void enhancedEcommerce() {

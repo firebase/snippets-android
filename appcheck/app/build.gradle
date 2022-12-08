@@ -35,7 +35,7 @@ dependencies {
 
     implementation 'com.google.firebase:firebase-appcheck:16.1.0'
     implementation 'com.google.firebase:firebase-appcheck-debug:16.1.0'
-    implementation 'com.google.firebase:firebase-appcheck-safetynet:16.1.0'
+    implementation 'com.google.firebase:firebase-appcheck-playintegrity:16.1.0'
 
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
 

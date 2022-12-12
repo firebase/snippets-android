@@ -172,6 +172,7 @@ class GenericIdpActivity : AppCompatActivity() {
     }
 
     fun reauthenticateWithProvider(provider: OAuthProvider.Builder) {
+        // [START auth_oidc_provider_reauth]
         // The user is already signed-in.
         val firebaseUser = firebaseAuth.currentUser!!
         firebaseUser
@@ -185,5 +186,6 @@ class GenericIdpActivity : AppCompatActivity() {
             .addOnFailureListener {
                 // Handle failure.
             }
+        // [END auth_oidc_provider_reauth]
     }
 }

@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -260,5 +261,31 @@ public class GenericIdpActivity extends AppCompatActivity {
                             }
                         });
         // [END auth_oidc_provider_reauth]
+    }
+
+    public void manuallySignIn(String idToken) {
+        // [START auth_oidc_provider_signin_manual]
+        AuthCredential credential = OAuthProvider
+                .newCredentialBuilder("oidc.example-provider")  // As registered in Firebase console.
+                .setIdToken(idToken)  // ID token from OpenID Connect flow.
+                .build();
+        FirebaseAuth.getInstance()
+                .signInWithCredential(credential)
+                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
+                        // User is signed in.
+
+                        // IdP data available in:
+                        //    authResult.getAdditionalUserInfo().getProfile()
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Handle failure.
+                    }
+                });
+        // [END auth_oidc_provider_signin_manual]
     }
 }

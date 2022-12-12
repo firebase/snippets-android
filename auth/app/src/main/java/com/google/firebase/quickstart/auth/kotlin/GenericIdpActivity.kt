@@ -3,6 +3,9 @@ package com.google.firebase.quickstart.auth.kotlin
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.OAuthProvider
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.ktx.oAuthCredential
+import com.google.firebase.ktx.Firebase
 
 class GenericIdpActivity : AppCompatActivity() {
 
@@ -187,5 +190,25 @@ class GenericIdpActivity : AppCompatActivity() {
                 // Handle failure.
             }
         // [END auth_oidc_provider_reauth]
+    }
+
+    fun manuallySignIn(idToken: String) {
+        // [START auth_oidc_provider_signin_manual]
+        val providerId = "oidc.example-provider" // As registered in Firebase console.
+        val credential = oAuthCredential(providerId) {
+            setIdToken(idToken) // ID token from OpenID Connect flow.
+        }
+        Firebase.auth
+            .signInWithCredential(credential)
+            .addOnSuccessListener { authResult ->
+                // User is signed in.
+
+                // IdP data available in:
+                //    authResult.additionalUserInfo.profile
+            }
+            .addOnFailureListener { e ->
+                // Handle failure.
+            }
+        // [END auth_oidc_provider_signin_manual]
     }
 }

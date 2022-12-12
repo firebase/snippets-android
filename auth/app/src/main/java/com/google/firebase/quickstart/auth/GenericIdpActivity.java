@@ -236,6 +236,7 @@ public class GenericIdpActivity extends AppCompatActivity {
     }
 
     public void reauthenticateWithProvider(OAuthProvider.Builder provider) {
+        // [START auth_oidc_provider_reauth]
         // The user is already signed-in.
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
@@ -258,5 +259,6 @@ public class GenericIdpActivity extends AppCompatActivity {
                                 // Handle failure.
                             }
                         });
+        // [END auth_oidc_provider_reauth]
     }
 }

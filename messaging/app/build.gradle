@@ -30,7 +30,7 @@ dependencies {
     // for Google Analytics. This is recommended, but not required.
     implementation 'com.google.firebase:firebase-analytics:21.2.0'
 
-    implementation "com.google.android.gms:play-services-auth:20.4.0"
+    implementation "com.google.android.gms:play-services-auth:20.4.1"
     implementation 'androidx.work:work-runtime-ktx:2.7.1'
 }
 

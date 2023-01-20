@@ -27,4 +27,11 @@ class MainActivity : AppCompatActivity() {
         Firebase.inAppMessaging.isAutomaticDataCollectionEnabled = true
         // [END fiam_enable_data_collection]
     }
+
+    private fun triggerEvent() {
+        // [START fiam_trigger_event]
+        // somewhere in the app's code
+        Firebase.inAppMessaging.triggerEvent("exampleTrigger")
+        // [END fiam_trigger_event]
+    }
 }

@@ -136,7 +136,7 @@ abstract class QueryActivity : AppCompatActivity() {
         // [START rtdb_order_by_nested]
         // Most viewed posts
         val myMostViewedPostsQuery = databaseReference.child("posts")
-            .orderByChild("metrics/views")
+                .orderByChild("metrics/views")
         myMostViewedPostsQuery.addChildEventListener(object : ChildEventListener {
             // TODO: implement the ChildEventListener methods as documented above
             // [START_EXCLUDE]
@@ -201,11 +201,8 @@ abstract class QueryActivity : AppCompatActivity() {
 
             override fun onCancelled(databaseError: DatabaseError) {
                 Log.w(TAG, "postComments:onCancelled", databaseError.toException())
-                Toast.makeText(
-                    context,
-                    "Failed to load comments.",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(context, "Failed to load comments.",
+                        Toast.LENGTH_SHORT).show()
             }
         }
         databaseReference.addChildEventListener(childEventListener)

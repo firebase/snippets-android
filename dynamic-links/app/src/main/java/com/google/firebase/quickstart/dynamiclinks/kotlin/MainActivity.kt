@@ -46,6 +46,7 @@ abstract class MainActivity : AppCompatActivity() {
                 // content, or apply promotional credit to the user's
                 // account.
                 // ...
+
             }
             .addOnFailureListener(this) { e -> Log.w(TAG, "getDynamicLink:onFailure", e) }
         // [END get_deep_link]
@@ -97,6 +98,7 @@ abstract class MainActivity : AppCompatActivity() {
     }
 
     private fun processShortLink(shortLink: Uri?, previewLink: Uri?) {
+
     }
 
     fun createShortLink() {
@@ -122,10 +124,8 @@ abstract class MainActivity : AppCompatActivity() {
     fun shortenLongLink() {
         // [START shorten_long_link]
         val shortLinkTask = Firebase.dynamicLinks.shortLinkAsync {
-            longLink = Uri.parse(
-                "https://example.page.link/?link=" +
-                    "https://www.example.com/&apn=com.example.android&ibn=com.example.ios"
-            )
+            longLink = Uri.parse("https://example.page.link/?link=" +
+                    "https://www.example.com/&apn=com.example.android&ibn=com.example.ios")
         }.addOnSuccessListener { (shortLink, flowChartLink) ->
             // You'll need to import com.google.firebase.dynamiclinks.ktx.component1 and
             // com.google.firebase.dynamiclinks.ktx.component2
@@ -163,19 +163,19 @@ abstract class MainActivity : AppCompatActivity() {
     fun getInvitation() {
         // [START ddl_get_invitation]
         Firebase.dynamicLinks
-            .getDynamicLink(intent)
-            .addOnCompleteListener { task ->
-                if (!task.isSuccessful) {
-                    // Handle error
-                    // ...
-                }
+                .getDynamicLink(intent)
+                .addOnCompleteListener { task ->
+                    if (!task.isSuccessful) {
+                        // Handle error
+                        // ...
+                    }
 
-                val invite = FirebaseAppInvite.getInvitation(task.result)
-                if (invite != null) {
-                    // Handle invite
-                    // ...
+                    val invite = FirebaseAppInvite.getInvitation(task.result)
+                    if (invite != null) {
+                        // Handle invite
+                        // ...
+                    }
                 }
-            }
         // [END ddl_get_invitation]
     }
 

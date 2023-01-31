@@ -10,10 +10,10 @@ import android.hardware.camera2.CameraManager
 import android.media.Image
 import android.net.Uri
 import android.os.Build
+import androidx.annotation.RequiresApi
 import android.util.Log
 import android.util.SparseIntArray
 import android.view.Surface
-import androidx.annotation.RequiresApi
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
 import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata
 import java.io.IOException
@@ -37,11 +37,11 @@ class VisionImage {
     private fun imageFromBuffer(buffer: ByteBuffer, rotation: Int) {
         // [START set_metadata]
         val metadata = FirebaseVisionImageMetadata.Builder()
-            .setWidth(480) // 480x360 is typically sufficient for
-            .setHeight(360) // image recognition
-            .setFormat(FirebaseVisionImageMetadata.IMAGE_FORMAT_NV21)
-            .setRotation(rotation)
-            .build()
+                .setWidth(480) // 480x360 is typically sufficient for
+                .setHeight(360) // image recognition
+                .setFormat(FirebaseVisionImageMetadata.IMAGE_FORMAT_NV21)
+                .setRotation(rotation)
+                .build()
         // [END set_metadata]
         // [START image_from_buffer]
         val image = FirebaseVisionImage.fromByteBuffer(buffer, metadata)
@@ -50,11 +50,11 @@ class VisionImage {
 
     private fun imageFromArray(byteArray: ByteArray, rotation: Int) {
         val metadata = FirebaseVisionImageMetadata.Builder()
-            .setWidth(480) // 480x360 is typically sufficient for
-            .setHeight(360) // image recognition
-            .setFormat(FirebaseVisionImageMetadata.IMAGE_FORMAT_NV21)
-            .setRotation(rotation)
-            .build()
+                .setWidth(480) // 480x360 is typically sufficient for
+                .setHeight(360) // image recognition
+                .setFormat(FirebaseVisionImageMetadata.IMAGE_FORMAT_NV21)
+                .setRotation(rotation)
+                .build()
         // [START image_from_array]
         val image = FirebaseVisionImage.fromByteArray(byteArray, metadata)
         // [END image_from_array]
@@ -90,8 +90,8 @@ class VisionImage {
         // 270, rotate the image an additional 180 ((270 + 270) % 360) degrees.
         val cameraManager = context.getSystemService(CAMERA_SERVICE) as CameraManager
         val sensorOrientation = cameraManager
-            .getCameraCharacteristics(cameraId)
-            .get(CameraCharacteristics.SENSOR_ORIENTATION)!!
+                .getCameraCharacteristics(cameraId)
+                .get(CameraCharacteristics.SENSOR_ORIENTATION)!!
         rotationCompensation = (rotationCompensation + sensorOrientation + 270) % 360
 
         // Return the corresponding FirebaseVisionImageMetadata rotation value.

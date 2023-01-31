@@ -91,10 +91,10 @@ class PhoneAuthActivity : Activity() {
     private fun startPhoneNumberVerification(phoneNumber: String) {
         // [START start_phone_auth]
         val options = PhoneAuthOptions.newBuilder(auth)
-            .setPhoneNumber(phoneNumber) // Phone number to verify
+            .setPhoneNumber(phoneNumber)       // Phone number to verify
             .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
-            .setActivity(this) // Activity (for callback binding)
-            .setCallbacks(callbacks) // OnVerificationStateChangedCallbacks
+            .setActivity(this)                 // Activity (for callback binding)
+            .setCallbacks(callbacks)          // OnVerificationStateChangedCallbacks
             .build()
         PhoneAuthProvider.verifyPhoneNumber(options)
         // [END start_phone_auth]
@@ -112,10 +112,10 @@ class PhoneAuthActivity : Activity() {
         token: PhoneAuthProvider.ForceResendingToken?
     ) {
         val optionsBuilder = PhoneAuthOptions.newBuilder(auth)
-            .setPhoneNumber(phoneNumber) // Phone number to verify
+            .setPhoneNumber(phoneNumber)       // Phone number to verify
             .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
-            .setActivity(this) // Activity (for callback binding)
-            .setCallbacks(callbacks) // OnVerificationStateChangedCallbacks
+            .setActivity(this)                 // Activity (for callback binding)
+            .setCallbacks(callbacks)          // OnVerificationStateChangedCallbacks
         if (token != null) {
             optionsBuilder.setForceResendingToken(token) // callback's ForceResendingToken
         }
@@ -126,25 +126,26 @@ class PhoneAuthActivity : Activity() {
     // [START sign_in_with_phone]
     private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
         auth.signInWithCredential(credential)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d(TAG, "signInWithCredential:success")
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(TAG, "signInWithCredential:success")
 
-                    val user = task.result?.user
-                } else {
-                    // Sign in failed, display a message and update the UI
-                    Log.w(TAG, "signInWithCredential:failure", task.exception)
-                    if (task.exception is FirebaseAuthInvalidCredentialsException) {
-                        // The verification code entered was invalid
+                        val user = task.result?.user
+                    } else {
+                        // Sign in failed, display a message and update the UI
+                        Log.w(TAG, "signInWithCredential:failure", task.exception)
+                        if (task.exception is FirebaseAuthInvalidCredentialsException) {
+                            // The verification code entered was invalid
+                        }
+                        // Update UI
                     }
-                    // Update UI
                 }
-            }
     }
     // [END sign_in_with_phone]
 
     private fun updateUI(user: FirebaseUser? = auth.currentUser) {
+
     }
 
     companion object {

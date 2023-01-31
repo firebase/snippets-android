@@ -55,9 +55,7 @@ abstract class MainActivity : AppCompatActivity() {
 
         // [START listener_try_catch]
         val signInTask = Firebase.auth.signInWithEmailAndPassword(
-            "email@example.com",
-            "mypassword1234"
-        )
+                "email@example.com", "mypassword1234")
         signInTask.addOnCompleteListener { task ->
             try {
                 // Specific error information can be obtained by passing the expected
@@ -78,19 +76,14 @@ abstract class MainActivity : AppCompatActivity() {
         // Create a new ThreadPoolExecutor with 2 threads for each processor on the
         // device and a 60 second keep-alive time.
         val numCores = Runtime.getRuntime().availableProcessors()
-        val executor = ThreadPoolExecutor(
-            numCores * 2,
-            numCores * 2,
-            60L,
-            TimeUnit.SECONDS,
-            LinkedBlockingQueue<Runnable>()
-        )
+        val executor = ThreadPoolExecutor(numCores * 2, numCores *2,
+                60L, TimeUnit.SECONDS, LinkedBlockingQueue<Runnable>())
         // [END create_handler_and_executor]
 
         // [START tasks_run_task_executor]
-        task.addOnCompleteListener(executor) {
+        task.addOnCompleteListener(executor, OnCompleteListener {
             // ...
-        }
+        })
         // [END tasks_run_task_executor]
     }
 

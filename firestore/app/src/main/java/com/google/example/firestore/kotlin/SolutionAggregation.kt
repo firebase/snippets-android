@@ -29,9 +29,9 @@ abstract class SolutionAggregation(private val db: FirebaseFirestore) {
     fun getAllRatings() {
         // [START get_all_ratings]
         db.collection("restaurants")
-            .document("arinell-pizza")
-            .collection("ratings")
-            .get()
+                .document("arinell-pizza")
+                .collection("ratings")
+                .get()
         // [END get_all_ratings]
     }
 
@@ -60,7 +60,7 @@ abstract class SolutionAggregation(private val db: FirebaseFirestore) {
 
             // Update rating
             val data = hashMapOf<String, Any>(
-                "rating" to rating
+                    "rating" to rating
             )
             transaction.set(ratingRef, data, SetOptions.merge())
 

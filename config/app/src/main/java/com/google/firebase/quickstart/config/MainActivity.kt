@@ -1,9 +1,9 @@
 package com.google.firebase.quickstart.config
 
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.get
@@ -37,17 +37,11 @@ class MainActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     val updated = task.result
                     Log.d(TAG, "Config params updated: $updated")
-                    Toast.makeText(
-                        this,
-                        "Fetch and activate succeeded",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(this, "Fetch and activate succeeded",
+                        Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(
-                        this,
-                        "Fetch failed",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(this, "Fetch failed",
+                        Toast.LENGTH_SHORT).show()
                 }
                 displayWelcomeMessage()
             }

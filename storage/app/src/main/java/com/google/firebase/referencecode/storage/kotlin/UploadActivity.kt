@@ -74,11 +74,8 @@ abstract class UploadActivity : AppCompatActivity() {
         // [START restore_after_restart]
         // resume the upload task from where it left off when the process died.
         // to do this, pass the sessionUri as the last parameter
-        uploadTask = storageRef.putFile(
-            localFile,
-            storageMetadata { },
-            sessionUri
-        )
+        uploadTask = storageRef.putFile(localFile,
+                storageMetadata {  }, sessionUri)
         // [END restore_after_restart]
     }
 }

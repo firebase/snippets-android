@@ -12,4 +12,5 @@ class EmulatorSuite {
         Firebase.auth.useEmulator("10.0.2.2", 9099)
         // [END auth_emulator_connect]
     }
+
 }

@@ -73,7 +73,6 @@ class GenericIdpActivity : AppCompatActivity() {
         val provider = OAuthProvider.newBuilder("yahoo.com")
         // [END auth_yahoo_provider_create]
 
-
         // [START auth_yahoo_provider_params]
         // Prompt user to re-authenticate to Yahoo.
         provider.addCustomParameter("prompt", "login")
@@ -81,7 +80,6 @@ class GenericIdpActivity : AppCompatActivity() {
         // Localize to French.
         provider.addCustomParameter("language", "fr")
         // [END auth_yahoo_provider_params]
-
 
         // [START auth_yahoo_provider_scopes]
         // Request read access to a user's email addresses.
@@ -95,12 +93,10 @@ class GenericIdpActivity : AppCompatActivity() {
         val providerBuilder = OAuthProvider.newBuilder("oidc.example-provider")
         // [END auth_oidc_provider_create]
 
-
         // [START auth_oidc_provider_params]
         // Target specific email with login hint.
         providerBuilder.addCustomParameter("login_hint", "user@example.com")
         // [END auth_oidc_provider_params]
-
 
         // [START auth_oidc_provider_scopes]
         // Request read access to a user's email addresses.

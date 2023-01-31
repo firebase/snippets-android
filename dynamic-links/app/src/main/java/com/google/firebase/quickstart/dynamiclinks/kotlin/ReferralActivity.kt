@@ -50,8 +50,11 @@ abstract class ReferralActivity : AppCompatActivity() {
         val subject = String.format("%s wants you to play MyExampleGame!", referrerName)
         val invitationLink = mInvitationUrl.toString()
         val msg = "Let's play MyExampleGame together! Use my referrer link: $invitationLink"
-        val msgHtml = String.format("<p>Let's play MyExampleGame together! Use my " +
-                "<a href=\"%s\">referrer link</a>!</p>", invitationLink)
+        val msgHtml = String.format(
+            "<p>Let's play MyExampleGame together! Use my " +
+                "<a href=\"%s\">referrer link</a>!</p>",
+            invitationLink
+        )
 
         val intent = Intent(Intent.ACTION_SENDTO).apply {
             data = Uri.parse("mailto:") // only email apps should handle this
@@ -72,40 +75,41 @@ abstract class ReferralActivity : AppCompatActivity() {
         // ...
 
         Firebase.dynamicLinks
-                .getDynamicLink(intent)
-                .addOnSuccessListener(this) { pendingDynamicLinkData ->
-                    // Get deep link from result (may be null if no link is found)
-                    var deepLink: Uri? = null
-                    if (pendingDynamicLinkData != null) {
-                        deepLink = pendingDynamicLinkData.link
-                    }
-                    //
-                    // If the user isn't signed in and the pending Dynamic Link is
-                    // an invitation, sign in the user anonymously, and record the
-                    // referrer's UID.
-                    //
-                    val user = Firebase.auth.currentUser
-                    if (user == null &&
-                            deepLink != null &&
-                            deepLink.getBooleanQueryParameter("invitedby", false)) {
-                        val referrerUid = deepLink.getQueryParameter("invitedby")
-                        createAnonymousAccountWithReferrerInfo(referrerUid)
-                    }
+            .getDynamicLink(intent)
+            .addOnSuccessListener(this) { pendingDynamicLinkData ->
+                // Get deep link from result (may be null if no link is found)
+                var deepLink: Uri? = null
+                if (pendingDynamicLinkData != null) {
+                    deepLink = pendingDynamicLinkData.link
                 }
+                //
+                // If the user isn't signed in and the pending Dynamic Link is
+                // an invitation, sign in the user anonymously, and record the
+                // referrer's UID.
+                //
+                val user = Firebase.auth.currentUser
+                if (user == null &&
+                    deepLink != null &&
+                    deepLink.getBooleanQueryParameter("invitedby", false)
+                ) {
+                    val referrerUid = deepLink.getQueryParameter("invitedby")
+                    createAnonymousAccountWithReferrerInfo(referrerUid)
+                }
+            }
     }
 
     private fun createAnonymousAccountWithReferrerInfo(referrerUid: String?) {
         Firebase.auth
-                .signInAnonymously()
-                .addOnSuccessListener {
-                    // Keep track of the referrer in the RTDB. Database calls
-                    // will depend on the structure of your app's RTDB.
-                    val user = Firebase.auth.currentUser
-                    val userRecord = Firebase.database.reference
-                            .child("users")
-                            .child(user!!.uid)
-                    userRecord.child("referred_by").setValue(referrerUid)
-                }
+            .signInAnonymously()
+            .addOnSuccessListener {
+                // Keep track of the referrer in the RTDB. Database calls
+                // will depend on the structure of your app's RTDB.
+                val user = Firebase.auth.currentUser
+                val userRecord = Firebase.database.reference
+                    .child("users")
+                    .child(user!!.uid)
+                userRecord.child("referred_by").setValue(referrerUid)
+            }
     }
     // [END ddl_referral_on_create]
 
@@ -118,30 +122,30 @@ abstract class ReferralActivity : AppCompatActivity() {
     fun linkCredential(credential: AuthCredential) {
         // [START ddl_referral_link_cred]
         Firebase.auth.currentUser!!
-                .linkWithCredential(credential)
-                .addOnSuccessListener {
-                    // Complete any post sign-up tasks here.
-                }
+            .linkWithCredential(credential)
+            .addOnSuccessListener {
+                // Complete any post sign-up tasks here.
+            }
         // [END ddl_referral_link_cred]
     }
 
     fun rewardUser(credential: AuthCredential) {
         // [START ddl_referral_reward_user]
         Firebase.auth.currentUser!!
-                .linkWithCredential(credential)
-                .addOnSuccessListener {
-                    // Complete any post sign-up tasks here.
+            .linkWithCredential(credential)
+            .addOnSuccessListener {
+                // Complete any post sign-up tasks here.
 
-                    // Trigger the sign-up reward function by creating the
-                    // "last_signin_at" field. (If this is a value you want to track,
-                    // you would also update this field in the success listeners of
-                    // your Firebase Authentication signIn calls.)
-                    val user = Firebase.auth.currentUser!!
-                    val userRecord = Firebase.database.reference
-                            .child("users")
-                            .child(user.uid)
-                    userRecord.child("last_signin_at").setValue(ServerValue.TIMESTAMP)
-                }
+                // Trigger the sign-up reward function by creating the
+                // "last_signin_at" field. (If this is a value you want to track,
+                // you would also update this field in the success listeners of
+                // your Firebase Authentication signIn calls.)
+                val user = Firebase.auth.currentUser!!
+                val userRecord = Firebase.database.reference
+                    .child("users")
+                    .child(user.uid)
+                userRecord.child("last_signin_at").setValue(ServerValue.TIMESTAMP)
+            }
         // [END ddl_referral_reward_user]
     }
 }

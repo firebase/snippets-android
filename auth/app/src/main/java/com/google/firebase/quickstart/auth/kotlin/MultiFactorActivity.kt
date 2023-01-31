@@ -33,17 +33,15 @@ class MultiFactorActivity : Activity() {
         // [START send_email_verification]
         val user = auth.currentUser!!
         user.sendEmailVerification()
-                .addOnCompleteListener(this) { task ->
-                    // Email verification sent
-                }
+            .addOnCompleteListener(this) { task ->
+                // Email verification sent
+            }
         // [END send_email_verification]
     }
 
     private fun reload() {
-
     }
 
     private fun updateUI(user: FirebaseUser?) {
-
     }
 }

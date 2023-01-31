@@ -7,10 +7,8 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.google.firebase.example.messaging.MainActivity
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging
 import com.google.firebase.messaging.ktx.remoteMessage
@@ -45,10 +43,12 @@ class MainActivity : AppCompatActivity() {
         // [START fcm_device_group_upstream]
         val to = "a_unique_key" // the notification key
         val msgId = AtomicInteger()
-        Firebase.messaging.send(remoteMessage(to) {
-            setMessageId(msgId.get().toString())
-            addData("hello", "world")
-        })
+        Firebase.messaging.send(
+            remoteMessage(to) {
+                setMessageId(msgId.get().toString())
+                addData("hello", "world")
+            }
+        )
         // [END fcm_device_group_upstream]
     }
 
@@ -57,11 +57,13 @@ class MainActivity : AppCompatActivity() {
         val messageId = 0 // Increment for each
         // [START fcm_send_upstream]
         val fm = Firebase.messaging
-        fm.send(remoteMessage("$SENDER_ID@fcm.googleapis.com") {
-            setMessageId(messageId.toString())
-            addData("my_message", "Hello World")
-            addData("my_action", "SAY_HELLO")
-        })
+        fm.send(
+            remoteMessage("$SENDER_ID@fcm.googleapis.com") {
+                setMessageId(messageId.toString())
+                addData("my_message", "Hello World")
+                addData("my_action", "SAY_HELLO")
+            }
+        )
         // [END fcm_send_upstream]
     }
 
@@ -129,5 +131,4 @@ class MainActivity : AppCompatActivity() {
         }
     }
     // [END ask_post_notifications]
-
 }

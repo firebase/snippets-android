@@ -13,14 +13,14 @@ class SolutionDeletes {
     fun deleteAtPath(path: String) {
         val deleteFn = Firebase.functions.getHttpsCallable("recursiveDelete")
         deleteFn.call(hashMapOf("path" to path))
-                .addOnSuccessListener {
-                    // Delete Success
-                    // ...
-                }
-                .addOnFailureListener {
-                    // Delete Failed
-                    // ...
-                }
+            .addOnSuccessListener {
+                // Delete Success
+                // ...
+            }
+            .addOnFailureListener {
+                // Delete Failed
+                // ...
+            }
     }
     // [END call_delete_function]
 }

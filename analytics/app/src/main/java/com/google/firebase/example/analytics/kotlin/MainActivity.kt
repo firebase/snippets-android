@@ -3,21 +3,24 @@ package com.google.firebase.example.analytics.kotlin
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.appcompat.app.AppCompatActivity
+// importing libraries to support 3rd party ad_impression snippets
+import com.applovin.mediation.MaxAd
+import com.applovin.mediation.MaxAdRevenueListener
+// importing Firebase Libraries
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.example.analytics.R
 import com.google.firebase.ktx.Firebase
 // importing libraries to support 3rd party ad_impression snippets
-import com.ironsource.mediationsdk.impressionData.ImpressionDataListener
 import com.ironsource.mediationsdk.impressionData.ImpressionData
-import com.applovin.mediation.MaxAd
-import com.applovin.mediation.MaxAdRevenueListener
+import com.ironsource.mediationsdk.impressionData.ImpressionDataListener
 
-
-class MainActivity : AppCompatActivity(),
+class MainActivity :
+    AppCompatActivity(),
     // importing libraries to support 3rd party ad_impression snippets
-    MaxAdRevenueListener, ImpressionDataListener {
+    MaxAdRevenueListener,
+    ImpressionDataListener {
 
     // [START declare_analytics]
     private lateinit var firebaseAnalytics: FirebaseAnalytics
@@ -26,7 +29,6 @@ class MainActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
 
         // [START shared_app_measurement]
         // Obtain the FirebaseAnalytics instance.
@@ -91,8 +93,10 @@ class MainActivity : AppCompatActivity(),
         firebaseAnalytics.logEvent(FirebaseAnalytics.Event.VIEW_ITEM_LIST) {
             param(FirebaseAnalytics.Param.ITEM_LIST_ID, "L001")
             param(FirebaseAnalytics.Param.ITEM_LIST_NAME, "Related products")
-            param(FirebaseAnalytics.Param.ITEMS,
-                    arrayOf(itemJeggingsWithIndex, itemBootsWithIndex, itemSocksWithIndex))
+            param(
+                FirebaseAnalytics.Param.ITEMS,
+                arrayOf(itemJeggingsWithIndex, itemBootsWithIndex, itemSocksWithIndex)
+            )
         }
         // [END view_item_list]
 

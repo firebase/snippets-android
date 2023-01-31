@@ -80,7 +80,6 @@ class MainActivity : AppCompatActivity() {
                 if (!task.isSuccessful) {
                     val e = task.exception
                     if (e is FirebaseFunctionsException) {
-
                         // Function error code, will be INTERNAL if the failure
                         // was not handled properly in the function call.
                         val code = e.code
@@ -94,7 +93,7 @@ class MainActivity : AppCompatActivity() {
         // [END call_add_numbers]
     }
 
-    private fun callAddMessage(inputMessage: String){
+    private fun callAddMessage(inputMessage: String) {
         // [START call_add_message]
         addMessage(inputMessage)
             .addOnCompleteListener { task ->

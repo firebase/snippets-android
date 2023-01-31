@@ -26,8 +26,8 @@ abstract class FirebaseUIActivity : AppCompatActivity() {
         // Download directly from StorageReference using Glide
         // (See MyAppGlideModule for Loader registration)
         Glide.with(this /* context */)
-                .load(storageReference)
-                .into(imageView)
+            .load(storageReference)
+            .into(imageView)
         // [END storage_load_with_glide]
     }
 }

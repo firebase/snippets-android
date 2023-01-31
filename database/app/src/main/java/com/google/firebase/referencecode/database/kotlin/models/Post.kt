@@ -19,12 +19,12 @@ data class Post(
     @Exclude
     fun toMap(): Map<String, Any?> {
         return mapOf(
-                "uid" to uid,
-                "author" to author,
-                "title" to title,
-                "body" to body,
-                "starCount" to starCount,
-                "stars" to stars
+            "uid" to uid,
+            "author" to author,
+            "title" to title,
+            "body" to body,
+            "starCount" to starCount,
+            "stars" to stars
         )
     }
     // [END post_to_map]

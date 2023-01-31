@@ -2,7 +2,6 @@ package com.google.firebase.dynamicinvites.kotlin.presenter
 
 import android.content.Context
 import androidx.annotation.DrawableRes
-
 import com.google.firebase.dynamicinvites.kotlin.model.InviteContent
 
 // [START ddl_invite_presenter]

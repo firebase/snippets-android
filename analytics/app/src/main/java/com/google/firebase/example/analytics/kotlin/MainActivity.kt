@@ -3,16 +3,13 @@ package com.google.firebase.example.analytics.kotlin
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.appcompat.app.AppCompatActivity
-// importing libraries to support 3rd party ad_impression snippets
 import com.applovin.mediation.MaxAd
 import com.applovin.mediation.MaxAdRevenueListener
-// importing Firebase Libraries
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.example.analytics.R
 import com.google.firebase.ktx.Firebase
-// importing libraries to support 3rd party ad_impression snippets
 import com.ironsource.mediationsdk.impressionData.ImpressionData
 import com.ironsource.mediationsdk.impressionData.ImpressionDataListener
 

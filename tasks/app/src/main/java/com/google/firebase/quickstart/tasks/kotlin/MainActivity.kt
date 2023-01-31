@@ -2,7 +2,6 @@ package com.google.firebase.quickstart.tasks.kotlin
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.AuthResult

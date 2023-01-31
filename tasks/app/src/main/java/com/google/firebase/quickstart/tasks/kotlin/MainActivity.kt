@@ -81,9 +81,9 @@ abstract class MainActivity : AppCompatActivity() {
         // [END create_handler_and_executor]
 
         // [START tasks_run_task_executor]
-        task.addOnCompleteListener(executor, OnCompleteListener {
+        task.addOnCompleteListener(executor) {
             // ...
-        })
+        }
         // [END tasks_run_task_executor]
     }
 

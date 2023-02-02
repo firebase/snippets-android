@@ -11,7 +11,7 @@ class EmulatorSuite {
         // 10.0.2.2 is the special IP address to connect to the 'localhost' of
         // the host computer from an Android emulator.
         val storage = Firebase.storage
-        storage.useEmulator("10.0.2.2", 9199);
+        storage.useEmulator("10.0.2.2", 9199)
         // [END storage_emulator_connect]
     }
 

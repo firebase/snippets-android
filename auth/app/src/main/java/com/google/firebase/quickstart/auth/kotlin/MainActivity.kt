@@ -55,17 +55,17 @@ abstract class MainActivity : AppCompatActivity() {
         val user = Firebase.auth.currentUser
         user?.let {
             // Name, email address, and profile photo Url
-            val name = user.displayName
-            val email = user.email
-            val photoUrl = user.photoUrl
+            val name = it.displayName
+            val email = it.email
+            val photoUrl = it.photoUrl
 
             // Check if user's email is verified
-            val emailVerified = user.isEmailVerified
+            val emailVerified = it.isEmailVerified
 
             // The user's ID, unique to the Firebase project. Do NOT use this value to
             // authenticate with your backend server, if you have one. Use
             // FirebaseUser.getToken() instead.
-            val uid = user.uid
+            val uid = it.uid
         }
         // [END get_user_profile]
     }
@@ -533,12 +533,12 @@ abstract class MainActivity : AppCompatActivity() {
         // [START games_get_user_info]
         val user = auth.currentUser
         user?.let {
-            val playerName = user.displayName
+            val playerName = it.displayName
 
             // The user's Id, unique to the Firebase project.
             // Do NOT use this value to authenticate with your backend server, if you
             // have one; use FirebaseUser.getIdToken() instead.
-            val uid = user.uid
+            val uid = it.uid
         }
 
         // [END games_get_user_info]

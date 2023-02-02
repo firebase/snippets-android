@@ -26,4 +26,11 @@ public class MainActivity extends AppCompatActivity {
         FirebaseInAppMessaging.getInstance().setAutomaticDataCollectionEnabled(true);
         // [END fiam_enable_data_collection]
     }
+
+    private void triggerEvent() {
+        // [START fiam_trigger_event]
+        // somewhere in the app's code
+        FirebaseInAppMessaging.getInstance().triggerEvent("exampleTrigger");
+        // [END fiam_trigger_event]
+    }
 }

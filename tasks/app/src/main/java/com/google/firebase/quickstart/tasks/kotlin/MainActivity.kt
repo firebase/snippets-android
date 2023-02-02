@@ -2,7 +2,6 @@ package com.google.firebase.quickstart.tasks.kotlin
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.AuthResult
@@ -82,9 +81,9 @@ abstract class MainActivity : AppCompatActivity() {
         // [END create_handler_and_executor]
 
         // [START tasks_run_task_executor]
-        task.addOnCompleteListener(executor, OnCompleteListener {
+        task.addOnCompleteListener(executor) {
             // ...
-        })
+        }
         // [END tasks_run_task_executor]
     }
 

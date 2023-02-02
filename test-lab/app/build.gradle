@@ -18,6 +18,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    namespace 'devrel.firebase.google.com.firebaseoptions'
 }
 
 repositories {
@@ -28,7 +29,7 @@ repositories {
 
 dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'androidx.appcompat:appcompat:1.6.0'
     implementation "com.google.firebase:firebase-iid:21.1.0"
 
     implementation(name:'cloudtestingscreenshotter_lib', ext:'aar')

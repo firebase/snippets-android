@@ -5,9 +5,9 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.2.2'
-        classpath 'com.google.gms:google-services:4.3.13'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10"
+        classpath 'com.android.tools.build:gradle:7.4.1'
+        classpath 'com.google.gms:google-services:4.3.15'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0"
     }
 }
 
@@ -31,7 +31,9 @@ allprojects {
     def isBlocked = { candidate ->
         def blocklist = [
             'androidx.browser:browser',
-            'com.facebook.android:facebook-android-sdk'
+            'com.facebook.android:facebook-android-sdk',
+            'com.applovin:applovin-sdk',
+            'com.ironsource.sdk:mediationsdk'
         ]
         return blocklist.any { word ->
             return candidate.toString().contains(word)
@@ -50,7 +52,11 @@ configurations {
 }
 
 dependencies {
-    ktlint "com.github.shyiko:ktlint:0.31.0"
+    ktlint ("com.pinterest:ktlint:0.48.2") {
+        attributes {
+            attribute(Bundling.BUNDLING_ATTRIBUTE, getObjects().named(Bundling, Bundling.EXTERNAL))
+        }
+    }
 }
 
 task("ktlint", type: JavaExec, group: "verification") {
@@ -65,7 +71,7 @@ task("ktlint", type: JavaExec, group: "verification") {
 
     description = "Check Kotlin code style."
     classpath = configurations.ktlint
-    main = "com.github.shyiko.ktlint.Main"
+    mainClass.set("com.pinterest.ktlint.Main")
     args = [
         "--format",
         "--android",

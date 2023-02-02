@@ -19,6 +19,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    namespace 'com.google.firebase.example.analytics'
 }
 repositories {
     maven {
@@ -29,11 +30,11 @@ repositories {
 
 dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.5.1'
-    implementation "com.google.firebase:firebase-analytics:21.1.1"
-    implementation "com.google.firebase:firebase-analytics-ktx:21.1.1"
+    implementation 'androidx.appcompat:appcompat:1.6.0'
+    implementation "com.google.firebase:firebase-analytics:21.2.0"
+    implementation "com.google.firebase:firebase-analytics-ktx:21.2.0"
     // Ironsource and AppLovin libraries used for ad_impression snippets
-    implementation 'com.applovin:applovin-sdk:11.4.6'
+    implementation 'com.applovin:applovin-sdk:11.5.1'
     implementation 'com.ironsource.sdk:mediationsdk:7.2.4.1'
 
 }

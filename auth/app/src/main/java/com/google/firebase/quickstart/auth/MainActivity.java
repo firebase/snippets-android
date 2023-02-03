@@ -516,8 +516,8 @@ public class MainActivity extends AppCompatActivity {
                 .setActivity(this)
                 .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                     @Override
-                    public void onCodeSent(String verificationId,
-                                           PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+                    public void onCodeSent(@NonNull String verificationId,
+                                           @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                         // Save the verification id somewhere
                         // ...
 
@@ -526,13 +526,13 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
+                    public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
                         // Sign in with the credential
                         // ...
                     }
 
                     @Override
-                    public void onVerificationFailed(FirebaseException e) {
+                    public void onVerificationFailed(@NonNull FirebaseException e) {
                         // ...
                     }
                 })
@@ -563,14 +563,14 @@ public class MainActivity extends AppCompatActivity {
                 .setActivity(this)
                 .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                     @Override
-                    public void onVerificationCompleted(PhoneAuthCredential credential) {
+                    public void onVerificationCompleted(@NonNull PhoneAuthCredential credential) {
                         // Instant verification is applied and a credential is directly returned.
                         // ...
                     }
 
                     // [START_EXCLUDE]
                     @Override
-                    public void onVerificationFailed(FirebaseException e) {
+                    public void onVerificationFailed(@NonNull FirebaseException e) {
 
                     }
                     // [END_EXCLUDE]

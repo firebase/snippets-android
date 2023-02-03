@@ -11,7 +11,7 @@ class EmulatorSuite {
         // 10.0.2.2 is the special IP address to connect to the 'localhost' of
         // the host computer from an Android emulator.
         val database = Firebase.database
-        database.useEmulator("10.0.2.2", 9000);
+        database.useEmulator("10.0.2.2", 9000)
         // [END rtdb_emulator_connect]
     }
 

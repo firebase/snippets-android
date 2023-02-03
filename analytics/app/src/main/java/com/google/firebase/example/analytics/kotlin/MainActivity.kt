@@ -272,7 +272,7 @@ class MainActivity :
             firebaseAnalytics.logEvent(FirebaseAnalytics.Event.AD_IMPRESSION) {
                 param(FirebaseAnalytics.Param.AD_PLATFORM, "appLovin")
                 param(FirebaseAnalytics.Param.AD_UNIT_NAME, impressionData.adUnitId)
-                param(FirebaseAnalytics.Param.AD_FORMAT, impressionData.format.displayName)
+                param(FirebaseAnalytics.Param.AD_FORMAT, impressionData.format.label)
                 param(FirebaseAnalytics.Param.AD_SOURCE, impressionData.networkName)
                 param(FirebaseAnalytics.Param.VALUE, impressionData.revenue)
                 param(FirebaseAnalytics.Param.CURRENCY, "USD") // All Applovin revenue is sent in USD

@@ -260,7 +260,7 @@ public class MainActivity extends AppCompatActivity
         Bundle params = new Bundle();
         params.putString(FirebaseAnalytics.Param.AD_PLATFORM, "appLovin");
         params.putString(FirebaseAnalytics.Param.AD_SOURCE, impressionData.getNetworkName());
-        params.putString(FirebaseAnalytics.Param.AD_FORMAT, impressionData.getFormat().getDisplayName());
+        params.putString(FirebaseAnalytics.Param.AD_FORMAT, impressionData.getFormat().getLabel());
         params.putString(FirebaseAnalytics.Param.AD_UNIT_NAME, impressionData.getAdUnitId());
         params.putDouble(FirebaseAnalytics.Param.VALUE, revenue);
         params.putString(FirebaseAnalytics.Param.CURRENCY, "USD"); // All Applovin revenue is sent in USD

@@ -1,5 +1,7 @@
 package com.google.example.firestore;
 
+import androidx.annotation.NonNull;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -54,7 +56,7 @@ public class SolutionAggregation {
         // In a transaction, add the new rating and update the aggregate totals
         return db.runTransaction(new Transaction.Function<Void>() {
             @Override
-            public Void apply(Transaction transaction) throws FirebaseFirestoreException {
+            public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
                 Restaurant restaurant = transaction.get(restaurantRef).toObject(Restaurant.class);
 
                 // Compute new number of ratings

@@ -69,7 +69,7 @@ public class QueryActivity extends AppCompatActivity {
         mMessagesRef = databaseReference.child("messages");
         mMessagesListener = new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // New data at this path. This method will be called after every change in the
                 // data at this path or a subpath.
 
@@ -88,7 +88,7 @@ public class QueryActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(DatabaseError error) {
+            public void onCancelled(@NonNull DatabaseError error) {
                 // Could not successfully listen for data, log the error
                 Log.e(TAG, "messages:onCancelled:" + error.getMessage());
             }
@@ -106,11 +106,11 @@ public class QueryActivity extends AppCompatActivity {
         myTopPostsQuery.addChildEventListener(new ChildEventListener() {
             // TODO: implement the ChildEventListener methods as documented above
             // [START_EXCLUDE]
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) { }
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) { }
-            public void onChildRemoved(DataSnapshot dataSnapshot) { }
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) { }
-            public void onCancelled(DatabaseError databaseError) { }
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, String s) { }
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, String s) { }
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) { }
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, String s) { }
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
             // [END_EXCLUDE]
         });
         // [END basic_query]
@@ -125,14 +125,14 @@ public class QueryActivity extends AppCompatActivity {
         // My top posts by number of stars
         myTopPostsQuery.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                     // TODO: handle the post
                 }
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Getting Post failed, log a message
                 Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
                 // ...

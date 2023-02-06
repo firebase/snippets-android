@@ -531,7 +531,7 @@ public class DocSnippets {
 
         db.runTransaction(new Transaction.Function<Void>() {
             @Override
-            public Void apply(Transaction transaction) throws FirebaseFirestoreException {
+            public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
                 DocumentSnapshot snapshot = transaction.get(sfDocRef);
 
                 // Note: this could be done without a transaction
@@ -563,7 +563,7 @@ public class DocSnippets {
 
         db.runTransaction(new Transaction.Function<Double>() {
             @Override
-            public Double apply(Transaction transaction) throws FirebaseFirestoreException {
+            public Double apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
                 DocumentSnapshot snapshot = transaction.get(sfDocRef);
                 double newPopulation = snapshot.getDouble("population") + 1;
                 if (newPopulation <= 1000000) {

@@ -172,7 +172,7 @@ public class OfflineActivity extends AppCompatActivity {
         final DatabaseReference connectedRef = database.getReference(".info/connected");
         connectedRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
                 boolean connected = snapshot.getValue(Boolean.class);
                 if (connected) {
                     DatabaseReference con = myConnectionsRef.push();
@@ -190,7 +190,7 @@ public class OfflineActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(DatabaseError error) {
+            public void onCancelled(@NonNull DatabaseError error) {
                 Log.w(TAG, "Listener was cancelled at .info/connected");
             }
         });

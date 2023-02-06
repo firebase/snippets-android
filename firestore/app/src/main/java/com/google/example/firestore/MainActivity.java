@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -85,24 +86,8 @@ public class MainActivity extends Activity implements OnClickListener {
     }
 
     private void onDeleteAllClicked() {
-        FirebaseAuth.getInstance()
-                .signInAnonymously()
-                .addOnSuccessListener(this, new OnSuccessListener<AuthResult>() {
-                    @Override
-                    public void onSuccess(AuthResult authResult) {
-                        Log.d(TAG, "auth:onSuccess");
-
-                        // Delete
-                        DocSnippets docSnippets = new DocSnippets(mFirestore);
-                        docSnippets.deleteAll();
-                    }
-                })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "auth:onFailure", e);
-                    }
-                });
+        // See: https://firebase.google.com/docs/firestore/manage-data/delete-data#collections
+        Toast.makeText(this, "Deleting all is no longer supported", Toast.LENGTH_LONG).show();
     }
 
     @Override

@@ -1001,62 +1001,6 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         // [END fs_collection_group_query]
     }
 
-    // [START delete_collection]
-    /**
-     * Delete all documents in a collection. Uses an Executor to perform work on a background
-     * thread. This does *not* automatically discover and delete subcollections.
-     */
-    private fun deleteCollection(
-        collection: CollectionReference,
-        batchSize: Int,
-        executor: Executor
-    ): Task<Void> {
-
-        // Perform the delete operation on the provided Executor, which allows us to use
-        // simpler synchronous logic without blocking the main thread.
-        return Tasks.call(executor, Callable<Void> {
-            // Get the first batch of documents in the collection
-            var query = collection.orderBy(FieldPath.documentId()).limit(batchSize.toLong())
-
-            // Get a list of deleted documents
-            var deleted = deleteQueryBatch(query)
-
-            // While the deleted documents in the last batch indicate that there
-            // may still be more documents in the collection, page down to the
-            // next batch and delete again
-            while (deleted.size >= batchSize) {
-                // Move the query cursor to start after the last doc in the batch
-                val last = deleted[deleted.size - 1]
-                query = collection.orderBy(FieldPath.documentId())
-                        .startAfter(last.id)
-                        .limit(batchSize.toLong())
-
-                deleted = deleteQueryBatch(query)
-            }
-
-            null
-        })
-    }
-
-    /**
-     * Delete all results from a query in a single WriteBatch. Must be run on a worker thread
-     * to avoid blocking/crashing the main thread.
-     */
-    @WorkerThread
-    @Throws(Exception::class)
-    private fun deleteQueryBatch(query: Query): List<DocumentSnapshot> {
-        val querySnapshot = Tasks.await(query.get())
-
-        val batch = query.firestore.batch()
-        for (snapshot in querySnapshot) {
-            batch.delete(snapshot.reference)
-        }
-        Tasks.await(batch.commit())
-
-        return querySnapshot.documents
-    }
-    // [END delete_collection]
-
     fun toggleOffline() {
         // [START disable_network]
         db.disableNetwork().addOnCompleteListener {

@@ -31,7 +31,7 @@ class EmailPasswordActivity : Activity() {
         // Check if user is signed in (non-null) and update UI accordingly.
         val currentUser = auth.currentUser
         if(currentUser != null){
-            reload();
+            reload()
         }
     }
     // [END on_start_check_user]

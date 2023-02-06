@@ -107,8 +107,9 @@ public class ReadAndWriteSnippets {
     // [START post_stars_transaction]
     private void onStarClicked(DatabaseReference postRef) {
         postRef.runTransaction(new Transaction.Handler() {
+            @NonNull
             @Override
-            public Transaction.Result doTransaction(MutableData mutableData) {
+            public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
                 Post p = mutableData.getValue(Post.class);
                 if (p == null) {
                     return Transaction.success(mutableData);

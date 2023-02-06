@@ -286,7 +286,7 @@ class MainActivity :
         // The onImpressionSuccess will be reported when the rewarded video and interstitial ad is
         // opened.
         // For banners, the impression is reported on load success. Log.d(TAG, "onImpressionSuccess" +
-        // impressionData);
+        // impressionData)
         firebaseAnalytics = Firebase.analytics
         firebaseAnalytics.logEvent(FirebaseAnalytics.Event.AD_IMPRESSION) {
             param(FirebaseAnalytics.Param.AD_PLATFORM, "ironSource")

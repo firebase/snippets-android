@@ -155,25 +155,4 @@ class MainActivity : AppCompatActivity() {
     }
     // [END get_store_token]
 
-    private fun refreshToken() {
-        // In the app’s first Activity
-        val preferences = this.getPreferences(Context.MODE_PRIVATE)
-        val lastRefreshLong = preferences.getLong("lastRefreshDate", -1)
-        lifecycleScope.launch {
-            val today = Date()
-            val c = Calendar.getInstance().apply {
-                time = if (lastRefreshLong == -1L) today else Date(lastRefreshLong)
-                add(Calendar.DATE, 30)
-            }
-
-            if (today.after(c.time) || lastRefreshLong == -1L) {
-                // get token and store into Firestore
-                getAndStoreRegToken()
-                // sync device cache time with Firestore just in case
-                val document = Firebase.firestore.collection("refresh").document("refreshDate").get().await()
-                val updatedTime = (document.data!!["lastRefreshDate"] as Timestamp).seconds * 1000
-                preferences.edit().putLong("lastRefreshDate", updatedTime).apply()
-            }
-        }
-    }
 }

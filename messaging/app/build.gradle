@@ -11,6 +11,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -30,8 +31,14 @@ dependencies {
     // for Google Analytics. This is recommended, but not required.
     implementation 'com.google.firebase:firebase-analytics:21.2.0'
 
+    // Used to store FCM Registration Token.
+    // This is recommended, but not required.
+    // See: https://firebase.google.com/docs/cloud-messaging/manage-tokens
+    implementation 'com.google.firebase:firebase-firestore-ktx:24.4.3'
+
     implementation "com.google.android.gms:play-services-auth:20.4.1"
     implementation 'androidx.work:work-runtime-ktx:2.7.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -1,6 +1,7 @@
 package com.google.firebase.example.messaging.kotlin
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -10,11 +11,19 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
+import com.google.firebase.Timestamp
 import com.google.firebase.example.messaging.MainActivity
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging
 import com.google.firebase.messaging.ktx.remoteMessage
+import java.util.Calendar
+import java.util.Date
 import java.util.concurrent.atomic.AtomicInteger
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class MainActivity : AppCompatActivity() {
 
@@ -130,4 +139,41 @@ class MainActivity : AppCompatActivity() {
     }
     // [END ask_post_notifications]
 
+    // [START get_store_token]
+    private suspend fun getAndStoreRegToken(): String {
+        val token = Firebase.messaging.token.await()
+        // Add token and timestamp to Firestore for this user
+        val deviceToken = hashMapOf(
+            "token" to token,
+            "timestamp" to FieldValue.serverTimestamp(),
+        )
+
+        // Get user ID from Firebase Auth or your own server
+        Firebase.firestore.collection("fcmTokens").document("myuserid")
+            .set(deviceToken).await()
+        return token
+    }
+    // [END get_store_token]
+
+    private fun refreshToken() {
+        // In the app’s first Activity
+        val preferences = this.getPreferences(Context.MODE_PRIVATE)
+        val lastRefreshLong = preferences.getLong("lastRefreshDate", -1)
+        lifecycleScope.launch {
+            val today = Date()
+            val c = Calendar.getInstance().apply {
+                time = if (lastRefreshLong == -1L) today else Date(lastRefreshLong)
+                add(Calendar.DATE, 30)
+            }
+
+            if (today.after(c.time) || lastRefreshLong == -1L) {
+                // get token and store into Firestore
+                getAndStoreRegToken()
+                // sync device cache time with Firestore just in case
+                val document = Firebase.firestore.collection("refresh").document("refreshDate").get().await()
+                val updatedTime = (document.data!!["lastRefreshDate"] as Timestamp).seconds * 1000
+                preferences.edit().putLong("lastRefreshDate", updatedTime).apply()
+            }
+        }
+    }
 }

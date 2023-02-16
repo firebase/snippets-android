@@ -24,7 +24,7 @@ android {
 
 dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.6.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation "com.google.firebase:firebase-messaging-ktx:23.1.1"
 
     // For an optimal experience using FCM, add the Firebase SDK
@@ -37,7 +37,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore-ktx:24.4.3'
 
     implementation "com.google.android.gms:play-services-auth:20.4.1"
-    implementation 'androidx.work:work-runtime-ktx:2.7.1'
+    implementation 'androidx.work:work-runtime-ktx:2.8.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
 }
 

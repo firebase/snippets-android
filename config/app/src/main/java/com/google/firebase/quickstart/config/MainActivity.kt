@@ -5,7 +5,10 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.ConfigUpdate
+import com.google.firebase.remoteconfig.ConfigUpdateListener
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigException
 import com.google.firebase.remoteconfig.ktx.get
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
@@ -46,6 +49,25 @@ class MainActivity : AppCompatActivity() {
                 displayWelcomeMessage()
             }
         // [END fetch_config_with_callback]
+
+        // [START add_config_update_listener]
+        remoteConfig.addOnConfigUpdateListener(object : ConfigUpdateListener {
+            override fun onUpdate(configUpdate : ConfigUpdate) {
+                Log.d(TAG, "Updated keys: " + configUpdate.updatedKeys.joinToString(", "));
+
+                if (configUpdate.updatedKeys.contains("welcome_message")) {
+                    remoteConfig.activate().addOnCompleteListener {
+                        displayWelcomeMessage()
+                    }
+                }
+            }
+
+            override fun onError(error: FirebaseRemoteConfigException) {
+                Log.w(TAG, "Config Update Error Code: " + error.code, error)
+            }
+        })
+        // [END add_config_update_listener]
+
     }
 
     private fun displayWelcomeMessage() {

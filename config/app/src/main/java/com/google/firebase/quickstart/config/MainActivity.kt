@@ -67,7 +67,6 @@ class MainActivity : AppCompatActivity() {
             }
         })
         // [END add_config_update_listener]
-
     }
 
     private fun displayWelcomeMessage() {

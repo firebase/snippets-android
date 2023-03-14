@@ -105,7 +105,8 @@ public class PhoneAuthActivity extends Activity {
           PhoneAuthOptions.newBuilder(mAuth) 
               .setPhoneNumber(phoneNumber)       // Phone number to verify
               .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
-              .setActivity(this)                 // Activity (for callback binding)
+              .setActivity(this)                 // (optional) Activity for callback binding
+              // If no activity is passed, reCAPTCHA verification can not be used.
               .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
               .build();
           PhoneAuthProvider.verifyPhoneNumber(options);     

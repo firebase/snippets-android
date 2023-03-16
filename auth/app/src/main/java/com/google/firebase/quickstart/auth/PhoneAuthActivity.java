@@ -13,6 +13,7 @@ import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthMissingActivityRecaptchaException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
@@ -67,6 +68,8 @@ public class PhoneAuthActivity extends Activity {
                     // Invalid request
                 } else if (e instanceof FirebaseTooManyRequestsException) {
                     // The SMS quota for the project has been exceeded
+                } else if (e instanceof FirebaseAuthMissingActivityRecaptchaException) {
+                    // Recaptcha verification attempted with invalid acitvity
                 }
 
                 // Show a message and update the UI

@@ -118,7 +118,7 @@ class PhoneAuthActivity : Activity() {
             .setPhoneNumber(phoneNumber)       // Phone number to verify
             .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
             .setActivity(this)                 // (optional) Activity for callback binding
-                                               // If no activity is passed, reCAPTCHA verification can not be used.
+            // If no activity is passed, reCAPTCHA verification can not be used.
             .setCallbacks(callbacks)          // OnVerificationStateChangedCallbacks
         if (token != null) {
             optionsBuilder.setForceResendingToken(token) // callback's ForceResendingToken

@@ -58,7 +58,7 @@ class PhoneAuthActivity : Activity() {
                     // Invalid request
                 } else if (e is FirebaseTooManyRequestsException) {
                     // The SMS quota for the project has been exceeded
-                } else if (e instanceof FirebaseAuthMissingActivityRecaptchaException) {
+                } else if (e is FirebaseAuthMissingActivityRecaptchaException) {
                     // Recaptcha verification attempted with invalid acitvity
                 }
 

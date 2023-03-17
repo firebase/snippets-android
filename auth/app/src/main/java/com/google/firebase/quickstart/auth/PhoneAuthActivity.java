@@ -69,7 +69,7 @@ public class PhoneAuthActivity extends Activity {
                 } else if (e instanceof FirebaseTooManyRequestsException) {
                     // The SMS quota for the project has been exceeded
                 } else if (e instanceof FirebaseAuthMissingActivityRecaptchaException) {
-                    // Recaptcha verification attempted with invalid acitvity
+                    // reCAPTCHA verification attempted with null Activity
                 }
 
                 // Show a message and update the UI

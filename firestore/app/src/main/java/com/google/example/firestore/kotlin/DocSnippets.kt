@@ -1112,10 +1112,11 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         val collection = db.collection("cities")
         // [START or_query]
         val query = collection.where(Filter.and(
-            Filter.greaterThan("name", "L"),
+            Filter.equalTo("state", "CA"),
             Filter.or(
                 Filter.equalTo("capital", true),
                 Filter.greaterThanOrEqualTo("population", 1000000)
+            )
         ))
         // [END or_query]
     }

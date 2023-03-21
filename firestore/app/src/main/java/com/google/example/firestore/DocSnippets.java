@@ -1340,7 +1340,7 @@ public class DocSnippets {
         CollectionReference collection = db.collection("cities");
         // [START or_queries]
         Query query = collection.where(Filter.and(
-            Filter.greaterThan("name", "L"),
+            Filter.equalTo("state", "CA"),
             Filter.or(
                 Filter.equalTo("capital", true),
                 Filter.greaterThanOrEqualTo("population", 1000000)

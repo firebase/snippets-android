@@ -63,21 +63,22 @@ public class MainActivity extends AppCompatActivity {
         // [END fetch_config_with_callback]
 
         // [START add_config_update_listener]
-        mFirebaseRemoteConfig.addOnConfigUpdateListener(object :ConfigUpdateListener {
-            override fun onUpdate(configUpdate :ConfigUpdate) {
-                Log.d(TAG, "Updated keys: " + configUpdate.updatedKeys.joinToString(", "));
+        mFirebaseRemoteConfig.addOnConfigUpdateListener(new ConfigUpdateListener() {
+            @Override
+            public void onUpdate(ConfigUpdate configUpdate) {
+                Log.d(TAG, "Updated keys: " + configUpdate.getUpdatedKeys());
 
-                if (configUpdate.updatedKeys.contains("welcome_message")) {
-                    remoteConfig.activate().addOnCompleteListener {
-                        displayWelcomeMessage()
-                    }
+                if (configUpdate.getUpdatedKeys().contains("welcome_message")) {
+                    mFirebaseRemoteConfig.activate()
+                            .addOnCompleteListener(task -> displayWelcomeMessage());
                 }
             }
 
-            override fun onError(error:FirebaseRemoteConfigException) {
-                Log.w(TAG, "Config Update Error Code: " + error.code, error)
+            @Override
+            public void onError(FirebaseRemoteConfigException error) {
+                Log.w(TAG, "Config update error with code: " + error.getCode(), error);
             }
-        })
+        });
         // [END add_config_update_listener]
     }
 

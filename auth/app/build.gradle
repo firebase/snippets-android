@@ -30,7 +30,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.activity:activity:1.7.0'
 
-    implementation "com.google.firebase:firebase-auth-ktx:21.1.0"
+    implementation "com.google.firebase:firebase-auth-ktx:21.2.0"
     
     // [START gradle_firebase_ui_auth]
     implementation "com.firebaseui:firebase-ui-auth:8.0.2"

@@ -7,6 +7,7 @@ import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthMissingActivityForRecaptchaException
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
@@ -57,6 +58,8 @@ class PhoneAuthActivity : Activity() {
                     // Invalid request
                 } else if (e is FirebaseTooManyRequestsException) {
                     // The SMS quota for the project has been exceeded
+                } else if (e is FirebaseAuthMissingActivityForRecaptchaException) {
+                    // reCAPTCHA verification attempted with null Activity
                 }
 
                 // Show a message and update the UI
@@ -114,7 +117,8 @@ class PhoneAuthActivity : Activity() {
         val optionsBuilder = PhoneAuthOptions.newBuilder(auth)
             .setPhoneNumber(phoneNumber)       // Phone number to verify
             .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
-            .setActivity(this)                 // Activity (for callback binding)
+            .setActivity(this)                 // (optional) Activity for callback binding
+            // If no activity is passed, reCAPTCHA verification can not be used.
             .setCallbacks(callbacks)          // OnVerificationStateChangedCallbacks
         if (token != null) {
             optionsBuilder.setForceResendingToken(token) // callback's ForceResendingToken

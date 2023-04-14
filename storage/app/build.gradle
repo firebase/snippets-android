@@ -1,6 +1,8 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'com.google.devtools.ksp' version '1.8.20-1.0.10'
+}
 
 android {
     compileSdkVersion 33
@@ -40,8 +42,7 @@ dependencies {
 
     implementation 'com.firebaseui:firebase-ui-storage:8.0.2'
     implementation 'com.github.bumptech.glide:glide:4.15.1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.15.1'
-    kapt 'com.github.bumptech.glide:compiler:4.15.1'
+    ksp 'com.github.bumptech.glide:ksp:4.15.1'
 
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 }

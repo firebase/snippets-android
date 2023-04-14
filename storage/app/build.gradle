@@ -19,7 +19,7 @@ android {
         }
     }
     namespace 'com.google.firebase.referencecode.storage'
-    lintOptions {
+    lint {
         // TODO(thatfiredev): Remove this once
         //  https://github.com/bumptech/glide/issues/4940 is fixed
         disable 'NotificationPermission'

@@ -18,10 +18,10 @@ android {
         }
     }
     packagingOptions {
-        // Required to avoid clashes in Jackson.
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/LICENSE-FIREBASE.txt'
-        exclude 'META-INF/NOTICE'
+        resources {
+            // Required to avoid clashes in Jackson.
+            excludes += ['META-INF/LICENSE', 'META-INF/LICENSE-FIREBASE.txt', 'META-INF/NOTICE']
+        }
     }
     namespace 'com.google.firebase.referencecode.database'
 }

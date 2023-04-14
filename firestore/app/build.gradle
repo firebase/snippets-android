@@ -14,9 +14,6 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    lintOptions {
-        warning 'InvalidPackage'
-    }
 
     buildTypes {
         release {
@@ -25,6 +22,9 @@ android {
         }
     }
     namespace 'com.google.example.firestore'
+    lint {
+        warning 'InvalidPackage'
+    }
 }
 
 repositories {

@@ -33,6 +33,13 @@ android {
     kotlinOptions {
         jvmTarget = '11'
     }
+
+    // Workaround until https://youtrack.jetbrains.com/issue/KT-55947 is fixed
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+        kotlinOptions {
+            jvmTarget = "11"
+        }
+    }
 }
 
 dependencies {

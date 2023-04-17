@@ -18,10 +18,17 @@ android {
         }
     }
     packagingOptions {
-        // Required to avoid clashes in Jackson.
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/LICENSE-FIREBASE.txt'
-        exclude 'META-INF/NOTICE'
+        resources {
+            // Required to avoid clashes in Jackson.
+            excludes += ['META-INF/LICENSE', 'META-INF/LICENSE-FIREBASE.txt', 'META-INF/NOTICE']
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = '11'
     }
     namespace 'com.google.firebase.referencecode.database'
 }

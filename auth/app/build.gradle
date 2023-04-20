@@ -35,9 +35,9 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'com.google.android.material:material:1.8.0'
-    implementation 'androidx.activity:activity:1.7.0'
+    implementation 'androidx.activity:activity:1.7.1'
 
-    implementation "com.google.firebase:firebase-auth-ktx:21.2.0"
+    implementation "com.google.firebase:firebase-auth-ktx:21.3.0"
     
     // [START gradle_firebase_ui_auth]
     implementation "com.firebaseui:firebase-ui-auth:8.0.2"

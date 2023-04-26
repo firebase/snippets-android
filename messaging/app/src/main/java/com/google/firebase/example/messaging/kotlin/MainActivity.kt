@@ -1,29 +1,22 @@
 package com.google.firebase.example.messaging.kotlin
 
 import android.Manifest
-import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.lifecycleScope
-import com.google.firebase.Timestamp
-import com.google.firebase.example.messaging.MainActivity
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging
 import com.google.firebase.messaging.ktx.remoteMessage
-import java.util.Calendar
-import java.util.Date
-import java.util.concurrent.atomic.AtomicInteger
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import java.util.concurrent.atomic.AtomicInteger
 
 class MainActivity : AppCompatActivity() {
 
@@ -54,10 +47,12 @@ class MainActivity : AppCompatActivity() {
         // [START fcm_device_group_upstream]
         val to = "a_unique_key" // the notification key
         val msgId = AtomicInteger()
-        Firebase.messaging.send(remoteMessage(to) {
-            setMessageId(msgId.get().toString())
-            addData("hello", "world")
-        })
+        Firebase.messaging.send(
+            remoteMessage(to) {
+                setMessageId(msgId.get().toString())
+                addData("hello", "world")
+            },
+        )
         // [END fcm_device_group_upstream]
     }
 
@@ -66,11 +61,13 @@ class MainActivity : AppCompatActivity() {
         val messageId = 0 // Increment for each
         // [START fcm_send_upstream]
         val fm = Firebase.messaging
-        fm.send(remoteMessage("$SENDER_ID@fcm.googleapis.com") {
-            setMessageId(messageId.toString())
-            addData("my_message", "Hello World")
-            addData("my_action", "SAY_HELLO")
-        })
+        fm.send(
+            remoteMessage("$SENDER_ID@fcm.googleapis.com") {
+                setMessageId(messageId.toString())
+                addData("my_message", "Hello World")
+                addData("my_action", "SAY_HELLO")
+            },
+        )
         // [END fcm_send_upstream]
     }
 
@@ -110,7 +107,7 @@ class MainActivity : AppCompatActivity() {
     // [START ask_post_notifications]
     // Declare the launcher at the top of your Activity/Fragment:
     private val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
+        ActivityResultContracts.RequestPermission(),
     ) { isGranted: Boolean ->
         if (isGranted) {
             // FCM SDK (and your app) can post notifications.
@@ -154,5 +151,4 @@ class MainActivity : AppCompatActivity() {
         return token
     }
     // [END get_store_token]
-
 }

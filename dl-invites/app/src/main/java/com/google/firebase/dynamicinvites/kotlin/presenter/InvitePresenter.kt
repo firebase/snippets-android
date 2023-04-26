@@ -2,7 +2,6 @@ package com.google.firebase.dynamicinvites.kotlin.presenter
 
 import android.content.Context
 import androidx.annotation.DrawableRes
-
 import com.google.firebase.dynamicinvites.kotlin.model.InviteContent
 
 // [START ddl_invite_presenter]
@@ -18,7 +17,7 @@ open class InvitePresenter(
     /** Whether or not the method is available on this device. For example, SMS is phone only.  */
     val isAvailable: Boolean,
     /** The Content of the invitation  */
-    val content: InviteContent
+    val content: InviteContent,
 ) {
     /**
      * Send the invitation using the specified method.

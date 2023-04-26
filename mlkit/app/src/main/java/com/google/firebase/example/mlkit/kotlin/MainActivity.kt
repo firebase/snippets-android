@@ -13,16 +13,18 @@ class MainActivity : AppCompatActivity() {
     fun buildCloudVisionOptions() {
         // [START ml_build_cloud_vision_options]
         val options = FirebaseVisionCloudDetectorOptions.Builder()
-                .setModelType(FirebaseVisionCloudDetectorOptions.LATEST_MODEL)
-                .setMaxResults(15)
-                .build()
+            .setModelType(FirebaseVisionCloudDetectorOptions.LATEST_MODEL)
+            .setMaxResults(15)
+            .build()
         // [END ml_build_cloud_vision_options]
     }
 
     fun enforceCertificateMatching() {
         // Dummy variable
-        val myImage = FirebaseVisionImage.fromByteArray(byteArrayOf(),
-                FirebaseVisionImageMetadata.Builder().build())
+        val myImage = FirebaseVisionImage.fromByteArray(
+            byteArrayOf(),
+            FirebaseVisionImageMetadata.Builder().build(),
+        )
 
         // [START mlkit_certificate_matching]
         val optionsBuilder = FirebaseVisionCloudImageLabelerOptions.Builder()

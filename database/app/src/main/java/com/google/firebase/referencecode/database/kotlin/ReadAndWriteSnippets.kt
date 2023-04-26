@@ -1,19 +1,18 @@
 package com.google.firebase.referencecode.database.kotlin
 
 import android.util.Log
+import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.MutableData
+import com.google.firebase.database.ServerValue
 import com.google.firebase.database.Transaction
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ServerValue
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.referencecode.database.kotlin.models.Post
 import com.google.firebase.referencecode.database.models.User
-import java.util.HashMap
 
 abstract class ReadAndWriteSnippets {
 
@@ -42,14 +41,14 @@ abstract class ReadAndWriteSnippets {
 
         // [START rtdb_write_new_user_task]
         database.child("users").child(userId).setValue(user)
-                .addOnSuccessListener {
-                    // Write was successful!
-                    // ...
-                }
-                .addOnFailureListener {
-                    // Write failed
-                    // ...
-                }
+            .addOnSuccessListener {
+                // Write was successful!
+                // ...
+            }
+            .addOnFailureListener {
+                // Write failed
+                // ...
+            }
         // [END rtdb_write_new_user_task]
     }
 
@@ -85,14 +84,13 @@ abstract class ReadAndWriteSnippets {
         val postValues = post.toMap()
 
         val childUpdates = hashMapOf<String, Any>(
-                "/posts/$key" to postValues,
-                "/user-posts/$userId/$key" to postValues
+            "/posts/$key" to postValues,
+            "/user-posts/$userId/$key" to postValues,
         )
 
         database.updateChildren(childUpdates)
     }
     // [END write_fan_out]
-
 
     // [START post_stars_transaction]
     private fun onStarClicked(postRef: DatabaseReference) {
@@ -102,7 +100,7 @@ abstract class ReadAndWriteSnippets {
         postRef.runTransaction(object : Transaction.Handler {
             override fun doTransaction(mutableData: MutableData): Transaction.Result {
                 val p = mutableData.getValue(Post::class.java)
-                        ?: return Transaction.success(mutableData)
+                    ?: return Transaction.success(mutableData)
 
                 if (p.stars.containsKey(uid)) {
                     // Unstar the post and remove self from stars
@@ -120,9 +118,9 @@ abstract class ReadAndWriteSnippets {
             }
 
             override fun onComplete(
-                    databaseError: DatabaseError?,
-                    committed: Boolean,
-                    currentData: DataSnapshot?
+                databaseError: DatabaseError?,
+                committed: Boolean,
+                currentData: DataSnapshot?,
             ) {
                 // Transaction completed
                 Log.d(TAG, "postTransaction:onComplete:" + databaseError!!)
@@ -137,7 +135,7 @@ abstract class ReadAndWriteSnippets {
             "posts/$key/stars/$uid" to true,
             "posts/$key/starCount" to ServerValue.increment(1),
             "user-posts/$uid/$key/stars/$uid" to true,
-            "user-posts/$uid/$key/starCount" to ServerValue.increment(1)
+            "user-posts/$uid/$key/starCount" to ServerValue.increment(1),
         )
         database.updateChildren(updates)
     }

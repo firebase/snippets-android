@@ -92,7 +92,7 @@ class MainActivity :
             param(FirebaseAnalytics.Param.ITEM_LIST_NAME, "Related products")
             param(
                 FirebaseAnalytics.Param.ITEMS,
-                arrayOf(itemJeggingsWithIndex, itemBootsWithIndex, itemSocksWithIndex)
+                arrayOf(itemJeggingsWithIndex, itemBootsWithIndex, itemSocksWithIndex),
             )
         }
         // [END view_item_list]

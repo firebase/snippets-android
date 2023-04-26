@@ -16,6 +16,7 @@ abstract class FirebaseUIActivity : AppCompatActivity() {
     }
 
     fun loadWithGlide() {
+        val context = this
         // [START storage_load_with_glide]
         // Reference to an image file in Cloud Storage
         val storageReference = Firebase.storage.reference
@@ -25,9 +26,9 @@ abstract class FirebaseUIActivity : AppCompatActivity() {
 
         // Download directly from StorageReference using Glide
         // (See MyAppGlideModule for Loader registration)
-        Glide.with(this /* context */)
-                .load(storageReference)
-                .into(imageView)
+        Glide.with(context)
+            .load(storageReference)
+            .into(imageView)
         // [END storage_load_with_glide]
     }
 }

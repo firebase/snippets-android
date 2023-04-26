@@ -39,7 +39,7 @@ class ShareDialogFragment : BottomSheetDialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         return inflater.inflate(R.layout.fragment_item_list_dialog, container, false)
     }
@@ -47,11 +47,11 @@ class ShareDialogFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val content = DynamicLinksUtil.generateInviteContent()
         val presenters = listOf(
-                EmailPresenter(true, content),
-                SocialPresenter(true, content),
-                MessagePresenter(true, content),
-                CopyPresenter(true, content),
-                MorePresenter(true, content)
+            EmailPresenter(true, content),
+            SocialPresenter(true, content),
+            MessagePresenter(true, content),
+            CopyPresenter(true, content),
+            MorePresenter(true, content),
         )
 
         val recycler = view.findViewById<RecyclerView>(R.id.recycler)

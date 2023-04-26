@@ -13,6 +13,6 @@ data class InviteContent(
     /** The body of the message. Indispensable content should go here.  */
     val body: String?,
     /** The URL containing the link to invite. In link-copy cases, only this field will be used.  */
-    val link: Uri
+    val link: Uri,
 )
 // [END ddl_invite_content]

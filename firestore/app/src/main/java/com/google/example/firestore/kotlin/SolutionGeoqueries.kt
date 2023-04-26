@@ -24,13 +24,13 @@ class SolutionGeoqueries {
         val updates: MutableMap<String, Any> = mutableMapOf(
             "geohash" to hash,
             "lat" to lat,
-            "lng" to lng
+            "lng" to lng,
         )
         val londonRef = db.collection("cities").document("LON")
         londonRef.update(updates)
-                .addOnCompleteListener {
-                    // ...
-                }
+            .addOnCompleteListener {
+                // ...
+            }
         // [END fs_geo_add_hash]
     }
 
@@ -47,35 +47,35 @@ class SolutionGeoqueries {
         val tasks: MutableList<Task<QuerySnapshot>> = ArrayList()
         for (b in bounds) {
             val q = db.collection("cities")
-                    .orderBy("geohash")
-                    .startAt(b.startHash)
-                    .endAt(b.endHash)
+                .orderBy("geohash")
+                .startAt(b.startHash)
+                .endAt(b.endHash)
             tasks.add(q.get())
         }
 
         // Collect all the query results together into a single list
         Tasks.whenAllComplete(tasks)
-                .addOnCompleteListener {
-                    val matchingDocs: MutableList<DocumentSnapshot> = ArrayList()
-                    for (task in tasks) {
-                        val snap = task.result
-                        for (doc in snap!!.documents) {
-                            val lat = doc.getDouble("lat")!!
-                            val lng = doc.getDouble("lng")!!
+            .addOnCompleteListener {
+                val matchingDocs: MutableList<DocumentSnapshot> = ArrayList()
+                for (task in tasks) {
+                    val snap = task.result
+                    for (doc in snap!!.documents) {
+                        val lat = doc.getDouble("lat")!!
+                        val lng = doc.getDouble("lng")!!
 
-                            // We have to filter out a few false positives due to GeoHash
-                            // accuracy, but most will match
-                            val docLocation = GeoLocation(lat, lng)
-                            val distanceInM = GeoFireUtils.getDistanceBetween(docLocation, center)
-                            if (distanceInM <= radiusInM) {
-                                matchingDocs.add(doc)
-                            }
+                        // We have to filter out a few false positives due to GeoHash
+                        // accuracy, but most will match
+                        val docLocation = GeoLocation(lat, lng)
+                        val distanceInM = GeoFireUtils.getDistanceBetween(docLocation, center)
+                        if (distanceInM <= radiusInM) {
+                            matchingDocs.add(doc)
                         }
                     }
-
-                    // matchingDocs contains the results
-                    // ...
                 }
+
+                // matchingDocs contains the results
+                // ...
+            }
         // [END fs_geo_query_hashes]
     }
 }

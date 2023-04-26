@@ -1,8 +1,8 @@
 package com.google.firebase.example.testlab.kotlin
 
 import android.provider.Settings
-import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.libraries.cloudtesting.screenshots.ScreenShotter
 import java.io.FileNotFoundException
 
@@ -60,9 +60,9 @@ class MainActivity : AppCompatActivity() {
             Log.i(TAG, "Log file ${it.encodedPath}")
             fd = try {
                 contentResolver
-                        .openAssetFileDescriptor(logFile, "w")!!
-                        .parcelFileDescriptor
-                        .fd
+                    .openAssetFileDescriptor(logFile, "w")!!
+                    .parcelFileDescriptor
+                    .fd
             } catch (e: FileNotFoundException) {
                 e.printStackTrace()
                 -1
@@ -85,8 +85,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun takeScreenshot() {
+        val activity = this
         // [START ftl_take_screenshot]
-        ScreenShotter.takeScreenshot("main_screen_2", this /* activity */)
+        ScreenShotter.takeScreenshot("main_screen_2", activity)
         // [END ftl_take_screenshot]
     }
 }

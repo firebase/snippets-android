@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         // Create the arguments to the callable function, which are two integers
         val data = hashMapOf(
             "firstNumber" to a,
-            "secondNumber" to b
+            "secondNumber" to b,
         )
 
         // Call the function and extract the operation from the result
@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
         // Create the arguments to the callable function.
         val data = hashMapOf(
             "text" to text,
-            "push" to true
+            "push" to true,
         )
 
         return functions
@@ -80,7 +80,6 @@ class MainActivity : AppCompatActivity() {
                 if (!task.isSuccessful) {
                     val e = task.exception
                     if (e is FirebaseFunctionsException) {
-
                         // Function error code, will be INTERNAL if the failure
                         // was not handled properly in the function call.
                         val code = e.code
@@ -94,7 +93,7 @@ class MainActivity : AppCompatActivity() {
         // [END call_add_numbers]
     }
 
-    private fun callAddMessage(inputMessage: String){
+    private fun callAddMessage(inputMessage: String) {
         // [START call_add_message]
         addMessage(inputMessage)
             .addOnCompleteListener { task ->

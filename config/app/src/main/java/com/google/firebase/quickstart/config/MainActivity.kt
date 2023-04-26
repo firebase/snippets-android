@@ -1,9 +1,9 @@
 package com.google.firebase.quickstart.config
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ConfigUpdate
 import com.google.firebase.remoteconfig.ConfigUpdateListener
@@ -40,11 +40,17 @@ class MainActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     val updated = task.result
                     Log.d(TAG, "Config params updated: $updated")
-                    Toast.makeText(this, "Fetch and activate succeeded",
-                        Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this,
+                        "Fetch and activate succeeded",
+                        Toast.LENGTH_SHORT,
+                    ).show()
                 } else {
-                    Toast.makeText(this, "Fetch failed",
-                        Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this,
+                        "Fetch failed",
+                        Toast.LENGTH_SHORT,
+                    ).show()
                 }
                 displayWelcomeMessage()
             }
@@ -52,8 +58,8 @@ class MainActivity : AppCompatActivity() {
 
         // [START add_config_update_listener]
         remoteConfig.addOnConfigUpdateListener(object : ConfigUpdateListener {
-            override fun onUpdate(configUpdate : ConfigUpdate) {
-                Log.d(TAG, "Updated keys: " + configUpdate.updatedKeys);
+            override fun onUpdate(configUpdate: ConfigUpdate) {
+                Log.d(TAG, "Updated keys: " + configUpdate.updatedKeys)
 
                 if (configUpdate.updatedKeys.contains("welcome_message")) {
                     remoteConfig.activate().addOnCompleteListener {

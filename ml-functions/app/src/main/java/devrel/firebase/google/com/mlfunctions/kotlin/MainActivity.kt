@@ -16,11 +16,12 @@ import com.google.gson.JsonParser
 import com.google.gson.JsonPrimitive
 import java.io.ByteArrayOutputStream
 
-
 class MainActivity : AppCompatActivity() {
-    val uri = null;
+    val uri = null
+
     // [START function_bitmap]
     var bitmap: Bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
+
     // [END function_bitmap]
     private lateinit var functions: FirebaseFunctions
 
@@ -51,11 +52,11 @@ class MainActivity : AppCompatActivity() {
         if (originalHeight > originalWidth) {
             resizedHeight = maxDimension
             resizedWidth =
-                    (resizedHeight * originalWidth.toFloat() / originalHeight.toFloat()).toInt()
+                (resizedHeight * originalWidth.toFloat() / originalHeight.toFloat()).toInt()
         } else if (originalWidth > originalHeight) {
             resizedWidth = maxDimension
             resizedHeight =
-                    (resizedWidth * originalHeight.toFloat() / originalWidth.toFloat()).toInt()
+                (resizedWidth * originalHeight.toFloat() / originalWidth.toFloat()).toInt()
         } else if (originalHeight == originalWidth) {
             resizedHeight = maxDimension
             resizedWidth = maxDimension
@@ -67,15 +68,15 @@ class MainActivity : AppCompatActivity() {
     // [START function_annotateImage]
     private fun annotateImage(requestJson: String): Task<JsonElement> {
         return functions
-                .getHttpsCallable("annotateImage")
-                .call(requestJson)
-                .continueWith { task ->
-                    // This continuation runs on either success or failure, but if the task
-                    // has failed then result will throw an Exception which will be
-                    // propagated down.
-                    val result = task.result?.data
-                    JsonParser.parseString(Gson().toJson(result))
-                }
+            .getHttpsCallable("annotateImage")
+            .call(requestJson)
+            .continueWith { task ->
+                // This continuation runs on either success or failure, but if the task
+                // has failed then result will throw an Exception which will be
+                // propagated down.
+                val result = task.result?.data
+                JsonParser.parseString(Gson().toJson(result))
+            }
     }
     // [END function_annotateImage]
 
@@ -87,7 +88,7 @@ class MainActivity : AppCompatActivity() {
         val image = JsonObject()
         image.add("content", JsonPrimitive(base64encoded))
         request.add("image", image)
-        //Add features to the request
+        // Add features to the request
         val feature = JsonObject()
         feature.add("maxResults", JsonPrimitive(5))
         feature.add("type", JsonPrimitive("LABEL_DETECTION"))
@@ -105,7 +106,7 @@ class MainActivity : AppCompatActivity() {
         val image = JsonObject()
         image.add("content", JsonPrimitive(base64encoded))
         request.add("image", image)
-        //Add features to the request
+        // Add features to the request
         val feature = JsonObject()
         feature.add("maxResults", JsonPrimitive(5))
         feature.add("type", JsonPrimitive("LANDMARK_DETECTION"))
@@ -123,7 +124,7 @@ class MainActivity : AppCompatActivity() {
         val image = JsonObject()
         image.add("content", JsonPrimitive(base64encoded))
         request.add("image", image)
-        //Add features to the request
+        // Add features to the request
         val feature = JsonObject()
         feature.add("type", JsonPrimitive("TEXT_DETECTION"))
         // Alternatively, for DOCUMENT_TEXT_DETECTION:
@@ -145,15 +146,15 @@ class MainActivity : AppCompatActivity() {
     private fun annotateImage(request: JsonObject) {
         // [START function_callAnnotate]
         annotateImage(request.toString())
-                .addOnCompleteListener { task ->
-                    if (!task.isSuccessful) {
-                        // Task failed with an exception
-                        // ...
-                    } else {
-                        // Task completed successfully
-                        // ...
-                    }
+            .addOnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    // Task failed with an exception
+                    // ...
+                } else {
+                    // Task completed successfully
+                    // ...
                 }
+            }
         // [END function_callAnnotate]
     }
 
@@ -178,7 +179,7 @@ class MainActivity : AppCompatActivity() {
             val bounds = labelObj["boundingPoly"]
             // Multiple locations are possible, e.g., the location of the depicted
             // landmark and the location the picture was taken.
-            for(loc in labelObj["locations"].asJsonArray) {
+            for (loc in labelObj["locations"].asJsonArray) {
                 val latitude = loc.asJsonObject["latLng"].asJsonObject["latitude"]
                 val longitude = loc.asJsonObject["latLng"].asJsonObject["longitude"]
             }
@@ -204,11 +205,17 @@ class MainActivity : AppCompatActivity() {
                         var wordText = ""
                         for (symbol in word.asJsonObject["symbols"].asJsonArray) {
                             wordText += symbol.asJsonObject["text"].asString
-                            System.out.format("Symbol text: %s (confidence: %f)%n",
-                                symbol.asJsonObject["text"].asString, symbol.asJsonObject["confidence"].asFloat)
+                            System.out.format(
+                                "Symbol text: %s (confidence: %f)%n",
+                                symbol.asJsonObject["text"].asString,
+                                symbol.asJsonObject["confidence"].asFloat,
+                            )
                         }
-                        System.out.format("Word text: %s (confidence: %f)%n%n", wordText,
-                            word.asJsonObject["confidence"].asFloat)
+                        System.out.format(
+                            "Word text: %s (confidence: %f)%n%n",
+                            wordText,
+                            word.asJsonObject["confidence"].asFloat,
+                        )
                         System.out.format("Word bounding box: %s%n", word.asJsonObject["boundingBox"])
                         paraText = String.format("%s%s ", paraText, wordText)
                     }

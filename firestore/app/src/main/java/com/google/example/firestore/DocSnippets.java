@@ -762,6 +762,27 @@ public class DocSnippets {
         // [END get_multiple_all]
     }
 
+    public void getAllDocsSubcollection() {
+        // [START firestore_query_subcollection]
+        db.collection("cities")
+                .document("SF")
+                .collection("landmarks")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+        // [END firestore_query_subcollection]
+    }
+    
     public void listenToMultiple() {
         // [START listen_multiple]
         db.collection("cities")

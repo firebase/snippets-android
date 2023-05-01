@@ -594,6 +594,23 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         // [END get_multiple_all]
     }
 
+    private fun getAllDocsSubcollection() {
+        // [START firestore_query_subcollection]
+        db.collection("cities")
+            .document("SF")
+            .collection("landmarks")
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    Log.d(TAG, "${document.id} => ${document.data}")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "Error getting documents: ", exception)
+            }
+        // [END firestore_query_subcollection]
+    }
+
     private fun listenToMultiple() {
         // [START listen_multiple]
         db.collection("cities")

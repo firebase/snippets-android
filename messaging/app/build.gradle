@@ -41,7 +41,7 @@ dependencies {
     // Used to store FCM Registration Token.
     // This is recommended, but not required.
     // See: https://firebase.google.com/docs/cloud-messaging/manage-tokens
-    implementation 'com.google.firebase:firebase-firestore-ktx:24.5.0'
+    implementation 'com.google.firebase:firebase-firestore-ktx:24.6.0'
 
     implementation "com.google.android.gms:play-services-auth:20.5.0"
     implementation 'androidx.work:work-runtime-ktx:2.8.1'

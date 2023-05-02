@@ -47,12 +47,12 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
 
     // Firestore
-    implementation "com.google.firebase:firebase-firestore-ktx:24.5.0"
+    implementation "com.google.firebase:firebase-firestore-ktx:24.6.0"
 
     // Firebase / Play Services
-    implementation "com.google.firebase:firebase-auth:21.3.0"
+    implementation "com.google.firebase:firebase-auth:22.0.0"
     implementation "com.google.android.gms:play-services-auth:20.5.0"
-    implementation "com.google.firebase:firebase-functions-ktx:20.2.2"
+    implementation "com.google.firebase:firebase-functions-ktx:20.3.0"
 
     // GeoFire (for Geoqueries solution)
     implementation "com.firebase:geofire-android-common:3.2.0"

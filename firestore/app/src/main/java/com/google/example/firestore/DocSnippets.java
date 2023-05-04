@@ -28,6 +28,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.MetadataChanges;
+import com.google.firebase.firestore.PersistentCacheSettings;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.Query.Direction;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -129,7 +130,7 @@ public class DocSnippets {
 
         // [START set_firestore_settings]
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                .setPersistenceEnabled(true)
+                .setLocalCacheSettings(PersistentCacheSettings.newBuilder().build())
                 .build();
         db.setFirestoreSettings(settings);
         // [END set_firestore_settings]
@@ -137,8 +138,12 @@ public class DocSnippets {
 
     public void setupCacheSize() {
         // [START fs_setup_cache]
+        PersistentCacheSettings cacheSettings = PersistentCacheSettings.newBuilder()
+                .setSizeBytes(FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED)
+                .build();
+
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                .setCacheSizeBytes(FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED)
+                .setLocalCacheSettings(cacheSettings)
                 .build();
         db.setFirestoreSettings(settings);
         // [END fs_setup_cache]

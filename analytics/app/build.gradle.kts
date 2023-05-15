@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.google.firebase.example.admob"
+    namespace = "com.google.firebase.example.analytics"
     compileSdk = 33
 
     defaultConfig {
-        applicationId = "com.google.firebase.example.admob"
+        applicationId = "com.google.firebase.example.analytics"
         minSdk = 19
         targetSdk = 33
         versionCode = 1
@@ -34,20 +34,11 @@ android {
 
 dependencies {
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
-    implementation("androidx.browser:browser:1.5.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.firebase:firebase-ads:22.0.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("androidx.multidex:multidex:2.0.1")
+    implementation("com.google.firebase:firebase-analytics:21.2.2")
+    implementation("com.google.firebase:firebase-analytics-ktx:21.2.2")
+    // Ironsource and AppLovin libraries used for ad_impression snippets
+    implementation("com.applovin:applovin-sdk:11.5.1")
+    implementation("com.ironsource.sdk:mediationsdk:7.2.4.1")
 
-    // [START gradle_play_config]
-    implementation("com.google.android.gms:play-services-ads:22.0.0")
-    // [END gradle_play_config]
-
-    // Import the Firebase BoM (see: https://firebase.google.com/docs/android/learn-more#bom)
-    implementation(platform("com.google.firebase:firebase-bom:32.0.0"))
-
-    // For an optimal experience using AdMob, add the Firebase SDK
-    // for Google Analytics. This is recommended, but not required.
-    implementation("com.google.firebase:firebase-analytics")
 }

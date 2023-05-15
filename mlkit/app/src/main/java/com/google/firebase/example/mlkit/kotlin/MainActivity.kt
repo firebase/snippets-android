@@ -1,12 +1,12 @@
 package com.google.firebase.example.mlkit.kotlin
 
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.BuildConfig
 import com.google.firebase.ml.vision.FirebaseVision
 import com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
 import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata
 import com.google.firebase.ml.vision.label.FirebaseVisionCloudImageLabelerOptions
-import devrel.firebase.google.com.firebaseoptions.BuildConfig
 
 class MainActivity : AppCompatActivity() {
 

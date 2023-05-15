@@ -2,6 +2,7 @@ package com.google.firebase.example.perf.kotlin
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.example.perf.R
 import com.google.firebase.example.perf.kotlin.model.ItemCache
 import com.google.firebase.example.perf.kotlin.model.User
 import com.google.firebase.ktx.Firebase
@@ -10,7 +11,6 @@ import com.google.firebase.perf.ktx.performance
 import com.google.firebase.perf.ktx.trace
 import com.google.firebase.perf.metrics.AddTrace
 import com.google.firebase.remoteconfig.ktx.remoteConfig
-import devrel.firebase.google.com.firebaseoptions.R
 import java.io.DataOutputStream
 import java.io.IOException
 import java.io.InputStream

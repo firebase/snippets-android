@@ -128,18 +128,26 @@ public class DocSnippets {
         // [END get_firestore_instance]
 
         // [START set_firestore_settings]
-        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                .setPersistenceEnabled(true)
-                .build();
-        db.setFirestoreSettings(settings);
+        FirebaseFirestoreSettings settings = 
+        new FirebaseFirestoreSettings.Builder(db.getFirestoreSettings())
+            // Use memory-only cache
+            .setLocalCacheSettings(MemoryCacheSettings.create())
+            // Use persistent disk cache (default)
+            .setLocalCacheSettings(PersistentCacheSettings.builder()
+                                    .build())
+            .build();
         // [END set_firestore_settings]
     }
 
     public void setupCacheSize() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
         // [START fs_setup_cache]
-        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                .setCacheSizeBytes(FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED)
-                .build();
+        FirebaseFirestoreSettings settings = 
+        new FirebaseFirestoreSettings.Builder(db.getFirestoreSettings())
+            .setLocalCacheSettings(PersistentCacheSettings.builder()
+                                    .setSizeBytes(1_000_000)
+                                    .build())
+            .build();
         db.setFirestoreSettings(settings);
         // [END fs_setup_cache]
     }

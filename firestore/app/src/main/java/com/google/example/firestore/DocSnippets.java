@@ -27,7 +27,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.MemoryCacheSettings;
 import com.google.firebase.firestore.MetadataChanges;
+import com.google.firebase.firestore.PersistentCacheSettings;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.Query.Direction;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -131,9 +133,9 @@ public class DocSnippets {
         FirebaseFirestoreSettings settings = 
         new FirebaseFirestoreSettings.Builder(db.getFirestoreSettings())
             // Use memory-only cache
-            .setLocalCacheSettings(MemoryCacheSettings.create())
+            .setLocalCacheSettings(MemoryCacheSettings.newBuilder().build())
             // Use persistent disk cache (default)
-            .setLocalCacheSettings(PersistentCacheSettings.builder()
+            .setLocalCacheSettings(PersistentCacheSettings.newBuilder()
                                     .build())
             .build();
         // [END set_firestore_settings]
@@ -144,7 +146,7 @@ public class DocSnippets {
         // [START fs_setup_cache]
         FirebaseFirestoreSettings settings = 
         new FirebaseFirestoreSettings.Builder(db.getFirestoreSettings())
-            .setLocalCacheSettings(PersistentCacheSettings.builder()
+            .setLocalCacheSettings(PersistentCacheSettings.newBuilder()
                                     .setSizeBytes(1_000_000)
                                     .build())
             .build();

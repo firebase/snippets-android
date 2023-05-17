@@ -23,8 +23,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
 
-import devrel.firebase.google.com.firebaseoptions.R;
-
 public class MainActivity extends AppCompatActivity {
 
     // [START perf_traced_create]

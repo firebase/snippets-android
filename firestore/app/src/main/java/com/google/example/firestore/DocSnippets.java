@@ -138,6 +138,7 @@ public class DocSnippets {
             .setLocalCacheSettings(PersistentCacheSettings.newBuilder()
                                     .build())
             .build();
+        db.setFirestoreSettings(settings);
         // [END set_firestore_settings]
     }
 

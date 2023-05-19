@@ -112,6 +112,15 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         }
         db.firestoreSettings = settings
         // [END set_firestore_settings]
+
+        // [START set_firestore_settings_configurable_cache]
+        FirebaseFirestoreSettings settings = FirebaseFirestoreSettings.Builder(db.getFirestoreSettings())
+            .setLocalCacheSettings(PersistentCacheSettings.builder()
+                .build()) // No-op, 100 MB persistent cache is configured by default, or
+            .setLocalCacheSettings(MemoryCacheSettings.create()) 
+                .build(); // Use memory as cache
+        db.firestoreSettings = settings
+        // [END set_firestore_settings_configurable_cache]
     }
 
     private fun setupCacheSize() {
@@ -121,6 +130,19 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         }
         db.firestoreSettings = settings
         // [END fs_setup_cache]
+    }
+
+    private fun setupCacheSizeConfigurable() {
+        // [START fs_setup_cache_configurable]
+        FirebaseFirestoreSettings settings = FirebaseFirestoreSettings.Builder(db.getFirestoreSettings())
+            .setLocalCacheSettings(PersistentCacheSettings.builder()
+                .setSizeBytes(1_000_000)
+                .build()) // Change cache size threshold, or
+            .setLocalCacheSettings(MemoryCacheSettings.create()) // Switch to use memory as cache
+                .setSizeBytes(FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED)
+                .build(); // Disable cache cleanup
+        db.firestoreSettings = settings
+        // [END fs_setup_cache_configurable]
     }
 
     private fun addAdaLovelace() {

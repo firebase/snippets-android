@@ -134,18 +134,14 @@ public class DocSnippets {
         db.setFirestoreSettings(settings);
         // [END set_firestore_settings]
 
-        // [START set_firestore_settings]
+        // [START set_firestore_settings_configurable_cache]
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder(db.getFirestoreSettings())
                 .setLocalCacheSettings(PersistentCacheSettings.builder()
                     .build()) // No-op, 100 MB persistent cache is configured by default, or
-                .setLocalCacheSettings(PersistentCacheSettings.builder()
-                    .setSizeBytes(1_000_000)
-                    .build()) // Change cache size threshold, or
-                .setLocalCacheSettings(MemoryCacheSettings.create()) // Switch to use memory as cache
-                    .build();
+                .setLocalCacheSettings(MemoryCacheSettings.create())
+                    .build(); // Use memory cache
         db.setFirestoreSettings(settings);
-
-        // [END set_firestore_settings]
+        // [END set_firestore_settings_configurable_cache]
     }
 
     public void setupCacheSize() {
@@ -155,6 +151,19 @@ public class DocSnippets {
                 .build();
         db.setFirestoreSettings(settings);
         // [END fs_setup_cache]
+    }
+
+    public void setupCacheSizeConfigurable() {
+        // [START fs_setup_cache_configurable]
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder(db.getFirestoreSettings())
+                .setLocalCacheSettings(PersistentCacheSettings.builder()
+                    .setSizeBytes(1_000_000)
+                    .build()) // Change cache size threshold, or
+                .setLocalCacheSettings(PersistentCacheSettings.builder()
+                    .setSizeBytes(FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED)
+                    .build()) // Disable cache cleanup
+        db.setFirestoreSettings(settings);
+        // [END fs_setup_cache_configurable]
     }
 
     public void addAdaLovelace() {

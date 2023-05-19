@@ -133,6 +133,19 @@ public class DocSnippets {
                 .build();
         db.setFirestoreSettings(settings);
         // [END set_firestore_settings]
+
+        // [START set_firestore_settings]
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder(db.getFirestoreSettings())
+                .setLocalCacheSettings(PersistentCacheSettings.builder()
+                    .build()) // No-op, 100 MB persistent cache is configured by default, or
+                .setLocalCacheSettings(PersistentCacheSettings.builder()
+                    .setSizeBytes(1_000_000)
+                    .build()) // Change cache size threshold, or
+                .setLocalCacheSettings(MemoryCacheSettings.create()) // Switch to use memory as cache
+                    .build();
+        db.setFirestoreSettings(settings);
+
+        // [END set_firestore_settings]
     }
 
     public void setupCacheSize() {

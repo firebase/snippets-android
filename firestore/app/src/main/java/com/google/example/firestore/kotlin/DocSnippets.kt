@@ -11,12 +11,15 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.MetadataChanges
+import com.google.firebase.firestore.PersistentCacheSettings
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ServerTimestamp
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.Source
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.firestoreSettings
+import com.google.firebase.firestore.ktx.memoryCacheSettings
+import com.google.firebase.firestore.ktx.persistentCacheSettings
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import java.util.ArrayList
@@ -108,7 +111,10 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
 
         // [START set_firestore_settings]
         val settings = firestoreSettings {
-            isPersistenceEnabled = true
+            // Use memory cache
+            setLocalCacheSettings(memoryCacheSettings {})
+            // Use persistent disk cache (default)
+            setLocalCacheSettings(persistentCacheSettings {})
         }
         db.firestoreSettings = settings
         // [END set_firestore_settings]
@@ -117,7 +123,10 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
     private fun setupCacheSize() {
         // [START fs_setup_cache]
         val settings = firestoreSettings {
-            cacheSizeBytes = FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED
+            setLocalCacheSettings(persistentCacheSettings {
+                // Set size to 1 MB
+                setSizeBytes(1000000)
+            })
         }
         db.firestoreSettings = settings
         // [END fs_setup_cache]

@@ -27,7 +27,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.MemoryCacheSettings;
 import com.google.firebase.firestore.MetadataChanges;
+import com.google.firebase.firestore.PersistentCacheSettings;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.Query.Direction;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -128,18 +130,28 @@ public class DocSnippets {
         // [END get_firestore_instance]
 
         // [START set_firestore_settings]
-        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                .setPersistenceEnabled(true)
-                .build();
+        FirebaseFirestoreSettings settings = 
+        new FirebaseFirestoreSettings.Builder(db.getFirestoreSettings())
+            // Use memory-only cache
+            .setLocalCacheSettings(MemoryCacheSettings.newBuilder().build())
+            // Use persistent disk cache (default)
+            .setLocalCacheSettings(PersistentCacheSettings.newBuilder()
+                                    .build())
+            .build();
         db.setFirestoreSettings(settings);
         // [END set_firestore_settings]
     }
 
     public void setupCacheSize() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
         // [START fs_setup_cache]
-        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                .setCacheSizeBytes(FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED)
-                .build();
+        FirebaseFirestoreSettings settings = 
+        new FirebaseFirestoreSettings.Builder(db.getFirestoreSettings())
+            .setLocalCacheSettings(PersistentCacheSettings.newBuilder()
+                                    // Set size to 1 MB
+                                    .setSizeBytes(1_000_000)
+                                    .build())
+            .build();
         db.setFirestoreSettings(settings);
         // [END fs_setup_cache]
     }

@@ -124,8 +124,8 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         // [START fs_setup_cache]
         val settings = firestoreSettings {
             setLocalCacheSettings(persistentCacheSettings {
-                // Set size to 1 MB
-                setSizeBytes(1000000)
+                // Set size to 100 MB
+                setSizeBytes(1024 * 1024 * 100)
             })
         }
         db.firestoreSettings = settings

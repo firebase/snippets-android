@@ -36,7 +36,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
 
     // Import the Firebase BoM (see: https://firebase.google.com/docs/android/learn-more#bom)
-    implementation(platform("com.google.firebase:firebase-bom:32.0.0"))
+    implementation(platform("com.google.firebase:firebase-bom:32.1.0"))
 
     // Import Firebase Authentication library
     implementation("com.google.firebase:firebase-auth-ktx")

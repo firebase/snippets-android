@@ -148,8 +148,8 @@ public class DocSnippets {
         FirebaseFirestoreSettings settings = 
         new FirebaseFirestoreSettings.Builder(db.getFirestoreSettings())
             .setLocalCacheSettings(PersistentCacheSettings.newBuilder()
-                                    // Set size to 1 MB
-                                    .setSizeBytes(1_000_000)
+                                    // Set size to 100 MB
+                                    .setSizeBytes(1024 * 1024 * 100)
                                     .build())
             .build();
         db.setFirestoreSettings(settings);

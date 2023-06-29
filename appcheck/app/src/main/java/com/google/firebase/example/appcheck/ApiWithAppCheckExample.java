@@ -32,10 +32,10 @@ public class ApiWithAppCheckExample {
                 .getAppCheckToken(false)
                 .addOnSuccessListener(new OnSuccessListener<AppCheckToken>() {
                     @Override
-                    public void onSuccess(@NonNull AppCheckToken tokenResponse) {
-                        String appCheckToken = tokenResponse.getToken();
+                    public void onSuccess(@NonNull AppCheckToken appCheckToken) {
+                        String token = appCheckToken.getToken();
                         Call<List<String>> apiCall =
-                                yourExampleBackendService.exampleData(appCheckToken);
+                                yourExampleBackendService.exampleData(token);
                         // ...
                     }
                 });
@@ -47,14 +47,15 @@ class Misc {
     public void getLimitedUseToken() {
         // [START appcheck_get_limited_use_token]
         FirebaseAppCheck.getInstance()
-                .getLimitedUseToken()
-                .addOnSuccessListener(new OnSuccessListener<AppCheckTokenResult>() {
-                    @Override
-                    public void onSuccess(AppCheckTokenResult appCheckTokenResult) {
-                        String appCheckToken = appCheckTokenResult.getToken();
-                        // ...
-                    }
-                });
+                .getLimitedUseAppCheckToken().addOnSuccessListener(
+                        new OnSuccessListener<AppCheckToken>() {
+                            @Override
+                            public void onSuccess(AppCheckToken appCheckToken) {
+                                String token = appCheckToken.getToken();
+                                // ...
+                            }
+                        }
+                );
         // [END appcheck_get_limited_use_token]
     }
 }

@@ -1,6 +1,9 @@
 package com.google.firebase.example.appcheck.kotlin
 
 import com.google.firebase.appcheck.FirebaseAppCheck
+import com.google.firebase.appcheck.ktx.appCheck
+import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.tasks.await
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.http.GET
@@ -20,14 +23,19 @@ class ApiWithAppCheckExample {
         .build()
         .create(YourExampleBackendService::class.java)
 
-    fun callApiExample() {
-        FirebaseAppCheck.getInstance()
-            .getAppCheckToken(false)
-            .addOnSuccessListener { tokenResponse ->
-                val appCheckToken = tokenResponse.token
-                val apiCall = yourExampleBackendService.exampleData(appCheckToken)
-                // ...
-            }
+    suspend fun callApiExample() {
+        val tokenResponse = Firebase.appCheck.getToken(false).await()
+        val appCheckToken = tokenResponse.token
+        val apiCall = yourExampleBackendService.exampleData(appCheckToken)
+        // ...
     }
 }
 // [END appcheck_custom_backend]
+
+class Misc {
+    private suspend fun getLimitedUseToken() {
+        // [START appcheck_get_limited_use_token]
+        val tokenResponse = Firebase.appCheck.limitedUseToken.await()
+        // [END appcheck_get_limited_use_token]
+    }
+}

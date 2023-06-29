@@ -40,9 +40,10 @@ dependencies {
 
     // Import the BoM for the Firebase platform
     implementation(platform("com.google.firebase:firebase-bom:32.1.1"))
+    implementation("com.google.firebase:firebase-appcheck")
     implementation("com.google.firebase:firebase-appcheck-playintegrity")
-    implementation("com.google.firebase:firebase-appcheck-debug:17.0.1")
-    implementation("com.google.firebase:firebase-appcheck-ktx:17.0.1")
+    implementation("com.google.firebase:firebase-appcheck-debug")
+    implementation("com.google.firebase:firebase-appcheck-ktx")
 
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("androidx.core:core-ktx:1.10.1")

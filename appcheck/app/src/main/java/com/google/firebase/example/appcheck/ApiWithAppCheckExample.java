@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.appcheck.AppCheckToken;
+import com.google.firebase.appcheck.AppCheckTokenResult;
 import com.google.firebase.appcheck.FirebaseAppCheck;
 
 import java.util.List;
@@ -41,3 +42,19 @@ public class ApiWithAppCheckExample {
     }
 }
 // [END appcheck_custom_backend]
+
+class Misc {
+    public void getLimitedUseToken() {
+        // [START appcheck_get_limited_use_token]
+        FirebaseAppCheck.getInstance()
+                .getLimitedUseToken()
+                .addOnSuccessListener(new OnSuccessListener<AppCheckTokenResult>() {
+                    @Override
+                    public void onSuccess(AppCheckTokenResult appCheckTokenResult) {
+                        String appCheckToken = appCheckTokenResult.getToken();
+                        // ...
+                    }
+                });
+        // [END appcheck_get_limited_use_token]
+    }
+}

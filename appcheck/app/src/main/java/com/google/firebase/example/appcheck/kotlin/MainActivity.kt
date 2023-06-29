@@ -2,8 +2,8 @@ package com.google.firebase.example.appcheck.kotlin
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.appcheck.FirebaseAppCheck
 import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory
+import com.google.firebase.appcheck.ktx.appCheck
 import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
 import com.google.firebase.example.appcheck.R
 import com.google.firebase.ktx.Firebase
@@ -18,8 +18,7 @@ class MainActivity : AppCompatActivity() {
     private fun init() {
         // [START appcheck_initialize]
         Firebase.initialize(context = this)
-        val firebaseAppCheck = FirebaseAppCheck.getInstance()
-        firebaseAppCheck.installAppCheckProviderFactory(
+        Firebase.appCheck.installAppCheckProviderFactory(
             PlayIntegrityAppCheckProviderFactory.getInstance(),
         )
         // [END appcheck_initialize]
@@ -28,8 +27,7 @@ class MainActivity : AppCompatActivity() {
     private fun initDebug() {
         // [START appcheck_initialize_debug]
         Firebase.initialize(context = this)
-        val firebaseAppCheck = FirebaseAppCheck.getInstance()
-        firebaseAppCheck.installAppCheckProviderFactory(
+        Firebase.appCheck.installAppCheckProviderFactory(
             DebugAppCheckProviderFactory.getInstance(),
         )
         // [END appcheck_initialize_debug]

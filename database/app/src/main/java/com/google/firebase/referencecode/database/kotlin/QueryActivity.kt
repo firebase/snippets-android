@@ -53,7 +53,7 @@ abstract class QueryActivity : AppCompatActivity() {
                 // data at this path or a subpath.
 
                 Log.d(TAG, "Number of messages: ${dataSnapshot.childrenCount}")
-                dataSnapshot.children.forEach { child ->
+                for (child in dataSnapshot.children) {
                     // Extract Message object from the DataSnapshot
                     val message: Message? = child.getValue<Message>()
 

@@ -441,12 +441,12 @@ abstract class StorageActivity : AppCompatActivity() {
         // com.google.firebase.storage.ktx.component2
         listRef.listAll()
             .addOnSuccessListener { (items, prefixes) ->
-                prefixes.forEach { prefix ->
+                for (prefix in prefixes) {
                     // All the prefixes under listRef.
                     // You may call listAll() recursively on them.
                 }
 
-                items.forEach { item ->
+                for (item in items) {
                     // All the items under listRef.
                 }
             }

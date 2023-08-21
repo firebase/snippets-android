@@ -48,8 +48,8 @@ dependencies {
     implementation("com.google.firebase:firebase-storage-ktx")
 
     implementation("com.firebaseui:firebase-ui-storage:8.0.2")
-    implementation("com.github.bumptech.glide:glide:4.15.1")
-    ksp("com.github.bumptech.glide:ksp:4.15.1")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    ksp("com.github.bumptech.glide:ksp:4.16.0")
 
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 }

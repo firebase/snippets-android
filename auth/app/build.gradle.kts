@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace = "com.google.firebase.quickstart.auth"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.google.firebase.quickstart.auth"
         minSdk = 19
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
         multiDexEnabled = true
@@ -40,7 +40,7 @@ dependencies {
     implementation("androidx.activity:activity-ktx:1.7.2")
 
     // Import the BoM for the Firebase platform
-    implementation(platform("com.google.firebase:firebase-bom:32.2.2"))
+    implementation(platform("com.google.firebase:firebase-bom:32.2.3"))
 
     // Add the dependency for the Firebase Authentication library
     // When using the BoM, you don't specify versions in Firebase library dependencies

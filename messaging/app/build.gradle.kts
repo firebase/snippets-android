@@ -51,7 +51,7 @@ dependencies {
     // See: https://firebase.google.com/docs/cloud-messaging/manage-tokens
     implementation("com.google.firebase:firebase-firestore-ktx")
 
-    implementation("com.google.android.gms:play-services-auth:20.6.0")
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
     implementation("androidx.work:work-runtime-ktx:2.8.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
 }

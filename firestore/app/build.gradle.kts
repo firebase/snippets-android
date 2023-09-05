@@ -50,7 +50,7 @@ dependencies {
 
     // Firebase / Play Services
     implementation("com.google.firebase:firebase-auth-ktx")
-    implementation("com.google.android.gms:play-services-auth:20.6.0")
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
     implementation("com.google.firebase:firebase-functions-ktx")
 
     // GeoFire (for Geoqueries solution)

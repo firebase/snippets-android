@@ -46,5 +46,5 @@ dependencies {
     implementation("com.google.firebase:firebase-appcheck-ktx")
 
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("androidx.core:core-ktx:1.10.1")
+    implementation("androidx.core:core-ktx:1.12.0")
 }

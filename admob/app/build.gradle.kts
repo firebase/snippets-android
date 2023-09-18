@@ -36,16 +36,16 @@ dependencies {
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.browser:browser:1.5.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.firebase:firebase-ads:22.3.0")
+    implementation("com.google.firebase:firebase-ads:22.4.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.multidex:multidex:2.0.1")
 
     // [START gradle_play_config]
-    implementation("com.google.android.gms:play-services-ads:22.3.0")
+    implementation("com.google.android.gms:play-services-ads:22.4.0")
     // [END gradle_play_config]
 
     // Import the Firebase BoM (see: https://firebase.google.com/docs/android/learn-more#bom)
-    implementation(platform("com.google.firebase:firebase-bom:32.2.3"))
+    implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
 
     // For an optimal experience using AdMob, add the Firebase SDK
     // for Google Analytics. This is recommended, but not required.

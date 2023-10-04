@@ -4,7 +4,7 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
-import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.firestore.toObject
 
 /**
  * https://firebase.google.com/docs/firestore/solutions/aggregation

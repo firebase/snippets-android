@@ -1,7 +1,7 @@
 package com.google.example.firestore.kotlin
 
-import com.google.firebase.functions.ktx.functions
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.functions.functions
+import com.google.firebase.Firebase
 
 class SolutionDeletes {
 

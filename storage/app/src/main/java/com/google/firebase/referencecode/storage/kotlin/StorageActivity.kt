@@ -8,17 +8,17 @@ import android.util.Log
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.tasks.OnFailureListener
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.ktx.initialize
+import com.google.firebase.Firebase
+import com.google.firebase.initialize
 import com.google.firebase.referencecode.storage.R
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageException
 import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.ktx.component1
-import com.google.firebase.storage.ktx.component2
-import com.google.firebase.storage.ktx.component3
-import com.google.firebase.storage.ktx.storage
-import com.google.firebase.storage.ktx.storageMetadata
+import com.google.firebase.storage.component1
+import com.google.firebase.storage.component2
+import com.google.firebase.storage.component3
+import com.google.firebase.storage.storage
+import com.google.firebase.storage.storageMetadata
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
@@ -210,8 +210,8 @@ abstract class StorageActivity : AppCompatActivity() {
 
         // [START monitor_upload_progress]
         // Observe state change events such as progress, pause, and resume
-        // You'll need to import com.google.firebase.storage.ktx.component1 and
-        // com.google.firebase.storage.ktx.component2
+        // You'll need to import com.google.firebase.storage.component1 and
+        // com.google.firebase.storage.component2
         uploadTask.addOnProgressListener { (bytesTransferred, totalByteCount) ->
             val progress = (100.0 * bytesTransferred) / totalByteCount
             Log.d(TAG, "Upload is $progress% done")
@@ -233,8 +233,8 @@ abstract class StorageActivity : AppCompatActivity() {
         uploadTask = storageRef.child("images/${file.lastPathSegment}").putFile(file, metadata)
 
         // Listen for state changes, errors, and completion of the upload.
-        // You'll need to import com.google.firebase.storage.ktx.component1 and
-        // com.google.firebase.storage.ktx.component2
+        // You'll need to import com.google.firebase.storage.component1 and
+        // com.google.firebase.storage.component2
         uploadTask.addOnProgressListener { (bytesTransferred, totalByteCount) ->
             val progress = (100.0 * bytesTransferred) / totalByteCount
             Log.d(TAG, "Upload is $progress% done")
@@ -437,8 +437,8 @@ abstract class StorageActivity : AppCompatActivity() {
         val storage = Firebase.storage
         val listRef = storage.reference.child("files/uid")
 
-        // You'll need to import com.google.firebase.storage.ktx.component1 and
-        // com.google.firebase.storage.ktx.component2
+        // You'll need to import com.google.firebase.storage.component1 and
+        // com.google.firebase.storage.component2
         listRef.listAll()
             .addOnSuccessListener { (items, prefixes) ->
                 for (prefix in prefixes) {
@@ -471,8 +471,8 @@ abstract class StorageActivity : AppCompatActivity() {
             listRef.list(100)
         }
 
-        // You'll need to import com.google.firebase.storage.ktx.component1 and
-        // com.google.firebase.storage.ktx.component2
+        // You'll need to import com.google.firebase.storage.component1 and
+        // com.google.firebase.storage.component2
         listPageTask
             .addOnSuccessListener { (items, prefixes, pageToken) ->
                 // Process page of results

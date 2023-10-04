@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.Firebase
 import com.google.firebase.referencecode.storage.R
-import com.google.firebase.storage.ktx.storage
+import com.google.firebase.storage.storage
 
 abstract class FirebaseUIActivity : AppCompatActivity() {
 

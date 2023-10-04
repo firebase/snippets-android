@@ -1,8 +1,8 @@
 package com.google.firebase.referencecode.database.kotlin
 
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.database.database
+import com.google.firebase.Firebase
 
 class ShardingActivity : AppCompatActivity() {
 

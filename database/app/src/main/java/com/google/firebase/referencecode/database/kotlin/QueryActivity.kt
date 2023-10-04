@@ -10,9 +10,9 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.Query
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.database
-import com.google.firebase.database.ktx.getValue
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.database.database
+import com.google.firebase.database.getValue
+import com.google.firebase.Firebase
 import com.google.firebase.referencecode.database.R
 import com.google.firebase.referencecode.database.kotlin.models.Comment
 import com.google.firebase.referencecode.database.models.Message

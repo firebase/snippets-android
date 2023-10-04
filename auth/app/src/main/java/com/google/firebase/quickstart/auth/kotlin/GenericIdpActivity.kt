@@ -3,9 +3,9 @@ package com.google.firebase.quickstart.auth.kotlin
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.OAuthProvider
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.auth.ktx.oAuthCredential
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.auth
+import com.google.firebase.auth.oAuthCredential
+import com.google.firebase.Firebase
 
 class GenericIdpActivity : AppCompatActivity() {
 

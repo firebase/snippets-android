@@ -7,9 +7,9 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.appcheck.AppCheckProvider
 import com.google.firebase.appcheck.AppCheckProviderFactory
 import com.google.firebase.appcheck.AppCheckToken
-import com.google.firebase.appcheck.ktx.appCheck
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.ktx.initialize
+import com.google.firebase.initialize
+import com.google.firebase.Firebase
+import com.google.firebase.appcheck.appCheck
 
 class CustomProvider {
     // [START appcheck_custom_provider]

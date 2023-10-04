@@ -1,7 +1,7 @@
 package com.google.firebase.example.appcheck.kotlin
 
-import com.google.firebase.appcheck.ktx.appCheck
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.appcheck.appCheck
+import com.google.firebase.Firebase
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.http.GET

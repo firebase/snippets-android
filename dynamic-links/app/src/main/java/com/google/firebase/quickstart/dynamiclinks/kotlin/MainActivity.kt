@@ -8,17 +8,17 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.appinvite.FirebaseAppInvite
 import com.google.firebase.dynamiclinks.PendingDynamicLinkData
 import com.google.firebase.dynamiclinks.ShortDynamicLink
-import com.google.firebase.dynamiclinks.ktx.androidParameters
-import com.google.firebase.dynamiclinks.ktx.component1
-import com.google.firebase.dynamiclinks.ktx.component2
-import com.google.firebase.dynamiclinks.ktx.dynamicLink
-import com.google.firebase.dynamiclinks.ktx.dynamicLinks
-import com.google.firebase.dynamiclinks.ktx.googleAnalyticsParameters
-import com.google.firebase.dynamiclinks.ktx.iosParameters
-import com.google.firebase.dynamiclinks.ktx.itunesConnectAnalyticsParameters
-import com.google.firebase.dynamiclinks.ktx.shortLinkAsync
-import com.google.firebase.dynamiclinks.ktx.socialMetaTagParameters
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.dynamiclinks.androidParameters
+import com.google.firebase.dynamiclinks.component1
+import com.google.firebase.dynamiclinks.component2
+import com.google.firebase.dynamiclinks.dynamicLink
+import com.google.firebase.dynamiclinks.dynamicLinks
+import com.google.firebase.dynamiclinks.googleAnalyticsParameters
+import com.google.firebase.dynamiclinks.iosParameters
+import com.google.firebase.dynamiclinks.itunesConnectAnalyticsParameters
+import com.google.firebase.dynamiclinks.shortLinkAsync
+import com.google.firebase.dynamiclinks.socialMetaTagParameters
+import com.google.firebase.Firebase
 import com.google.firebase.quickstart.dynamiclinks.R
 
 abstract class MainActivity : AppCompatActivity() {
@@ -107,8 +107,8 @@ abstract class MainActivity : AppCompatActivity() {
             // Set parameters
             // ...
         }.addOnSuccessListener { (shortLink, flowchartLink) ->
-            // You'll need to import com.google.firebase.dynamiclinks.ktx.component1 and
-            // com.google.firebase.dynamiclinks.ktx.component2
+            // You'll need to import com.google.firebase.dynamiclinks.component1 and
+            // com.google.firebase.dynamiclinks.component2
 
             // Short link created
             processShortLink(shortLink, flowchartLink)
@@ -127,8 +127,8 @@ abstract class MainActivity : AppCompatActivity() {
                     "https://www.example.com/&apn=com.example.android&ibn=com.example.ios",
             )
         }.addOnSuccessListener { (shortLink, flowChartLink) ->
-            // You'll need to import com.google.firebase.dynamiclinks.ktx.component1 and
-            // com.google.firebase.dynamiclinks.ktx.component2
+            // You'll need to import com.google.firebase.dynamiclinks.component1 and
+            // com.google.firebase.dynamiclinks.component2
 
             // Short link created
             processShortLink(shortLink, flowChartLink)

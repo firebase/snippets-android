@@ -1,8 +1,8 @@
 package com.google.example.firestore.kotlin
 
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.firestoreSettings
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.firestoreSettings
+import com.google.firebase.Firebase
 
 class EmulatorSuite {
 

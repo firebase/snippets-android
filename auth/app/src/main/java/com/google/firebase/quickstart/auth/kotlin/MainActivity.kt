@@ -20,10 +20,10 @@ import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.auth.PlayGamesAuthProvider
-import com.google.firebase.auth.ktx.actionCodeSettings
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.auth.ktx.userProfileChangeRequest
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.actionCodeSettings
+import com.google.firebase.auth.auth
+import com.google.firebase.auth.userProfileChangeRequest
+import com.google.firebase.Firebase
 import com.google.firebase.quickstart.auth.R
 import java.util.concurrent.TimeUnit
 

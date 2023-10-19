@@ -5,12 +5,12 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.example.perf.R
 import com.google.firebase.example.perf.kotlin.model.ItemCache
 import com.google.firebase.example.perf.kotlin.model.User
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.Firebase
 import com.google.firebase.perf.FirebasePerformance
-import com.google.firebase.perf.ktx.performance
-import com.google.firebase.perf.ktx.trace
+import com.google.firebase.perf.performance
+import com.google.firebase.perf.trace
 import com.google.firebase.perf.metrics.AddTrace
-import com.google.firebase.remoteconfig.ktx.remoteConfig
+import com.google.firebase.remoteconfig.remoteConfig
 import java.io.DataOutputStream
 import java.io.IOException
 import java.io.InputStream

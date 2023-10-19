@@ -2,8 +2,8 @@ package com.google.firebase.example.inappmessaging.kotlin
 
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.example.inappmessaging.MyClickListener
-import com.google.firebase.inappmessaging.ktx.inAppMessaging
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.inappmessaging.inAppMessaging
+import com.google.firebase.Firebase
 
 class MainActivity : AppCompatActivity() {
 

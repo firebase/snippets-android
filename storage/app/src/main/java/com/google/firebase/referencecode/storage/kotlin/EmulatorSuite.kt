@@ -1,7 +1,7 @@
 package com.google.firebase.referencecode.storage.kotlin
 
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
+import com.google.firebase.Firebase
+import com.google.firebase.storage.storage
 
 class EmulatorSuite {
 

@@ -3,11 +3,11 @@ package com.google.firebase.example.appcheck.kotlin
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory
-import com.google.firebase.appcheck.ktx.appCheck
+import com.google.firebase.appcheck.appCheck
 import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
 import com.google.firebase.example.appcheck.R
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.ktx.initialize
+import com.google.firebase.Firebase
+import com.google.firebase.initialize
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

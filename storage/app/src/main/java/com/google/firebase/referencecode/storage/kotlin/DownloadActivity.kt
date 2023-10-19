@@ -2,10 +2,10 @@ package com.google.firebase.referencecode.storage.kotlin
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.Firebase
 import com.google.firebase.referencecode.storage.R
 import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.ktx.storage
+import com.google.firebase.storage.storage
 
 class DownloadActivity : AppCompatActivity() {
 

@@ -40,11 +40,11 @@ dependencies {
     implementation("androidx.activity:activity-ktx:1.8.0")
 
     // Import the BoM for the Firebase platform
-    implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
+    implementation(platform("com.google.firebase:firebase-bom:32.4.0"))
 
     // Add the dependency for the Firebase Authentication library
     // When using the BoM, you don't specify versions in Firebase library dependencies
-    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-auth")
     
     // [START gradle_firebase_ui_auth]
     implementation("com.firebaseui:firebase-ui-auth:8.0.2")

@@ -6,8 +6,8 @@ import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuthException
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.auth
+import com.google.firebase.Firebase
 import com.google.firebase.quickstart.tasks.R
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.LinkedBlockingQueue

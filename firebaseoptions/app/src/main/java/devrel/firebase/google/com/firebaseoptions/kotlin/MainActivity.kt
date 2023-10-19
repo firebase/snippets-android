@@ -3,10 +3,10 @@ package devrel.firebase.google.com.firebaseoptions.kotlin
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.FirebaseOptions
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.ktx.app
-import com.google.firebase.ktx.initialize
+import com.google.firebase.database.database
+import com.google.firebase.Firebase
+import com.google.firebase.app
+import com.google.firebase.initialize
 import devrel.firebase.google.com.firebaseoptions.R
 
 class MainActivity : AppCompatActivity() {

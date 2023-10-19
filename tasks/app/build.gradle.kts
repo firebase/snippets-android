@@ -39,5 +39,5 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.4.0"))
 
     // Import Firebase Authentication library
-    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-auth")
 }

@@ -44,5 +44,5 @@ dependencies {
 
     // Add the dependency for the Dynamic Links library
     // When using the BoM, you don't specify versions in Firebase library dependencies
-    implementation("com.google.firebase:firebase-dynamic-links-ktx")
+    implementation("com.google.firebase:firebase-dynamic-links")
 }

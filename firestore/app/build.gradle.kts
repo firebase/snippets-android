@@ -46,12 +46,12 @@ dependencies {
 
     // Declare the dependency for the Cloud Firestore library
     // When using the BoM, you don't specify versions in Firebase library dependencies
-    implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation("com.google.firebase:firebase-firestore")
 
     // Firebase / Play Services
-    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-auth")
     implementation("com.google.android.gms:play-services-auth:20.7.0")
-    implementation("com.google.firebase:firebase-functions-ktx")
+    implementation("com.google.firebase:firebase-functions")
 
     // GeoFire (for Geoqueries solution)
     implementation("com.firebase:geofire-android-common:3.2.0")

@@ -40,7 +40,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.4.0"))
 
     // Import Firebase Cloud Messaging library
-    implementation("com.google.firebase:firebase-messaging-ktx")
+    implementation("com.google.firebase:firebase-messaging")
 
     // For an optimal experience using FCM, add the Firebase SDK
     // for Google Analytics. This is recommended, but not required.
@@ -49,7 +49,7 @@ dependencies {
     // Used to store FCM Registration Token.
     // This is recommended, but not required.
     // See: https://firebase.google.com/docs/cloud-messaging/manage-tokens
-    implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation("com.google.firebase:firebase-firestore")
 
     implementation("com.google.android.gms:play-services-auth:20.7.0")
     implementation("androidx.work:work-runtime-ktx:2.8.1")

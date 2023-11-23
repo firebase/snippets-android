@@ -21,7 +21,7 @@ allprojects {
 }
 
 fun isNonStable(candidate: ModuleComponentIdentifier): Boolean {
-    return listOf("alpha", "beta", "rc", "snapshot", "-m").any { keyword ->
+    return listOf("alpha", "beta", "rc", "snapshot", "-m", "final").any { keyword ->
         keyword in candidate.version.lowercase()
     }
 }
@@ -46,7 +46,7 @@ tasks.withType<DependencyUpdatesTask> {
 val ktlint by configurations.creating
 
 dependencies {
-    ktlint("com.pinterest:ktlint:0.51.0-FINAL") {
+    ktlint("com.pinterest:ktlint:0.49.0") {
         attributes {
             attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling.EXTERNAL))
         }

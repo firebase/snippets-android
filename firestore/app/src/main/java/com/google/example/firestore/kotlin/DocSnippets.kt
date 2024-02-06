@@ -4,8 +4,23 @@ package com.google.example.firestore.kotlin
 
 import android.util.Log
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.AggregateField
+import com.google.firebase.firestore.AggregateSource
+import com.google.firebase.firestore.DocumentChange
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.MetadataChanges
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.ServerTimestamp
+import com.google.firebase.firestore.SetOptions
+import com.google.firebase.firestore.Source
+import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.firestoreSettings
+import com.google.firebase.firestore.memoryCacheSettings
+import com.google.firebase.firestore.persistentCacheSettings
+import com.google.firebase.firestore.toObject
 import com.google.firebase.Firebase
-import com.google.firebase.firestore.*
 import java.util.ArrayList
 import java.util.Date
 import java.util.HashMap

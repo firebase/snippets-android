@@ -4,14 +4,13 @@ package com.google.example.firestore.kotlin
 
 import android.util.Log
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.AggregateField
 import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
-import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.MetadataChanges
-import com.google.firebase.firestore.PersistentCacheSettings
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ServerTimestamp
 import com.google.firebase.firestore.SetOptions
@@ -1141,5 +1140,91 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             }
         }
         // [END count_aggregate_query]
+    }
+
+    fun sumAggregateCollection() {
+        // [START sum_aggregate_collection]
+        val query = db.collection("cities")
+        val aggregateQuery = query.aggregate(AggregateField.sum("population"))
+        aggregateQuery.get(AggregateSource.SERVER).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                // Aggregate fetched successfully
+                val snapshot = task.result
+                Log.d(TAG, "Sum: ${snapshot.get(AggregateField.sum("population"))}")
+            } else {
+                Log.d(TAG, "Aggregate failed: ", task.getException())
+            }
+        }
+        // [END sum_aggregate_collection]
+    }
+
+    fun sumAggregateQuery() {
+        // [START sum_aggregate_query]
+        val query = db.collection("cities").whereEqualTo("capital", true)
+        val aggregateQuery = query.aggregate(AggregateField.sum("population"))
+        aggregateQuery.get(AggregateSource.SERVER).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                // Aggregate fetched successfully
+                val snapshot = task.result
+                Log.d(TAG, "Sum: ${snapshot.get(AggregateField.sum("population"))}")
+            } else {
+                Log.d(TAG, "Aggregate failed: ", task.getException())
+            }
+        }
+        // [END sum_aggregate_query]
+    }
+
+    fun averageAggregateCollection() {
+        // [START average_aggregate_collection]
+        val query = db.collection("cities")
+        val aggregateQuery = query.aggregate(AggregateField.average("population"))
+        aggregateQuery.get(AggregateSource.SERVER).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                // Aggregate fetched successfully
+                val snapshot = task.result
+                Log.d(TAG, "Average: ${snapshot.get(AggregateField.average("population"))}")
+            } else {
+                Log.d(TAG, "Aggregate failed: ", task.getException())
+            }
+        }
+        // [END average_aggregate_collection]
+    }
+
+    fun averageAggregateQuery() {
+        // [START average_aggregate_query]
+        val query = db.collection("cities").whereEqualTo("capital", true)
+        val aggregateQuery = query.aggregate(AggregateField.average("population"))
+        aggregateQuery.get(AggregateSource.SERVER).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                // Aggregate fetched successfully
+                val snapshot = task.result
+                Log.d(TAG, "Average: ${snapshot.get(AggregateField.average("population"))}")
+            } else {
+                Log.d(TAG, "Aggregate failed: ", task.getException())
+            }
+        }
+        // [END average_aggregate_query]
+    }
+
+    fun multiAggregateQuery() {
+        // [START multi_aggregate_query]
+        val query = db.collection("cities")
+        val aggregateQuery = query.aggregate(
+            AggregateField.count(),
+            AggregateField.sum("population"),
+            AggregateField.average("population")
+        )
+        aggregateQuery.get(AggregateSource.SERVER).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                // Aggregate fetched successfully
+                val snapshot = task.result
+                Log.d(TAG, "Count: ${snapshot.get(AggregateField.count())}")
+                Log.d(TAG, "Sum: ${snapshot.get(AggregateField.sum("population"))}")
+                Log.d(TAG, "Average: ${snapshot.get(AggregateField.average("population"))}")
+            } else {
+                Log.d(TAG, "Aggregate failed: ", task.getException())
+            }
+        }
+        // [END multi_aggregate_query]
     }
 }

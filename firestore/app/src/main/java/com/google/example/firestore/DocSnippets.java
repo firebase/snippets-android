@@ -12,6 +12,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.AggregateField;
 import com.google.firebase.firestore.AggregateQuery;
 import com.google.firebase.firestore.AggregateQuerySnapshot;
 import com.google.firebase.firestore.AggregateSource;
@@ -1367,5 +1368,105 @@ public class DocSnippets {
             }
         });
         // [END count_aggregate_query]
+    }
+
+    public void sumAggregateCollection() {
+        // [START sum_aggregate_collection]
+        Query query = db.collection("cities");
+        AggregateQuery aggregateQuery = query.aggregate(AggregateField.sum("population"));
+        aggregateQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    // Aggregate fetched successfully
+                    AggregateQuerySnapshot snapshot = task.getResult();
+                    Log.d(TAG, "Sum: " + snapshot.get(AggregateField.sum("population")));
+                } else {
+                    Log.d(TAG, "Aggregation failed: ", task.getException());
+                }
+            }
+        });
+        // [END sum_aggregate_collection]
+    }
+
+    public void sumAggregateQuery() {
+        // [START sum_aggregate_query]
+        Query query = db.collection("cities").whereEqualTo("capital", true);
+        AggregateQuery aggregateQuery = query.aggregate(AggregateField.sum("population"));
+        aggregateQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    // Aggregate fetched successfully
+                    AggregateQuerySnapshot snapshot = task.getResult();
+                    Log.d(TAG, "Sum: " + snapshot.get(AggregateField.sum("population")));
+                } else {
+                    Log.d(TAG, "Aggregation failed: ", task.getException());
+                }
+            }
+        });
+        // [END sum_aggregate_query]
+    }
+
+    public void averageAggregateCollection() {
+        // [START average_aggregate_collection]
+        Query query = db.collection("cities");
+        AggregateQuery aggregateQuery = query.aggregate(AggregateField.average("population"));
+        aggregateQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    // Aggregate fetched successfully
+                    AggregateQuerySnapshot snapshot = task.getResult();
+                    Log.d(TAG, "Average: " + snapshot.get(AggregateField.average("population")));
+                } else {
+                    Log.d(TAG, "Aggregation failed: ", task.getException());
+                }
+            }
+        });
+        // [END average_aggregate_collection]
+    }
+
+    public void averageAggregateQuery() {
+        // [START average_aggregate_query]
+        Query query = db.collection("cities").whereEqualTo("capital", true);
+        AggregateQuery aggregateQuery = query.aggregate(AggregateField.average("population"));
+        aggregateQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    // Aggregate fetched successfully
+                    AggregateQuerySnapshot snapshot = task.getResult();
+                    Log.d(TAG, "Average: " + snapshot.get(AggregateField.average("population")));
+                } else {
+                    Log.d(TAG, "Aggregation failed: ", task.getException());
+                }
+            }
+        });
+        // [END average_aggregate_query]
+    }
+
+    public void multiAggregateQuery() {
+        // [START multi_aggregate_query]
+        Query query = db.collection("cities");
+        AggregateQuery aggregateQuery = query.aggregate(
+                AggregateField.count(),
+                AggregateField.sum("population"),
+                AggregateField.average("population"));
+        aggregateQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    // Aggregate fetched successfully
+                    AggregateQuerySnapshot snapshot = task.getResult();
+                    Log.d(TAG, "Count: " + snapshot.get(AggregateField.count()));
+                    Log.d(TAG, "Sum: " + snapshot.get(AggregateField.sum("population")));
+                    Log.d(TAG, "Average: " + snapshot.get(AggregateField.average("population")));
+                } else {
+                    Log.d(TAG, "Aggregation failed: ", task.getException());
+                }
+            }
+        });
+        // [END multi_aggregate_query]
     }
 }

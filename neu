@@ -1,0 +1,7 @@
+Query query = collection.where(Filter.and(
+    Filter.equalTo("state", "CA"),
+    Filter.or(
+        Filter.equalTo("capital", true),
+        Filter.greaterThanOrEqualTo("population", 1000000)
+    )
+));

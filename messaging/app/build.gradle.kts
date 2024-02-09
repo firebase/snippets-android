@@ -37,7 +37,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
 
     // Import the Firebase BoM (see: https://firebase.google.com/docs/android/learn-more#bom)
-    implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
+    implementation(platform("com.google.firebase:firebase-bom:32.7.2"))
 
     // Import Firebase Cloud Messaging library
     implementation("com.google.firebase:firebase-messaging")

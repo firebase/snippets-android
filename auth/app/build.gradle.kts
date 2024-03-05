@@ -36,7 +36,7 @@ dependencies {
     implementation("androidx.browser:browser:1.0.0")
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("com.google.android.material:material:1.9.0")
+    implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.activity:activity-ktx:1.8.2")
 
     // Import the BoM for the Firebase platform

@@ -138,4 +138,24 @@ class GenerateContentViewModel : ViewModel() {
             // [END vertexai_text_and_images]
         }
     }
+
+    fun countTokensText() {
+        viewModelScope.launch {
+            // [START vertexai_count_tokens_text]
+            val (totalTokens) = generativeModel.countTokens("Write a story about a magic backpack.")
+            // [END vertexai_count_tokens_text]
+        }
+    }
+
+    fun countTokensMultimodal(bitmap: Bitmap) {
+        viewModelScope.launch {
+            // [START vertexai_count_tokens_multimodal]
+            val prompt = content {
+                image(bitmap)
+                text("Where can I buy this?")
+            }
+            val (totalTokens) = generativeModel.countTokens(prompt)
+            // [END vertexai_count_tokens_multimodal]
+        }
+    }
 }

@@ -1,6 +1,7 @@
 package com.google.firebase.example.vertexai.kotlin
 
 import android.content.res.Resources
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.Firebase
@@ -11,7 +12,7 @@ import kotlinx.coroutines.launch
 
 @Suppress("JoinDeclarationAndAssignment") // for the generativeModel var
 class ChatViewModel : ViewModel() {
-
+    private val TAG = "ChatViewModel"
     private var generativeModel: GenerativeModel
 
     init {
@@ -29,7 +30,7 @@ class ChatViewModel : ViewModel() {
             )
 
             chat.sendMessageStream("How many paws are in my house?").collect { chunk ->
-                print(chunk.text)
+                Log.d(TAG, chunk.text ?: "")
             }
             // [END vertexai_send_message_stream]
         }
@@ -46,7 +47,7 @@ class ChatViewModel : ViewModel() {
             )
 
             val response = chat.sendMessage("How many paws are in my house?")
-            print(response.text)
+            Log.d(TAG, response.text ?: "")
             // [END vertexai_send_message]
         }
     }

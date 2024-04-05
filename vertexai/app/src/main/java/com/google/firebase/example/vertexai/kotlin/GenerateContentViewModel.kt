@@ -3,6 +3,7 @@ package com.google.firebase.example.vertexai.kotlin
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.Firebase
@@ -14,7 +15,7 @@ import kotlinx.coroutines.launch
 
 @Suppress("JoinDeclarationAndAssignment") // for the generativeModel var
 class GenerateContentViewModel : ViewModel() {
-
+    private val TAG = "ContentViewModel"
     private var generativeModel: GenerativeModel
 
     // Only meant to separate the scope of the initialization snippet
@@ -41,7 +42,7 @@ class GenerateContentViewModel : ViewModel() {
             // To stream generated text output, call generateContentStream and pass in the prompt
             var fullResponse = ""
             generativeModel.generateContentStream(prompt).collect { chunk ->
-                print(chunk.text)
+                Log.d(TAG, chunk.text ?: "")
                 fullResponse += chunk.text
             }
             // [END vertexai_textonly_stream]
@@ -56,7 +57,7 @@ class GenerateContentViewModel : ViewModel() {
 
             // To generate text output, call generateContent and pass in the prompt
             val response = generativeModel.generateContent(prompt)
-            print(response.text)
+            Log.d(TAG, response.text ?: "")
             // [END vertexai_textonly]
         }
     }
@@ -74,7 +75,7 @@ class GenerateContentViewModel : ViewModel() {
 
             var fullResponse = ""
             generativeModel.generateContentStream(prompt).collect { chunk ->
-                print(chunk.text)
+                Log.d(TAG, chunk.text ?: "")
                 fullResponse += chunk.text
             }
             // [END vertexai_text_and_image_stream]
@@ -93,7 +94,7 @@ class GenerateContentViewModel : ViewModel() {
             }
 
             val response = generativeModel.generateContent(prompt)
-            print(response.text)
+            Log.d(TAG, response.text ?: "")
             // [END vertexai_text_and_image]
         }
     }
@@ -113,7 +114,7 @@ class GenerateContentViewModel : ViewModel() {
 
             var fullResponse = ""
             generativeModel.generateContentStream(prompt).collect { chunk ->
-                print(chunk.text)
+                Log.d(TAG, chunk.text ?: "")
                 fullResponse += chunk.text
             }
             // [END vertexai_text_and_images_stream]
@@ -134,7 +135,7 @@ class GenerateContentViewModel : ViewModel() {
             }
 
             val response = generativeModel.generateContent(prompt)
-            print(response.text)
+            Log.d(TAG, response.text ?: "")
             // [END vertexai_text_and_images]
         }
     }

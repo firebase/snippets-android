@@ -62,6 +62,12 @@ dependencies {
 
     implementation(libs.firebase.vertex.ai)
 
+    // Required for one-shot operations (to use `ListenableFuture` from Reactive Streams)
+    implementation(libs.reactive.streams)
+
+    // Required for streaming operations (to use `Publisher` from Guava Android)
+    implementation(libs.guava)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

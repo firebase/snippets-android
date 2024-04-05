@@ -36,7 +36,7 @@ class ChatViewModel : ViewModel() {
         }
     }
 
-    fun startChatSendMessage(resources: Resources) {
+    fun startChatSendMessage() {
         viewModelScope.launch {
             // [START vertexai_send_message]
             val chat = generativeModel.startChat(

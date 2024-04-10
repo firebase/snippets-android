@@ -143,7 +143,7 @@ class GenerateContentViewModel : ViewModel() {
     fun countTokensText() {
         viewModelScope.launch {
             // [START vertexai_count_tokens_text]
-            val (totalTokens) = generativeModel.countTokens("Write a story about a magic backpack.")
+            val (tokens, billableChars) = generativeModel.countTokens("Write a story about a magic backpack.")
             // [END vertexai_count_tokens_text]
         }
     }
@@ -155,7 +155,7 @@ class GenerateContentViewModel : ViewModel() {
                 image(bitmap)
                 text("Where can I buy this?")
             }
-            val (totalTokens) = generativeModel.countTokens(prompt)
+            val (tokens, billableChars) = generativeModel.countTokens(prompt)
             // [END vertexai_count_tokens_multimodal]
         }
     }

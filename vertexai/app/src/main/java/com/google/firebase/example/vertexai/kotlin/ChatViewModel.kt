@@ -59,7 +59,7 @@ class ChatViewModel : ViewModel() {
             // Count tokens for a chat prompt
             val history = chat.history
             val messageContent = content { text("This is the message I intend to send") }
-            val (totalTokens) = generativeModel.countTokens(*history.toTypedArray(), messageContent)
+            val (tokens, billableChars) = generativeModel.countTokens(*history.toTypedArray(), messageContent)
             // [END vertexai_count_tokens_chat]
         }
     }

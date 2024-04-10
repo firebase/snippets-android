@@ -142,7 +142,9 @@ public class ChatViewModel extends ViewModel {
             @Override
             public void onSuccess(CountTokensResponse result) {
                 int totalTokens = result.getTotalTokens();
-                System.out.println("totalTokens = " + totalTokens);
+                int totalBillableTokens = result.getTotalBillableCharacters();
+                System.out.println("totalTokens = " + totalTokens +
+                        "totalBillableTokens = " + totalBillableTokens);
             }
 
             @Override

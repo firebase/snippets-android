@@ -30,11 +30,7 @@ public class ConfigurationViewModel extends ViewModel {
 
         GenerativeModel gm = FirebaseVertexAI.Companion.getInstance().generativeModel(
                 "MODEL_NAME",
-                generationConfig,
-                /* safetySettings */ null,
-                /* tools */ null,
-                /* toolConfig */ null,
-                /* requestOptions */ new RequestOptions()
+                generationConfig
         );
 
         GenerativeModelFutures model = GenerativeModelFutures.from(gm);
@@ -47,11 +43,8 @@ public class ConfigurationViewModel extends ViewModel {
 
         GenerativeModel gm1 = FirebaseVertexAI.Companion.getInstance().generativeModel(
                 "MODEL_NAME",
-                /* generationConfig */ null,
-                Collections.singletonList(harassmentSafety1),
-                /* tools */ null,
-                /* toolConfig */ null,
-                /* requestOptions */ new RequestOptions()
+                /* generationConfig is optional */ null,
+                Collections.singletonList(harassmentSafety1)
         );
 
         GenerativeModelFutures model1 = GenerativeModelFutures.from(gm1);
@@ -65,11 +58,8 @@ public class ConfigurationViewModel extends ViewModel {
 
         GenerativeModel gm = FirebaseVertexAI.Companion.getInstance().generativeModel(
                 "MODEL_NAME",
-                /* generationConfig */ null,
-                List.of(harassmentSafety, hateSpeechSafety),
-                /* tools */ null,
-                /* toolConfig */ null,
-                /* requestOptions */ new RequestOptions()
+                /* generationConfig is optional */ null,
+                List.of(harassmentSafety, hateSpeechSafety)
         );
 
         GenerativeModelFutures model = GenerativeModelFutures.from(gm);

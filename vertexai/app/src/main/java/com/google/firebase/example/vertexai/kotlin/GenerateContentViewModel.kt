@@ -1,8 +1,10 @@
 package com.google.firebase.example.vertexai.kotlin
 
+import android.content.Context
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -137,6 +139,57 @@ class GenerateContentViewModel : ViewModel() {
             val response = generativeModel.generateContent(prompt)
             Log.d(TAG, response.text ?: "")
             // [END vertexai_text_and_images]
+        }
+    }
+
+    fun generateContentWithVideoStream(
+        applicationContext: Context,
+        videoUri: Uri
+    ) {
+        viewModelScope.launch {
+            // [START vertexai_text_and_video_stream]
+            val contentResolver = applicationContext.contentResolver
+            contentResolver.openInputStream(videoUri).use { stream ->
+                stream?.let {
+                    val bytes = stream.readBytes()
+
+                    val prompt = content {
+                        blob("video/mp4", bytes)
+                        text("What is in the video?")
+                    }
+
+                    var fullResponse = ""
+                    generativeModel.generateContentStream(prompt).collect { chunk ->
+                        Log.d(TAG, chunk.text ?: "")
+                        fullResponse += chunk.text
+                    }
+                }
+            }
+            // [END vertexai_text_and_video_stream]
+        }
+    }
+
+    fun generateContentWithVideo(
+        applicationContext: Context,
+        videoUri: Uri
+    ) {
+        viewModelScope.launch {
+            // [START vertexai_text_and_video]
+            val contentResolver = applicationContext.contentResolver
+            contentResolver.openInputStream(videoUri).use { stream ->
+                stream?.let {
+                    val bytes = stream.readBytes()
+
+                    val prompt = content {
+                        blob("video/mp4", bytes)
+                        text("What is in the video?")
+                    }
+
+                    val response = generativeModel.generateContent(prompt)
+                    Log.d(TAG, response.text ?: "")
+                }
+            }
+            // [END vertexai_text_and_video]
         }
     }
 

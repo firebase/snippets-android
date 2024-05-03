@@ -24,6 +24,7 @@ include(":auth:app",
         ":perf:app",
         ":test-lab:app",
         ":analytics:app",
-        ":installations:app"
+        ":installations:app",
+        ":vertexai:app"
 )
 

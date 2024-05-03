@@ -20,7 +20,7 @@ class ConfigurationViewModel : ViewModel() {
             stopSequences = listOf("red")
         }
         val generativeModel = Firebase.vertexAI.generativeModel(
-            modelName = "gemini-1.5-pro",
+            modelName = "gemini-1.5-pro-preview-0409",
             generationConfig = config
         )
         // [END vertexai_model_params]

@@ -1,16 +1,20 @@
 package com.google.firebase.example.vertexai.java;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.firebase.vertexai.Chat;
+import com.google.firebase.vertexai.FirebaseVertexAI;
+import com.google.firebase.vertexai.GenerativeModel;
 import com.google.firebase.vertexai.java.ChatFutures;
 import com.google.firebase.vertexai.java.GenerativeModelFutures;
 import com.google.firebase.vertexai.type.Content;
 import com.google.firebase.vertexai.type.CountTokensResponse;
 import com.google.firebase.vertexai.type.GenerateContentResponse;
+import com.google.firebase.vertexai.type.RequestOptions;
 
 import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
@@ -118,7 +122,7 @@ public class ChatViewModel extends ViewModel {
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(@NonNull Throwable t) {
                 t.printStackTrace();
             }
         }, executor);
@@ -148,10 +152,28 @@ public class ChatViewModel extends ViewModel {
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(@NonNull Throwable t) {
                 t.printStackTrace();
             }
         }, executor);
         // [END vertexai_count_tokens_chat]
+    }
+
+    void systemInstructionsText() {
+        // [START vertexai_si_text]
+        Content systemInstruction = new Content.Builder()
+                .addText("You are a cat. Your name is Neko.")
+                .build();
+        GenerativeModel model = FirebaseVertexAI.getInstance()
+                .generativeModel(
+                /* modelName */ "gemini-1.5-pro-preview-0409",
+                /* generationConfig (optional) */ null,
+                /* safetySettings (optional) */ null,
+                /* requestOptions (optional) */ new RequestOptions(),
+                /* tools (optional) */ null,
+                /* toolsConfig (optional) */ null,
+                /* systemInstruction (optional) */ systemInstruction
+        );
+        // [END vertexai_si_text]
     }
 }

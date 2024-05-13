@@ -31,15 +31,21 @@ fun isBlockListed(candidate: ModuleComponentIdentifier): Boolean {
             "androidx.browser:browser",
             "com.facebook.android:facebook-android-sdk",
             "com.applovin:applovin-sdk",
-            "com.ironsource.sdk:mediationsdk"
+            "com.ironsource.sdk:mediationsdk",
+            "com.google.guava",
+            "com.github.bumptech.glide"
     ).any { keyword ->
         keyword in candidate.toString().lowercase()
     }
 }
 
+fun notFromFirebase(candidate: ModuleComponentIdentifier): Boolean {
+    return candidate.group != "com.google.firebase"
+}
+
 tasks.withType<DependencyUpdatesTask> {
     rejectVersionIf {
-        isNonStable(candidate) || isBlockListed(candidate)
+        (isNonStable(candidate) && notFromFirebase(candidate)) || isBlockListed(candidate)
     }
 }
 

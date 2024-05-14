@@ -33,9 +33,9 @@ android {
 
 dependencies {
     implementation(fileTree("libs").include("*.jar"))
-    implementation("androidx.core:core-ktx:1.13.0")
+    implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
-    implementation("com.google.firebase:firebase-installations:17.2.0")
+    implementation("com.google.firebase:firebase-installations:18.0.0")
 }

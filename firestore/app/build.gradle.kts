@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.google.example.firestore"
-        minSdk = 19
+        minSdk = 23
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -42,7 +42,7 @@ dependencies {
     implementation("androidx.multidex:multidex:2.0.1")
 
     // Import the BoM for the Firebase platform
-    implementation(platform("com.google.firebase:firebase-bom:32.8.1"))
+    implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
 
     // Declare the dependency for the Cloud Firestore library
     // When using the BoM, you don't specify versions in Firebase library dependencies
@@ -50,7 +50,7 @@ dependencies {
 
     // Firebase / Play Services
     implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.android.gms:play-services-auth:21.1.0")
+    implementation("com.google.android.gms:play-services-auth:21.1.1")
     implementation("com.google.firebase:firebase-functions")
 
     // GeoFire (for Geoqueries solution)

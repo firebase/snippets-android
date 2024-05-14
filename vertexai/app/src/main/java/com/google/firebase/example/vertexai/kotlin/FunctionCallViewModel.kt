@@ -63,7 +63,7 @@ class FunctionCallViewModel : ViewModel() {
             var response = chat.sendMessage(prompt)
 
             // Check if the model responded with a function call
-            response.functionCall?.let { functionCall ->
+            response.functionCalls.firstOrNull()?.let { functionCall ->
                 // Try to retrieve the stored lambda from the model's tools and
                 // throw an exception if the returned function was not declared
                 val matchedFunction = generativeModel.tools?.flatMap { it.functionDeclarations }

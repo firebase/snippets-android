@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.google.firebase.quickstart.dynamiclinks"
-        minSdk = 19
+        minSdk = 23
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -36,7 +36,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
 
     // Import the BoM for the Firebase platform
-    implementation(platform("com.google.firebase:firebase-bom:32.8.1"))
+    implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
 
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation("com.google.firebase:firebase-auth")

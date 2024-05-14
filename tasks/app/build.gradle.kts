@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.google.firebase.quickstart.tasks"
-        minSdk = 19
+        minSdk = 23
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -36,7 +36,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
 
     // Import the Firebase BoM (see: https://firebase.google.com/docs/android/learn-more#bom)
-    implementation(platform("com.google.firebase:firebase-bom:32.8.1"))
+    implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
 
     // Import Firebase Authentication library
     implementation("com.google.firebase:firebase-auth")

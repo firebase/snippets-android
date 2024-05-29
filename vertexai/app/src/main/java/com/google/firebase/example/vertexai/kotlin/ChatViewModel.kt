@@ -21,7 +21,7 @@ class ChatViewModel : ViewModel() {
 
     fun startChatSendMessageStream() {
         viewModelScope.launch {
-            // [START vertexai_send_message_stream]
+            // [START chat_streaming]
             val chat = generativeModel.startChat(
                 history = listOf(
                     content(role = "user") { text("Hello, I have 2 dogs in my house.") },
@@ -32,13 +32,13 @@ class ChatViewModel : ViewModel() {
             chat.sendMessageStream("How many paws are in my house?").collect { chunk ->
                 Log.d(TAG, chunk.text ?: "")
             }
-            // [END vertexai_send_message_stream]
+            // [END chat_streaming]
         }
     }
 
     fun startChatSendMessage() {
         viewModelScope.launch {
-            // [START vertexai_send_message]
+            // [START chat]
             val chat = generativeModel.startChat(
                 history = listOf(
                     content(role = "user") { text("Hello, I have 2 dogs in my house.") },
@@ -48,19 +48,19 @@ class ChatViewModel : ViewModel() {
 
             val response = chat.sendMessage("How many paws are in my house?")
             Log.d(TAG, response.text ?: "")
-            // [END vertexai_send_message]
+            // [END chat]
         }
     }
 
     fun countTokensChat() {
         viewModelScope.launch {
             val chat = generativeModel.startChat()
-            // [START vertexai_count_tokens_chat]
+            // [START count_tokens_chat]
             // Count tokens for a chat prompt
             val history = chat.history
             val messageContent = content { text("This is the message I intend to send") }
             val (tokens, billableChars) = generativeModel.countTokens(*history.toTypedArray(), messageContent)
-            // [END vertexai_count_tokens_chat]
+            // [END count_tokens_chat]
         }
     }
 

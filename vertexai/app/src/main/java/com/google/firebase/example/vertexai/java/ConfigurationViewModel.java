@@ -18,7 +18,7 @@ import java.util.List;
 public class ConfigurationViewModel extends ViewModel {
 
     void configModelParams() {
-        // [START vertexai_model_params]
+        // [START configure_model]
         GenerationConfig.Builder configBuilder = new GenerationConfig.Builder();
         configBuilder.temperature = 0.9f;
         configBuilder.topK = 16;
@@ -34,7 +34,7 @@ public class ConfigurationViewModel extends ViewModel {
         );
 
         GenerativeModelFutures model = GenerativeModelFutures.from(gm);
-        // [END vertexai_model_params]
+        // [END configure_model]
     }
 
     void configSafetySettings() {
@@ -49,7 +49,7 @@ public class ConfigurationViewModel extends ViewModel {
 
         GenerativeModelFutures model1 = GenerativeModelFutures.from(gm1);
 
-        // [START vertexai_safety_settings]
+        // [START multi_safety_settings]
         SafetySetting harassmentSafety = new SafetySetting(HarmCategory.HARASSMENT,
                 BlockThreshold.ONLY_HIGH);
 
@@ -63,6 +63,6 @@ public class ConfigurationViewModel extends ViewModel {
         );
 
         GenerativeModelFutures model = GenerativeModelFutures.from(gm);
-        // [END vertexai_safety_settings]
+        // [END multi_safety_settings]
     }
 }

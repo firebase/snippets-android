@@ -11,7 +11,7 @@ import com.google.firebase.vertexai.vertexAI
 class ConfigurationViewModel : ViewModel() {
 
     fun configModelParams() {
-        // [START vertexai_model_params]
+        // [START configure_model]
         val config = generationConfig {
             temperature = 0.9f
             topK = 16
@@ -23,7 +23,7 @@ class ConfigurationViewModel : ViewModel() {
             modelName = "gemini-1.5-pro-preview-0409",
             generationConfig = config
         )
-        // [END vertexai_model_params]
+        // [END configure_model]
     }
 
     fun configSafetySettings() {
@@ -34,7 +34,7 @@ class ConfigurationViewModel : ViewModel() {
             )
         )
 
-        // [START vertexai_safety_settings]
+        // [START multi_safety_settings]
         val harassmentSafety = SafetySetting(HarmCategory.HARASSMENT, BlockThreshold.ONLY_HIGH)
         val hateSpeechSafety = SafetySetting(HarmCategory.HATE_SPEECH, BlockThreshold.MEDIUM_AND_ABOVE)
 
@@ -42,6 +42,6 @@ class ConfigurationViewModel : ViewModel() {
             modelName = "MODEL_NAME",
             safetySettings = listOf(harassmentSafety, hateSpeechSafety)
         )
-        // [END vertexai_safety_settings]
+        // [END multi_safety_settings]
     }
 }

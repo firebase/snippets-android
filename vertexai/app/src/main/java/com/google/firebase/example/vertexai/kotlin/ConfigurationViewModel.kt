@@ -26,20 +26,27 @@ class ConfigurationViewModel : ViewModel() {
         // [END configure_model]
     }
 
-    fun configSafetySettings() {
-        val generativeModel1 = Firebase.vertexAI.generativeModel(
-            modelName = "MODEL_NAME",
+    fun configSafetySetting() {
+        // [START safety_settings]
+        val harassmentSafety = SafetySetting(HarmCategory.HARASSMENT, BlockThreshold.ONLY_HIGH)
+        val hateSpeechSafety = SafetySetting(HarmCategory.HATE_SPEECH, BlockThreshold.MEDIUM_AND_ABOVE)
+
+        val generativeModel = Firebase.vertexAI.generativeModel(
+            modelName = "{{generic_model_name_initialization}}",
             safetySettings = listOf(
                 SafetySetting(HarmCategory.HARASSMENT, BlockThreshold.ONLY_HIGH)
             )
         )
+        // [END safety_settings]
+    }
 
+    fun configMultiSafetySettings() {
         // [START multi_safety_settings]
         val harassmentSafety = SafetySetting(HarmCategory.HARASSMENT, BlockThreshold.ONLY_HIGH)
         val hateSpeechSafety = SafetySetting(HarmCategory.HATE_SPEECH, BlockThreshold.MEDIUM_AND_ABOVE)
 
         val generativeModel = Firebase.vertexAI.generativeModel(
-            modelName = "MODEL_NAME",
+            modelName = "{{generic_model_name_initialization}}",
             safetySettings = listOf(harassmentSafety, hateSpeechSafety)
         )
         // [END multi_safety_settings]

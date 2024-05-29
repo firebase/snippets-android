@@ -29,7 +29,7 @@ public class ConfigurationViewModel extends ViewModel {
         GenerationConfig generationConfig = configBuilder.build();
 
         GenerativeModel gm = FirebaseVertexAI.Companion.getInstance().generativeModel(
-                "MODEL_NAME",
+                "{{generic_model_name_initialization}}",
                 generationConfig
         );
 
@@ -38,17 +38,21 @@ public class ConfigurationViewModel extends ViewModel {
     }
 
     void configSafetySettings() {
-        SafetySetting harassmentSafety1 = new SafetySetting(HarmCategory.HARASSMENT,
+        // [START safety_settings]
+        SafetySetting harassmentSafety = new SafetySetting(HarmCategory.HARASSMENT,
                 BlockThreshold.ONLY_HIGH);
 
-        GenerativeModel gm1 = FirebaseVertexAI.Companion.getInstance().generativeModel(
-                "MODEL_NAME",
+        GenerativeModel gm = FirebaseVertexAI.Companion.getInstance().generativeModel(
+                "{{generic_model_name_initialization}}",
                 /* generationConfig is optional */ null,
-                Collections.singletonList(harassmentSafety1)
+                Collections.singletonList(harassmentSafety)
         );
 
-        GenerativeModelFutures model1 = GenerativeModelFutures.from(gm1);
+        GenerativeModelFutures model = GenerativeModelFutures.from(gm);
+        // [END safety_settings]
+    }
 
+    void configMultiSafetySettings() {
         // [START multi_safety_settings]
         SafetySetting harassmentSafety = new SafetySetting(HarmCategory.HARASSMENT,
                 BlockThreshold.ONLY_HIGH);
@@ -57,7 +61,7 @@ public class ConfigurationViewModel extends ViewModel {
                 BlockThreshold.MEDIUM_AND_ABOVE);
 
         GenerativeModel gm = FirebaseVertexAI.Companion.getInstance().generativeModel(
-                "MODEL_NAME",
+                "{{generic_model_name_initialization}}",
                 /* generationConfig is optional */ null,
                 List.of(harassmentSafety, hateSpeechSafety)
         );

@@ -339,11 +339,12 @@ public class GenerateContentViewModel extends ViewModel {
 
     void countTokensText(Executor executor) {
         // [START count_tokens_text]
-        Content text = new Content.Builder()
+        Content prompt = new Content.Builder()
                 .addText("Write a story about a magic backpack.")
                 .build();
 
-        ListenableFuture<CountTokensResponse> countTokensResponse = model.countTokens(text);
+        // Count tokens and billable characters before calling generateContent
+        ListenableFuture<CountTokensResponse> countTokensResponse = model.countTokens(prompt);
 
         Futures.addCallback(countTokensResponse, new FutureCallback<CountTokensResponse>() {
             @Override
@@ -352,6 +353,9 @@ public class GenerateContentViewModel extends ViewModel {
                 int totalBillableTokens = result.getTotalBillableCharacters();
                 System.out.println("totalTokens = " + totalTokens +
                         "totalBillableTokens = " + totalBillableTokens);
+
+                // To generate text output, call generateContent with the text input
+                ListenableFuture<GenerateContentResponse> response = model.generateContent(prompt);
             }
 
             @Override
@@ -364,13 +368,13 @@ public class GenerateContentViewModel extends ViewModel {
 
     void countTokensMultimodal(Executor executor, Bitmap bitmap) {
         // [START count_tokens_text_image]
-        Content text = new Content.Builder()
+        Content prompt = new Content.Builder()
                 .addImage(bitmap)
                 .addText("Where can I buy this")
                 .build();
 
-        // For text-only input
-        ListenableFuture<CountTokensResponse> countTokensResponse = model.countTokens(text);
+        // Count tokens and billable characters before calling generateContent
+        ListenableFuture<CountTokensResponse> countTokensResponse = model.countTokens(prompt);
 
         Futures.addCallback(countTokensResponse, new FutureCallback<CountTokensResponse>() {
             @Override
@@ -379,6 +383,9 @@ public class GenerateContentViewModel extends ViewModel {
                 int totalBillableTokens = result.getTotalBillableCharacters();
                 System.out.println("totalTokens = " + totalTokens +
                         "totalBillableTokens = " + totalBillableTokens);
+
+                // To generate text output, call generateContent with the prompt
+                ListenableFuture<GenerateContentResponse> response = model.generateContent(prompt);
             }
 
             @Override

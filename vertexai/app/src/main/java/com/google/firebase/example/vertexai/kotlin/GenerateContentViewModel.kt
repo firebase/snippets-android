@@ -196,7 +196,16 @@ class GenerateContentViewModel : ViewModel() {
     fun countTokensText() {
         viewModelScope.launch {
             // [START count_tokens_text]
-            val (tokens, billableChars) = generativeModel.countTokens("Write a story about a magic backpack.")
+            val prompt = "Write a story about a magic backpack."
+
+            // Count tokens and billable characters before calling generateContent
+            val (tokens, billableChars) = generativeModel.countTokens(prompt)
+            Log.d(TAG, "Total Tokens: $tokens")
+            Log.d(TAG, "Total Billable Characters: $billableChars")
+
+            // To generate text output, call generateContent with the text input
+            val response = generativeModel.generateContent(prompt)
+            Log.d(TAG, response.text ?: "")
             // [END count_tokens_text]
         }
     }
@@ -208,7 +217,15 @@ class GenerateContentViewModel : ViewModel() {
                 image(bitmap)
                 text("Where can I buy this?")
             }
+
+            // Count tokens and billable characters before calling generateContent
             val (tokens, billableChars) = generativeModel.countTokens(prompt)
+            Log.d(TAG, "Total Tokens: $tokens")
+            Log.d(TAG, "Total Billable Characters: $billableChars")
+
+            // To generate text output, call generateContent with the text input
+            val response = generativeModel.generateContent(prompt)
+            Log.d(TAG, response.text ?: "")
             // [END count_tokens_text_image]
         }
     }

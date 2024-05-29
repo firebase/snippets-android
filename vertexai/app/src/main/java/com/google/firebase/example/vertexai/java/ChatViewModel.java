@@ -160,7 +160,9 @@ public class ChatViewModel extends ViewModel {
     }
 
     void systemInstructionsText() {
-        // [START vertexai_si_text]
+        // [START system_instructions_text]
+        // Initialize the Vertex AI service and the generative model
+        // Specify a model that supports system instructions, like a Gemini 1.5 model
         Content systemInstruction = new Content.Builder()
                 .addText("You are a cat. Your name is Neko.")
                 .build();
@@ -174,6 +176,6 @@ public class ChatViewModel extends ViewModel {
                 /* toolsConfig (optional) */ null,
                 /* systemInstruction (optional) */ systemInstruction
         );
-        // [END vertexai_si_text]
+        // [END system_instructions_text]
     }
 }

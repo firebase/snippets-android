@@ -27,13 +27,13 @@ class GenerateContentViewModel : ViewModel() {
         val generativeModel = Firebase.vertexAI.generativeModel(
             // Specify a model that supports your use case
             // Gemini 1.5 Pro is versatile and can accept both text-only and multimodal prompt inputs
-            modelName = "gemini-1.5-pro-preview-0409"
+            modelName = "{{generic_model_name_initialization}}"
         )
         // [END initialize_model]
     }
 
     init {
-        generativeModel = Firebase.vertexAI.generativeModel("gemini-1.5-pro-preview-0409")
+        generativeModel = Firebase.vertexAI.generativeModel("{{generic_model_name_initialization}}")
     }
 
     fun generateContentStream() {

@@ -39,7 +39,7 @@ public class GenerateContentViewModel extends ViewModel {
     static class InitializationSnippet {
         // [START initialize_model]
         GenerativeModel gm = FirebaseVertexAI.getInstance()
-                .generativeModel("gemini-1.5-pro-preview-0409");
+                .generativeModel("{{generic_model_name_initialization}}");
 
         GenerativeModelFutures model = GenerativeModelFutures.from(gm);
         // [END initialize_model]

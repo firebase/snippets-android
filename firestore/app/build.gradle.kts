@@ -37,7 +37,7 @@ android {
 
 dependencies {
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.multidex:multidex:2.0.1")
 

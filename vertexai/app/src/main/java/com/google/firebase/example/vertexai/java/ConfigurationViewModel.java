@@ -29,7 +29,7 @@ public class ConfigurationViewModel extends ViewModel {
         GenerationConfig generationConfig = configBuilder.build();
 
         GenerativeModel gm = FirebaseVertexAI.Companion.getInstance().generativeModel(
-                "{{generic_model_name_initialization}}",
+                "gemini-1.5-flash",
                 generationConfig
         );
 
@@ -43,7 +43,7 @@ public class ConfigurationViewModel extends ViewModel {
                 BlockThreshold.ONLY_HIGH);
 
         GenerativeModel gm = FirebaseVertexAI.Companion.getInstance().generativeModel(
-                "{{generic_model_name_initialization}}",
+                "gemini-1.5-flash",
                 /* generationConfig is optional */ null,
                 Collections.singletonList(harassmentSafety)
         );
@@ -61,7 +61,7 @@ public class ConfigurationViewModel extends ViewModel {
                 BlockThreshold.MEDIUM_AND_ABOVE);
 
         GenerativeModel gm = FirebaseVertexAI.Companion.getInstance().generativeModel(
-                "{{generic_model_name_initialization}}",
+                "gemini-1.5-flash",
                 /* generationConfig is optional */ null,
                 List.of(harassmentSafety, hateSpeechSafety)
         );

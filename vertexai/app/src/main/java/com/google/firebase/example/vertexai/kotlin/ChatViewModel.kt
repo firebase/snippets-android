@@ -16,7 +16,7 @@ class ChatViewModel : ViewModel() {
     private var generativeModel: GenerativeModel
 
     init {
-        generativeModel = Firebase.vertexAI.generativeModel("{{generic_model_name_initialization}}")
+        generativeModel = Firebase.vertexAI.generativeModel("gemini-1.5-flash")
     }
 
     fun startChatSendMessageStream() {
@@ -69,7 +69,7 @@ class ChatViewModel : ViewModel() {
         // Initialize the Vertex AI service and the generative model
         // Specify a model that supports system instructions, like a Gemini 1.5 model
         val generativeModel = Firebase.vertexAI.generativeModel(
-            modelName = "{{generic_model_name_initialization}}",
+            modelName = "gemini-1.5-flash",
             systemInstruction = content { text("You are a cat. Your name is Neko.") },
         )
         // [END system_instructions_text]

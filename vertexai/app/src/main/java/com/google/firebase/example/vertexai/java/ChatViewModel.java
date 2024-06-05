@@ -168,7 +168,7 @@ public class ChatViewModel extends ViewModel {
                 .build();
         GenerativeModel model = FirebaseVertexAI.getInstance()
                 .generativeModel(
-                /* modelName */ "{{generic_model_name_initialization}}",
+                /* modelName */ "gemini-1.5-flash",
                 /* generationConfig (optional) */ null,
                 /* safetySettings (optional) */ null,
                 /* requestOptions (optional) */ new RequestOptions(),

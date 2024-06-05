@@ -20,7 +20,7 @@ class ConfigurationViewModel : ViewModel() {
             stopSequences = listOf("red")
         }
         val generativeModel = Firebase.vertexAI.generativeModel(
-            modelName = "{{generic_model_name_initialization}}",
+            modelName = "gemini-1.5-flash",
             generationConfig = config
         )
         // [END configure_model]
@@ -32,7 +32,7 @@ class ConfigurationViewModel : ViewModel() {
         val hateSpeechSafety = SafetySetting(HarmCategory.HATE_SPEECH, BlockThreshold.MEDIUM_AND_ABOVE)
 
         val generativeModel = Firebase.vertexAI.generativeModel(
-            modelName = "{{generic_model_name_initialization}}",
+            modelName = "gemini-1.5-flash",
             safetySettings = listOf(
                 SafetySetting(HarmCategory.HARASSMENT, BlockThreshold.ONLY_HIGH)
             )
@@ -46,7 +46,7 @@ class ConfigurationViewModel : ViewModel() {
         val hateSpeechSafety = SafetySetting(HarmCategory.HATE_SPEECH, BlockThreshold.MEDIUM_AND_ABOVE)
 
         val generativeModel = Firebase.vertexAI.generativeModel(
-            modelName = "{{generic_model_name_initialization}}",
+            modelName = "gemini-1.5-flash",
             safetySettings = listOf(harassmentSafety, hateSpeechSafety)
         )
         // [END multi_safety_settings]

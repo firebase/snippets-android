@@ -36,12 +36,12 @@ dependencies {
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.browser:browser:1.5.0")
     implementation("androidx.appcompat:appcompat:1.7.0")
-    implementation("com.google.firebase:firebase-ads:23.1.0")
+    implementation("com.google.firebase:firebase-ads:23.2.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.multidex:multidex:2.0.1")
 
     // [START gradle_play_config]
-    implementation("com.google.android.gms:play-services-ads:23.1.0")
+    implementation("com.google.android.gms:play-services-ads:23.2.0")
     // [END gradle_play_config]
 
     // Import the Firebase BoM (see: https://firebase.google.com/docs/android/learn-more#bom)

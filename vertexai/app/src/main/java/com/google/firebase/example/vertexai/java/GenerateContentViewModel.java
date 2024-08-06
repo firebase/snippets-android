@@ -37,16 +37,16 @@ public class GenerateContentViewModel extends ViewModel {
     // Only meant to separate the scope of the initialization snippet
     // so that it doesn't cause a naming clash with the top level declaration
     static class InitializationSnippet {
-        // [START vertexai_init]
+        // [START initialize_model]
         GenerativeModel gm = FirebaseVertexAI.getInstance()
-                .generativeModel("gemini-1.5-pro-preview-0409");
+                .generativeModel("gemini-1.5-flash");
 
         GenerativeModelFutures model = GenerativeModelFutures.from(gm);
-        // [END vertexai_init]
+        // [END initialize_model]
     }
 
     void generateContentStream() {
-        // [START vertexai_textonly_stream]
+        // [START text_gen_text_only_prompt_streaming]
         Content prompt = new Content.Builder()
                 .addText("Write a story about a magic backpack.")
                 .build();
@@ -77,11 +77,11 @@ public class GenerateContentViewModel extends ViewModel {
             public void onSubscribe(Subscription s) {
             }
         });
-        // [END vertexai_textonly_stream]
+        // [END text_gen_text_only_prompt_streaming]
     }
 
     void generateContent(Executor executor) {
-        // [START vertexai_textonly]
+        // [START text_gen_text_only_prompt]
         // Provide a prompt that contains text
         Content prompt = new Content.Builder()
                 .addText("Write a story about a magic backpack.")
@@ -101,7 +101,7 @@ public class GenerateContentViewModel extends ViewModel {
                 t.printStackTrace();
             }
         }, executor);
-        // [END vertexai_textonly]
+        // [END text_gen_text_only_prompt]
     }
 
     // Fake implementation to exemplify Activity.getResources()
@@ -115,7 +115,7 @@ public class GenerateContentViewModel extends ViewModel {
     }
 
     void generateContentWithImageStream() {
-        // [START vertexai_text_and_image_stream]
+        // [START text_gen_multimodal_one_image_prompt_streaming]
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sparky);
 
         Content prompt = new Content.Builder()
@@ -149,11 +149,11 @@ public class GenerateContentViewModel extends ViewModel {
             public void onSubscribe(Subscription s) {
             }
         });
-        // [END vertexai_text_and_image_stream]
+        // [END text_gen_multimodal_one_image_prompt_streaming]
     }
 
     void generateContentWithImage(Executor executor) {
-        // [START vertexai_text_and_image]
+        // [START text_gen_multimodal_one_image_prompt]
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sparky);
 
         Content content = new Content.Builder()
@@ -174,11 +174,11 @@ public class GenerateContentViewModel extends ViewModel {
                 t.printStackTrace();
             }
         }, executor);
-        // [END vertexai_text_and_image]
+        // [END text_gen_multimodal_one_image_prompt]
     }
 
     void generateContentWithMultipleImagesStream() {
-        // [START vertexai_text_and_images_stream]
+        // [START text_gen_multimodal_multi_image_prompt_streaming]
         Bitmap bitmap1 = BitmapFactory.decodeResource(getResources(), R.drawable.sparky);
         Bitmap bitmap2 = BitmapFactory.decodeResource(getResources(), R.drawable.sparky_eats_pizza);
 
@@ -215,11 +215,11 @@ public class GenerateContentViewModel extends ViewModel {
             public void onSubscribe(Subscription s) {
             }
         });
-        // [END vertexai_text_and_images_stream]
+        // [END text_gen_multimodal_multi_image_prompt_streaming]
     }
 
     void generateContentWithMultipleImages(Executor executor) {
-        // [START vertexai_text_and_images]
+        // [START text_gen_multimodal_multi_image_prompt]
         Bitmap bitmap1 = BitmapFactory.decodeResource(getResources(), R.drawable.sparky);
         Bitmap bitmap2 = BitmapFactory.decodeResource(getResources(), R.drawable.sparky_eats_pizza);
 
@@ -243,11 +243,11 @@ public class GenerateContentViewModel extends ViewModel {
                 t.printStackTrace();
             }
         }, executor);
-        // [END vertexai_text_and_images]
+        // [END text_gen_multimodal_multi_image_prompt]
     }
 
     void generateContentWithVideo(Executor executor, Uri videoUri) {
-        // [START vertexai_text_and_video]
+        // [START text_gen_multimodal_video_prompt]
         ContentResolver resolver = getApplicationContext().getContentResolver();
         try (InputStream stream = resolver.openInputStream(videoUri)) {
             File videoFile = new File(new URI(videoUri.toString()));
@@ -281,13 +281,13 @@ public class GenerateContentViewModel extends ViewModel {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-        // [END vertexai_text_and_video]
+        // [END text_gen_multimodal_video_prompt]
     }
 
     void generateContentWithVideoStream(
             Uri videoUri
     ) {
-        // [START vertexai_text_and_video_stream]
+        // [START text_gen_multimodal_video_prompt_streaming]
         ContentResolver resolver = getApplicationContext().getContentResolver();
         try (InputStream stream = resolver.openInputStream(videoUri)) {
             File videoFile = new File(new URI(videoUri.toString()));
@@ -334,16 +334,17 @@ public class GenerateContentViewModel extends ViewModel {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-        // [END vertexai_text_and_video_stream]
+        // [END text_gen_multimodal_video_prompt_streaming]
     }
 
     void countTokensText(Executor executor) {
-        // [START vertexai_count_tokens_text]
-        Content text = new Content.Builder()
+        // [START count_tokens_text]
+        Content prompt = new Content.Builder()
                 .addText("Write a story about a magic backpack.")
                 .build();
 
-        ListenableFuture<CountTokensResponse> countTokensResponse = model.countTokens(text);
+        // Count tokens and billable characters before calling generateContent
+        ListenableFuture<CountTokensResponse> countTokensResponse = model.countTokens(prompt);
 
         Futures.addCallback(countTokensResponse, new FutureCallback<CountTokensResponse>() {
             @Override
@@ -352,6 +353,9 @@ public class GenerateContentViewModel extends ViewModel {
                 int totalBillableTokens = result.getTotalBillableCharacters();
                 System.out.println("totalTokens = " + totalTokens +
                         "totalBillableTokens = " + totalBillableTokens);
+
+                // To generate text output, call generateContent with the text input
+                ListenableFuture<GenerateContentResponse> response = model.generateContent(prompt);
             }
 
             @Override
@@ -359,18 +363,18 @@ public class GenerateContentViewModel extends ViewModel {
                 t.printStackTrace();
             }
         }, executor);
-        // [END vertexai_count_tokens_text]
+        // [END count_tokens_text]
     }
 
     void countTokensMultimodal(Executor executor, Bitmap bitmap) {
-        // [START vertexai_count_tokens_multimodal]
-        Content text = new Content.Builder()
+        // [START count_tokens_text_image]
+        Content prompt = new Content.Builder()
                 .addImage(bitmap)
                 .addText("Where can I buy this")
                 .build();
 
-        // For text-only input
-        ListenableFuture<CountTokensResponse> countTokensResponse = model.countTokens(text);
+        // Count tokens and billable characters before calling generateContent
+        ListenableFuture<CountTokensResponse> countTokensResponse = model.countTokens(prompt);
 
         Futures.addCallback(countTokensResponse, new FutureCallback<CountTokensResponse>() {
             @Override
@@ -379,6 +383,9 @@ public class GenerateContentViewModel extends ViewModel {
                 int totalBillableTokens = result.getTotalBillableCharacters();
                 System.out.println("totalTokens = " + totalTokens +
                         "totalBillableTokens = " + totalBillableTokens);
+
+                // To generate text output, call generateContent with the prompt
+                ListenableFuture<GenerateContentResponse> response = model.generateContent(prompt);
             }
 
             @Override
@@ -386,6 +393,6 @@ public class GenerateContentViewModel extends ViewModel {
                 t.printStackTrace();
             }
         }, executor);
-        // [END vertexai_count_tokens_multimodal]
+        // [END count_tokens_text_image]
     }
 }

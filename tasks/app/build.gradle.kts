@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace = "com.google.firebase.quickstart.tasks"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.google.firebase.quickstart.tasks"
         minSdk = 23
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

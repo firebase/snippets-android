@@ -8,12 +8,12 @@ android {
     namespace = "devrel.firebase.google.com.mlfunctions"
     // Changes the test build type for instrumented tests to "stage".
     testBuildType = "release"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "devrel.firebase.google.com.mlfunctions"
         minSdk = 16
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

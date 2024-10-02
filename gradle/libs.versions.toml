@@ -1,5 +1,5 @@
 [versions]
-agp = "8.6.1"
+agp = "8.7.0"
 guava = "32.0.1-android"
 kotlin = "2.0.20"
 coreKtx = "1.13.1"
@@ -10,7 +10,7 @@ lifecycleRuntimeKtx = "2.8.6"
 activityCompose = "1.9.2"
 composeBom = "2024.09.02"
 reactiveStreams = "1.0.4"
-vertexAI = "16.0.0-beta04"
+vertexAI = "16.0.0-beta06"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }

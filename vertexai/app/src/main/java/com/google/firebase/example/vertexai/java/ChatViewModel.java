@@ -29,7 +29,7 @@ public class ChatViewModel extends ViewModel {
     private GenerativeModelFutures model;
 
     void startChatSendMessageStream() {
-        // [START vertexai_send_message_stream]
+        // [START chat_streaming]
         // (optional) Create previous chat history for context
         Content.Builder userContentBuilder = new Content.Builder();
         userContentBuilder.setRole("user");
@@ -84,11 +84,11 @@ public class ChatViewModel extends ViewModel {
             }
             // [END_EXCLUDE]
         });
-        // [END vertexai_send_message_stream]
+        // [END chat_streaming]
     }
 
     void startChatSendMessage(Executor executor) {
-        // [START vertexai_send_message]
+        // [START chat]
         // (optional) Create previous chat history for context
         Content.Builder userContentBuilder = new Content.Builder();
         userContentBuilder.setRole("user");
@@ -126,12 +126,12 @@ public class ChatViewModel extends ViewModel {
                 t.printStackTrace();
             }
         }, executor);
-        // [END vertexai_send_message]
+        // [END chat]
     }
 
     void countTokensChat(Executor executor) {
         ChatFutures chat = model.startChat();
-        // [START vertexai_count_tokens_chat]
+        // [START count_tokens_chat]
         List<Content> history = chat.getChat().getHistory();
 
         Content messageContent = new Content.Builder()
@@ -156,17 +156,19 @@ public class ChatViewModel extends ViewModel {
                 t.printStackTrace();
             }
         }, executor);
-        // [END vertexai_count_tokens_chat]
+        // [END count_tokens_chat]
     }
 
     void systemInstructionsText() {
-        // [START vertexai_si_text]
+        // [START system_instructions_text]
+        // Initialize the Vertex AI service and the generative model
+        // Specify a model that supports system instructions, like a Gemini 1.5 model
         Content systemInstruction = new Content.Builder()
                 .addText("You are a cat. Your name is Neko.")
                 .build();
         GenerativeModel model = FirebaseVertexAI.getInstance()
                 .generativeModel(
-                /* modelName */ "gemini-1.5-pro-preview-0409",
+                /* modelName */ "gemini-1.5-flash",
                 /* generationConfig (optional) */ null,
                 /* safetySettings (optional) */ null,
                 /* requestOptions (optional) */ new RequestOptions(),
@@ -174,6 +176,6 @@ public class ChatViewModel extends ViewModel {
                 /* toolsConfig (optional) */ null,
                 /* systemInstruction (optional) */ systemInstruction
         );
-        // [END vertexai_si_text]
+        // [END system_instructions_text]
     }
 }

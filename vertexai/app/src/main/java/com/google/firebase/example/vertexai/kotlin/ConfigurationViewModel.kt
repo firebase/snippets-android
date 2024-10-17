@@ -11,7 +11,7 @@ import com.google.firebase.vertexai.vertexAI
 class ConfigurationViewModel : ViewModel() {
 
     fun configModelParams() {
-        // [START vertexai_model_params]
+        // [START configure_model]
         val config = generationConfig {
             temperature = 0.9f
             topK = 16
@@ -20,28 +20,35 @@ class ConfigurationViewModel : ViewModel() {
             stopSequences = listOf("red")
         }
         val generativeModel = Firebase.vertexAI.generativeModel(
-            modelName = "gemini-1.5-pro-preview-0409",
+            modelName = "gemini-1.5-flash",
             generationConfig = config
         )
-        // [END vertexai_model_params]
+        // [END configure_model]
     }
 
-    fun configSafetySettings() {
-        val generativeModel1 = Firebase.vertexAI.generativeModel(
-            modelName = "MODEL_NAME",
-            safetySettings = listOf(
-                SafetySetting(HarmCategory.HARASSMENT, BlockThreshold.ONLY_HIGH)
-            )
-        )
-
-        // [START vertexai_safety_settings]
+    fun configSafetySetting() {
+        // [START safety_settings]
         val harassmentSafety = SafetySetting(HarmCategory.HARASSMENT, BlockThreshold.ONLY_HIGH)
         val hateSpeechSafety = SafetySetting(HarmCategory.HATE_SPEECH, BlockThreshold.MEDIUM_AND_ABOVE)
 
         val generativeModel = Firebase.vertexAI.generativeModel(
-            modelName = "MODEL_NAME",
+            modelName = "gemini-1.5-flash",
+            safetySettings = listOf(
+                SafetySetting(HarmCategory.HARASSMENT, BlockThreshold.ONLY_HIGH)
+            )
+        )
+        // [END safety_settings]
+    }
+
+    fun configMultiSafetySettings() {
+        // [START multi_safety_settings]
+        val harassmentSafety = SafetySetting(HarmCategory.HARASSMENT, BlockThreshold.ONLY_HIGH)
+        val hateSpeechSafety = SafetySetting(HarmCategory.HATE_SPEECH, BlockThreshold.MEDIUM_AND_ABOVE)
+
+        val generativeModel = Firebase.vertexAI.generativeModel(
+            modelName = "gemini-1.5-flash",
             safetySettings = listOf(harassmentSafety, hateSpeechSafety)
         )
-        // [END vertexai_safety_settings]
+        // [END multi_safety_settings]
     }
 }

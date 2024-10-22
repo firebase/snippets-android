@@ -43,7 +43,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.7.0")
 
     // Import the Firebase BoM (see: https://firebase.google.com/docs/android/learn-more#bom)
-    implementation(platform("com.google.firebase:firebase-bom:33.4.0"))
+    implementation(platform("com.google.firebase:firebase-bom:33.5.0"))
 
     // Cloud Functions for Firebase
     implementation("com.google.firebase:firebase-functions")

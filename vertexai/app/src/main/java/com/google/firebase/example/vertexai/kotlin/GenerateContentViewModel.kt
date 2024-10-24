@@ -23,22 +23,22 @@ class GenerateContentViewModel : ViewModel() {
     // Only meant to separate the scope of the initialization snippet
     // so that it doesn't cause a naming clash with the top level generativeModel
     fun initialize() {
-        // [START vertexai_init]
+        // [START initialize_model]
         val generativeModel = Firebase.vertexAI.generativeModel(
             // Specify a model that supports your use case
             // Gemini 1.5 Pro is versatile and can accept both text-only and multimodal prompt inputs
-            modelName = "gemini-1.5-pro-preview-0409"
+            modelName = "gemini-1.5-flash"
         )
-        // [END vertexai_init]
+        // [END initialize_model]
     }
 
     init {
-        generativeModel = Firebase.vertexAI.generativeModel("gemini-1.5-pro-preview-0409")
+        generativeModel = Firebase.vertexAI.generativeModel("gemini-1.5-flash")
     }
 
     fun generateContentStream() {
         viewModelScope.launch {
-            // [START vertexai_textonly_stream]
+            // [START text_gen_text_only_prompt_streaming]
             // Provide a prompt that includes only text
             val prompt = "Write a story about a magic backpack."
             // To stream generated text output, call generateContentStream and pass in the prompt
@@ -47,26 +47,26 @@ class GenerateContentViewModel : ViewModel() {
                 Log.d(TAG, chunk.text ?: "")
                 fullResponse += chunk.text
             }
-            // [END vertexai_textonly_stream]
+            // [END text_gen_text_only_prompt_streaming]
         }
     }
 
     fun generateContent() {
         viewModelScope.launch {
-            // [START vertexai_textonly]
+            // [START text_gen_text_only_prompt]
             // Provide a prompt that includes only text
             val prompt = "Write a story about a magic backpack."
 
             // To generate text output, call generateContent and pass in the prompt
             val response = generativeModel.generateContent(prompt)
             Log.d(TAG, response.text ?: "")
-            // [END vertexai_textonly]
+            // [END text_gen_text_only_prompt]
         }
     }
 
     fun generateContentWithImageStream(resources: Resources) {
         viewModelScope.launch {
-            // [START vertexai_text_and_image_stream]
+            // [START text_gen_multimodal_one_image_prompt_streaming]
             // Loads an image from the app/res/drawable/ directory
             val bitmap: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.sparky)
 
@@ -80,13 +80,13 @@ class GenerateContentViewModel : ViewModel() {
                 Log.d(TAG, chunk.text ?: "")
                 fullResponse += chunk.text
             }
-            // [END vertexai_text_and_image_stream]
+            // [END text_gen_multimodal_one_image_prompt_streaming]
         }
     }
 
     fun generateContentWithImage(resources: Resources) {
         viewModelScope.launch {
-            // [START vertexai_text_and_image]
+            // [START text_gen_multimodal_one_image_prompt]
             // Loads an image from the app/res/drawable/ directory
             val bitmap: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.sparky)
 
@@ -97,13 +97,13 @@ class GenerateContentViewModel : ViewModel() {
 
             val response = generativeModel.generateContent(prompt)
             Log.d(TAG, response.text ?: "")
-            // [END vertexai_text_and_image]
+            // [END text_gen_multimodal_one_image_prompt]
         }
     }
 
     fun generateContentWithMultipleImagesStream(resources: Resources) {
         viewModelScope.launch {
-            // [START vertexai_text_and_images_stream]
+            // [START text_gen_multimodal_multi_image_prompt_streaming]
             // Loads an image from the app/res/drawable/ directory
             val bitmap1: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.sparky)
             val bitmap2: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.sparky_eats_pizza)
@@ -119,13 +119,13 @@ class GenerateContentViewModel : ViewModel() {
                 Log.d(TAG, chunk.text ?: "")
                 fullResponse += chunk.text
             }
-            // [END vertexai_text_and_images_stream]
+            // [END text_gen_multimodal_multi_image_prompt_streaming]
         }
     }
 
     fun generateContentWithMultipleImages(resources: Resources) {
         viewModelScope.launch {
-            // [START vertexai_text_and_images]
+            // [START text_gen_multimodal_multi_image_prompt]
             // Loads an image from the app/res/drawable/ directory
             val bitmap1: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.sparky)
             val bitmap2: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.sparky_eats_pizza)
@@ -138,7 +138,7 @@ class GenerateContentViewModel : ViewModel() {
 
             val response = generativeModel.generateContent(prompt)
             Log.d(TAG, response.text ?: "")
-            // [END vertexai_text_and_images]
+            // [END text_gen_multimodal_multi_image_prompt]
         }
     }
 
@@ -147,7 +147,7 @@ class GenerateContentViewModel : ViewModel() {
         videoUri: Uri
     ) {
         viewModelScope.launch {
-            // [START vertexai_text_and_video_stream]
+            // [START text_gen_multimodal_video_prompt_streaming]
             val contentResolver = applicationContext.contentResolver
             contentResolver.openInputStream(videoUri).use { stream ->
                 stream?.let {
@@ -165,7 +165,7 @@ class GenerateContentViewModel : ViewModel() {
                     }
                 }
             }
-            // [END vertexai_text_and_video_stream]
+            // [END text_gen_multimodal_video_prompt_streaming]
         }
     }
 
@@ -174,7 +174,7 @@ class GenerateContentViewModel : ViewModel() {
         videoUri: Uri
     ) {
         viewModelScope.launch {
-            // [START vertexai_text_and_video]
+            // [START text_gen_multimodal_video_prompt]
             val contentResolver = applicationContext.contentResolver
             contentResolver.openInputStream(videoUri).use { stream ->
                 stream?.let {
@@ -189,27 +189,44 @@ class GenerateContentViewModel : ViewModel() {
                     Log.d(TAG, response.text ?: "")
                 }
             }
-            // [END vertexai_text_and_video]
+            // [END text_gen_multimodal_video_prompt]
         }
     }
 
     fun countTokensText() {
         viewModelScope.launch {
-            // [START vertexai_count_tokens_text]
-            val (tokens, billableChars) = generativeModel.countTokens("Write a story about a magic backpack.")
-            // [END vertexai_count_tokens_text]
+            // [START count_tokens_text]
+            val prompt = "Write a story about a magic backpack."
+
+            // Count tokens and billable characters before calling generateContent
+            val (tokens, billableChars) = generativeModel.countTokens(prompt)
+            Log.d(TAG, "Total Tokens: $tokens")
+            Log.d(TAG, "Total Billable Characters: $billableChars")
+
+            // To generate text output, call generateContent with the text input
+            val response = generativeModel.generateContent(prompt)
+            Log.d(TAG, response.text ?: "")
+            // [END count_tokens_text]
         }
     }
 
     fun countTokensMultimodal(bitmap: Bitmap) {
         viewModelScope.launch {
-            // [START vertexai_count_tokens_multimodal]
+            // [START count_tokens_text_image]
             val prompt = content {
                 image(bitmap)
                 text("Where can I buy this?")
             }
+
+            // Count tokens and billable characters before calling generateContent
             val (tokens, billableChars) = generativeModel.countTokens(prompt)
-            // [END vertexai_count_tokens_multimodal]
+            Log.d(TAG, "Total Tokens: $tokens")
+            Log.d(TAG, "Total Billable Characters: $billableChars")
+
+            // To generate text output, call generateContent with the text input
+            val response = generativeModel.generateContent(prompt)
+            Log.d(TAG, response.text ?: "")
+            // [END count_tokens_text_image]
         }
     }
 }

@@ -48,5 +48,5 @@ dependencies {
     // for Google Analytics. This is recommended, but not required.
     implementation("com.google.firebase:firebase-analytics")
 
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.constraintlayout:constraintlayout:2.2.0")
 }

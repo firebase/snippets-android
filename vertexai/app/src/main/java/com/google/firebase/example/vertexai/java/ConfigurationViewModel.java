@@ -18,7 +18,7 @@ import java.util.List;
 public class ConfigurationViewModel extends ViewModel {
 
     void configModelParams() {
-        // [START vertexai_model_params]
+        // [START configure_model]
         GenerationConfig.Builder configBuilder = new GenerationConfig.Builder();
         configBuilder.temperature = 0.9f;
         configBuilder.topK = 16;
@@ -29,27 +29,31 @@ public class ConfigurationViewModel extends ViewModel {
         GenerationConfig generationConfig = configBuilder.build();
 
         GenerativeModel gm = FirebaseVertexAI.Companion.getInstance().generativeModel(
-                "MODEL_NAME",
+                "gemini-1.5-flash",
                 generationConfig
         );
 
         GenerativeModelFutures model = GenerativeModelFutures.from(gm);
-        // [END vertexai_model_params]
+        // [END configure_model]
     }
 
     void configSafetySettings() {
-        SafetySetting harassmentSafety1 = new SafetySetting(HarmCategory.HARASSMENT,
+        // [START safety_settings]
+        SafetySetting harassmentSafety = new SafetySetting(HarmCategory.HARASSMENT,
                 BlockThreshold.ONLY_HIGH);
 
-        GenerativeModel gm1 = FirebaseVertexAI.Companion.getInstance().generativeModel(
-                "MODEL_NAME",
+        GenerativeModel gm = FirebaseVertexAI.Companion.getInstance().generativeModel(
+                "gemini-1.5-flash",
                 /* generationConfig is optional */ null,
-                Collections.singletonList(harassmentSafety1)
+                Collections.singletonList(harassmentSafety)
         );
 
-        GenerativeModelFutures model1 = GenerativeModelFutures.from(gm1);
+        GenerativeModelFutures model = GenerativeModelFutures.from(gm);
+        // [END safety_settings]
+    }
 
-        // [START vertexai_safety_settings]
+    void configMultiSafetySettings() {
+        // [START multi_safety_settings]
         SafetySetting harassmentSafety = new SafetySetting(HarmCategory.HARASSMENT,
                 BlockThreshold.ONLY_HIGH);
 
@@ -57,12 +61,12 @@ public class ConfigurationViewModel extends ViewModel {
                 BlockThreshold.MEDIUM_AND_ABOVE);
 
         GenerativeModel gm = FirebaseVertexAI.Companion.getInstance().generativeModel(
-                "MODEL_NAME",
+                "gemini-1.5-flash",
                 /* generationConfig is optional */ null,
                 List.of(harassmentSafety, hateSpeechSafety)
         );
 
         GenerativeModelFutures model = GenerativeModelFutures.from(gm);
-        // [END vertexai_safety_settings]
+        // [END multi_safety_settings]
     }
 }

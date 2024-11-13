@@ -3,88 +3,91 @@ package com.google.firebase.example.vertexai.kotlin
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.Firebase
-import com.google.firebase.vertexai.GenerativeModel
-import com.google.firebase.vertexai.type.FunctionResponsePart
-import com.google.firebase.vertexai.type.InvalidStateException
+import com.google.firebase.vertexai.type.FunctionDeclaration
 import com.google.firebase.vertexai.type.Schema
 import com.google.firebase.vertexai.type.Tool
-import com.google.firebase.vertexai.type.content
-import com.google.firebase.vertexai.type.defineFunction
 import com.google.firebase.vertexai.vertexAI
 import kotlinx.coroutines.launch
-import org.json.JSONObject
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 
 class FunctionCallViewModel : ViewModel() {
 
     // [START vertexai_fc_create_function]
-    suspend fun makeApiRequest(
-        currencyFrom: String,
-        currencyTo: String
-    ): JSONObject {
-        // This hypothetical API returns a JSON such as:
-        // {"base":"USD","rates":{"SEK": 10.99}}
-        return JSONObject().apply {
-            put("base", currencyFrom)
-            put("rates", hashMapOf(currencyTo to 10.99))
-        }
+    // This function calls a hypothetical external API that returns
+    // a collection of weather information for a given location on a given date.
+    // `location` is an object of the form { city: string, state: string }
+    data class Location(val city: String, val state: String)
+
+    suspend fun fetchWeather(location: Location, date: String): JsonObject {
+
+        // TODO(developer): Write a standard function that would call to an external weather API.
+
+        // For demo purposes, this hypothetical response is hardcoded here in the expected format.
+        return JsonObject(mapOf(
+            "temperature" to JsonPrimitive(38),
+            "chancePrecipitation" to JsonPrimitive("56%"),
+            "cloudConditions" to JsonPrimitive("partlyCloudy")
+        ))
     }
     // [END vertexai_fc_create_function]
 
     // [START vertexai_fc_func_declaration]
-    val getExchangeRate = defineFunction(
-        name = "getExchangeRate",
-        description = "Get the exchange rate for currencies between countries",
-        Schema.str("currencyFrom", "The currency to convert from."),
-        Schema.str("currencyTo", "The currency to convert to.")
-    ) { from, to ->
-        // Call the function that you declared above
-        makeApiRequest(from, to)
-    }
+    val fetchWeatherTool = FunctionDeclaration(
+        "fetchWeather",
+        "Get the weather conditions for a specific city on a specific date.",
+        mapOf(
+            "location" to Schema.obj(
+                mapOf(
+                    "city" to Schema.string("The city of the location."),
+                    "state" to Schema.string("The US state of the location."),
+                ),
+                description = "The name of the city and its state for which " +
+                        "to get the weather. Only cities in the " +
+                        "USA are supported."
+            ),
+            "date" to Schema.string("The date for which to get the weather." +
+                    " Date must be in the format: YYYY-MM-DD."
+            ),
+        ),
+    )
     // [END vertexai_fc_func_declaration]
 
     // [START vertexai_fc_init]
     // Initialize the Vertex AI service and the generative model
-    // Use a model that supports function calling, like Gemini 1.0 Pro.
-    val generativeModel = Firebase.vertexAI.generativeModel(
-        modelName = "gemini-1.0-pro",
-        // Specify the function declaration.
-        tools = listOf(Tool(listOf(getExchangeRate)))
+    // Use a model that supports function calling, like a Gemini 1.5 model
+    val model = Firebase.vertexAI.generativeModel(
+        modelName = "gemini-1.5-flash",
+        // Provide the function declaration to the model.
+        tools = listOf(Tool.functionDeclarations(listOf(fetchWeatherTool)))
     )
     // [END vertexai_fc_init]
 
     // [START vertexai_fc_generate]
     fun generateFunctionCall() {
         viewModelScope.launch {
-            val chat = generativeModel.startChat()
+            val prompt = "What was the weather in Boston on October 17, 2024?"
+            val chat = model.startChat()
+            // Send the user's question (the prompt) to the model using multi-turn chat.
+            val result = chat.sendMessage(prompt)
 
-            val prompt = "How much is 50 US dollars worth in Swedish krona?"
+            val functionCalls = result.functionCalls
+            // When the model responds with one or more function calls, invoke the function(s).
+            val fetchWeatherCall = functionCalls.find { it.name == "fetchWeather" }
 
-            // Send the message to the generative model
-            var response = chat.sendMessage(prompt)
-
-            // Check if the model responded with a function call
-            response.functionCalls.firstOrNull()?.let { functionCall ->
-                // Try to retrieve the stored lambda from the model's tools and
-                // throw an exception if the returned function was not declared
-                val matchedFunction = generativeModel.tools?.flatMap { it.functionDeclarations }
-                    ?.first { it.name == functionCall.name }
-                    ?: throw InvalidStateException("Function not found: ${functionCall.name}")
-
-                // Call the lambda retrieved above
-                val apiResponse: JSONObject = matchedFunction.execute(functionCall)
-
-                // Send the API response back to the generative model
-                // so that it generates a text response that can be displayed to the user
-                response = chat.sendMessage(
-                    content(role = "function") {
-                        part(FunctionResponsePart(functionCall.name, apiResponse))
-                    }
+            // Forward the structured input data prepared by the model
+            // to the hypothetical external API.
+            val functionResponse = fetchWeatherCall?.let {
+                // Alternatively, if your `Location` class is marked as @Serializable, you can use
+                // val location = Json.decodeFromJsonElement<Location>(it.args["location"]!!)
+                val location = Location(
+                    it.args["location"]!!.jsonObject["city"]!!.jsonPrimitive.content,
+                    it.args["location"]!!.jsonObject["state"]!!.jsonPrimitive.content
                 )
-            }
-
-            // Whenever the model responds with text, show it in the UI
-            response.text?.let { modelResponse ->
-                println(modelResponse)
+                val date = it.args["date"]!!.jsonPrimitive.content
+                fetchWeather(location, date)
             }
         }
     }

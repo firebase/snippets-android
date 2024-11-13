@@ -59,6 +59,7 @@ dependencies {
     implementation(libs.androidx.material3)
 
     implementation(libs.firebase.vertex.ai)
+    implementation(libs.kotlinx.serialization.json)
 
     // Required for one-shot operations (to use `ListenableFuture` from Reactive Streams)
     implementation(libs.reactive.streams)

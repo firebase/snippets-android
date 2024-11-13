@@ -258,7 +258,7 @@ public class GenerateContentViewModel extends ViewModel {
                 stream.close();
 
                 Content prompt = new Content.Builder()
-                        .addBlob("video/mp4", videoBytes)
+                        .addInlineData(videoBytes, "video/mp4")
                         .addText("What is in the video?")
                         .build();
 
@@ -298,7 +298,7 @@ public class GenerateContentViewModel extends ViewModel {
                 stream.close();
 
                 Content prompt = new Content.Builder()
-                        .addBlob("video/mp4", videoBytes)
+                        .addInlineData(videoBytes, "video/mp4")
                         .addText("What is in the video?")
                         .build();
 

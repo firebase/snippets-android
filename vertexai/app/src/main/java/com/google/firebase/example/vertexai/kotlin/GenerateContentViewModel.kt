@@ -154,7 +154,7 @@ class GenerateContentViewModel : ViewModel() {
                     val bytes = stream.readBytes()
 
                     val prompt = content {
-                        blob("video/mp4", bytes)
+                        inlineData(bytes, "video/mp4")
                         text("What is in the video?")
                     }
 
@@ -181,7 +181,7 @@ class GenerateContentViewModel : ViewModel() {
                     val bytes = stream.readBytes()
 
                     val prompt = content {
-                        blob("video/mp4", bytes)
+                        inlineData(bytes, "video/mp4")
                         text("What is in the video?")
                     }
 

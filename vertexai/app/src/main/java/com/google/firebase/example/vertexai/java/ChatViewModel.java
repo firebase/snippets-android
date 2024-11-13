@@ -169,10 +169,10 @@ public class ChatViewModel extends ViewModel {
                 /* modelName */ "gemini-1.5-pro-preview-0409",
                 /* generationConfig (optional) */ null,
                 /* safetySettings (optional) */ null,
-                /* requestOptions (optional) */ new RequestOptions(),
                 /* tools (optional) */ null,
                 /* toolsConfig (optional) */ null,
-                /* systemInstruction (optional) */ systemInstruction
+                /* systemInstruction (optional) */ systemInstruction,
+                /* requestOptions (optional) */ new RequestOptions()
         );
         // [END vertexai_si_text]
     }

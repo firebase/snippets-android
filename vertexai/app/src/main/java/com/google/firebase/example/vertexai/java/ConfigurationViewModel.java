@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel;
 import com.google.firebase.vertexai.FirebaseVertexAI;
 import com.google.firebase.vertexai.GenerativeModel;
 import com.google.firebase.vertexai.java.GenerativeModelFutures;
-import com.google.firebase.vertexai.type.BlockThreshold;
+import com.google.firebase.vertexai.type.HarmBlockThreshold;
 import com.google.firebase.vertexai.type.GenerationConfig;
 import com.google.firebase.vertexai.type.HarmCategory;
 import com.google.firebase.vertexai.type.RequestOptions;
@@ -39,7 +39,7 @@ public class ConfigurationViewModel extends ViewModel {
 
     void configSafetySettings() {
         SafetySetting harassmentSafety1 = new SafetySetting(HarmCategory.HARASSMENT,
-                BlockThreshold.ONLY_HIGH);
+                HarmBlockThreshold.ONLY_HIGH, null);
 
         GenerativeModel gm1 = FirebaseVertexAI.Companion.getInstance().generativeModel(
                 "MODEL_NAME",
@@ -51,10 +51,10 @@ public class ConfigurationViewModel extends ViewModel {
 
         // [START vertexai_safety_settings]
         SafetySetting harassmentSafety = new SafetySetting(HarmCategory.HARASSMENT,
-                BlockThreshold.ONLY_HIGH);
+                HarmBlockThreshold.ONLY_HIGH, null);
 
         SafetySetting hateSpeechSafety = new SafetySetting(HarmCategory.HATE_SPEECH,
-                BlockThreshold.MEDIUM_AND_ABOVE);
+                HarmBlockThreshold.MEDIUM_AND_ABOVE, null);
 
         GenerativeModel gm = FirebaseVertexAI.Companion.getInstance().generativeModel(
                 "MODEL_NAME",

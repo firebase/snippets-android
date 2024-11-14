@@ -9,7 +9,7 @@ espressoCore = "3.6.1"
 kotlinxSerializationJson = "1.7.3"
 lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.9.3"
-composeBom = "2024.10.01"
+composeBom = "2024.11.00"
 reactiveStreams = "1.0.4"
 vertexAI = "16.0.1"
 

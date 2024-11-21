@@ -11,7 +11,7 @@ lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.9.3"
 composeBom = "2024.11.00"
 reactiveStreams = "1.0.4"
-vertexAI = "16.0.1"
+vertexAI = "16.0.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }

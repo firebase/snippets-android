@@ -82,7 +82,10 @@ class MainActivity : AppCompatActivity() {
         try {
             methodThatThrows()
         } catch (e: Exception) {
-            Firebase.crashlytics.recordException(e, mapOf("key_1" to "value_1", "key_2" to "value_2"))
+            Firebase.crashlytics.recordException(
+                e, 
+                mapOf("key_1" to "value_1", "key_2" to "value_2"),
+                )
             // handle your exception here
         }
         // [END crash_log_caught_ex_custom_keys]

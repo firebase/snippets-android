@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
       } catch (Exception e) {
           CustomKeysAndValues keysAndValues = new CustomKeysAndValues.Builder()
                   .putString("string key", "string value")
-                  .putBoolean("boolean key", Boolean.TRUE)
+                  .putBoolean("boolean key", true)
                   .putFloat("float key", Float.MAX_VALUE)
                   .build();
           FirebaseCrashlytics.getInstance().recordException(e, keysAndValues);

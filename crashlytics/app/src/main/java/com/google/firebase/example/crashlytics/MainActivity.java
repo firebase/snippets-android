@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics.*;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -85,9 +86,12 @@ public class MainActivity extends AppCompatActivity {
       try {
           methodThatThrows();
       } catch (Exception e) {
-          FirebaseCrashlytics.getInstance().recordException(
-            e, 
-            Map.of("key_1", "value_1", "key_2", "value_2"));
+          CustomKeysAndValues keysAndValues = new CustomKeysAndValues.Builder()
+                  .putString("string key", "string value")
+                  .putBoolean("boolean key", Boolean.TRUE)
+                  .putFloat("float key", Float.MAX_VALUE)
+                  .build();
+          FirebaseCrashlytics.getInstance().recordException(e, keysAndValues);
           // handle your exception here
       }
       // [END crash_log_caught_ex_custom_keys]

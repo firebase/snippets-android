@@ -80,6 +80,22 @@ public class MainActivity extends AppCompatActivity {
         // [END crash_log_caught_ex]
     }
 
+    public void logCaughtExWithCustomKeys() {
+      // [START crash_log_caught_ex_custom_keys]
+      try {
+          methodThatThrows();
+      } catch (Exception e) {
+          CustomKeysAndValues keysAndValues = new CustomKeysAndValues.Builder()
+                  .putString("string key", "string value")
+                  .putBoolean("boolean key", true)
+                  .putFloat("float key", Float.MAX_VALUE)
+                  .build();
+          FirebaseCrashlytics.getInstance().recordException(e, keysAndValues);
+          // handle your exception here
+      }
+      // [END crash_log_caught_ex_custom_keys]
+  }
+
     public void forceACrash() {
         // [START crash_force_crash]
         Button crashButton = new Button(this);

@@ -77,6 +77,21 @@ class MainActivity : AppCompatActivity() {
         // [END crash_log_caught_ex]
     }
 
+    fun logCaughtExWithCustomKeys() {
+        // [START crash_log_caught_ex_custom_keys]
+        try {
+            methodThatThrows()
+        } catch (e: Exception) {
+            Firebase.crashlytics.recordException(e) {
+                key("string key", "string value")
+                key("boolean key", true)
+                key("float key", Float.MAX_VALUE)
+            }
+            // handle your exception here
+        }
+        // [END crash_log_caught_ex_custom_keys]
+    }
+
     fun forceACrash() {
         // [START crash_force_crash]
         val crashButton = Button(this)

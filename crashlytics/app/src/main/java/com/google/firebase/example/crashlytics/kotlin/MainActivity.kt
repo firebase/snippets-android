@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.crashlytics.crashlytics
-import com.google.firebase.crashlytics.setCustomKeys
 import com.google.firebase.crashlytics.recordException
+import com.google.firebase.crashlytics.setCustomKeys
 import com.google.firebase.Firebase
 
 class MainActivity : AppCompatActivity() {

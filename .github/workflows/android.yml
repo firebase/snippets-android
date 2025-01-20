@@ -6,7 +6,9 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # TODO: Unpin version once firebase/snippets-android#602 is fixed
+    # https://github.com/firebase/snippets-android/issues/602
+    runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v2
     - name: set up JDK 17

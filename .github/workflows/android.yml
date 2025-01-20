@@ -20,6 +20,8 @@ jobs:
       run: python scripts/checksnippets.py
     - name: Install NDK
       run: echo "y" | sudo ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager --install "ndk;21.0.6113669" --sdk_root=${ANDROID_SDK_ROOT}
+    - name: Create dir
+      run: mkdir "$HOME/.android"
     - name: Build with Gradle (Pull Request)
       run: ./build_pull_request.sh
       if: github.event_name == 'pull_request'

@@ -10,15 +10,14 @@ jobs:
     # https://github.com/firebase/snippets-android/issues/602
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v2
-    - name: set up JDK 17
-      uses: actions/setup-java@v1
-      with:
-        java-version: 17
+    - uses: actions/checkout@v4
     - name: Check Snippets
       run: python scripts/checksnippets.py
-    - name: Install NDK
-      run: echo "y" | sudo ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager --install "ndk;21.0.6113669" --sdk_root=${ANDROID_SDK_ROOT}
+    - name: set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: 17
+        distribution: temurin
     - name: Build with Gradle (Pull Request)
       run: ./build_pull_request.sh
       if: github.event_name == 'pull_request'

@@ -15,6 +15,7 @@ jobs:
       uses: actions/setup-java@v4
       with:
         java-version: 17
+        distribution: 'zulu'
     - name: Check Snippets
       run: python scripts/checksnippets.py
     - name: What is home?

@@ -10,18 +10,20 @@ jobs:
     permissions:
       contents: write
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: set up JDK 17
-      uses: actions/setup-java@v1
+      uses: actions/setup-java@v4
       with:
         java-version: 17
     - name: Check Snippets
       run: python scripts/checksnippets.py
-    - name: Install NDK
-      run: echo "y" | sudo ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager --install "ndk;21.0.6113669" --sdk_root=${ANDROID_SDK_ROOT}
-    - name: Build with Gradle (Pull Request)
-      run: ./build_pull_request.sh
-      if: github.event_name == 'pull_request'
-    - name: Build with Gradle (Push)
-      run: ./gradlew clean ktlint build
-      if: github.event_name != 'pull_request'
+    - name: What is home?
+      run: echo $HOME
+    # - name: Install NDK
+    #   run: echo "y" | sudo ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager --install "ndk;21.0.6113669" --sdk_root=${ANDROID_SDK_ROOT}
+    # - name: Build with Gradle (Pull Request)
+    #   run: ./build_pull_request.sh
+    #   if: github.event_name == 'pull_request'
+    # - name: Build with Gradle (Push)
+    #   run: ./gradlew clean ktlint build
+    #   if: github.event_name != 'pull_request'

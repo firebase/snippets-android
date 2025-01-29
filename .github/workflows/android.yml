@@ -6,9 +6,7 @@ on:
 
 jobs:
   build:
-    # TODO: Unpin version once firebase/snippets-android#602 is fixed
-    # https://github.com/firebase/snippets-android/issues/602
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Check Snippets

@@ -40,5 +40,7 @@ dependencies {
 
     // Add the dependency for the Cloud Functions library
     // When using the BoM, you don't specify versions in Firebase library dependencies
-    implementation("com.google.firebase:firebase-functions")
+    // TODO(thatfiredev): remove the pinned dependency version when
+    //   https://github.com/firebase/firebase-android-sdk/issues/6522 is fixed
+    implementation("com.google.firebase:firebase-functions:21.0.0")
 }

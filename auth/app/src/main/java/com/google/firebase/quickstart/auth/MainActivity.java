@@ -340,6 +340,7 @@ public class MainActivity extends AppCompatActivity {
                         .setUrl("https://www.example.com/finishSignUp?cartId=1234")
                         // This must be true
                         .setHandleCodeInApp(true)
+                        .setLinkDomain("custom-domain.com")
                         .setIOSBundleId("com.example.ios")
                         .setAndroidPackageName(
                                 "com.example.android",

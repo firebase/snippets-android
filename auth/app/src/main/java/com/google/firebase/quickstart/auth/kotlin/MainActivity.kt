@@ -280,6 +280,7 @@ abstract class MainActivity : AppCompatActivity() {
             url = "https://www.example.com/finishSignUp?cartId=1234"
             // This must be true
             handleCodeInApp = true
+            setLinkDomain("custom-domain.com")
             setIOSBundleId("com.example.ios")
             setAndroidPackageName(
                 "com.example.android",

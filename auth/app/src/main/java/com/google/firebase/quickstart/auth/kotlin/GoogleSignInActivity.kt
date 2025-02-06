@@ -3,6 +3,7 @@ package com.google.firebase.quickstart.auth.kotlin
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.credentials.Credential
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
@@ -45,20 +46,7 @@ class GoogleSignInActivity : AppCompatActivity() {
         credentialManager = CredentialManager.create(baseContext)
         // [END initialize_credential_manager]
 
-        // [START configure_credential_manager]
-        // Create the configuration for the Credential Manager request
-        val googleIdOption = GetGoogleIdOption.Builder()
-            .setFilterByAuthorizedAccounts(true)
-            .setServerClientId(baseContext.getString(R.string.default_web_client_id))
-            .build()
-
-        // Create the Credential Manager request using the configuration created above
-        val request = GetCredentialRequest.Builder()
-            .addCredentialOption(googleIdOption)
-            .build()
-        // [END configure_credential_manager]
-
-        getCredential(request)
+        launchCredentialManager()
     }
 
     // [START on_start_check_user]
@@ -70,8 +58,19 @@ class GoogleSignInActivity : AppCompatActivity() {
     }
     // [END on_start_check_user]
 
-    // [START get_user_credential]
-    private fun getCredential(request: GetCredentialRequest) {
+    // [START launch_credential_manager]
+    private fun launchCredentialManager() {
+        // Create the configuration for the Credential Manager request
+        val googleIdOption = GetGoogleIdOption.Builder()
+            .setFilterByAuthorizedAccounts(true)
+            .setServerClientId(baseContext.getString(R.string.default_web_client_id))
+            .build()
+
+        // Create the Credential Manager request using the configuration created above
+        val request = GetCredentialRequest.Builder()
+            .addCredentialOption(googleIdOption)
+            .build()
+
         lifecycleScope.launch {
             try {
                 // Launch Credential Manager UI
@@ -81,22 +80,28 @@ class GoogleSignInActivity : AppCompatActivity() {
                 )
 
                 // Extract credential from the result returned by Credential Manager
-                val credential = result.credential
-
-                // Check if credential is of type Google ID
-                if (credential is CustomCredential && credential.type == TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
-                    val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
-                    // Sign in to Firebase with the Google ID Token
-                    firebaseAuthWithGoogle(googleIdTokenCredential.idToken)
-                } else {
-                    Log.d(TAG, "Credential is not of type Google ID!")
-                }
+                createGoogleIdToken(result.credential)
             } catch (e: GetCredentialException) {
                 Log.e(TAG, "Couldn't retrieve user's credentials: ${e.localizedMessage}")
             }
         }
     }
-    // [END get_user_credential]
+    // [END launch_credential_manager]
+
+    // [START create_google_id_token]
+    private fun createGoogleIdToken(credential: Credential) {
+        // Check if credential is of type Google ID
+        if (credential is CustomCredential && credential.type == TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
+            // Create Google ID Token
+            val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
+
+            // Sign in to Firebase with using the token
+            firebaseAuthWithGoogle(googleIdTokenCredential.idToken)
+        } else {
+            Log.d(TAG, "Credential is not of type Google ID!")
+        }
+    }
+    // [END create_google_id_token]
 
     // [START auth_with_google]
     private fun firebaseAuthWithGoogle(idToken: String) {
@@ -109,7 +114,7 @@ class GoogleSignInActivity : AppCompatActivity() {
                     val user = auth.currentUser
                     updateUI(user)
                 } else {
-                    // If sign in fails, display a message to the user.
+                    // If sign in fails, display a message to the user
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
                     updateUI(null)
                 }

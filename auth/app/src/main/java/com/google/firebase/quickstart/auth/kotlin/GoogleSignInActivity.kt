@@ -3,10 +3,12 @@ package com.google.firebase.quickstart.auth.kotlin
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.credentials.ClearCredentialStateRequest
 import androidx.credentials.Credential
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
+import androidx.credentials.exceptions.ClearCredentialException
 import androidx.credentials.exceptions.GetCredentialException
 import androidx.lifecycle.lifecycleScope
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
@@ -75,8 +77,8 @@ class GoogleSignInActivity : AppCompatActivity() {
             try {
                 // Launch Credential Manager UI
                 val result = credentialManager.getCredential(
-                    request = request,
-                    context = baseContext
+                    context = baseContext,
+                    request = request
                 )
 
                 // Extract credential from the result returned by Credential Manager
@@ -98,7 +100,7 @@ class GoogleSignInActivity : AppCompatActivity() {
             // Sign in to Firebase with using the token
             firebaseAuthWithGoogle(googleIdTokenCredential.idToken)
         } else {
-            Log.d(TAG, "Credential is not of type Google ID!")
+            Log.w(TAG, "Credential is not of type Google ID!")
         }
     }
     // [END create_google_id_token]
@@ -121,6 +123,24 @@ class GoogleSignInActivity : AppCompatActivity() {
             }
     }
     // [END auth_with_google]
+
+    // [START sign_out]
+    private fun signOut() {
+        // Firebase sign out
+        auth.signOut()
+
+        // When a user signs out, clear the current user credential state from all credential providers.
+        lifecycleScope.launch {
+            try {
+                val clearRequest = ClearCredentialStateRequest()
+                credentialManager.clearCredentialState(clearRequest)
+                updateUI(null)
+            } catch (e: ClearCredentialException) {
+                Log.e(TAG, "Couldn't clear user credentials: ${e.localizedMessage}")
+            }
+        }
+    }
+    // [END sign_out]
 
     private fun updateUI(user: FirebaseUser?) {
     }

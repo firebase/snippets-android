@@ -21,13 +21,17 @@ import static com.google.android.libraries.identity.googleid.GoogleIdTokenCreden
 import android.os.Bundle;
 import android.os.CancellationSignal;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.credentials.ClearCredentialStateRequest;
 import androidx.credentials.Credential;
 import androidx.credentials.CredentialManager;
 import androidx.credentials.CredentialManagerCallback;
 import androidx.credentials.CustomCredential;
 import androidx.credentials.GetCredentialRequest;
 import androidx.credentials.GetCredentialResponse;
+import androidx.credentials.exceptions.ClearCredentialException;
 import androidx.credentials.exceptions.GetCredentialException;
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption;
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential;
@@ -126,7 +130,7 @@ public class GoogleSignInActivity extends AppCompatActivity {
             // Sign in to Firebase with using the token
             firebaseAuthWithGoogle(googleIdTokenCredential.getIdToken());
         } else {
-            Log.d(TAG, "Credential is not of type Google ID!");
+            Log.w(TAG, "Credential is not of type Google ID!");
         }
     }
     // [END create_google_id_token]
@@ -149,6 +153,31 @@ public class GoogleSignInActivity extends AppCompatActivity {
                 });
     }
     // [END auth_with_google]
+
+    // [START sign_out]
+    private void signOut() {
+        // Firebase sign out
+        mAuth.signOut();
+
+        // When a user signs out, clear the current user credential state from all credential providers.
+        ClearCredentialStateRequest clearRequest = new ClearCredentialStateRequest();
+        credentialManager.clearCredentialStateAsync(
+                clearRequest,
+                new CancellationSignal(),
+                Executors.newSingleThreadExecutor(),
+                new CredentialManagerCallback<>() {
+                    @Override
+                    public void onResult(@NonNull Void result) {
+                        updateUI(null);
+                    }
+
+                    @Override
+                    public void onError(@NonNull ClearCredentialException e) {
+                        Log.e(TAG, "Couldn't clear user credentials: " + e.getLocalizedMessage());
+                    }
+                });
+    }
+    // [END sign_out]
 
     private void updateUI(FirebaseUser user) {
 

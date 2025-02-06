@@ -2,7 +2,7 @@ package com.google.firebase.example.vertexai.kotlin
 
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Firebase
-import com.google.firebase.vertexai.type.BlockThreshold
+import com.google.firebase.vertexai.type.HarmBlockThreshold
 import com.google.firebase.vertexai.type.HarmCategory
 import com.google.firebase.vertexai.type.SafetySetting
 import com.google.firebase.vertexai.type.generationConfig
@@ -30,13 +30,13 @@ class ConfigurationViewModel : ViewModel() {
         val generativeModel1 = Firebase.vertexAI.generativeModel(
             modelName = "MODEL_NAME",
             safetySettings = listOf(
-                SafetySetting(HarmCategory.HARASSMENT, BlockThreshold.ONLY_HIGH)
+                SafetySetting(HarmCategory.HARASSMENT, HarmBlockThreshold.ONLY_HIGH)
             )
         )
 
         // [START vertexai_safety_settings]
-        val harassmentSafety = SafetySetting(HarmCategory.HARASSMENT, BlockThreshold.ONLY_HIGH)
-        val hateSpeechSafety = SafetySetting(HarmCategory.HATE_SPEECH, BlockThreshold.MEDIUM_AND_ABOVE)
+        val harassmentSafety = SafetySetting(HarmCategory.HARASSMENT, HarmBlockThreshold.ONLY_HIGH)
+        val hateSpeechSafety = SafetySetting(HarmCategory.HATE_SPEECH, HarmBlockThreshold.MEDIUM_AND_ABOVE)
 
         val generativeModel = Firebase.vertexAI.generativeModel(
             modelName = "MODEL_NAME",

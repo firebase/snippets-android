@@ -36,9 +36,11 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.7.0")
 
     // Import the BoM for the Firebase platform
-    implementation(platform("com.google.firebase:firebase-bom:33.5.0"))
+    implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
 
     // Add the dependency for the Cloud Functions library
     // When using the BoM, you don't specify versions in Firebase library dependencies
-    implementation("com.google.firebase:firebase-functions")
+    // TODO(thatfiredev): remove the pinned dependency version when
+    //   https://github.com/firebase/firebase-android-sdk/issues/6522 is fixed
+    implementation("com.google.firebase:firebase-functions:21.0.0")
 }

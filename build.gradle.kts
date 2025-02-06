@@ -2,14 +2,14 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 plugins {
-    id("com.android.application") version "8.7.1" apply false
-    id("com.android.library") version "8.7.1" apply false
-    id("org.jetbrains.kotlin.android") version "2.0.21" apply false
+    id("com.android.application") version "8.8.0" apply false
+    id("com.android.library") version "8.8.0" apply false
+    id("org.jetbrains.kotlin.android") version "2.1.10" apply false
     id("com.google.gms.google-services") version "4.4.2" apply false
     id("com.google.firebase.crashlytics") version "3.0.2" apply false
     id("com.google.firebase.firebase-perf") version "1.4.2" apply false
-    id("androidx.navigation.safeargs") version "2.8.3" apply false
-    id("com.github.ben-manes.versions") version "0.51.0" apply true
+    id("androidx.navigation.safeargs") version "2.8.6" apply false
+    id("com.github.ben-manes.versions") version "0.52.0" apply true
 }
 
 allprojects {
@@ -33,7 +33,9 @@ fun isBlockListed(candidate: ModuleComponentIdentifier): Boolean {
             "com.applovin:applovin-sdk",
             "com.ironsource.sdk:mediationsdk",
             "com.google.guava",
-            "com.github.bumptech.glide"
+            "com.github.bumptech.glide",
+            // TODO(thatfiredev): remove functions once https://github.com/firebase/firebase-android-sdk/issues/6522 is fixed
+            "com.google.firebase:firebase-functions"
     ).any { keyword ->
         keyword in candidate.toString().lowercase()
     }

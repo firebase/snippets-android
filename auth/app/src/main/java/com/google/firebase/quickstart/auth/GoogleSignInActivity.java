@@ -83,18 +83,19 @@ public class GoogleSignInActivity extends AppCompatActivity {
     }
     // [END on_start_check_user]
 
-    // [START launch_credential_manager]
     private void launchCredentialManager() {
-        // Create the configuration for the Credential Manager request
+        // [START create_credential_manager_request]
+        // Instantiate a Google sign-in request
         GetGoogleIdOption googleIdOption = new GetGoogleIdOption.Builder()
                 .setFilterByAuthorizedAccounts(true)
                 .setServerClientId(getBaseContext().getString(R.string.default_web_client_id))
                 .build();
 
-        // Create the Credential Manager request using the configuration created above
+        // Create the Credential Manager request
         GetCredentialRequest request = new GetCredentialRequest.Builder()
                 .addCredentialOption(googleIdOption)
                 .build();
+        // [END create_credential_manager_request]
 
         // Launch Credential Manager UI
         credentialManager.getCredentialAsync(
@@ -116,7 +117,6 @@ public class GoogleSignInActivity extends AppCompatActivity {
                 }
         );
     }
-    // [END launch_credential_manager]
 
     // [START create_google_id_token]
     private void createGoogleIdToken(Credential credential) {

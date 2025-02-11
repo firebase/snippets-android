@@ -60,18 +60,20 @@ class GoogleSignInActivity : AppCompatActivity() {
     }
     // [END on_start_check_user]
 
-    // [START launch_credential_manager]
+
     private fun launchCredentialManager() {
-        // Create the configuration for the Credential Manager request
+        // [START create_credential_manager_request]
+        // Instantiate a Google sign-in request
         val googleIdOption = GetGoogleIdOption.Builder()
             .setFilterByAuthorizedAccounts(true)
             .setServerClientId(baseContext.getString(R.string.default_web_client_id))
             .build()
 
-        // Create the Credential Manager request using the configuration created above
+        // Create the Credential Manager request
         val request = GetCredentialRequest.Builder()
             .addCredentialOption(googleIdOption)
             .build()
+        // [END create_credential_manager_request]
 
         lifecycleScope.launch {
             try {
@@ -88,7 +90,6 @@ class GoogleSignInActivity : AppCompatActivity() {
             }
         }
     }
-    // [END launch_credential_manager]
 
     // [START create_google_id_token]
     private fun createGoogleIdToken(credential: Credential) {

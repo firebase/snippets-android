@@ -125,11 +125,8 @@ class GoogleSignInActivity : AppCompatActivity() {
     }
     // [END auth_with_google]
 
-    // [START sign_out]
-    private fun signOut() {
-        // Firebase sign out
-        auth.signOut()
-
+    // [START clear_credential_stage]
+    private fun clearCredentialState() {
         // When a user signs out, clear the current user credential state from all credential providers.
         lifecycleScope.launch {
             try {
@@ -141,7 +138,7 @@ class GoogleSignInActivity : AppCompatActivity() {
             }
         }
     }
-    // [END sign_out]
+    // [END clear_credential_stage]
 
     private fun updateUI(user: FirebaseUser?) {
     }

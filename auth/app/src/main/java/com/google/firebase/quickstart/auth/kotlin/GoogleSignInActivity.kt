@@ -86,15 +86,15 @@ class GoogleSignInActivity : AppCompatActivity() {
                 )
 
                 // Extract credential from the result returned by Credential Manager
-                createGoogleIdToken(result.credential)
+                handleSignIn(result.credential)
             } catch (e: GetCredentialException) {
                 Log.e(TAG, "Couldn't retrieve user's credentials: ${e.localizedMessage}")
             }
         }
     }
 
-    // [START create_google_id_token]
-    private fun createGoogleIdToken(credential: Credential) {
+    // [START handle_sign_in]
+    private fun handleSignIn(credential: Credential) {
         // Check if credential is of type Google ID
         if (credential is CustomCredential && credential.type == TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
             // Create Google ID Token
@@ -106,7 +106,7 @@ class GoogleSignInActivity : AppCompatActivity() {
             Log.w(TAG, "Credential is not of type Google ID!")
         }
     }
-    // [END create_google_id_token]
+    // [END handle_sign_in]
 
     // [START auth_with_google]
     private fun firebaseAuthWithGoogle(idToken: String) {
@@ -127,8 +127,11 @@ class GoogleSignInActivity : AppCompatActivity() {
     }
     // [END auth_with_google]
 
-    // [START clear_credential_stage]
-    private fun clearCredentialState() {
+    // [START sign_out]
+    private fun signOut() {
+        // Firebase sign out
+        auth.signOut()
+
         // When a user signs out, clear the current user credential state from all credential providers.
         lifecycleScope.launch {
             try {
@@ -140,7 +143,7 @@ class GoogleSignInActivity : AppCompatActivity() {
             }
         }
     }
-    // [END clear_credential_stage]
+    // [END sign_out]
 
     private fun updateUI(user: FirebaseUser?) {
     }

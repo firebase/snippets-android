@@ -88,7 +88,7 @@ public class GoogleSignInActivity extends AppCompatActivity {
         // Instantiate a Google sign-in request
         GetGoogleIdOption googleIdOption = new GetGoogleIdOption.Builder()
                 .setFilterByAuthorizedAccounts(true)
-                .setServerClientId(getBaseContext().getString(R.string.default_web_client_id))
+                .setServerClientId(getString(R.string.default_web_client_id))
                 .build();
 
         // Create the Credential Manager request
@@ -107,7 +107,7 @@ public class GoogleSignInActivity extends AppCompatActivity {
                     @Override
                     public void onResult(GetCredentialResponse result) {
                         // Extract credential from the result returned by Credential Manager
-                        createGoogleIdToken(result.getCredential());
+                        handleSignIn(result.getCredential());
                     }
 
                     @Override
@@ -118,8 +118,8 @@ public class GoogleSignInActivity extends AppCompatActivity {
         );
     }
 
-    // [START create_google_id_token]
-    private void createGoogleIdToken(Credential credential) {
+    // [START handle_sign_in]
+    private void handleSignIn(Credential credential) {
         // Check if credential is of type Google ID
         if (credential instanceof CustomCredential customCredential
                 && credential.getType().equals(TYPE_GOOGLE_ID_TOKEN_CREDENTIAL)) {
@@ -133,7 +133,7 @@ public class GoogleSignInActivity extends AppCompatActivity {
             Log.w(TAG, "Credential is not of type Google ID!");
         }
     }
-    // [END create_google_id_token]
+    // [END handle_sign_in]
 
     // [START auth_with_google]
     private void firebaseAuthWithGoogle(String idToken) {
@@ -154,8 +154,11 @@ public class GoogleSignInActivity extends AppCompatActivity {
     }
     // [END auth_with_google]
 
-    // [START clear_credential_stage]
-    private void clearCredentialState() {
+    // [START sign_out]
+    private void signOut() {
+        // Firebase sign out
+        mAuth.signOut();
+
         // When a user signs out, clear the current user credential state from all credential providers.
         ClearCredentialStateRequest clearRequest = new ClearCredentialStateRequest();
         credentialManager.clearCredentialStateAsync(
@@ -174,7 +177,7 @@ public class GoogleSignInActivity extends AppCompatActivity {
                     }
                 });
     }
-    // [END clear_credential_stage]
+    // [END sign_out]
 
     private void updateUI(FirebaseUser user) {
 

@@ -36,7 +36,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.7.0")
 
     // Import the BoM for the Firebase platform
-    implementation(platform("com.google.firebase:firebase-bom:33.9.0"))
+    implementation(platform("com.google.firebase:firebase-bom:33.10.0"))
 
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation("com.google.firebase:firebase-auth")
@@ -48,5 +48,5 @@ dependencies {
     // for Google Analytics. This is recommended, but not required.
     implementation("com.google.firebase:firebase-analytics")
 
-    implementation("androidx.constraintlayout:constraintlayout:2.2.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.2.1")
 }

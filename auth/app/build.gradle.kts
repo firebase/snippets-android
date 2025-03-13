@@ -50,8 +50,8 @@ dependencies {
     implementation("com.firebaseui:firebase-ui-auth:8.0.2")
 
     // Google Identity Services SDK (only required for Auth with Google)
-    implementation("androidx.credentials:credentials:1.3.0")
-    implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
+    implementation("androidx.credentials:credentials:1.5.0")
+    implementation("androidx.credentials:credentials-play-services-auth:1.5.0")
     implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
 
     // Required only if Facebook login support is required

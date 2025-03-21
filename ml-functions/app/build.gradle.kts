@@ -8,12 +8,12 @@ android {
     namespace = "devrel.firebase.google.com.mlfunctions"
     // Changes the test build type for instrumented tests to "stage".
     testBuildType = "release"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "devrel.firebase.google.com.mlfunctions"
         minSdk = 16
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -43,7 +43,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.7.0")
 
     // Import the Firebase BoM (see: https://firebase.google.com/docs/android/learn-more#bom)
-    implementation(platform("com.google.firebase:firebase-bom:33.10.0"))
+    implementation(platform("com.google.firebase:firebase-bom:33.11.0"))
 
     // Cloud Functions for Firebase
     implementation("com.google.firebase:firebase-functions")

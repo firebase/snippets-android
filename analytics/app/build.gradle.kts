@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace = "com.google.firebase.example.analytics"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.google.firebase.example.analytics"
         minSdk = 21
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -35,7 +35,7 @@ android {
 dependencies {
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.appcompat:appcompat:1.7.0")
-    implementation("com.google.firebase:firebase-analytics:22.3.0")
+    implementation("com.google.firebase:firebase-analytics:22.4.0")
     // Ironsource and AppLovin libraries used for ad_impression snippets
     implementation("com.applovin:applovin-sdk:11.5.1")
     implementation("com.ironsource.sdk:mediationsdk:7.2.4.1")

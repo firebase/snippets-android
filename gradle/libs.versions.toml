@@ -1,5 +1,6 @@
 [versions]
 agp = "8.10.0"
+firebaseAi = "16.0.0"
 guava = "32.0.1-android"
 kotlin = "2.1.21"
 coreKtx = "1.16.0"
@@ -15,6 +16,7 @@ vertexAI = "16.5.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+firebase-ai = { module = "com.google.firebase:firebase-ai", version.ref = "firebaseAi" }
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

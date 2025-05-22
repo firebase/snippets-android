@@ -28,3 +28,4 @@ include(":auth:app",
         ":vertexai:app"
 )
 
+include(":firebase-ai")

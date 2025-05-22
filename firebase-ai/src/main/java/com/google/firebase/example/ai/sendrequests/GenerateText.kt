@@ -1,4 +1,4 @@
-package com.google.firebase.example.ai.send_requests
+package com.google.firebase.example.ai.sendrequests
 
 import com.google.firebase.ai.GenerativeModel
 

@@ -2,9 +2,11 @@ package com.google.firebase.example.ai.send_requests
 
 import com.google.firebase.ai.GenerativeModel
 
-class GenerateText {
+class GenerateText(
+  private val model: GenerativeModel
+) {
 
-  private suspend fun textOnlyNonStreaming(model: GenerativeModel) {
+  private suspend fun textOnlyNonStreaming() {
     // [START text_only_non_streaming]
     // Provide a prompt that contains text
     val prompt = "Write a story about a magic backpack."
@@ -15,7 +17,7 @@ class GenerateText {
     // [END text_only_non_streaming]
   }
 
-  private suspend fun textOnlyStreaming(model: GenerativeModel) {
+  private suspend fun textOnlyStreaming() {
     // [START text_only_streaming]
     // Provide a prompt that includes only text
     val prompt = "Write a story about a magic backpack."

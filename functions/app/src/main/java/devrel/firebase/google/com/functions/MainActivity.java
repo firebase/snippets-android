@@ -26,9 +26,16 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.FirebaseFunctionsException;
+import com.google.firebase.functions.HttpsCallableReference;
 import com.google.firebase.functions.HttpsCallableResult;
+import com.google.firebase.functions.StreamResponse;
 
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
@@ -127,22 +134,99 @@ public class MainActivity extends AppCompatActivity {
         // [END call_add_numbers]
     }
 
-    private void callAddMessage(String inputMessage) {
-        // [START call_add_message]
-        addMessage(inputMessage)
-                .addOnCompleteListener(new OnCompleteListener<String>() {
-                    @Override
-                    public void onComplete(@NonNull Task<String> task) {
-                        if (!task.isSuccessful()) {
-                            Exception e = task.getException();
-                            if (e instanceof FirebaseFunctionsException) {
-                                FirebaseFunctionsException ffe = (FirebaseFunctionsException) e;
-                                FirebaseFunctionsException.Code code = ffe.getCode();
-                                Object details = ffe.getDetails();
-                            }
-                        }
-                    }
-                });
-        // [END call_add_message]
-    }
+  private void callAddMessage(String inputMessage) {
+    // [START call_add_message]
+    addMessage(inputMessage)
+      .addOnCompleteListener(new OnCompleteListener<String>() {
+        @Override
+        public void onComplete(@NonNull Task<String> task) {
+          if (!task.isSuccessful()) {
+            Exception e = task.getException();
+            if (e instanceof FirebaseFunctionsException) {
+              FirebaseFunctionsException ffe = (FirebaseFunctionsException) e;
+              FirebaseFunctionsException.Code code = ffe.getCode();
+              Object details = ffe.getDetails();
+            }
+          }
+        }
+      });
+    // [END call_add_message]
+  }
+
+  private void callStreamingFunctions() {
+    List<devrel.firebase.google.com.functions.kotlin.MainActivity.Location> favoriteLocations = new ArrayList<>();
+    favoriteLocations.add(new devrel.firebase.google.com.functions.kotlin.MainActivity.Location(
+      "The Googleplex",
+      37.4220199895279,
+      -122.08531347325561));
+    favoriteLocations.add(new devrel.firebase.google.com.functions.kotlin.MainActivity.Location(
+      "Yosemite Valley",
+      37.745192257741984,
+      -119.5945133017153));
+    favoriteLocations.add(new devrel.firebase.google.com.functions.kotlin.MainActivity.Location(
+      "Old Faithful",
+      44.46037818049411,
+      -110.82802255265777));
+    // [START stream_data_client]
+    // Get the callable by passing an initialized functions SDK.
+    HttpsCallableReference getForecast = mFunctions.getHttpsCallable("getForecast");
+    getForecast.stream(
+      new HashMap<String, Object>() {{
+        put("locations", favoriteLocations);
+      }}
+    ).subscribe(new Subscriber<StreamResponse>() {
+      @Override
+      public void onSubscribe(Subscription subscription) {
+        subscription.request(Long.MAX_VALUE);
+      }
+
+      @Override
+      public void onNext(StreamResponse streamResponse) {
+        if (streamResponse instanceof StreamResponse.Message) {
+          // The flow will emit a [StreamResponse.Message] value every time the
+          // callable function calls `sendChunk()`.
+          StreamResponse.Message response = (StreamResponse.Message) streamResponse;
+          Map<String, Object> forecastDataChunk =
+            (Map<String, Object>) response.getMessage().getData();
+          // Update the UI every time a new chunk is received
+          // from the callable function
+          updateUI(
+            (double) forecastDataChunk.get("latitude"),
+            (double) forecastDataChunk.get("longitude"),
+            (double) forecastDataChunk.get("forecast")
+          );
+        } else if(streamResponse instanceof StreamResponse.Result) {
+          // The flow will emit a [StreamResponse.Result] value when the
+          // callable function completes.
+          StreamResponse.Result response = (StreamResponse.Result) streamResponse;
+          List<Map<String, Object>> allWeatherForecasts =
+            (List<Map<String, Object>>) response.getResult().getData();
+          finalizeUI();
+        }
+      }
+
+      @Override
+      public void onError(Throwable throwable) {
+        // an error occurred in the function
+      }
+
+      @Override
+      public void onComplete() {
+
+      }
+    });
+    // [END stream_data_client]
+  }
+
+  private void updateUI(
+    double latitude,
+    double longitude,
+    double forecast
+  ) {
+
+  }
+
+  private void finalizeUI() {
+
+  }
 }

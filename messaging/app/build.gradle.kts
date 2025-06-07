@@ -34,10 +34,10 @@ android {
 
 dependencies {
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
-    implementation("androidx.appcompat:appcompat:1.7.0")
+    implementation("androidx.appcompat:appcompat:1.7.1")
 
     // Import the Firebase BoM (see: https://firebase.google.com/docs/android/learn-more#bom)
-    implementation(platform("com.google.firebase:firebase-bom:33.14.0"))
+    implementation(platform("com.google.firebase:firebase-bom:33.15.0"))
 
     // Import Firebase Cloud Messaging library
     implementation("com.google.firebase:firebase-messaging")
@@ -53,5 +53,5 @@ dependencies {
 
     implementation("com.google.android.gms:play-services-auth:21.3.0")
     implementation("androidx.work:work-runtime-ktx:2.10.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.9.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.9.1")
 }

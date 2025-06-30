@@ -45,7 +45,7 @@ dependencies {
     // [END gradle_play_config]
 
     // Import the Firebase BoM (see: https://firebase.google.com/docs/android/learn-more#bom)
-    implementation(platform("com.google.firebase:firebase-bom:33.15.0"))
+    implementation(platform("com.google.firebase:firebase-bom:33.16.0"))
 
     // For an optimal experience using AdMob, add the Firebase SDK
     // for Google Analytics. This is recommended, but not required.

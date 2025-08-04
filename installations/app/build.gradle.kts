@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.google.samples.snippet"
-        minSdk = 21
+        minSdk = 23
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -37,5 +37,5 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.7.1")
     implementation("androidx.constraintlayout:constraintlayout:2.2.1")
 
-    implementation("com.google.firebase:firebase-installations:18.0.0")
+    implementation("com.google.firebase:firebase-installations:19.0.0")
 }

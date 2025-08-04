@@ -41,7 +41,7 @@ dependencies {
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-database")
-    implementation("com.google.firebase:firebase-dynamic-links")
+    implementation("com.google.firebase:firebase-dynamic-links:22.1.0")
     implementation("com.google.firebase:firebase-invites:17.0.0")
 
     // For an optimal experience using Dynamic Links, add the Firebase SDK

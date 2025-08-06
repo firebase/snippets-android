@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.google.firebase.example.analytics"
-        minSdk = 21
+        minSdk = 23
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -35,7 +35,7 @@ android {
 dependencies {
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.appcompat:appcompat:1.7.1")
-    implementation("com.google.firebase:firebase-analytics:22.5.0")
+    implementation("com.google.firebase:firebase-analytics:23.0.0")
     // Ironsource and AppLovin libraries used for ad_impression snippets
     implementation("com.applovin:applovin-sdk:11.5.1")
     implementation("com.ironsource.sdk:mediationsdk:7.2.4.1")

@@ -5,21 +5,20 @@ import com.google.firebase.Firebase
 import com.google.firebase.ai.ai
 import com.google.firebase.ai.type.FunctionDeclaration
 import com.google.firebase.ai.type.GenerativeBackend
-import com.google.firebase.ai.type.Tool
-import com.google.firebase.ai.type.ImagenGenerationConfig
+import com.google.firebase.ai.type.HarmBlockThreshold
+import com.google.firebase.ai.type.HarmCategory
 import com.google.firebase.ai.type.ImagenAspectRatio
 import com.google.firebase.ai.type.ImagenImageFormat
-import com.google.firebase.ai.type.ResponseModality
-import com.google.firebase.ai.type.SpeechConfig
-import com.google.firebase.ai.type.Voices
-import com.google.firebase.ai.type.ImagenSafetySettings
-import com.google.firebase.ai.type.ImagenSafetyFilterLevel
 import com.google.firebase.ai.type.ImagenPersonFilterLevel
-import com.google.firebase.ai.type.SafetySetting
-import com.google.firebase.ai.type.HarmCategory
-import com.google.firebase.ai.type.HarmBlockThreshold
+import com.google.firebase.ai.type.ImagenSafetyFilterLevel
+import com.google.firebase.ai.type.ImagenSafetySettings
 import com.google.firebase.ai.type.PublicPreviewAPI
+import com.google.firebase.ai.type.ResponseModality
+import com.google.firebase.ai.type.SafetySetting
+import com.google.firebase.ai.type.SpeechConfig
+import com.google.firebase.ai.type.Tool
 import com.google.firebase.ai.type.Voice
+import com.google.firebase.ai.type.content
 import com.google.firebase.ai.type.generationConfig
 import com.google.firebase.ai.type.imagenGenerationConfig
 import com.google.firebase.ai.type.liveGenerationConfig
@@ -54,10 +53,9 @@ class GoogleAISnippets : ViewModel() {
 
     // Initialize the Gemini Developer API backend service
     // Specify the config as part of creating the `GenerativeModel` instance
-    val model = Firebase.ai(backend = GenerativeBackend.googleAI()).generativeModel(
-      modelName = "gemini-1.5-flash",
-      generationConfig = config
-    )
+    val model =
+      Firebase.ai(backend = GenerativeBackend.googleAI())
+        .generativeModel(modelName = "gemini-1.5-flash", generationConfig = config)
 
     // ...
     // [END model_parameters_general]
@@ -79,10 +77,9 @@ class GoogleAISnippets : ViewModel() {
 
     // Initialize the Gemini Developer API backend service
     // Specify the config as part of creating the `GenerativeModel` instance
-    val model = Firebase.ai(backend = GenerativeBackend.vertexAI()).imagenModel(
-      modelName = "imagen-3",
-      generationConfig = config
-    )
+    val model =
+      Firebase.ai(backend = GenerativeBackend.vertexAI())
+        .imagenModel(modelName = "imagen-3", generationConfig = config)
 
     // ...
     // [END model_parameters_imagen]
@@ -105,10 +102,9 @@ class GoogleAISnippets : ViewModel() {
 
     // Initialize the Gemini Developer API backend service
     // Specify the config as part of creating the `LiveModel` instance
-    val model = Firebase.ai(backend = GenerativeBackend.googleAI()).liveModel(
-      modelName = "gemini-1.5-flash",
-      generationConfig = config
-    )
+    val model =
+      Firebase.ai(backend = GenerativeBackend.googleAI())
+        .liveModel(modelName = "gemini-1.5-flash", generationConfig = config)
 
     // ...
     // [END model_parameters_live]
@@ -118,13 +114,16 @@ class GoogleAISnippets : ViewModel() {
   fun modelConfiguration_safety_settings_imagen() {
     // [START safety_settings_imagen]
     // Specify the safety settings as part of creating the `ImagenModel` instance
-    val model = Firebase.ai(backend = GenerativeBackend.googleAI()).imagenModel(
-      modelName = "imagen-3",
-      safetySettings = ImagenSafetySettings(
-        safetyFilterLevel = ImagenSafetyFilterLevel.BLOCK_LOW_AND_ABOVE,
-        personFilterLevel = ImagenPersonFilterLevel.BLOCK_ALL
-      )
-    )
+    val model =
+      Firebase.ai(backend = GenerativeBackend.googleAI())
+        .imagenModel(
+          modelName = "imagen-3",
+          safetySettings =
+            ImagenSafetySettings(
+              safetyFilterLevel = ImagenSafetyFilterLevel.BLOCK_LOW_AND_ABOVE,
+              personFilterLevel = ImagenPersonFilterLevel.BLOCK_ALL,
+            ),
+        )
 
     // ...
     // [END safety_settings_imagen]
@@ -133,13 +132,16 @@ class GoogleAISnippets : ViewModel() {
   fun modelConfiguration_safety_settings_multiple() {
     // [START safety_settings_multiple]
     val harassmentSafety = SafetySetting(HarmCategory.HARASSMENT, HarmBlockThreshold.ONLY_HIGH)
-    val hateSpeechSafety = SafetySetting(HarmCategory.HATE_SPEECH, HarmBlockThreshold.MEDIUM_AND_ABOVE)
+    val hateSpeechSafety =
+      SafetySetting(HarmCategory.HATE_SPEECH, HarmBlockThreshold.MEDIUM_AND_ABOVE)
 
     // Specify the safety settings as part of creating the `GenerativeModel` instance
-    val model = Firebase.ai(backend = GenerativeBackend.googleAI()).generativeModel(
-      modelName = "gemini-1.5-flash",
-      safetySettings = listOf(harassmentSafety, hateSpeechSafety)
-    )
+    val model =
+      Firebase.ai(backend = GenerativeBackend.googleAI())
+        .generativeModel(
+          modelName = "gemini-1.5-flash",
+          safetySettings = listOf(harassmentSafety, hateSpeechSafety),
+        )
 
     // ...
     // [END safety_settings_multiple]
@@ -148,14 +150,36 @@ class GoogleAISnippets : ViewModel() {
   fun modelConfiguration_safety_settings_single() {
     // [START safety_settings_single]
     // Specify the safety settings as part of creating the `GenerativeModel` instance
-    val model = Firebase.ai(backend = GenerativeBackend.googleAI()).generativeModel(
-      modelName = "gemini-1.5-flash",
-      safetySettings = listOf(
-        SafetySetting(HarmCategory.HARASSMENT, HarmBlockThreshold.ONLY_HIGH)
-      )
-    )
+    val model =
+      Firebase.ai(backend = GenerativeBackend.googleAI())
+        .generativeModel(
+          modelName = "gemini-1.5-flash",
+          safetySettings =
+            listOf(SafetySetting(HarmCategory.HARASSMENT, HarmBlockThreshold.ONLY_HIGH)),
+        )
 
     // ...
     // [END safety_settings_single]
+  }
+
+  fun systemInstructions_general() {
+    // [START system_instructions_general]
+    // Specify the system instructions as part of creating the `GenerativeModel` instance
+    val model = Firebase.ai(backend = GenerativeBackend.googleAI()).generativeModel(
+      modelName = "gemini-1.5-flash",
+      systemInstruction = content { text("You are a cat. Your name is Neko.") }
+    )
+    // [END system_instructions_general]
+  }
+
+  @OptIn(PublicPreviewAPI::class)
+  fun systemInstructions_live() {
+    // [START system_instructions_live]
+    // Specify the system instructions as part of creating the `LiveModel` instance
+    val model = Firebase.ai(backend = GenerativeBackend.googleAI()).liveModel(
+      modelName = "gemini-1.5-flash",
+      systemInstruction = content { text("You are a cat. Your name is Neko.") }
+    )
+    // [END system_instructions_live]
   }
 }

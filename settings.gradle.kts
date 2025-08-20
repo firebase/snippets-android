@@ -23,7 +23,5 @@ include(":auth:app",
         ":test-lab:app",
         ":analytics:app",
         ":installations:app",
-        ":vertexai:app"
+        ":firebase-ai:app"
 )
-
-include(":firebase-ai")

@@ -16,7 +16,6 @@ vertexAI = "16.5.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-firebase-ai = { module = "com.google.firebase:firebase-ai", version.ref = "firebaseAi" }
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -32,8 +31,8 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 
-# Vertex AI SDKs in Firebase
-firebase-vertex-ai ={ group = "com.google.firebase", name = "firebase-vertexai", version.ref = "vertexAI" }
+# Firebase AI Logic
+firebase-ai = { module = "com.google.firebase:firebase-ai", version.ref = "firebaseAi" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 reactive-streams = { module = "org.reactivestreams:reactive-streams", version.ref = "reactiveStreams" }
 

@@ -39,7 +39,7 @@ public class VertexAISnippets extends ViewModel {
       GenerativeModelFutures.from(
         FirebaseAI.getInstance(GenerativeBackend.vertexAI("global"))
           .generativeModel(
-            "gemini-1.5-flash",
+            "gemini-2.5-flash",
             null,
             null,
             // Provide the function declaration to the model.
@@ -65,7 +65,7 @@ public class VertexAISnippets extends ViewModel {
     GenerativeModelFutures model =
       GenerativeModelFutures.from(
         FirebaseAI.getInstance(GenerativeBackend.vertexAI())
-          .generativeModel("gemini-1.5-flash", config));
+          .generativeModel("gemini-2.5-flash", config));
 
     // ...
     // [END model_parameters_general]
@@ -89,7 +89,7 @@ public class VertexAISnippets extends ViewModel {
     // Specify the config as part of creating the `ImagenModel` instance
     ImagenModelFutures model =
       ImagenModelFutures.from(
-        FirebaseAI.getInstance(GenerativeBackend.vertexAI()).imagenModel("imagen-3", config));
+        FirebaseAI.getInstance(GenerativeBackend.vertexAI()).imagenModel("imagen-4.0-generate-001", config));
 
     // ...
     // [END model_parameters_imagen]
@@ -117,7 +117,7 @@ public class VertexAISnippets extends ViewModel {
     LiveModelFutures model =
       LiveModelFutures.from(
         FirebaseAI.getInstance(GenerativeBackend.vertexAI())
-          .liveModel("gemini-1.5-flash", config));
+          .liveModel("gemini-2.5-flash", config));
 
     // ...
     // [END model_parameters_live]
@@ -130,7 +130,7 @@ public class VertexAISnippets extends ViewModel {
     ImagenModelFutures model =
       ImagenModelFutures.from(
         FirebaseAI.getInstance(GenerativeBackend.vertexAI())
-          .imagenModel(/* modelName */ "imagen-3", /* imageGenerationConfig */ null));
+          .imagenModel(/* modelName */ "imagen-4.0-generate-001", /* imageGenerationConfig */ null));
 
     // ...
     // [END safety_settings_imagen]
@@ -149,7 +149,7 @@ public class VertexAISnippets extends ViewModel {
       GenerativeModelFutures.from(
         FirebaseAI.getInstance(GenerativeBackend.vertexAI())
           .generativeModel(
-            /* modelName */ "gemini-1.5-flash",
+            /* modelName */ "gemini-2.5-flash",
             /* generationConfig is optional */ null,
             List.of(harassmentSafety, hateSpeechSafety)));
 
@@ -167,7 +167,7 @@ public class VertexAISnippets extends ViewModel {
       GenerativeModelFutures.from(
         FirebaseAI.getInstance(GenerativeBackend.vertexAI())
           .generativeModel(
-            /* modelName */ "gemini-1.5-flash",
+            /* modelName */ "gemini-2.5-flash",
             /* generationConfig is optional */ null,
             Collections.singletonList(harassmentSafety)));
 
@@ -180,7 +180,7 @@ public class VertexAISnippets extends ViewModel {
     // Specify the system instructions as part of creating the `GenerativeModel` instance
     GenerativeModel ai = FirebaseAI.getInstance(GenerativeBackend.vertexAI())
       .generativeModel(
-        /* modelName */ "gemini-1.5-flash",
+        /* modelName */ "gemini-2.5-flash",
         /* generationConfig (optional) */ null,
         /* safetySettings (optional) */ null,
         /* tools (optional) */ null,
@@ -198,7 +198,7 @@ public class VertexAISnippets extends ViewModel {
     // Specify the system instructions as part of creating the `LiveModel` instance
     LiveGenerativeModel ai = FirebaseAI.getInstance(GenerativeBackend.vertexAI())
       .liveModel(
-        /* modelName */ "gemini-1.5-flash",
+        /* modelName */ "gemini-2.5-flash",
         /* generationConfig (optional) */ null,
         /* tools (optional) */ null,
         /* systemInstruction (optional) */ new Content.Builder().addText("You are a cat. Your name is Neko.").build()

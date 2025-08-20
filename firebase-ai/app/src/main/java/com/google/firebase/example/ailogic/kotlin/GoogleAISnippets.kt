@@ -31,7 +31,7 @@ class GoogleAISnippets : ViewModel() {
     val model =
       Firebase.ai(backend = GenerativeBackend.googleAI())
         .generativeModel(
-          modelName = "gemini-1.5-flash",
+          modelName = "gemini-2.5-flash",
           // Provide the function declaration to the model.
           tools = listOf(Tool.functionDeclarations(listOf(fetchWeatherTool))),
         )
@@ -55,7 +55,7 @@ class GoogleAISnippets : ViewModel() {
     // Specify the config as part of creating the `GenerativeModel` instance
     val model =
       Firebase.ai(backend = GenerativeBackend.googleAI())
-        .generativeModel(modelName = "gemini-1.5-flash", generationConfig = config)
+        .generativeModel(modelName = "gemini-2.5-flash", generationConfig = config)
 
     // ...
     // [END model_parameters_general]
@@ -79,7 +79,7 @@ class GoogleAISnippets : ViewModel() {
     // Specify the config as part of creating the `GenerativeModel` instance
     val model =
       Firebase.ai(backend = GenerativeBackend.vertexAI())
-        .imagenModel(modelName = "imagen-3", generationConfig = config)
+        .imagenModel(modelName = "imagen-4.0-generate-001", generationConfig = config)
 
     // ...
     // [END model_parameters_imagen]
@@ -104,7 +104,7 @@ class GoogleAISnippets : ViewModel() {
     // Specify the config as part of creating the `LiveModel` instance
     val model =
       Firebase.ai(backend = GenerativeBackend.googleAI())
-        .liveModel(modelName = "gemini-1.5-flash", generationConfig = config)
+        .liveModel(modelName = "gemini-2.5-flash", generationConfig = config)
 
     // ...
     // [END model_parameters_live]
@@ -117,7 +117,7 @@ class GoogleAISnippets : ViewModel() {
     val model =
       Firebase.ai(backend = GenerativeBackend.googleAI())
         .imagenModel(
-          modelName = "imagen-3",
+          modelName = "imagen-4.0-generate-001",
           safetySettings =
             ImagenSafetySettings(
               safetyFilterLevel = ImagenSafetyFilterLevel.BLOCK_LOW_AND_ABOVE,
@@ -139,7 +139,7 @@ class GoogleAISnippets : ViewModel() {
     val model =
       Firebase.ai(backend = GenerativeBackend.googleAI())
         .generativeModel(
-          modelName = "gemini-1.5-flash",
+          modelName = "gemini-2.5-flash",
           safetySettings = listOf(harassmentSafety, hateSpeechSafety),
         )
 
@@ -153,7 +153,7 @@ class GoogleAISnippets : ViewModel() {
     val model =
       Firebase.ai(backend = GenerativeBackend.googleAI())
         .generativeModel(
-          modelName = "gemini-1.5-flash",
+          modelName = "gemini-2.5-flash",
           safetySettings =
             listOf(SafetySetting(HarmCategory.HARASSMENT, HarmBlockThreshold.ONLY_HIGH)),
         )
@@ -166,7 +166,7 @@ class GoogleAISnippets : ViewModel() {
     // [START system_instructions_general]
     // Specify the system instructions as part of creating the `GenerativeModel` instance
     val model = Firebase.ai(backend = GenerativeBackend.googleAI()).generativeModel(
-      modelName = "gemini-1.5-flash",
+      modelName = "gemini-2.5-flash",
       systemInstruction = content { text("You are a cat. Your name is Neko.") }
     )
     // [END system_instructions_general]
@@ -177,7 +177,7 @@ class GoogleAISnippets : ViewModel() {
     // [START system_instructions_live]
     // Specify the system instructions as part of creating the `LiveModel` instance
     val model = Firebase.ai(backend = GenerativeBackend.googleAI()).liveModel(
-      modelName = "gemini-1.5-flash",
+      modelName = "gemini-2.5-flash",
       systemInstruction = content { text("You are a cat. Your name is Neko.") }
     )
     // [END system_instructions_live]

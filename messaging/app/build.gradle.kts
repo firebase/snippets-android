@@ -53,5 +53,5 @@ dependencies {
 
     implementation("com.google.android.gms:play-services-auth:21.4.0")
     implementation("androidx.work:work-runtime-ktx:2.10.3")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.9.2")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.9.3")
 }

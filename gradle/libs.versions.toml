@@ -1,6 +1,6 @@
 [versions]
-agp = "8.12.1"
-firebaseAi = "17.1.0"
+agp = "8.12.2"
+firebaseAi = "17.2.0"
 guava = "32.0.1-android"
 kotlin = "2.2.10"
 coreKtx = "1.17.0"

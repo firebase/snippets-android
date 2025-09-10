@@ -41,7 +41,7 @@ dependencies {
     implementation("androidx.multidex:multidex:2.0.1")
 
     // [START gradle_play_config]
-    implementation("com.google.android.gms:play-services-ads:24.5.0")
+    implementation("com.google.android.gms:play-services-ads:24.6.0")
     // [END gradle_play_config]
 
     // Import the Firebase BoM (see: https://firebase.google.com/docs/android/learn-more#bom)

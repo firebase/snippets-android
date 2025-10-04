@@ -42,8 +42,10 @@ class GoogleAISnippets : ViewModel() {
     // [START model_parameters_general]
     // ...
 
-    // Set parameter values in a `GenerationConfig` (example values shown here)
+    // Set parameter values in a `GenerationConfig`.
+    // IMPORTANT: Example values shown here. Make sure to update for your use case.
     val config = generationConfig {
+      candidateCount = 1
       maxOutputTokens = 200
       stopSequences = listOf("red")
       temperature = 0.9f

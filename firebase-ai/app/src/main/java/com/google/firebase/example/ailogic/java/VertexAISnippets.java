@@ -51,8 +51,10 @@ public class VertexAISnippets extends ViewModel {
     // [START model_parameters_general]
     // ...
 
-    // Set parameter values in a `GenerationConfig` (example values shown here)
+    // Set parameter values in a `GenerationConfig`.
+    // IMPORTANT: Example values shown here. Make sure to update for your use case.
     GenerationConfig.Builder configBuilder = new GenerationConfig.Builder();
+    configBuilder.candidateCount = 1;
     configBuilder.maxOutputTokens = 200;
     configBuilder.stopSequences = List.of("red");
     configBuilder.temperature = 0.9f;

@@ -38,9 +38,9 @@ public class GoogleAISnippets extends ViewModel {
       GenerativeModelFutures.from(
         FirebaseAI.getInstance(GenerativeBackend.googleAI())
           .generativeModel(
-            "gemini-2.5-flash",
-            null,
-            null,
+            /* modelName */ "gemini-2.5-flash",
+            /* generationConfig (optional) */ null,
+            /* safetySettings (optional) */ null,
             // Provide the function declaration to the model.
             List.of(Tool.functionDeclarations(List.of(fetchWeatherTool)))));
     // [END function_calling_specify_declaration_during_init]
@@ -64,7 +64,9 @@ public class GoogleAISnippets extends ViewModel {
     GenerativeModelFutures model =
       GenerativeModelFutures.from(
         FirebaseAI.getInstance(GenerativeBackend.googleAI())
-          .generativeModel("gemini-2.5-flash", config));
+          .generativeModel(
+            /* modelName */ "gemini-2.5-flash",
+            /* generationConfig (optional) */ config));
 
     // ...
     // [END model_parameters_general]
@@ -88,7 +90,10 @@ public class GoogleAISnippets extends ViewModel {
     // Specify the config as part of creating the `ImagenModel` instance
     ImagenModelFutures model =
       ImagenModelFutures.from(
-        FirebaseAI.getInstance(GenerativeBackend.googleAI()).imagenModel("imagen-4.0-generate-001", config));
+        FirebaseAI.getInstance(GenerativeBackend.googleAI())
+          .imagenModel(
+            /* modelName */ "imagen-4.0-generate-001",
+            /* imagenGenerationConfig (optional) */ config));
 
     // ...
     // [END model_parameters_imagen]
@@ -116,7 +121,9 @@ public class GoogleAISnippets extends ViewModel {
     LiveModelFutures model =
       LiveModelFutures.from(
         FirebaseAI.getInstance(GenerativeBackend.googleAI())
-          .liveModel("gemini-2.5-flash", config));
+          .liveModel(
+            /* modelName */ "gemini-2.0-flash-live-preview-04-09",
+            /* liveGenerationConfig (optional) */ config));
 
     // ...
     // [END model_parameters_live]
@@ -129,7 +136,9 @@ public class GoogleAISnippets extends ViewModel {
     ImagenModelFutures model =
       ImagenModelFutures.from(
         FirebaseAI.getInstance(GenerativeBackend.googleAI())
-          .imagenModel(/* modelName */ "imagen-4.0-generate-001", /* imageGenerationConfig */ null));
+          .imagenModel(
+            /* modelName */ "imagen-4.0-generate-001",
+            /* imageGenerationConfig (optional) */ null));
 
     // ...
     // [END safety_settings_imagen]
@@ -184,7 +193,9 @@ public class GoogleAISnippets extends ViewModel {
         /* safetySettings (optional) */ null,
         /* tools (optional) */ null,
         /* toolConfig (optional) */ null,
-        /* systemInstructions (optional) */ new Content.Builder().addText("You are a cat. Your name is Neko.").build()
+        /* systemInstructions (optional) */ new Content.Builder()
+          .addText("You are a cat. Your name is Neko.")
+          .build()
       );
 
     GenerativeModelFutures model = GenerativeModelFutures.from(ai);
@@ -197,10 +208,12 @@ public class GoogleAISnippets extends ViewModel {
     // Specify the system instructions as part of creating the `LiveModel` instance
     LiveGenerativeModel ai = FirebaseAI.getInstance(GenerativeBackend.googleAI())
       .liveModel(
-        /* modelName */ "gemini-2.5-flash",
-        /* generationConfig (optional) */ null,
+        /* modelName */ "gemini-2.0-flash-live-preview-04-09",
+        /* liveGenerationConfig (optional) */ null,
         /* tools (optional) */ null,
-        /* systemInstructions (optional) */ new Content.Builder().addText("You are a cat. Your name is Neko.").build()
+        /* systemInstructions (optional) */ new Content.Builder()
+          .addText("You are a cat. Your name is Neko.")
+          .build()
       );
 
     LiveModelFutures model = LiveModelFutures.from(ai);

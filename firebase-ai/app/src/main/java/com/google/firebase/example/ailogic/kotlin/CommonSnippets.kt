@@ -57,7 +57,9 @@ class CommonSnippets(
           )
       )
 
-    chat.sendMessageStream("How many paws are in my house?").collect { chunk -> print(chunk.text) }
+    chat.sendMessageStream("How many paws are in my house?").collect {
+      chunk -> print(chunk.text)
+    }
     // [END chat_streaming]
   }
 
@@ -119,7 +121,9 @@ class CommonSnippets(
     // so that the model can use it to generate its final response.
     val finalResponse =
       chat.sendMessage(
-        content("function") { part(FunctionResponsePart("fetchWeather", functionResponse!!)) }
+        content("function") {
+          part(FunctionResponsePart("fetchWeather", functionResponse!!))
+        }
       )
 
     // Log the text response.

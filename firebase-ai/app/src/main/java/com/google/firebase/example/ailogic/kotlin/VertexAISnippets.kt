@@ -110,7 +110,7 @@ class VertexAISnippets : ViewModel() {
     val model =
       Firebase.ai(backend = GenerativeBackend.vertexAI())
         .liveModel(
-          modelName = "gemini-2.5-flash",
+          modelName = "gemini-2.0-flash-live-preview-04-09",
           generationConfig = config)
 
     // ...
@@ -186,7 +186,7 @@ class VertexAISnippets : ViewModel() {
     // Specify the system instructions as part of creating the `LiveModel` instance
     val model = Firebase.ai(backend = GenerativeBackend.vertexAI())
       .liveModel(
-        modelName = "gemini-2.5-flash",
+        modelName = "gemini-2.0-flash-live-preview-04-09",
         systemInstruction = content { text("You are a cat. Your name is Neko.") }
       )
     // [END system_instructions_live]

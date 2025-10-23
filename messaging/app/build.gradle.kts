@@ -37,7 +37,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.7.1")
 
     // Import the Firebase BoM (see: https://firebase.google.com/docs/android/learn-more#bom)
-    implementation(platform("com.google.firebase:firebase-bom:34.3.0"))
+    implementation(platform("com.google.firebase:firebase-bom:34.4.0"))
 
     // Import Firebase Cloud Messaging library
     implementation("com.google.firebase:firebase-messaging")
@@ -52,6 +52,6 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore")
 
     implementation("com.google.android.gms:play-services-auth:21.4.0")
-    implementation("androidx.work:work-runtime-ktx:2.10.5")
+    implementation("androidx.work:work-runtime-ktx:2.11.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.9.4")
 }

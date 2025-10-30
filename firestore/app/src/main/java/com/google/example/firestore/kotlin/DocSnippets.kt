@@ -8,6 +8,7 @@ import com.google.firebase.firestore.AggregateField
 import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.MetadataChanges
@@ -1140,6 +1141,95 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             }
         }
         // [END count_aggregate_query]
+    }
+
+    fun orQuery() {
+        val collection = db.collection("cities")
+        // [START or_queries]
+        val query = collection.where(Filter.and(
+            Filter.equalTo("state", "CA"),
+            Filter.or(
+                Filter.equalTo("capital", true),
+                Filter.greaterThanOrEqualTo("population", 1000000)
+            )
+        ))
+        // [END or_queries]
+    }
+
+    fun orQueryDisjunctions() {
+        val collection = db.collection("cities")
+
+        // [START one_disjunction]
+        collection.whereEqualTo("a", 1)
+        // [END one_disjunction]
+
+        // [START two_disjunctions]
+        collection.where(Filter.or(
+            Filter.equalTo("a", 1),
+            Filter.equalTo("b", 2)
+        ))
+        // [END two_disjunctions]
+
+        // [START four_disjunctions]
+        collection.where(Filter.or(
+            Filter.and(
+                Filter.equalTo("a", 1),
+                Filter.equalTo("c", 3)
+            ),
+            Filter.and(
+                Filter.equalTo("a", 1),
+                Filter.equalTo("d", 4)
+            ),
+            Filter.and(
+                Filter.equalTo("b", 2),
+                Filter.equalTo("c", 3)
+            ),
+            Filter.and(
+                Filter.equalTo("b", 2),
+                Filter.equalTo("d", 4)
+            )
+        ))
+        // [END four_disjunctions]
+
+        // [START four_disjunctions_compact]
+        collection.where(Filter.and(
+            Filter.or(
+                Filter.equalTo("a", 1),
+                Filter.equalTo("b", 2)
+            ),
+            Filter.or(
+                Filter.equalTo("c", 3),
+                Filter.equalTo("d", 4)
+            )
+        ))
+        // [END four_disjunctions_compact]
+
+        // [START 20_disjunctions]
+        collection.where(Filter.or(
+            Filter.inArray("a", listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)),
+            Filter.inArray("b", listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)),
+        ))
+        // [END 20_disjunctions]
+
+        // [START 10_disjunctions]
+        collection.where(Filter.and(
+            Filter.inArray("a", listOf(1, 2, 3, 4, 5)),
+            Filter.or(
+                Filter.equalTo("b", 2),
+                Filter.equalTo("c", 3)
+            )
+        ))
+        // [END 10_disjunctions]
+    }
+
+    fun illegalDisjunctions() {
+        val collection = db.collection("cities")
+        // [START 50_disjunctions]
+        collection.where(Filter.and(
+            Filter.inArray("a", listOf(1, 2, 3, 4, 5)),
+            Filter.inArray("b", listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)),
+        ));
+        // [END 50_disjunctions]
     }
 
     fun sumAggregateCollection() {

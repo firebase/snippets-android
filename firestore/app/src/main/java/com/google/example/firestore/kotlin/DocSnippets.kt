@@ -8,6 +8,7 @@ import com.google.firebase.firestore.AggregateField
 import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.MetadataChanges
@@ -1205,14 +1206,14 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
 
         // [START 20_disjunctions]
         collection.where(Filter.or(
-            Filter.inArray("a", [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
-            Filter.inArray("b", [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
+            Filter.inArray("a", listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)),
+            Filter.inArray("b", listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)),
         ))
         // [END 20_disjunctions]
 
         // [START 10_disjunctions]
         collection.where(Filter.and(
-            Filter.inArray("a", [1, 2, 3, 4, 5]),
+            Filter.inArray("a", listOf(1, 2, 3, 4, 5)),
             Filter.or(
                 Filter.equalTo("b", 2),
                 Filter.equalTo("c", 3)
@@ -1225,8 +1226,8 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         val collection = db.collection("cities")
         // [START 50_disjunctions]
         collection.where(Filter.and(
-            Filter.inArray("a", [1, 2, 3, 4, 5]),
-            Filter.inArray("b", [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
+            Filter.inArray("a", listOf(1, 2, 3, 4, 5)),
+            Filter.inArray("b", listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)),
         ));
         // [END 50_disjunctions]
     }

@@ -24,6 +24,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
@@ -1434,7 +1435,7 @@ public class DocSnippets {
         // [START 20_disjunctions]
         collection.where(Filter.or(
             Filter.inArray("a", Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)),
-            Filter.inArray("b", Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)),
+            Filter.inArray("b", Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10))
         ));
         // [END 20_disjunctions]
 
@@ -1450,10 +1451,11 @@ public class DocSnippets {
     }
 
     public void illegalDisjunctions() {
+        CollectionReference collection = db.collection("cities");
         // [START 50_disjunctions]
         collection.where(Filter.and(
             Filter.inArray("a", Arrays.asList(1, 2, 3, 4, 5)),
-            Filter.inArray("b", Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)),
+            Filter.inArray("b", Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10))
         ));
         // [END 50_disjunctions]
     }

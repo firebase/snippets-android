@@ -5,8 +5,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.tasks.Task
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.functions.FirebaseFunctionsException
-import com.google.firebase.functions.ktx.functions
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.functions.functions
+import com.google.firebase.Firebase
+import com.google.firebase.functions.StreamResponse
+import kotlinx.coroutines.reactive.asFlow
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         // Create the arguments to the callable function, which are two integers
         val data = hashMapOf(
             "firstNumber" to a,
-            "secondNumber" to b
+            "secondNumber" to b,
         )
 
         // Call the function and extract the operation from the result
@@ -57,7 +59,7 @@ class MainActivity : AppCompatActivity() {
         // Create the arguments to the callable function.
         val data = hashMapOf(
             "text" to text,
-            "push" to true
+            "push" to true,
         )
 
         return functions
@@ -80,7 +82,6 @@ class MainActivity : AppCompatActivity() {
                 if (!task.isSuccessful) {
                     val e = task.exception
                     if (e is FirebaseFunctionsException) {
-
                         // Function error code, will be INTERNAL if the failure
                         // was not handled properly in the function call.
                         val code = e.code
@@ -94,7 +95,7 @@ class MainActivity : AppCompatActivity() {
         // [END call_add_numbers]
     }
 
-    private fun callAddMessage(inputMessage: String){
+    private fun callAddMessage(inputMessage: String) {
         // [START call_add_message]
         addMessage(inputMessage)
             .addOnCompleteListener { task ->
@@ -108,4 +109,56 @@ class MainActivity : AppCompatActivity() {
             }
         // [END call_add_message]
     }
+
+  data class Location(val name: String, val latitude: Double, val longitude: Double)
+
+  private suspend fun callStreamingFunctions() {
+    val favoriteLocations = listOf(
+      Location("The Googleplex", 37.4220199895279, -122.08531347325561),
+      Location("Yosemite Valley", 37.745192257741984, -119.5945133017153),
+      Location("Old Faithful", 44.46037818049411, -110.82802255265777),
+    )
+    // [START stream_data_client]
+    // Get the callable by passing an initialized functions SDK.
+    val getForecast = functions.getHttpsCallable("getForecast");
+
+    // Call the function with the `.stream()` method and convert it to a flow
+    getForecast.stream(
+      mapOf("locations" to favoriteLocations)
+    ).asFlow().collect { response ->
+      when (response) {
+        is StreamResponse.Message -> {
+          // The flow will emit a [StreamResponse.Message] value every time the
+          // callable function calls `sendChunk()`.
+          val forecastDataChunk = response.message.data as Map<String, Any>
+          // Update the UI every time a new chunk is received
+          // from the callable function
+          updateUI(
+            forecastDataChunk["latitude"] as Double,
+            forecastDataChunk["longitude"] as Double,
+            forecastDataChunk["forecast"] as Double,
+          )
+        }
+        is StreamResponse.Result -> {
+          // The flow will emit a [StreamResponse.Result] value when the
+          // callable function completes.
+          val allWeatherForecasts = response.result.data as List<Map<String, Any>>
+          finalizeUI(allWeatherForecasts)
+        }
+      }
+    }
+    // [END stream_data_client]
+  }
+
+  private fun updateUI(
+    latitude: Double,
+    longitude: Double,
+    forecast: Double
+  ) {
+
+  }
+
+  private fun finalizeUI(results: List<Map<String, Any>>) {
+
+  }
 }

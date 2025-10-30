@@ -3,12 +3,12 @@ package com.google.firebase.referencecode.storage.kotlin
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.Firebase
 import com.google.firebase.referencecode.storage.R
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
-import com.google.firebase.storage.ktx.storage
-import com.google.firebase.storage.ktx.storageMetadata
+import com.google.firebase.storage.storage
+import com.google.firebase.storage.storageMetadata
 
 abstract class UploadActivity : AppCompatActivity() {
 
@@ -74,8 +74,11 @@ abstract class UploadActivity : AppCompatActivity() {
         // [START restore_after_restart]
         // resume the upload task from where it left off when the process died.
         // to do this, pass the sessionUri as the last parameter
-        uploadTask = storageRef.putFile(localFile,
-                storageMetadata {  }, sessionUri)
+        uploadTask = storageRef.putFile(
+            localFile,
+            storageMetadata { },
+            sessionUri,
+        )
         // [END restore_after_restart]
     }
 }

@@ -10,9 +10,9 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.Query
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.database
-import com.google.firebase.database.ktx.getValue
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.database.database
+import com.google.firebase.database.getValue
+import com.google.firebase.Firebase
 import com.google.firebase.referencecode.database.R
 import com.google.firebase.referencecode.database.kotlin.models.Comment
 import com.google.firebase.referencecode.database.models.Message
@@ -53,7 +53,7 @@ abstract class QueryActivity : AppCompatActivity() {
                 // data at this path or a subpath.
 
                 Log.d(TAG, "Number of messages: ${dataSnapshot.childrenCount}")
-                dataSnapshot.children.forEach { child ->
+                for (child in dataSnapshot.children) {
                     // Extract Message object from the DataSnapshot
                     val message: Message? = child.getValue<Message>()
 
@@ -136,7 +136,7 @@ abstract class QueryActivity : AppCompatActivity() {
         // [START rtdb_order_by_nested]
         // Most viewed posts
         val myMostViewedPostsQuery = databaseReference.child("posts")
-                .orderByChild("metrics/views")
+            .orderByChild("metrics/views")
         myMostViewedPostsQuery.addChildEventListener(object : ChildEventListener {
             // TODO: implement the ChildEventListener methods as documented above
             // [START_EXCLUDE]
@@ -201,8 +201,11 @@ abstract class QueryActivity : AppCompatActivity() {
 
             override fun onCancelled(databaseError: DatabaseError) {
                 Log.w(TAG, "postComments:onCancelled", databaseError.toException())
-                Toast.makeText(context, "Failed to load comments.",
-                        Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    "Failed to load comments.",
+                    Toast.LENGTH_SHORT,
+                ).show()
             }
         }
         databaseReference.addChildEventListener(childEventListener)

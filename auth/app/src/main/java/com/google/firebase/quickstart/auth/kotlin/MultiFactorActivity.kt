@@ -4,8 +4,8 @@ import android.app.Activity
 import android.os.Bundle
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.auth
+import com.google.firebase.Firebase
 
 class MultiFactorActivity : Activity() {
     // [START declare_auth]
@@ -33,17 +33,15 @@ class MultiFactorActivity : Activity() {
         // [START send_email_verification]
         val user = auth.currentUser!!
         user.sendEmailVerification()
-                .addOnCompleteListener(this) { task ->
-                    // Email verification sent
-                }
+            .addOnCompleteListener(this) { task ->
+                // Email verification sent
+            }
         // [END send_email_verification]
     }
 
     private fun reload() {
-
     }
 
     private fun updateUI(user: FirebaseUser?) {
-
     }
 }

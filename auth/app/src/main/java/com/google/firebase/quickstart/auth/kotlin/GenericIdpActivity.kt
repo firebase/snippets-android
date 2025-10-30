@@ -3,13 +3,21 @@ package com.google.firebase.quickstart.auth.kotlin
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.OAuthProvider
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.auth.ktx.oAuthCredential
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.auth
+import com.google.firebase.auth.oAuthCredential
+import com.google.firebase.Firebase
 
 class GenericIdpActivity : AppCompatActivity() {
 
     private lateinit var firebaseAuth: FirebaseAuth
+
+    /**
+     * Used to improve readability of snippets that take an Activity as
+     * argument.
+     * Eg: `startActivityForSignInWithProvider(activity)` reads better than
+     * `startActivityForSignInWithProvider(this)`
+     */
+    private val activity = this
 
     fun twitter() {
         // [START auth_twitter_provider_create]
@@ -73,7 +81,6 @@ class GenericIdpActivity : AppCompatActivity() {
         val provider = OAuthProvider.newBuilder("yahoo.com")
         // [END auth_yahoo_provider_create]
 
-
         // [START auth_yahoo_provider_params]
         // Prompt user to re-authenticate to Yahoo.
         provider.addCustomParameter("prompt", "login")
@@ -81,7 +88,6 @@ class GenericIdpActivity : AppCompatActivity() {
         // Localize to French.
         provider.addCustomParameter("language", "fr")
         // [END auth_yahoo_provider_params]
-
 
         // [START auth_yahoo_provider_scopes]
         // Request read access to a user's email addresses.
@@ -95,12 +101,10 @@ class GenericIdpActivity : AppCompatActivity() {
         val providerBuilder = OAuthProvider.newBuilder("oidc.example-provider")
         // [END auth_oidc_provider_create]
 
-
         // [START auth_oidc_provider_params]
         // Target specific email with login hint.
         providerBuilder.addCustomParameter("login_hint", "user@example.com")
         // [END auth_oidc_provider_params]
-
 
         // [START auth_oidc_provider_scopes]
         // Request read access to a user's email addresses.
@@ -137,7 +141,7 @@ class GenericIdpActivity : AppCompatActivity() {
     fun signInWithProvider(provider: OAuthProvider.Builder) {
         // [START auth_oidc_provider_signin]
         firebaseAuth
-            .startActivityForSignInWithProvider( /* activity = */this, provider.build())
+            .startActivityForSignInWithProvider(activity, provider.build())
             .addOnSuccessListener {
                 // User is signed in.
                 // IdP data available in
@@ -158,7 +162,7 @@ class GenericIdpActivity : AppCompatActivity() {
         // The user is already signed-in.
         val firebaseUser = firebaseAuth.currentUser!!
         firebaseUser
-            .startActivityForLinkWithProvider( /* activity = */this, provider.build())
+            .startActivityForLinkWithProvider(activity, provider.build())
             .addOnSuccessListener {
                 // Provider credential is linked to the current user.
                 // IdP data available in
@@ -179,7 +183,7 @@ class GenericIdpActivity : AppCompatActivity() {
         // The user is already signed-in.
         val firebaseUser = firebaseAuth.currentUser!!
         firebaseUser
-            .startActivityForReauthenticateWithProvider( /* activity = */this, provider.build())
+            .startActivityForReauthenticateWithProvider(activity, provider.build())
             .addOnSuccessListener {
                 // User is re-authenticated with fresh tokens and
                 // should be able to perform sensitive operations

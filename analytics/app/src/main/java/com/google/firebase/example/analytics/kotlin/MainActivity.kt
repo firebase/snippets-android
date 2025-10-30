@@ -6,10 +6,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.applovin.mediation.MaxAd
 import com.applovin.mediation.MaxAdRevenueListener
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.analytics.ktx.logEvent
+import com.google.firebase.analytics.analytics
+import com.google.firebase.analytics.logEvent
 import com.google.firebase.example.analytics.R
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.Firebase
 import com.ironsource.mediationsdk.impressionData.ImpressionData
 import com.ironsource.mediationsdk.impressionData.ImpressionDataListener
 
@@ -92,7 +92,7 @@ class MainActivity :
             param(FirebaseAnalytics.Param.ITEM_LIST_NAME, "Related products")
             param(
                 FirebaseAnalytics.Param.ITEMS,
-                arrayOf(itemJeggingsWithIndex, itemBootsWithIndex, itemSocksWithIndex)
+                arrayOf(itemJeggingsWithIndex, itemBootsWithIndex, itemSocksWithIndex),
             )
         }
         // [END view_item_list]

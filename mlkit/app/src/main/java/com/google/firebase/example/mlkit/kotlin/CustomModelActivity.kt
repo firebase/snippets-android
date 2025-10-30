@@ -4,20 +4,18 @@ package com.google.firebase.example.mlkit.kotlin
 
 import android.graphics.Bitmap
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
-import com.google.android.gms.tasks.OnFailureListener
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.ml.common.FirebaseMLException
 import com.google.firebase.ml.common.modeldownload.FirebaseModelDownloadConditions
 import com.google.firebase.ml.common.modeldownload.FirebaseModelManager
 import com.google.firebase.ml.custom.FirebaseCustomLocalModel
 import com.google.firebase.ml.custom.FirebaseCustomRemoteModel
-import com.google.firebase.ml.custom.FirebaseModelInterpreterOptions
-import com.google.firebase.ml.custom.FirebaseModelInterpreter
+import com.google.firebase.ml.custom.FirebaseModelDataType
 import com.google.firebase.ml.custom.FirebaseModelInputOutputOptions
 import com.google.firebase.ml.custom.FirebaseModelInputs
-import com.google.firebase.ml.custom.FirebaseModelDataType
-
+import com.google.firebase.ml.custom.FirebaseModelInterpreter
+import com.google.firebase.ml.custom.FirebaseModelInterpreterOptions
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -25,8 +23,7 @@ import java.io.InputStreamReader
 class CustomModelActivity : AppCompatActivity() {
 
     // This method is just for show
-    private
-    val yourInputImage: Bitmap
+    private val yourInputImage: Bitmap
         get() = Bitmap.createBitmap(0, 0, Bitmap.Config.ALPHA_8)
 
     private fun configureHostedModelSource() {
@@ -38,20 +35,20 @@ class CustomModelActivity : AppCompatActivity() {
     private fun startModelDownloadTask(remoteModel: FirebaseCustomRemoteModel) {
         // [START mlkit_model_download_task]
         val conditions = FirebaseModelDownloadConditions.Builder()
-                .requireWifi()
-                .build()
+            .requireWifi()
+            .build()
         FirebaseModelManager.getInstance().download(remoteModel, conditions)
-                .addOnCompleteListener {
-                    // Success.
-                }
+            .addOnCompleteListener {
+                // Success.
+            }
         // [END mlkit_model_download_task]
     }
 
     private fun configureLocalModelSource() {
         // [START mlkit_local_model_source]
         val localModel = FirebaseCustomLocalModel.Builder()
-                .setAssetFilePath("your_model.tflite")
-                .build()
+            .setAssetFilePath("your_model.tflite")
+            .build()
         // [END mlkit_local_model_source]
     }
 
@@ -68,28 +65,28 @@ class CustomModelActivity : AppCompatActivity() {
     private fun checkModelDownloadStatus(remoteModel: FirebaseCustomRemoteModel, localModel: FirebaseCustomLocalModel) {
         // [START mlkit_check_download_status]
         FirebaseModelManager.getInstance().isModelDownloaded(remoteModel)
-                .addOnSuccessListener { isDownloaded ->
-                    val options =
-                            if (isDownloaded) {
-                                FirebaseModelInterpreterOptions.Builder(remoteModel).build()
-                            } else {
-                                FirebaseModelInterpreterOptions.Builder(localModel).build()
-                            }
-                    val interpreter = FirebaseModelInterpreter.getInstance(options)
-                }
+            .addOnSuccessListener { isDownloaded ->
+                val options =
+                    if (isDownloaded) {
+                        FirebaseModelInterpreterOptions.Builder(remoteModel).build()
+                    } else {
+                        FirebaseModelInterpreterOptions.Builder(localModel).build()
+                    }
+                val interpreter = FirebaseModelInterpreter.getInstance(options)
+            }
         // [END mlkit_check_download_status]
     }
 
     private fun addDownloadListener(
-            remoteModel: FirebaseCustomRemoteModel,
-            conditions: FirebaseModelDownloadConditions
+        remoteModel: FirebaseCustomRemoteModel,
+        conditions: FirebaseModelDownloadConditions,
     ) {
         // [START mlkit_remote_model_download_listener]
         FirebaseModelManager.getInstance().download(remoteModel, conditions)
-                .addOnCompleteListener {
-                    // Download complete. Depending on your app, you could enable the ML
-                    // feature, or switch from the local model to the remote model, etc.
-                }
+            .addOnCompleteListener {
+                // Download complete. Depending on your app, you could enable the ML
+                // feature, or switch from the local model to the remote model, etc.
+            }
         // [END mlkit_remote_model_download_listener]
     }
 
@@ -97,9 +94,9 @@ class CustomModelActivity : AppCompatActivity() {
     private fun createInputOutputOptions(): FirebaseModelInputOutputOptions {
         // [START mlkit_create_io_options]
         val inputOutputOptions = FirebaseModelInputOutputOptions.Builder()
-                .setInputFormat(0, FirebaseModelDataType.FLOAT32, intArrayOf(1, 224, 224, 3))
-                .setOutputFormat(0, FirebaseModelDataType.FLOAT32, intArrayOf(1, 5))
-                .build()
+            .setInputFormat(0, FirebaseModelDataType.FLOAT32, intArrayOf(1, 224, 224, 3))
+            .setOutputFormat(0, FirebaseModelDataType.FLOAT32, intArrayOf(1, 5))
+            .build()
         // [END mlkit_create_io_options]
         return inputOutputOptions
     }
@@ -134,21 +131,21 @@ class CustomModelActivity : AppCompatActivity() {
 
         // [START mlkit_run_inference]
         val inputs = FirebaseModelInputs.Builder()
-                .add(input) // add() as many input arrays as your model requires
-                .build()
+            .add(input) // add() as many input arrays as your model requires
+            .build()
         firebaseInterpreter.run(inputs, inputOutputOptions)
-                .addOnSuccessListener { result ->
-                    // [START_EXCLUDE]
-                    // [START mlkit_read_result]
-                    val output = result.getOutput<Array<FloatArray>>(0)
-                    val probabilities = output[0]
-                    // [END mlkit_read_result]
-                    // [END_EXCLUDE]
-                }
-                .addOnFailureListener { e ->
-                    // Task failed with an exception
-                    // ...
-                }
+            .addOnSuccessListener { result ->
+                // [START_EXCLUDE]
+                // [START mlkit_read_result]
+                val output = result.getOutput<Array<FloatArray>>(0)
+                val probabilities = output[0]
+                // [END mlkit_read_result]
+                // [END_EXCLUDE]
+            }
+            .addOnFailureListener { e ->
+                // Task failed with an exception
+                // ...
+            }
         // [END mlkit_run_inference]
     }
 
@@ -156,7 +153,8 @@ class CustomModelActivity : AppCompatActivity() {
     private fun useInferenceResult(probabilities: FloatArray) {
         // [START mlkit_use_inference_result]
         val reader = BufferedReader(
-                InputStreamReader(assets.open("retrained_labels.txt")))
+            InputStreamReader(assets.open("retrained_labels.txt")),
+        )
         for (i in probabilities.indices) {
             val label = reader.readLine()
             Log.i("MLKit", String.format("%s: %1.4f", label, probabilities[i]))

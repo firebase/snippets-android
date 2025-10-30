@@ -1,8 +1,8 @@
 package com.google.samples.snippet.kotlin
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.samples.snippet.R
 
@@ -16,7 +16,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun logInstallationAuthToken() {
         // [START get_installation_token]
-        FirebaseInstallations.getInstance().getToken(/* forceRefresh */ true)
+        val forceRefresh = true
+        FirebaseInstallations.getInstance().getToken(forceRefresh)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Log.d("Installations", "Installation auth token: " + task.result?.token)
@@ -44,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         FirebaseInstallations.getInstance().delete().addOnCompleteListener { task ->
             if (task.isComplete) {
                 Log.d("Installations", "Installation deleted")
-            }  else {
+            } else {
                 Log.e("Installations", "Unable to delete Installation")
             }
         }

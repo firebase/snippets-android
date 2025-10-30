@@ -1,7 +1,7 @@
 package com.google.firebase.quickstart.auth.kotlin
 
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.auth
+import com.google.firebase.Firebase
 
 class EmulatorSuite {
 
@@ -12,5 +12,4 @@ class EmulatorSuite {
         Firebase.auth.useEmulator("10.0.2.2", 9099)
         // [END auth_emulator_connect]
     }
-
 }

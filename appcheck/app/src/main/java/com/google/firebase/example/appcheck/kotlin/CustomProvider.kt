@@ -7,13 +7,15 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.appcheck.AppCheckProvider
 import com.google.firebase.appcheck.AppCheckProviderFactory
 import com.google.firebase.appcheck.AppCheckToken
-import com.google.firebase.appcheck.FirebaseAppCheck
+import com.google.firebase.initialize
+import com.google.firebase.Firebase
+import com.google.firebase.appcheck.appCheck
 
 class CustomProvider {
     // [START appcheck_custom_provider]
     class YourCustomAppCheckToken(
         private val token: String,
-        private val expiration: Long
+        private val expiration: Long,
     ) : AppCheckToken() {
         override fun getToken(): String = token
         override fun getExpireTimeMillis(): Long = expiration
@@ -49,10 +51,9 @@ class CustomProvider {
 
     private fun init(context: Context) {
         // [START appcheck_initialize_custom_provider]
-        FirebaseApp.initializeApp(/*context=*/ context)
-        val firebaseAppCheck = FirebaseAppCheck.getInstance()
-        firebaseAppCheck.installAppCheckProviderFactory(
-            YourCustomAppCheckProviderFactory()
+        Firebase.initialize(context)
+        Firebase.appCheck.installAppCheckProviderFactory(
+            YourCustomAppCheckProviderFactory(),
         )
         // [END appcheck_initialize_custom_provider]
     }

@@ -1,5 +1,6 @@
 package com.google.firebase.referencecode.storage;
 
+import android.content.Context;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import android.widget.ImageView;
@@ -17,6 +18,7 @@ public class FirebaseUIActivity extends AppCompatActivity {
     }
 
     public void loadWithGlide() {
+        Context context = this;
         // [START storage_load_with_glide]
         // Reference to an image file in Cloud Storage
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
@@ -26,7 +28,7 @@ public class FirebaseUIActivity extends AppCompatActivity {
 
         // Download directly from StorageReference using Glide
         // (See MyAppGlideModule for Loader registration)
-        Glide.with(this /* context */)
+        Glide.with(context)
                 .load(storageReference)
                 .into(imageView);
         // [END storage_load_with_glide]

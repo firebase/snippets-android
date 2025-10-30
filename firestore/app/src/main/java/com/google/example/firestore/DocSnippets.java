@@ -12,6 +12,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.AggregateField;
 import com.google.firebase.firestore.AggregateQuery;
 import com.google.firebase.firestore.AggregateQuerySnapshot;
 import com.google.firebase.firestore.AggregateSource;
@@ -27,7 +28,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.MemoryCacheSettings;
 import com.google.firebase.firestore.MetadataChanges;
+import com.google.firebase.firestore.PersistentCacheSettings;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.Query.Direction;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -128,18 +131,28 @@ public class DocSnippets {
         // [END get_firestore_instance]
 
         // [START set_firestore_settings]
-        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                .setPersistenceEnabled(true)
-                .build();
+        FirebaseFirestoreSettings settings = 
+        new FirebaseFirestoreSettings.Builder(db.getFirestoreSettings())
+            // Use memory-only cache
+            .setLocalCacheSettings(MemoryCacheSettings.newBuilder().build())
+            // Use persistent disk cache (default)
+            .setLocalCacheSettings(PersistentCacheSettings.newBuilder()
+                                    .build())
+            .build();
         db.setFirestoreSettings(settings);
         // [END set_firestore_settings]
     }
 
     public void setupCacheSize() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
         // [START fs_setup_cache]
-        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                .setCacheSizeBytes(FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED)
-                .build();
+        FirebaseFirestoreSettings settings = 
+        new FirebaseFirestoreSettings.Builder(db.getFirestoreSettings())
+            .setLocalCacheSettings(PersistentCacheSettings.newBuilder()
+                                    // Set size to 100 MB
+                                    .setSizeBytes(1024 * 1024 * 100)
+                                    .build())
+            .build();
         db.setFirestoreSettings(settings);
         // [END fs_setup_cache]
     }
@@ -762,6 +775,27 @@ public class DocSnippets {
         // [END get_multiple_all]
     }
 
+    public void getAllDocsSubcollection() {
+        // [START firestore_query_subcollection]
+        db.collection("cities")
+                .document("SF")
+                .collection("landmarks")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+        // [END firestore_query_subcollection]
+    }
+    
     public void listenToMultiple() {
         // [START listen_multiple]
         db.collection("cities")
@@ -1422,5 +1456,105 @@ public class DocSnippets {
             Filter.inArray("b", Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)),
         ));
         // [END 50_disjunctions]
+    }
+
+    public void sumAggregateCollection() {
+        // [START sum_aggregate_collection]
+        Query query = db.collection("cities");
+        AggregateQuery aggregateQuery = query.aggregate(AggregateField.sum("population"));
+        aggregateQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    // Aggregate fetched successfully
+                    AggregateQuerySnapshot snapshot = task.getResult();
+                    Log.d(TAG, "Sum: " + snapshot.get(AggregateField.sum("population")));
+                } else {
+                    Log.d(TAG, "Aggregation failed: ", task.getException());
+                }
+            }
+        });
+        // [END sum_aggregate_collection]
+    }
+
+    public void sumAggregateQuery() {
+        // [START sum_aggregate_query]
+        Query query = db.collection("cities").whereEqualTo("capital", true);
+        AggregateQuery aggregateQuery = query.aggregate(AggregateField.sum("population"));
+        aggregateQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    // Aggregate fetched successfully
+                    AggregateQuerySnapshot snapshot = task.getResult();
+                    Log.d(TAG, "Sum: " + snapshot.get(AggregateField.sum("population")));
+                } else {
+                    Log.d(TAG, "Aggregation failed: ", task.getException());
+                }
+            }
+        });
+        // [END sum_aggregate_query]
+    }
+
+    public void averageAggregateCollection() {
+        // [START average_aggregate_collection]
+        Query query = db.collection("cities");
+        AggregateQuery aggregateQuery = query.aggregate(AggregateField.average("population"));
+        aggregateQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    // Aggregate fetched successfully
+                    AggregateQuerySnapshot snapshot = task.getResult();
+                    Log.d(TAG, "Average: " + snapshot.get(AggregateField.average("population")));
+                } else {
+                    Log.d(TAG, "Aggregation failed: ", task.getException());
+                }
+            }
+        });
+        // [END average_aggregate_collection]
+    }
+
+    public void averageAggregateQuery() {
+        // [START average_aggregate_query]
+        Query query = db.collection("cities").whereEqualTo("capital", true);
+        AggregateQuery aggregateQuery = query.aggregate(AggregateField.average("population"));
+        aggregateQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    // Aggregate fetched successfully
+                    AggregateQuerySnapshot snapshot = task.getResult();
+                    Log.d(TAG, "Average: " + snapshot.get(AggregateField.average("population")));
+                } else {
+                    Log.d(TAG, "Aggregation failed: ", task.getException());
+                }
+            }
+        });
+        // [END average_aggregate_query]
+    }
+
+    public void multiAggregateQuery() {
+        // [START multi_aggregate_query]
+        Query query = db.collection("cities");
+        AggregateQuery aggregateQuery = query.aggregate(
+                AggregateField.count(),
+                AggregateField.sum("population"),
+                AggregateField.average("population"));
+        aggregateQuery.get(AggregateSource.SERVER).addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    // Aggregate fetched successfully
+                    AggregateQuerySnapshot snapshot = task.getResult();
+                    Log.d(TAG, "Count: " + snapshot.get(AggregateField.count()));
+                    Log.d(TAG, "Sum: " + snapshot.get(AggregateField.sum("population")));
+                    Log.d(TAG, "Average: " + snapshot.get(AggregateField.average("population")));
+                } else {
+                    Log.d(TAG, "Aggregation failed: ", task.getException());
+                }
+            }
+        });
+        // [END multi_aggregate_query]
     }
 }

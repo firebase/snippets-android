@@ -9,50 +9,48 @@ import com.google.firebase.ml.vision.document.FirebaseVisionDocumentText
 import com.google.firebase.ml.vision.document.FirebaseVisionDocumentTextRecognizer
 import com.google.firebase.ml.vision.text.FirebaseVisionCloudTextRecognizerOptions
 import com.google.firebase.ml.vision.text.FirebaseVisionText
-import java.util.Arrays
 
 class TextRecognitionActivity : AppCompatActivity() {
 
     private fun recognizeText(image: FirebaseVisionImage) {
-
         // [START get_detector_default]
         val detector = FirebaseVision.getInstance()
-                .onDeviceTextRecognizer
+            .onDeviceTextRecognizer
         // [END get_detector_default]
 
         // [START fml_run_detector]
         val result = detector.processImage(image)
-                .addOnSuccessListener { firebaseVisionText ->
-                    // Task completed successfully
-                    // [START_EXCLUDE]
-                    // [START get_text]
-                    for (block in firebaseVisionText.textBlocks) {
-                        val boundingBox = block.boundingBox
-                        val cornerPoints = block.cornerPoints
-                        val text = block.text
+            .addOnSuccessListener { firebaseVisionText ->
+                // Task completed successfully
+                // [START_EXCLUDE]
+                // [START get_text]
+                for (block in firebaseVisionText.textBlocks) {
+                    val boundingBox = block.boundingBox
+                    val cornerPoints = block.cornerPoints
+                    val text = block.text
 
-                        for (line in block.lines) {
+                    for (line in block.lines) {
+                        // ...
+                        for (element in line.elements) {
                             // ...
-                            for (element in line.elements) {
-                                // ...
-                            }
                         }
                     }
-                    // [END get_text]
-                    // [END_EXCLUDE]
                 }
-                .addOnFailureListener { e ->
-                    // Task failed with an exception
-                    // ...
-                }
+                // [END get_text]
+                // [END_EXCLUDE]
+            }
+            .addOnFailureListener { e ->
+                // Task failed with an exception
+                // ...
+            }
         // [END fml_run_detector]
     }
 
     private fun recognizeTextCloud(image: FirebaseVisionImage) {
         // [START set_detector_options_cloud]
         val options = FirebaseVisionCloudTextRecognizerOptions.Builder()
-                .setLanguageHints(listOf("en", "hi"))
-                .build()
+            .setLanguageHints(listOf("en", "hi"))
+            .build()
         // [END set_detector_options_cloud]
 
         // [START get_detector_cloud]
@@ -63,29 +61,29 @@ class TextRecognitionActivity : AppCompatActivity() {
 
         // [START fml_run_detector_cloud]
         val result = detector.processImage(image)
-                .addOnSuccessListener { firebaseVisionText ->
-                    // Task completed successfully
-                    // [START_EXCLUDE]
-                    // [START get_text_cloud]
-                    for (block in firebaseVisionText.textBlocks) {
-                        val boundingBox = block.boundingBox
-                        val cornerPoints = block.cornerPoints
-                        val text = block.text
+            .addOnSuccessListener { firebaseVisionText ->
+                // Task completed successfully
+                // [START_EXCLUDE]
+                // [START get_text_cloud]
+                for (block in firebaseVisionText.textBlocks) {
+                    val boundingBox = block.boundingBox
+                    val cornerPoints = block.cornerPoints
+                    val text = block.text
 
-                        for (line in block.lines) {
+                    for (line in block.lines) {
+                        // ...
+                        for (element in line.elements) {
                             // ...
-                            for (element in line.elements) {
-                                // ...
-                            }
                         }
                     }
-                    // [END get_text_cloud]
-                    // [END_EXCLUDE]
                 }
-                .addOnFailureListener { e ->
-                    // Task failed with an exception
-                    // ...
-                }
+                // [END get_text_cloud]
+                // [END_EXCLUDE]
+            }
+            .addOnFailureListener { e ->
+                // Task failed with an exception
+                // ...
+            }
         // [END fml_run_detector_cloud]
     }
 
@@ -119,7 +117,7 @@ class TextRecognitionActivity : AppCompatActivity() {
     private fun getLocalDocumentRecognizer(): FirebaseVisionDocumentTextRecognizer {
         // [START mlkit_local_doc_recognizer]
         val detector = FirebaseVision.getInstance()
-                .cloudDocumentTextRecognizer
+            .cloudDocumentTextRecognizer
         // [END mlkit_local_doc_recognizer]
 
         return detector
@@ -130,10 +128,10 @@ class TextRecognitionActivity : AppCompatActivity() {
         // Or, to provide language hints to assist with language detection:
         // See https://cloud.google.com/vision/docs/languages for supported languages
         val options = FirebaseVisionCloudDocumentRecognizerOptions.Builder()
-                .setLanguageHints(listOf("en", "hi"))
-                .build()
+            .setLanguageHints(listOf("en", "hi"))
+            .build()
         val detector = FirebaseVision.getInstance()
-                .getCloudDocumentTextRecognizer(options)
+            .getCloudDocumentTextRecognizer(options)
         // [END mlkit_cloud_doc_recognizer]
 
         return detector
@@ -142,19 +140,21 @@ class TextRecognitionActivity : AppCompatActivity() {
     private fun processDocumentImage() {
         // Dummy variables
         val detector = getLocalDocumentRecognizer()
-        val myImage = FirebaseVisionImage.fromByteArray(byteArrayOf(),
-                FirebaseVisionImageMetadata.Builder().build())
+        val myImage = FirebaseVisionImage.fromByteArray(
+            byteArrayOf(),
+            FirebaseVisionImageMetadata.Builder().build(),
+        )
 
         // [START mlkit_process_doc_image]
         detector.processImage(myImage)
-                .addOnSuccessListener { firebaseVisionDocumentText ->
-                    // Task completed successfully
-                    // ...
-                }
-                .addOnFailureListener { e ->
-                    // Task failed with an exception
-                    // ...
-                }
+            .addOnSuccessListener { firebaseVisionDocumentText ->
+                // Task completed successfully
+                // ...
+            }
+            .addOnFailureListener { e ->
+                // Task failed with an exception
+                // ...
+            }
         // [END mlkit_process_doc_image]
     }
 

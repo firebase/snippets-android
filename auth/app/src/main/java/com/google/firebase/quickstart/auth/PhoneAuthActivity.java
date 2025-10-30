@@ -13,6 +13,7 @@ import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthMissingActivityForRecaptchaException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
@@ -67,6 +68,8 @@ public class PhoneAuthActivity extends Activity {
                     // Invalid request
                 } else if (e instanceof FirebaseTooManyRequestsException) {
                     // The SMS quota for the project has been exceeded
+                } else if (e instanceof FirebaseAuthMissingActivityForRecaptchaException) {
+                    // reCAPTCHA verification attempted with null Activity
                 }
 
                 // Show a message and update the UI
@@ -105,7 +108,8 @@ public class PhoneAuthActivity extends Activity {
           PhoneAuthOptions.newBuilder(mAuth) 
               .setPhoneNumber(phoneNumber)       // Phone number to verify
               .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
-              .setActivity(this)                 // Activity (for callback binding)
+              .setActivity(this)                 // (optional) Activity for callback binding
+              // If no activity is passed, reCAPTCHA verification can not be used.
               .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
               .build();
           PhoneAuthProvider.verifyPhoneNumber(options);     

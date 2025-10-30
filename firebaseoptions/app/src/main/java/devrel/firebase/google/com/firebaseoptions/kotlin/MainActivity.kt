@@ -3,10 +3,10 @@ package devrel.firebase.google.com.firebaseoptions.kotlin
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.FirebaseOptions
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.ktx.app
-import com.google.firebase.ktx.initialize
+import com.google.firebase.database.database
+import com.google.firebase.Firebase
+import com.google.firebase.app
+import com.google.firebase.initialize
 import devrel.firebase.google.com.firebaseoptions.R
 
 class MainActivity : AppCompatActivity() {
@@ -21,17 +21,17 @@ class MainActivity : AppCompatActivity() {
         //   - App ID
         //   - API Key
         val options = FirebaseOptions.Builder()
-                .setProjectId("my-firebase-project")
-                .setApplicationId("1:27992087142:android:ce3b6448250083d1")
-                .setApiKey("AIzaSyADUe90ULnQDuGShD9W23RDP0xmeDc6Mvw")
-                // .setDatabaseUrl(...)
-                // .setStorageBucket(...)
-                .build()
+            .setProjectId("my-firebase-project")
+            .setApplicationId("1:27992087142:android:ce3b6448250083d1")
+            .setApiKey("AIzaSyADUe90ULnQDuGShD9W23RDP0xmeDc6Mvw")
+            // .setDatabaseUrl(...)
+            // .setStorageBucket(...)
+            .build()
         // [END firebase_options]
 
         // [START firebase_secondary]
         // Initialize secondary FirebaseApp.
-        Firebase.initialize(this /* Context */, options, "secondary")
+        Firebase.initialize(context = this, options, "secondary")
 
         // Retrieve secondary FirebaseApp.
         val secondary = Firebase.app("secondary")

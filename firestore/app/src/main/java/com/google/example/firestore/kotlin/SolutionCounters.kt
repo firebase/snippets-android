@@ -5,7 +5,7 @@ import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.firestore.toObject
 
 /**
  * https://firebase.google.com/docs/firestore/solutions/counters
@@ -24,24 +24,24 @@ class SolutionCounters(val db: FirebaseFirestore) {
     fun createCounter(ref: DocumentReference, numShards: Int): Task<Void> {
         // Initialize the counter document, then initialize each shard.
         return ref.set(Counter(numShards))
-                .continueWithTask { task ->
-                    if (!task.isSuccessful) {
-                        throw task.exception!!
-                    }
-
-                    val tasks = arrayListOf<Task<Void>>()
-
-                    // Initialize each shard with count=0
-                    for (i in 0 until numShards) {
-                        val makeShard = ref.collection("shards")
-                                .document(i.toString())
-                                .set(Shard(0))
-
-                        tasks.add(makeShard)
-                    }
-
-                    Tasks.whenAll(tasks)
+            .continueWithTask { task ->
+                if (!task.isSuccessful) {
+                    throw task.exception!!
                 }
+
+                val tasks = arrayListOf<Task<Void>>()
+
+                // Initialize each shard with count=0
+                for (i in 0 until numShards) {
+                    val makeShard = ref.collection("shards")
+                        .document(i.toString())
+                        .set(Shard(0))
+
+                    tasks.add(makeShard)
+                }
+
+                Tasks.whenAll(tasks)
+            }
     }
     // [END create_counter]
 
@@ -58,14 +58,14 @@ class SolutionCounters(val db: FirebaseFirestore) {
     fun getCount(ref: DocumentReference): Task<Int> {
         // Sum the count of each shard in the subcollection
         return ref.collection("shards").get()
-                .continueWith { task ->
-                    var count = 0
-                    for (snap in task.result!!) {
-                        val shard = snap.toObject<Shard>()
-                        count += shard.count
-                    }
-                    count
+            .continueWith { task ->
+                var count = 0
+                for (snap in task.result!!) {
+                    val shard = snap.toObject<Shard>()
+                    count += shard.count
                 }
+                count
+            }
     }
     // [END get_count]
 }

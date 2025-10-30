@@ -4,9 +4,10 @@ import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.crashlytics.ktx.crashlytics
-import com.google.firebase.crashlytics.ktx.setCustomKeys
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.crashlytics.crashlytics
+import com.google.firebase.crashlytics.recordException
+import com.google.firebase.crashlytics.setCustomKeys
+import com.google.firebase.Firebase
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,10 +20,10 @@ class MainActivity : AppCompatActivity() {
         val crashlytics = Firebase.crashlytics
         crashlytics.setCustomKeys {
             key("my_string_key", "foo") // String value
-            key("my_bool_key", true)    // boolean value
-            key("my_double_key", 1.0)   // double value
-            key("my_float_key", 1.0f)   // float value
-            key("my_int_key", 1)        // int value
+            key("my_bool_key", true) // boolean value
+            key("my_double_key", 1.0) // double value
+            key("my_float_key", 1.0f) // float value
+            key("my_int_key", 1) // int value
         }
         // [END crash_set_keys_basic]
     }
@@ -77,6 +78,21 @@ class MainActivity : AppCompatActivity() {
         // [END crash_log_caught_ex]
     }
 
+    fun logCaughtExWithCustomKeys() {
+        // [START crash_log_caught_ex_custom_keys]
+        try {
+            methodThatThrows()
+        } catch (e: Exception) {
+            Firebase.crashlytics.recordException(e) {
+                key("string key", "string value")
+                key("boolean key", true)
+                key("float key", Float.MAX_VALUE)
+            }
+            // handle your exception here
+        }
+        // [END crash_log_caught_ex_custom_keys]
+    }
+
     fun forceACrash() {
         // [START crash_force_crash]
         val crashButton = Button(this)
@@ -85,9 +101,13 @@ class MainActivity : AppCompatActivity() {
             throw RuntimeException() // Force a crash
         }
 
-        addContentView(crashButton, ViewGroup.LayoutParams(
+        addContentView(
+            crashButton,
+            ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT))
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+            ),
+        )
         // [END crash_force_crash]
     }
 }

@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.Firebase
 import com.google.firebase.referencecode.storage.R
-import com.google.firebase.storage.ktx.storage
+import com.google.firebase.storage.storage
 
 abstract class FirebaseUIActivity : AppCompatActivity() {
 
@@ -16,6 +16,7 @@ abstract class FirebaseUIActivity : AppCompatActivity() {
     }
 
     fun loadWithGlide() {
+        val context = this
         // [START storage_load_with_glide]
         // Reference to an image file in Cloud Storage
         val storageReference = Firebase.storage.reference
@@ -25,9 +26,9 @@ abstract class FirebaseUIActivity : AppCompatActivity() {
 
         // Download directly from StorageReference using Glide
         // (See MyAppGlideModule for Loader registration)
-        Glide.with(this /* context */)
-                .load(storageReference)
-                .into(imageView)
+        Glide.with(context)
+            .load(storageReference)
+            .into(imageView)
         // [END storage_load_with_glide]
     }
 }

@@ -4,7 +4,7 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
-import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.firestore.toObject
 
 /**
  * https://firebase.google.com/docs/firestore/solutions/aggregation
@@ -16,7 +16,7 @@ abstract class SolutionAggregation(private val db: FirebaseFirestore) {
         // default values required for use with "toObject"
         internal var name: String = "",
         internal var avgRating: Double = 0.0,
-        internal var numRatings: Int = 0
+        internal var numRatings: Int = 0,
     )
     // [END restaurant_class]
 
@@ -29,9 +29,9 @@ abstract class SolutionAggregation(private val db: FirebaseFirestore) {
     fun getAllRatings() {
         // [START get_all_ratings]
         db.collection("restaurants")
-                .document("arinell-pizza")
-                .collection("ratings")
-                .get()
+            .document("arinell-pizza")
+            .collection("ratings")
+            .get()
         // [END get_all_ratings]
     }
 
@@ -60,7 +60,7 @@ abstract class SolutionAggregation(private val db: FirebaseFirestore) {
 
             // Update rating
             val data = hashMapOf<String, Any>(
-                    "rating" to rating
+                "rating" to rating,
             )
             transaction.set(ratingRef, data, SetOptions.merge())
 

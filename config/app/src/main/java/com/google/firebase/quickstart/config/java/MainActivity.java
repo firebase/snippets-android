@@ -11,7 +11,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.quickstart.config.R;
+import com.google.firebase.remoteconfig.ConfigUpdate;
+import com.google.firebase.remoteconfig.ConfigUpdateListener;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigException;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 public class MainActivity extends AppCompatActivity {
@@ -58,6 +61,25 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
         // [END fetch_config_with_callback]
+
+        // [START add_config_update_listener]
+        mFirebaseRemoteConfig.addOnConfigUpdateListener(new ConfigUpdateListener() {
+            @Override
+            public void onUpdate(ConfigUpdate configUpdate) {
+                Log.d(TAG, "Updated keys: " + configUpdate.getUpdatedKeys());
+
+                if (configUpdate.getUpdatedKeys().contains("welcome_message")) {
+                    mFirebaseRemoteConfig.activate()
+                            .addOnCompleteListener(task -> displayWelcomeMessage());
+                }
+            }
+
+            @Override
+            public void onError(FirebaseRemoteConfigException error) {
+                Log.w(TAG, "Config update error with code: " + error.getCode(), error);
+            }
+        });
+        // [END add_config_update_listener]
     }
 
     private void displayWelcomeMessage() {

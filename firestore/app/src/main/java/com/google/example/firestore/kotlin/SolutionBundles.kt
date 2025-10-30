@@ -9,7 +9,6 @@ import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
 
-
 /**
  * https://firebase.google.com/docs/firestore/solutions/serve-bundles
  */

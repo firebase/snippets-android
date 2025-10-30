@@ -1,7 +1,7 @@
 package com.google.example.firestore.kotlin
 
-import com.google.firebase.functions.ktx.functions
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.functions.functions
+import com.google.firebase.Firebase
 
 class SolutionDeletes {
 
@@ -13,14 +13,14 @@ class SolutionDeletes {
     fun deleteAtPath(path: String) {
         val deleteFn = Firebase.functions.getHttpsCallable("recursiveDelete")
         deleteFn.call(hashMapOf("path" to path))
-                .addOnSuccessListener {
-                    // Delete Success
-                    // ...
-                }
-                .addOnFailureListener {
-                    // Delete Failed
-                    // ...
-                }
+            .addOnSuccessListener {
+                // Delete Success
+                // ...
+            }
+            .addOnFailureListener {
+                // Delete Failed
+                // ...
+            }
     }
     // [END call_delete_function]
 }

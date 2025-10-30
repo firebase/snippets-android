@@ -2,15 +2,15 @@ package com.google.firebase.example.perf.kotlin
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.example.perf.R
 import com.google.firebase.example.perf.kotlin.model.ItemCache
 import com.google.firebase.example.perf.kotlin.model.User
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.Firebase
 import com.google.firebase.perf.FirebasePerformance
-import com.google.firebase.perf.ktx.performance
-import com.google.firebase.perf.ktx.trace
+import com.google.firebase.perf.performance
+import com.google.firebase.perf.trace
 import com.google.firebase.perf.metrics.AddTrace
-import com.google.firebase.remoteconfig.ktx.remoteConfig
-import devrel.firebase.google.com.firebaseoptions.R
+import com.google.firebase.remoteconfig.remoteConfig
 import java.io.DataOutputStream
 import java.io.IOException
 import java.io.InputStream
@@ -20,7 +20,8 @@ import java.net.URL
 class MainActivity : AppCompatActivity() {
 
     // [START perf_traced_create]
-    @AddTrace(name = "onCreateTrace", enabled = true /* optional */)
+    // the `enabled` argument is optional and defaults to true
+    @AddTrace(name = "onCreateTrace", enabled = true)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -70,7 +71,7 @@ class MainActivity : AppCompatActivity() {
         // [START perf_disable_with_config]
         // Setup remote config
         val config = Firebase.remoteConfig
-        
+
         // You can uncomment the following two statements to permit more fetches when
         // validating your app, but you should comment out or delete these lines before
         // distributing your app in production.
@@ -83,13 +84,13 @@ class MainActivity : AppCompatActivity() {
 
         // Observe the remote config parameter "perf_disable" and disable Performance Monitoring if true
         config.setDefaultsAsync(R.xml.remote_config_defaults)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        Firebase.performance.isPerformanceCollectionEnabled = !config.getBoolean("perf_disable")
-                    } else {
-                        // An error occurred while setting default parameters
-                    }
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Firebase.performance.isPerformanceCollectionEnabled = !config.getBoolean("perf_disable")
+                } else {
+                    // An error occurred while setting default parameters
                 }
+            }
         // [END perf_disable_with_config]
     }
 
@@ -98,22 +99,22 @@ class MainActivity : AppCompatActivity() {
         // Remote Config fetches and activates parameter values from the service
         val config = Firebase.remoteConfig
         config.fetch(3600)
-                .continueWithTask { task ->
-                    if (!task.isSuccessful) {
-                        task.exception?.let {
-                            throw it
-                        }
-                    }
-                    config.activate()
-                }
-                .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        // Parameter values successfully activated
-                        // ...
-                    } else {
-                        // Handle errors
+            .continueWithTask { task ->
+                if (!task.isSuccessful) {
+                    task.exception?.let {
+                        throw it
                     }
                 }
+                config.activate()
+            }
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // Parameter values successfully activated
+                    // ...
+                } else {
+                    // Handle errors
+                }
+            }
         // [END perf_activate_config]
     }
 
@@ -123,8 +124,10 @@ class MainActivity : AppCompatActivity() {
 
         // [START perf_manual_network_trace]
         val url = URL("https://www.google.com")
-        val metric = Firebase.performance.newHttpMetric("https://www.google.com",
-                FirebasePerformance.HttpMethod.GET)
+        val metric = Firebase.performance.newHttpMetric(
+            "https://www.google.com",
+            FirebasePerformance.HttpMethod.GET,
+        )
         metric.trace {
             val conn = url.openConnection() as HttpURLConnection
             conn.doOutput = true

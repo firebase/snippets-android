@@ -1144,7 +1144,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
 
     fun orQuery() {
         val collection = db.collection("cities")
-        // [START or_query]
+        // [START or_queries]
         val query = collection.where(Filter.and(
             Filter.equalTo("state", "CA"),
             Filter.or(
@@ -1152,7 +1152,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
                 Filter.greaterThanOrEqualTo("population", 1000000)
             )
         ))
-        // [END or_query]
+        // [END or_queries]
     }
 
     fun orQueryDisjunctions() {

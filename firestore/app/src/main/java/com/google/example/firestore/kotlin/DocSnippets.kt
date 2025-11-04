@@ -1343,6 +1343,24 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         println(pipeline)
     }
 
+    fun basicPipelineRead() {
+        // [START basic_pipeline_read]
+        val readDataPipeline = db.pipeline()
+            .collection("users")
+
+        // Execute the pipeline and handle the result
+        readDataPipeline.execute()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    println("${document.getId()} => ${document.getData()}")
+                }
+            }
+            .addOnFailureListener { exception ->
+                println("Error getting documents: $exception")
+            }
+        // [END basic_pipeline_read]
+    }
+
     // https://cloud.google.com/firestore/docs/pipeline/overview#initialization
     fun pipelineInitialization() {
         // [START pipeline_initialization]

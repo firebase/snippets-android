@@ -55,6 +55,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Pipeline;
+import com.google.firebase.firestore.PipelineResult;
 import com.google.firebase.firestore.PipelineSource;
 import com.google.firebase.firestore.VectorValue;
 import com.google.firebase.firestore.pipeline.AggregateFunction;
@@ -1584,6 +1585,29 @@ public class DocSnippets {
             .limit(10);
         // [END pipeline_concepts]
         System.out.println(pipeline);
+    }
+
+    void basicPipelineRead() {
+        // [START basic_pipeline_read]
+        Pipeline readDataPipeline = db.pipeline()
+            .collection("users");
+
+        readDataPipeline.execute()
+            .addOnSuccessListener(new OnSuccessListener<Pipeline.Snapshot>() {
+                @Override
+                public void onSuccess(Pipeline.Snapshot snapshot) {
+                    for (PipelineResult result : snapshot.getResults()) {
+                        System.out.println(result.getId() + " => " + result.getData());
+                    }
+                }
+            })
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    System.out.println("Error getting documents: " + e);
+                }
+            });
+        // [END basic_pipeline_read]
     }
 
     // https://cloud.google.com/firestore/docs/pipeline/overview#initialization

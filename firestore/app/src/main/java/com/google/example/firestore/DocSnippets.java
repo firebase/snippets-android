@@ -57,12 +57,14 @@ import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Pipeline;
 import com.google.firebase.firestore.PipelineResult;
 import com.google.firebase.firestore.PipelineSource;
-import com.google.firebase.firestore.VectorValue;
 import com.google.firebase.firestore.pipeline.AggregateFunction;
 import com.google.firebase.firestore.pipeline.AggregateStage;
 import com.google.firebase.firestore.pipeline.Expression;
 import com.google.firebase.firestore.pipeline.SampleStage;
 import com.google.firebase.firestore.pipeline.UnnestOptions;
+
+import static com.google.firebase.firestore.pipeline.Expression.field;
+import static com.google.firebase.firestore.pipeline.Expression.constant;
 
 /**
  * Snippets for inclusion in documentation.
@@ -1577,9 +1579,9 @@ public class DocSnippets {
             // Step 1: Start a query with collection scope
             .collection("cities")
             // Step 2: Filter the collection
-            .where(Expression.field("population").greaterThan(100000))
+            .where(field("population").greaterThan(100000))
             // Step 3: Sort the remaining documents
-            .sort(Expression.field("name").ascending())
+            .sort(field("name").ascending())
             // Step 4: Return the top 10. Note applying the limit earlier in the pipeline would have
             // unintentional results.
             .limit(10);
@@ -1624,7 +1626,7 @@ public class DocSnippets {
         // [START field_or_constant]
         Pipeline pipeline = db.pipeline()
             .collection("cities")
-            .where(Expression.field("name").equal(Expression.constant("Toronto")));
+            .where(field("name").equal(constant("Toronto")));
         // [END field_or_constant]
         System.out.println(pipeline);
     }
@@ -1659,14 +1661,14 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> results;
 
         results = db.pipeline().collection("books")
-            .where(Expression.field("rating").equal(5))
-            .where(Expression.field("published").lessThan(1900))
+            .where(field("rating").equal(5))
+            .where(field("published").lessThan(1900))
             .execute();
 
         results = db.pipeline().collection("books")
             .where(Expression.and(
-                Expression.field("rating").equal(5),
-                Expression.field("published").lessThan(1900)
+                field("rating").equal(5),
+                field("published").lessThan(1900)
             ))
             .execute();
         // [END pipeline_where]
@@ -1681,7 +1683,7 @@ public class DocSnippets {
             .aggregate(AggregateStage
                 .withAccumulators(
                     AggregateFunction.average("rating").alias("avg_rating"))
-                .withGroups(Expression.field("genre")))
+                .withGroups(field("genre")))
             .execute();
         // [END aggregate_groups]
         System.out.println(results);
@@ -1693,8 +1695,8 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> results = db.pipeline()
             .collection("books")
             .distinct(
-                Expression.field("author").toUpper().alias("author"),
-                Expression.field("genre")
+                field("author").toUpper().alias("author"),
+                field("genre")
             )
             .execute();
         // [END aggregate_distinct]
@@ -1707,8 +1709,8 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> results = db.pipeline()
             .collection("books")
             .sort(
-                Expression.field("release_date").descending(),
-                Expression.field("author").ascending()
+                field("release_date").descending(),
+                field("author").ascending()
             )
             .execute();
         // [END sort]
@@ -1725,8 +1727,8 @@ public class DocSnippets {
         Pipeline pipeline = db.pipeline()
             .collection("books")
             .sort(
-                Expression.field("release_date").descending(),
-                Expression.field("author").ascending()
+                field("release_date").descending(),
+                field("author").ascending()
             );
         // [END sort_comparison]
         System.out.println(query);
@@ -1742,7 +1744,7 @@ public class DocSnippets {
         // Example: Return the min store price for each book.
         results = db.pipeline().collection("books")
             .select(
-                Expression.field("current").logicalMinimum("updated").alias("price_min")
+                field("current").logicalMinimum("updated").alias("price_min")
             )
             .execute();
 
@@ -1760,10 +1762,10 @@ public class DocSnippets {
         // [START query_example]
         Task<Pipeline.Snapshot> results = db.pipeline()
             .collection("books")
-            .where(Expression.field("published").lessThan(1900))
-            .where(Expression.field("genre").equal("Science Fiction"))
-            .where(Expression.field("rating").greaterThan(4.3))
-            .sort(Expression.field("published").descending())
+            .where(field("published").lessThan(1900))
+            .where(field("genre").equal("Science Fiction"))
+            .where(field("rating").greaterThan(4.3))
+            .sort(field("published").descending())
             .execute();
         // [END query_example]
         System.out.println(results);
@@ -1774,7 +1776,7 @@ public class DocSnippets {
         // [START sparse_index_example]
         Task<Pipeline.Snapshot> results = db.pipeline()
             .collection("books")
-            .where(Expression.field("category").like("%fantasy%"))
+            .where(field("category").like("%fantasy%"))
             .execute();
         // [END sparse_index_example]
         System.out.println(results);
@@ -1784,7 +1786,7 @@ public class DocSnippets {
         // [START sparse_index_example_2]
         Task<Pipeline.Snapshot> results = db.pipeline()
             .collection("books")
-            .sort(Expression.field("release_date").ascending())
+            .sort(field("release_date").ascending())
             .execute();
         // [END sparse_index_example_2]
         System.out.println(results);
@@ -1795,10 +1797,10 @@ public class DocSnippets {
         // [START covered_query]
         Task<Pipeline.Snapshot> results = db.pipeline()
             .collection("books")
-            .where(Expression.field("category").like("%fantasy%"))
-            .where(Expression.field("title").exists())
-            .where(Expression.field("author").exists())
-            .select(Expression.field("title"), Expression.field("author"))
+            .where(field("category").like("%fantasy%"))
+            .where(field("title").exists())
+            .where(field("author").exists())
+            .select(field("title"), field("author"))
             .execute();
         // [END covered_query]
         System.out.println(results);
@@ -1813,8 +1815,8 @@ public class DocSnippets {
         // Private preview workaround using pipelines
         Pipeline pipeline = db.pipeline()
             .collection("cities")
-            .where(Expression.field("population").greaterThanOrEqual(1000000))
-            .sort(Expression.field("population").descending());
+            .where(field("population").greaterThanOrEqual(1000000))
+            .sort(field("population").descending());
         // [END pagination_not_supported_preview]
         System.out.println(query);
         System.out.println(pipeline);
@@ -1825,7 +1827,7 @@ public class DocSnippets {
         // [START collection_example]
         Task<Pipeline.Snapshot> results = db.pipeline()
             .collection("users/bob/games")
-            .sort(Expression.field("name").ascending())
+            .sort(field("name").ascending())
             .execute();
         // [END collection_example]
         System.out.println(results);
@@ -1836,7 +1838,7 @@ public class DocSnippets {
         // [START collection_group_example]
         Task<Pipeline.Snapshot> results = db.pipeline()
             .collectionGroup("games")
-            .sort(Expression.field("name").ascending())
+            .sort(field("name").ascending())
             .execute();
         // [END collection_group_example]
         System.out.println(results);
@@ -1952,12 +1954,12 @@ public class DocSnippets {
         // [START union_stage]
         Task<Pipeline.Snapshot> results = db.pipeline()
             .collection("cities/SF/restaurants")
-            .where(Expression.field("type").equal("Chinese"))
+            .where(field("type").equal("Chinese"))
             .union(db.pipeline()
                 .collection("cities/NY/restaurants")
-                .where(Expression.field("type").equal("Italian")))
-            .where(Expression.field("rating").greaterThanOrEqual(4.5))
-            .sort(Expression.field("__name__").descending())
+                .where(field("type").equal("Italian")))
+            .where(field("rating").greaterThanOrEqual(4.5))
+            .sort(field("__name__").descending())
             .execute();
         // [END union_stage]
         System.out.println(results);
@@ -1968,12 +1970,12 @@ public class DocSnippets {
         // [START union_stage_stable]
         Task<Pipeline.Snapshot> results = db.pipeline()
             .collection("cities/SF/restaurants")
-            .where(Expression.field("type").equal("Chinese"))
+            .where(field("type").equal("Chinese"))
             .union(db.pipeline()
                 .collection("cities/NY/restaurants")
-                .where(Expression.field("type").equal("Italian")))
-            .where(Expression.field("rating").greaterThanOrEqual(4.5))
-            .sort(Expression.field("__name__").descending())
+                .where(field("type").equal("Italian")))
+            .where(field("rating").greaterThanOrEqual(4.5))
+            .sort(field("__name__").descending())
             .execute();
         // [END union_stage_stable]
         System.out.println(results);
@@ -1984,7 +1986,7 @@ public class DocSnippets {
         // [START unnest_stage]
         Task<Pipeline.Snapshot> results = db.pipeline()
             .database()
-            .unnest(Expression.field("arrayField").alias("unnestedArrayField"), new UnnestOptions().withIndexField("index"))
+            .unnest(field("arrayField").alias("unnestedArrayField"), new UnnestOptions().withIndexField("index"))
             .execute();
         // [END unnest_stage]
         System.out.println(results);
@@ -2000,7 +2002,7 @@ public class DocSnippets {
 
         Task<Pipeline.Snapshot> results = db.pipeline()
             .database()
-            .unnest(Expression.field("neighbors").alias("unnestedNeighbors"), new UnnestOptions().withIndexField("index"))
+            .unnest(field("neighbors").alias("unnestedNeighbors"), new UnnestOptions().withIndexField("index"))
             .execute();
 
         // Output
@@ -2036,7 +2038,7 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
             .aggregate(
-                AggregateFunction.countIf(Expression.field("rating").greaterThan(4)).alias("filteredCount")
+                AggregateFunction.countIf(field("rating").greaterThan(4)).alias("filteredCount")
             )
             .execute();
         // [END count_if]
@@ -2103,7 +2105,7 @@ public class DocSnippets {
         // [START add_function]
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
-            .select(Expression.add(Expression.field("soldBooks"), Expression.field("unsoldBooks")).alias("totalBooks"))
+            .select(Expression.add(field("soldBooks"), field("unsoldBooks")).alias("totalBooks"))
             .execute();
         // [END add_function]
         System.out.println(result);
@@ -2115,7 +2117,7 @@ public class DocSnippets {
         int storeCredit = 7;
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
-            .select(Expression.subtract(Expression.field("price"), storeCredit).alias("totalCost"))
+            .select(Expression.subtract(field("price"), storeCredit).alias("totalCost"))
             .execute();
         // [END subtract_function]
         System.out.println(result);
@@ -2126,7 +2128,7 @@ public class DocSnippets {
         // [START multiply_function]
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
-            .select(Expression.multiply(Expression.field("price"), Expression.field("soldBooks")).alias("revenue"))
+            .select(Expression.multiply(field("price"), field("soldBooks")).alias("revenue"))
             .execute();
         // [END multiply_function]
         System.out.println(result);
@@ -2137,7 +2139,7 @@ public class DocSnippets {
         // [START divide_function]
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
-            .select(Expression.divide(Expression.field("ratings"), Expression.field("soldBooks")).alias("reviewRate"))
+            .select(Expression.divide(field("ratings"), field("soldBooks")).alias("reviewRate"))
             .execute();
         // [END divide_function]
         System.out.println(result);
@@ -2149,7 +2151,7 @@ public class DocSnippets {
         int displayCapacity = 1000;
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
-            .select(Expression.mod(Expression.field("unsoldBooks"), displayCapacity).alias("warehousedBooks"))
+            .select(Expression.mod(field("unsoldBooks"), displayCapacity).alias("warehousedBooks"))
             .execute();
         // [END mod_function]
         System.out.println(result);
@@ -2162,7 +2164,7 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
             .select(
-                Expression.divide(Expression.field("unsoldBooks"), booksPerShelf).ceil().alias("requiredShelves")
+                Expression.divide(field("unsoldBooks"), booksPerShelf).ceil().alias("requiredShelves")
             )
             .execute();
         // [END ceil_function]
@@ -2175,7 +2177,7 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
             .addFields(
-                Expression.divide(Expression.field("wordCount"), Expression.field("pages")).floor().alias("wordsPerPage")
+                Expression.divide(field("wordCount"), field("pages")).floor().alias("wordsPerPage")
             )
             .execute();
         // [END floor_function]
@@ -2187,7 +2189,7 @@ public class DocSnippets {
         // [START round_function]
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
-            .select(Expression.multiply(Expression.field("soldBooks"), Expression.field("price")).round().alias("partialRevenue"))
+            .select(Expression.multiply(field("soldBooks"), field("price")).round().alias("partialRevenue"))
             .aggregate(AggregateFunction.sum("partialRevenue").alias("totalRevenue"))
             .execute();
         // [END round_function]
@@ -2201,17 +2203,17 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("cities")
             .addFields(
-                Expression.field("lat").subtract(googleplex.getLatitude())
+                field("lat").subtract(googleplex.getLatitude())
                     .multiply(111 /* km per degree */)
                     .pow(2)
                     .alias("latitudeDifference"),
-                Expression.field("lng").subtract(googleplex.getLongitude())
+                field("lng").subtract(googleplex.getLongitude())
                     .multiply(111 /* km per degree */)
                     .pow(2)
                     .alias("longitudeDifference")
             )
             .select(
-                Expression.field("latitudeDifference").add(Expression.field("longitudeDifference")).sqrt()
+                field("latitudeDifference").add(field("longitudeDifference")).sqrt()
                     // Inaccurate for large distances or close to poles
                     .alias("approximateDistanceToGoogle")
             )
@@ -2227,17 +2229,17 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("cities")
             .addFields(
-                Expression.field("lat").subtract(googleplex.getLatitude())
+                field("lat").subtract(googleplex.getLatitude())
                     .multiply(111 /* km per degree */)
                     .pow(2)
                     .alias("latitudeDifference"),
-                Expression.field("lng").subtract(googleplex.getLongitude())
+                field("lng").subtract(googleplex.getLongitude())
                     .multiply(111 /* km per degree */)
                     .pow(2)
                     .alias("longitudeDifference")
             )
             .select(
-                Expression.field("latitudeDifference").add(Expression.field("longitudeDifference")).sqrt()
+                field("latitudeDifference").add(field("longitudeDifference")).sqrt()
                     // Inaccurate for large distances or close to poles
                     .alias("approximateDistanceToGoogle")
             )
@@ -2251,7 +2253,7 @@ public class DocSnippets {
         // [START exp_function]
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
-            .select(Expression.field("rating").exp().alias("expRating"))
+            .select(field("rating").exp().alias("expRating"))
             .execute();
         // [END exp_function]
         System.out.println(result);
@@ -2262,7 +2264,7 @@ public class DocSnippets {
         // [START ln_function]
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
-            .select(Expression.field("rating").ln().alias("lnRating"))
+            .select(field("rating").ln().alias("lnRating"))
             .execute();
         // [END ln_function]
         System.out.println(result);
@@ -2280,7 +2282,7 @@ public class DocSnippets {
         // [START array_concat]
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
-            .select(Expression.field("genre").arrayConcat(Expression.field("subGenre")).alias("allGenres"))
+            .select(field("genre").arrayConcat(field("subGenre")).alias("allGenres"))
             .execute();
         // [END array_concat]
         System.out.println(result);
@@ -2291,7 +2293,7 @@ public class DocSnippets {
         // [START array_contains]
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
-            .select(Expression.field("genre").arrayContains("mystery").alias("isMystery"))
+            .select(field("genre").arrayContains("mystery").alias("isMystery"))
             .execute();
         // [END array_contains]
         System.out.println(result);
@@ -2303,7 +2305,7 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
             .select(
-                Expression.field("genre")
+                field("genre")
                     .arrayContainsAll(Arrays.asList("fantasy", "adventure"))
                     .alias("isFantasyAdventure")
             )
@@ -2318,7 +2320,7 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
             .select(
-                Expression.field("genre")
+                field("genre")
                     .arrayContainsAny(Arrays.asList("fantasy", "nonfiction"))
                     .alias("isMysteryOrFantasy")
             )
@@ -2332,7 +2334,7 @@ public class DocSnippets {
         // [START array_length]
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
-            .select(Expression.field("genre").arrayLength().alias("genreCount"))
+            .select(field("genre").arrayLength().alias("genreCount"))
             .execute();
         // [END array_length]
         System.out.println(result);
@@ -2343,7 +2345,7 @@ public class DocSnippets {
         // [START array_reverse]
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
-            .select(Expression.field("genre").arrayReverse().alias("reversedGenres"))
+            .select(field("genre").arrayReverse().alias("reversedGenres"))
             .execute();
         // [END array_reverse]
         System.out.println(result);
@@ -2354,7 +2356,7 @@ public class DocSnippets {
         // [START equal_function]
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
-            .select(Expression.field("rating").equal(5).alias("hasPerfectRating"))
+            .select(field("rating").equal(5).alias("hasPerfectRating"))
             .execute();
         // [END equal_function]
         System.out.println(result);
@@ -2365,7 +2367,7 @@ public class DocSnippets {
         // [START greater_than]
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
-            .select(Expression.field("rating").greaterThan(4).alias("hasHighRating"))
+            .select(field("rating").greaterThan(4).alias("hasHighRating"))
             .execute();
         // [END greater_than]
         System.out.println(result);
@@ -2376,7 +2378,7 @@ public class DocSnippets {
         // [START greater_or_equal]
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
-            .select(Expression.field("published").greaterThanOrEqual(1900).alias("publishedIn20thCentury"))
+            .select(field("published").greaterThanOrEqual(1900).alias("publishedIn20thCentury"))
             .execute();
         // [END greater_or_equal]
         System.out.println(result);
@@ -2387,7 +2389,7 @@ public class DocSnippets {
         // [START less_than]
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
-            .select(Expression.field("published").lessThan(1923).alias("isPublicDomainProbably"))
+            .select(field("published").lessThan(1923).alias("isPublicDomainProbably"))
             .execute();
         // [END less_than]
         System.out.println(result);
@@ -2398,7 +2400,7 @@ public class DocSnippets {
         // [START less_or_equal]
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
-            .select(Expression.field("rating").lessThanOrEqual(2).alias("hasBadRating"))
+            .select(field("rating").lessThanOrEqual(2).alias("hasBadRating"))
             .execute();
         // [END less_or_equal]
         System.out.println(result);
@@ -2409,7 +2411,7 @@ public class DocSnippets {
         // [START not_equal]
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
-            .select(Expression.field("title").notEqual("1984").alias("not1984"))
+            .select(field("title").notEqual("1984").alias("not1984"))
             .execute();
         // [END not_equal]
         System.out.println(result);
@@ -2420,7 +2422,7 @@ public class DocSnippets {
         // [START exists_function]
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
-            .select(Expression.field("rating").exists().alias("hasRating"))
+            .select(field("rating").exists().alias("hasRating"))
             .execute();
         // [END exists_function]
         System.out.println(result);
@@ -2433,8 +2435,8 @@ public class DocSnippets {
             .collection("books")
             .select(
                 Expression.and(
-                    Expression.field("rating").greaterThan(4),
-                    Expression.field("price").lessThan(10)
+                    field("rating").greaterThan(4),
+                    field("price").lessThan(10)
                 ).alias("under10Recommendation")
             )
             .execute();
@@ -2449,8 +2451,8 @@ public class DocSnippets {
             .collection("books")
             .select(
                 Expression.or(
-                    Expression.field("genre").equal("Fantasy"),
-                    Expression.field("tags").arrayContains("adventure")
+                    field("genre").equal("Fantasy"),
+                    field("tags").arrayContains("adventure")
                 ).alias("matchesSearchFilters")
             )
             .execute();
@@ -2465,8 +2467,8 @@ public class DocSnippets {
             .collection("books")
             .select(
                 Expression.xor(
-                    Expression.field("tags").arrayContains("magic"),
-                    Expression.field("tags").arrayContains("nonfiction")
+                    field("tags").arrayContains("magic"),
+                    field("tags").arrayContains("nonfiction")
                 ).alias("matchesSearchFilters")
             )
             .execute();
@@ -2481,7 +2483,7 @@ public class DocSnippets {
             .collection("books")
             .select(
                 Expression.not(
-                    Expression.field("tags").arrayContains("nonfiction")
+                    field("tags").arrayContains("nonfiction")
                 ).alias("isFiction")
             )
             .execute();
@@ -2495,11 +2497,11 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
             .select(
-                Expression.field("tags").arrayConcat(
+                field("tags").arrayConcat(
                     Expression.conditional(
-                        Expression.field("pages").greaterThan(100),
-                        Expression.constant("longRead"),
-                        Expression.constant("shortRead")
+                        field("pages").greaterThan(100),
+                        constant("longRead"),
+                        constant("shortRead")
                     )
                 ).alias("extendedTags")
             )
@@ -2514,7 +2516,7 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
             .select(
-                Expression.field("genre").equalAny(Arrays.asList("Science Fiction", "Psychological Thriller"))
+                field("genre").equalAny(Arrays.asList("Science Fiction", "Psychological Thriller"))
                     .alias("matchesGenreFilters")
             )
             .execute();
@@ -2528,7 +2530,7 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
             .select(
-                Expression.field("author").notEqualAny(Arrays.asList("George Orwell", "F. Scott Fitzgerald"))
+                field("author").notEqualAny(Arrays.asList("George Orwell", "F. Scott Fitzgerald"))
                     .alias("byExcludedAuthors")
             )
             .execute();
@@ -2556,7 +2558,7 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
             .select(
-                Expression.field("rating").logicalMaximum(1).alias("flooredRating")
+                field("rating").logicalMaximum(1).alias("flooredRating")
             )
             .execute();
         // [END max_logical_function]
@@ -2569,7 +2571,7 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
             .select(
-                Expression.field("rating").logicalMinimum(5).alias("cappedRating")
+                field("rating").logicalMinimum(5).alias("cappedRating")
             )
             .execute();
         // [END min_logical_function]
@@ -2582,7 +2584,7 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
             .select(
-                Expression.field("awards").mapGet("pulitzer").alias("hasPulitzerAward")
+                field("awards").mapGet("pulitzer").alias("hasPulitzerAward")
             )
             .execute();
         // [END map_get]
@@ -2595,7 +2597,7 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
             .select(
-                Expression.field("title").byteLength().alias("titleByteLength")
+                field("title").byteLength().alias("titleByteLength")
             )
             .execute();
         // [END byte_length]
@@ -2608,7 +2610,7 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
             .select(
-                Expression.field("title").charLength().alias("titleCharLength")
+                field("title").charLength().alias("titleCharLength")
             )
             .execute();
         // [END char_length]
@@ -2621,7 +2623,7 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
             .select(
-                Expression.field("title").startsWith("The")
+                field("title").startsWith("The")
                     .alias("needsSpecialAlphabeticalSort")
             )
             .execute();
@@ -2635,7 +2637,7 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("inventory/devices/laptops")
             .select(
-                Expression.field("name").endsWith("16 inch")
+                field("name").endsWith("16 inch")
                     .alias("16InLaptops")
             )
             .execute();
@@ -2649,7 +2651,7 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
             .select(
-                Expression.field("genre").like("%Fiction")
+                field("genre").like("%Fiction")
                     .alias("anyFiction")
             )
             .execute();
@@ -2663,7 +2665,7 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("documents")
             .select(
-                Expression.field("title").regexContains("Firestore (Enterprise|Standard)")
+                field("title").regexContains("Firestore (Enterprise|Standard)")
                     .alias("isFirestoreRelated")
             )
             .execute();
@@ -2677,7 +2679,7 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("documents")
             .select(
-                Expression.field("title").regexMatch("Firestore (Enterprise|Standard)")
+                field("title").regexMatch("Firestore (Enterprise|Standard)")
                     .alias("isFirestoreExactly")
             )
             .execute();
@@ -2691,7 +2693,7 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
             .select(
-                Expression.field("title").concat(" by ", Expression.field("author"))
+                field("title").concat(" by ", field("author"))
                     .alias("fullyQualifiedTitle")
             )
             .execute();
@@ -2705,7 +2707,7 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("articles")
             .select(
-                Expression.field("body").stringContains("Firestore")
+                field("body").stringContains("Firestore")
                     .alias("isFirestoreRelated")
             )
             .execute();
@@ -2719,7 +2721,7 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("authors")
             .select(
-                Expression.field("name").toUpper()
+                field("name").toUpper()
                     .alias("uppercaseName")
             )
             .execute();
@@ -2733,7 +2735,7 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("authors")
             .select(
-                Expression.field("genre").toLower().equal("fantasy")
+                field("genre").toLower().equal("fantasy")
                     .alias("isFantasy")
             )
             .execute();
@@ -2746,11 +2748,11 @@ public class DocSnippets {
         // [START substr_function]
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
-            .where(Expression.field("title").startsWith("The "))
+            .where(field("title").startsWith("The "))
             .select(
-                Expression.field("title").substring(
-                  Expression.constant(4),
-                    Expression.field("title").charLength().subtract(4))
+                field("title").substring(
+                  constant(4),
+                    field("title").charLength().subtract(4))
                     .alias("titleWithoutLeadingThe")
             )
             .execute();
@@ -2764,7 +2766,7 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
             .select(
-                Expression.field("name").reverse().alias("reversedName")
+                field("name").reverse().alias("reversedName")
             )
             .execute();
         // [END str_reverse]
@@ -2777,7 +2779,7 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
             .select(
-                Expression.field("name").trim().alias("whitespaceTrimmedName")
+                field("name").trim().alias("whitespaceTrimmedName")
             )
             .execute();
         // [END trim_function]
@@ -2800,7 +2802,7 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("documents")
             .select(
-                Expression.field("createdAtMicros").unixMicrosToTimestamp().alias("createdAtString")
+                field("createdAtMicros").unixMicrosToTimestamp().alias("createdAtString")
             )
             .execute();
         // [END unix_micros_timestamp]
@@ -2813,7 +2815,7 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("documents")
             .select(
-                Expression.field("createdAtMillis").unixMillisToTimestamp().alias("createdAtString")
+                field("createdAtMillis").unixMillisToTimestamp().alias("createdAtString")
             )
             .execute();
         // [END unix_millis_timestamp]
@@ -2826,7 +2828,7 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("documents")
             .select(
-                Expression.field("createdAtSeconds").unixSecondsToTimestamp().alias("createdAtString")
+                field("createdAtSeconds").unixSecondsToTimestamp().alias("createdAtString")
             )
             .execute();
         // [END unix_seconds_timestamp]
@@ -2839,7 +2841,7 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("documents")
             .select(
-                Expression.field("createdAt").timestampAdd("day", 3653).alias("expiresAt")
+                field("createdAt").timestampAdd("day", 3653).alias("expiresAt")
             )
             .execute();
         // [END timestamp_add]
@@ -2852,7 +2854,7 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("documents")
             .select(
-                Expression.field("expiresAt").timestampSubtract("day", 14).alias("sendWarningTimestamp")
+                field("expiresAt").timestampSubtract("day", 14).alias("sendWarningTimestamp")
             )
             .execute();
         // [END timestamp_sub]
@@ -2865,7 +2867,7 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("documents")
             .select(
-                Expression.field("dateString").timestampToUnixMicros().alias("unixMicros")
+                field("dateString").timestampToUnixMicros().alias("unixMicros")
             )
             .execute();
         // [END timestamp_unix_micros]
@@ -2878,7 +2880,7 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("documents")
             .select(
-                Expression.field("dateString").timestampToUnixMillis().alias("unixMillis")
+                field("dateString").timestampToUnixMillis().alias("unixMillis")
             )
             .execute();
         // [END timestamp_unix_millis]
@@ -2891,7 +2893,7 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("documents")
             .select(
-                Expression.field("dateString").timestampToUnixSeconds().alias("unixSeconds")
+                field("dateString").timestampToUnixSeconds().alias("unixSeconds")
             )
             .execute();
         // [END timestamp_unix_seconds]
@@ -2905,7 +2907,7 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
             .select(
-                Expression.field("embedding").cosineDistance(sampleVector).alias("cosineDistance")
+                field("embedding").cosineDistance(sampleVector).alias("cosineDistance")
             )
             .execute();
         // [END cosine_distance]
@@ -2919,7 +2921,7 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
             .select(
-                Expression.field("embedding").dotProduct(sampleVector).alias("dotProduct")
+                field("embedding").dotProduct(sampleVector).alias("dotProduct")
             )
             .execute();
         // [END dot_product]
@@ -2933,7 +2935,7 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
             .select(
-                Expression.field("embedding").euclideanDistance(sampleVector).alias("euclideanDistance")
+                field("embedding").euclideanDistance(sampleVector).alias("euclideanDistance")
             )
             .execute();
         // [END euclidean_distance]
@@ -2946,7 +2948,7 @@ public class DocSnippets {
         Task<Pipeline.Snapshot> result = db.pipeline()
             .collection("books")
             .select(
-                Expression.field("embedding").vectorLength().alias("vectorLength")
+                field("embedding").vectorLength().alias("vectorLength")
             )
             .execute();
         // [END vector_length]

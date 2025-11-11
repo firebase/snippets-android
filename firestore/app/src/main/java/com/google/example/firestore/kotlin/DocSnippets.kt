@@ -31,11 +31,13 @@ import java.util.concurrent.TimeUnit
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.Pipeline
+import com.google.firebase.firestore.VectorValue
 import com.google.firebase.firestore.pipeline.AggregateFunction
 import com.google.firebase.firestore.pipeline.AggregateStage
 import com.google.firebase.firestore.pipeline.Expression
 import com.google.firebase.firestore.pipeline.Expression.Companion.field
 import com.google.firebase.firestore.pipeline.Expression.Companion.constant
+import com.google.firebase.firestore.pipeline.FindNearestStage
 import com.google.firebase.firestore.pipeline.SampleStage
 import com.google.firebase.firestore.pipeline.UnnestOptions
 
@@ -2705,4 +2707,866 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         // [END vector_length]
         println(result)
     }
+
+    fun stagesExpressionsExample() {
+        // [START stages_expressions_example]
+        val trailing30Days = constant(Timestamp.now().toDate().time)
+            .unixMillisToTimestamp()
+            .timestampSubtract("day", 30)
+        val snapshot = db.pipeline()
+            .collection("productViews")
+            .where(field("viewedAt").greaterThan(trailing30Days))
+            .aggregate(AggregateFunction.countDistinct(field("productId")).alias("uniqueProductViews"))
+            .execute()
+        // [END stages_expressions_example]
+        println(snapshot)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/where
+    fun createWhereData() {
+        // [START create_where_data]
+        db.collection("cities").document("SF").set(
+            mapOf(
+                "name" to "San Francisco",
+                "state" to "CA",
+                "country" to "USA",
+                "population" to 870000
+            )
+        )
+        db.collection("cities").document("LA").set(
+            mapOf(
+                "name" to "Los Angeles",
+                "state" to "CA",
+                "country" to "USA",
+                "population" to 3970000
+            )
+        )
+        db.collection("cities").document("NY").set(
+            mapOf(
+                "name" to "New York",
+                "state" to "NY",
+                "country" to "USA",
+                "population" to 8530000
+            )
+        )
+        db.collection("cities").document("TOR").set(
+            mapOf(
+                "name" to "Toronto",
+                "state" to null,
+                "country" to "Canada",
+                "population" to 2930000
+            )
+        )
+        db.collection("cities").document("MEX").set(
+            mapOf(
+                "name" to "Mexico City",
+                "state" to null,
+                "country" to "Mexico",
+                "population" to 9200000
+            )
+        )
+        // [END create_where_data]
+    }
+
+    fun whereEqualityExample() {
+        // [START where_equality_example]
+        val cities = db.pipeline()
+            .collection("cities")
+            .where(field("state").equal(constant("CA")))
+            .execute()
+        // [END where_equality_example]
+        println(cities)
+    }
+
+    fun whereMultipleStagesExample() {
+        // [START where_multiple_stages]
+        val cities = db.pipeline()
+            .collection("cities")
+            .where(field("location.country").equal(constant("USA")))
+            .where(field("population").greaterThan(500000))
+            .execute()
+        // [END where_multiple_stages]
+        println(cities)
+    }
+
+    fun whereComplexExample() {
+        // [START where_complex]
+        val cities = db.pipeline()
+            .collection("cities")
+            .where(
+                Expression.or(
+                    field("name").like("San%"),
+                    Expression.and(
+                        field("location.state").charLength().greaterThan(7),
+                        field("location.country").equal(constant("USA"))
+                    )
+                )
+            ).execute()
+        // [END where_complex]
+        println(cities)
+    }
+
+    fun whereStageOrderExample() {
+        // [START where_stage_order]
+        val cities = db.pipeline()
+            .collection("cities")
+            .limit(10)
+            .where(field("location.country").equal(constant("USA")))
+            .execute()
+        // [END where_stage_order]
+        println(cities)
+    }
+
+    fun whereHavingExample() {
+        // [START where_having_example]
+        val cities = db.pipeline()
+            .collection("cities")
+            .aggregate(
+                AggregateStage
+                    .withAccumulators(
+                        AggregateFunction.sum(field("population")).alias("totalPopulation")
+                    )
+                    .withGroups(field("location.state"))
+            )
+            .where(field("totalPopulation").greaterThan(10000000))
+            .execute()
+        // [END where_having_example]
+        println(cities)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/unnest
+    fun unnestSyntaxExample() {
+        // [START unnest_syntax]
+        val userScore = db.pipeline()
+            .collection("users")
+            .unnest(field("scores").alias("userScore"), UnnestOptions().withIndexField("attempt"))
+            .execute()
+        // [END unnest_syntax]
+        println(userScore)
+    }
+
+    fun unnestAliasIndexDataExample() {
+        // [START unnest_alias_index_data]
+        db.collection("users").add(mapOf("name" to "foo", "scores" to listOf(5, 4), "userScore" to 0))
+        db.collection("users").add(mapOf("name" to "bar", "scores" to listOf(1, 3), "attempt" to 5))
+        // [END unnest_alias_index_data]
+    }
+
+    fun unnestAliasIndexExample() {
+        // [START unnest_alias_index]
+        val userScore = db.pipeline()
+            .collection("users")
+            .unnest(field("scores").alias("userScore"), UnnestOptions().withIndexField("attempt"))
+            .execute()
+        // [END unnest_alias_index]
+        println(userScore)
+    }
+
+    fun unnestNonArrayDataExample() {
+        // [START unnest_nonarray_data]
+        db.collection("users").add(mapOf("name" to "foo", "scores" to 1))
+        db.collection("users").add(mapOf("name" to "bar", "scores" to null))
+        db.collection("users").add(mapOf("name" to "qux", "scores" to mapOf("backupScores" to 1)))
+        // [END unnest_nonarray_data]
+    }
+
+    fun unnestNonArrayExample() {
+        // [START unnest_nonarray]
+        val userScore = db.pipeline()
+            .collection("users")
+            .unnest(field("scores").alias("userScore"), UnnestOptions().withIndexField("attempt"))
+            .execute()
+        // [END unnest_nonarray]
+        println(userScore)
+    }
+
+    fun unnestEmptyArrayDataExample() {
+        // [START unnest_empty_array_data]
+        db.collection("users").add(mapOf("name" to "foo", "scores" to listOf(5, 4)))
+        db.collection("users").add(mapOf("name" to "bar", "scores" to emptyList<Int>()))
+        // [END unnest_empty_array_data]
+    }
+
+    fun unnestEmptyArrayExample() {
+        // [START unnest_empty_array]
+        val userScore = db.pipeline()
+            .collection("users")
+            .unnest(field("scores").alias("userScore"), UnnestOptions().withIndexField("attempt"))
+            .execute()
+        // [END unnest_empty_array]
+        println(userScore)
+    }
+
+    fun unnestPreserveEmptyArrayExample() {
+        // [START unnest_preserve_empty_array]
+        val userScore = db.pipeline()
+            .collection("users")
+            .unnest(
+                Expression.conditional(
+                    field("scores").equal(Expression.array()),
+                    Expression.array(field("scores")),
+                    field("scores")
+                ).alias("userScore"),
+                UnnestOptions().withIndexField("attempt")
+            )
+            .execute()
+        // [END unnest_preserve_empty_array]
+        println(userScore)
+    }
+
+    fun unnestNestedDataExample() {
+        // [START unnest_nested_data]
+        db.collection("users").add(
+            mapOf(
+                "name" to "foo",
+                "record" to listOf(
+                    mapOf(
+                        "scores" to listOf(5, 4),
+                        "avg" to 4.5
+                    ),
+                    mapOf(
+                        "scores" to listOf(1, 3),
+                        "old_avg" to 2
+                    )
+                )
+            )
+        )
+        // [END unnest_nested_data]
+    }
+
+    fun unnestNestedExample() {
+        // [START unnest_nested]
+        val userScore = db.pipeline()
+            .collection("users")
+            .unnest(field("record").alias("record"))
+            .unnest(field("record.scores").alias("userScore"), UnnestOptions().withIndexField("attempt"))
+            .execute()
+        // [END unnest_nested]
+        println(userScore)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/sample
+    fun sampleSyntaxExample() {
+        // [START sample_syntax]
+        var sampled = db.pipeline()
+            .database()
+            .sample(50)
+            .execute()
+
+        sampled = db.pipeline()
+            .database()
+            .sample(SampleStage.withPercentage(0.5))
+            .execute()
+        // [END sample_syntax]
+        println(sampled)
+    }
+
+    fun sampleDocumentsDataExample() {
+        // [START sample_documents_data]
+        db.collection("cities").document("SF").set(mapOf("name" to "San Francisco", "state" to "California"))
+        db.collection("cities").document("NYC").set(mapOf("name" to "New York City", "state" to "New York"))
+        db.collection("cities").document("CHI").set(mapOf("name" to "Chicago", "state" to "Illinois"))
+        // [END sample_documents_data]
+    }
+
+    fun sampleDocumentsExample() {
+        // [START sample_documents]
+        val sampled = db.pipeline()
+            .collection("cities")
+            .sample(1)
+            .execute()
+        // [END sample_documents]
+        println(sampled)
+    }
+
+    fun sampleAllDocumentsExample() {
+        // [START sample_all_documents]
+        val sampled = db.pipeline()
+            .collection("cities")
+            .sample(5)
+            .execute()
+        // [END sample_all_documents]
+        println(sampled)
+    }
+
+    fun samplePercentageDataExample() {
+        // [START sample_percentage_data]
+        db.collection("cities").document("SF").set(mapOf("name" to "San Francsico", "state" to "California"))
+        db.collection("cities").document("NYC").set(mapOf("name" to "New York City", "state" to "New York"))
+        db.collection("cities").document("CHI").set(mapOf("name" to "Chicago", "state" to "Illinois"))
+        db.collection("cities").document("ATL").set(mapOf("name" to "Atlanta", "state" to "Georgia"))
+        // [END sample_percentage_data]
+    }
+
+    fun samplePercentageExample() {
+        // [START sample_percentage]
+        val sampled = db.pipeline()
+            .collection("cities")
+            .sample(SampleStage.withPercentage(0.5))
+            .execute()
+        // [END sample_percentage]
+        println(sampled)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/sort
+    fun sortSyntaxExample() {
+        // [START sort_syntax]
+        val results = db.pipeline()
+            .collection("cities")
+            .sort(field("population").ascending())
+            .execute()
+        // [END sort_syntax]
+        println(results)
+    }
+
+    fun sortSyntaxExample2() {
+        // [START sort_syntax_2]
+        val results = db.pipeline()
+            .collection("cities")
+            .sort(field("name").charLength().ascending())
+            .execute()
+        // [END sort_syntax_2]
+        println(results)
+    }
+
+    fun sortDocumentIDExample() {
+        // [START sort_document_id]
+        val results = db.pipeline()
+            .collection("cities")
+            .sort(field("country").ascending(), field("__name__").ascending())
+            .execute()
+        // [END sort_document_id]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/select
+    fun selectSyntaxExample() {
+        // [START select_syntax]
+        val names = db.pipeline()
+            .collection("cities")
+            .select(
+                field("name").stringConcat(", ", field("location.country")).alias("name"),
+                field("population")
+            ).execute()
+        // [END select_syntax]
+        println(names)
+    }
+
+    fun selectPositionDataExample() {
+        // [START select_position_data]
+        db.collection("cities").document("SF").set(
+            mapOf(
+                "name" to "San Francisco",
+                "population" to 800000,
+                "location" to mapOf("country" to "USA", "state" to "California")
+            )
+        )
+        db.collection("cities").document("TO").set(
+            mapOf(
+                "name" to "Toronto",
+                "population" to 3000000,
+                "location" to mapOf("country" to "Canada", "province" to "Ontario")
+            )
+        )
+        // [END select_position_data]
+    }
+
+    fun selectPositionExample() {
+        // [START select_position]
+        val names = db.pipeline()
+            .collection("cities")
+            .where(field("location.country").equal(constant("Canada")))
+            .select(
+                field("name").stringConcat(", ", field("location.country")).alias("name"),
+                field("population")
+            )
+            .execute()
+        // [END select_position]
+        println(names)
+    }
+
+    fun selectBadPositionExample() {
+        // [START select_bad_position]
+        val names = db.pipeline()
+            .collection("cities")
+            .select(
+                field("name").stringConcat(", ", field("location.country")).alias("name"),
+                field("population")
+            )
+            .where(field("location.country").equal(constant("Canada")))
+            .execute()
+        // [END select_bad_position]
+        println(names)
+    }
+
+    fun selectNestedDataExample() {
+        // [START select_nested_data]
+        db.collection("cities").document("SF").set(
+            mapOf(
+                "name" to "San Francisco",
+                "population" to 800000,
+                "location" to mapOf("country" to "USA", "state" to "California"),
+                "landmarks" to listOf("Golden Gate Bridge", "Alcatraz")
+            )
+        )
+        db.collection("cities").document("TO").set(
+            mapOf(
+                "name" to "Toronto",
+                "population" to 3000000,
+                "province" to "ON",
+                "location" to mapOf("country" to "Canada", "province" to "Ontario"),
+                "landmarks" to listOf("CN Tower", "Casa Loma")
+            )
+        )
+        db.collection("cities").document("AT").set(mapOf("name" to "Atlantis", "population" to null))
+        // [END select_nested_data]
+    }
+
+    fun selectNestedExample() {
+        // [START select_nested]
+        val locations = db.pipeline()
+            .collection("cities")
+            .select(
+                field("name").alias("city"),
+                field("location.country").alias("country"),
+                field("landmarks").arrayGet(0).alias("topLandmark")
+            ).execute()
+        // [END select_nested]
+        println(locations)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/remove_fields
+    fun removeFieldsSyntaxExample() {
+        // [START remove_fields_syntax]
+        val results = db.pipeline()
+            .collection("cities")
+            .removeFields("population", "location.state")
+            .execute()
+        // [END remove_fields_syntax]
+        println(results)
+    }
+
+    fun removeFieldsNestedDataExample() {
+        // [START remove_fields_nested_data]
+        db.collection("cities").document("SF").set(
+            mapOf(
+                "name" to "San Francisco",
+                "location" to mapOf("country" to "USA", "state" to "California")
+            )
+        )
+        db.collection("cities").document("TO").set(
+            mapOf(
+                "name" to "Toronto",
+                "location" to mapOf("country" to "Canada", "province" to "Ontario")
+            )
+        )
+        // [END remove_fields_nested_data]
+    }
+
+    fun removeFieldsNestedExample() {
+        // [START remove_fields_nested]
+        val results = db.pipeline()
+            .collection("cities")
+            .removeFields("location.state")
+            .execute()
+        // [END remove_fields_nested]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/limit
+    fun limitSyntaxExample() {
+        // [START limit_syntax]
+        val results = db.pipeline()
+            .collection("cities")
+            .limit(10)
+            .execute()
+        // [END limit_syntax]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/find_nearest
+    fun findNearestSyntaxExample() {
+        // [START find_nearest_syntax]
+        val results = db.pipeline()
+            .collection("cities")
+            .findNearest(
+                "embedding",
+                FieldValue.vector(doubleArrayOf(1.5, 2.345)),
+                FindNearestStage.DistanceMeasure.EUCLIDEAN
+            )
+            .execute()
+        // [END find_nearest_syntax]
+        println(results)
+    }
+
+    fun findNearestLimitExample() {
+        // [START find_nearest_limit]
+        val results = db.pipeline()
+            .collection("cities")
+            .findNearest(
+                "embedding",
+                FieldValue.vector(doubleArrayOf(1.5, 2.345)),
+                FindNearestStage.DistanceMeasure.EUCLIDEAN
+            )
+            .execute()
+        // [END find_nearest_limit]
+        println(results)
+    }
+
+    fun findNearestDistanceDataExample() {
+        // [START find_nearest_distance_data]
+        db.collection("cities").document("SF").set(mapOf("name" to "San Francisco", "embedding" to listOf(1.0, -1.0)))
+        db.collection("cities").document("TO").set(mapOf("name" to "Toronto", "embedding" to listOf(5.0, -10.0)))
+        db.collection("cities").document("AT").set(mapOf("name" to "Atlantis", "embedding" to listOf(2.0, -4.0)))
+        // [END find_nearest_distance_data]
+    }
+
+    fun findNearestDistanceExample() {
+        // [START find_nearest_distance]
+        val results = db.pipeline()
+            .collection("cities")
+            .findNearest(
+                "embedding",
+                FieldValue.vector(doubleArrayOf(1.3, 2.345)),
+                FindNearestStage.DistanceMeasure.EUCLIDEAN
+            )
+            .execute()
+        // [END find_nearest_distance]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/offset
+    fun offsetSyntaxExample() {
+        // [START offset_syntax]
+        val results = db.pipeline()
+            .collection("cities")
+            .offset(10)
+            .execute()
+        // [END offset_syntax]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/add_fields
+    fun addFieldsSyntaxExample() {
+        // [START add_fields_syntax]
+        val results = db.pipeline()
+            .collection("users")
+            .addFields(field("firstName").stringConcat(" ", field("lastName")).alias("fullName"))
+            .execute()
+        // [END add_fields_syntax]
+        println(results)
+    }
+
+    fun addFieldsOverlapExample() {
+        // [START add_fields_overlap]
+        val results = db.pipeline()
+            .collection("users")
+            .addFields(field("age").abs().alias("age"))
+            .addFields(field("age").add(10).alias("age"))
+            .execute()
+        // [END add_fields_overlap]
+        println(results)
+    }
+
+    fun addFieldsNestingExample() {
+        // [START add_fields_nesting]
+        val results = db.pipeline()
+            .collection("users")
+            .addFields(field("address.city").toLower().alias("address.city"))
+            .execute()
+        // [END add_fields_nesting]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/input/collection
+    fun collectionInputSyntaxExample() {
+        // [START collection_input_syntax]
+        val results = db.pipeline()
+            .collection("cities/SF/departments")
+            .execute()
+        // [END collection_input_syntax]
+        println(results)
+    }
+
+    fun collectionInputExampleData() {
+        // [START collection_input_data]
+        db.collection("cities").document("SF").set(mapOf("name" to "San Francsico", "state" to "California"))
+        db.collection("cities").document("NYC").set(mapOf("name" to "New York City", "state" to "New York"))
+        db.collection("cities").document("CHI").set(mapOf("name" to "Chicago", "state" to "Illinois"))
+        db.collection("states").document("CA").set(mapOf("name" to "California"))
+        // [END collection_input_data]
+    }
+
+    fun collectionInputExample() {
+        // [START collection_input]
+        val results = db.pipeline()
+            .collection("cities")
+            .sort(field("name").ascending())
+            .execute()
+        // [END collection_input]
+        println(results)
+    }
+
+    fun subcollectionInputExampleData() {
+        // [START subcollection_input_data]
+        db.collection("cities/SF/departments").document("building")
+            .set(mapOf("name" to "SF Building Deparment", "employees" to 750))
+        db.collection("cities/NY/departments").document("building")
+            .set(mapOf("name" to "NY Building Deparment", "employees" to 1000))
+        db.collection("cities/CHI/departments").document("building")
+            .set(mapOf("name" to "CHI Building Deparment", "employees" to 900))
+        db.collection("cities/NY/departments").document("finance")
+            .set(mapOf("name" to "NY Finance Deparment", "employees" to 1200))
+        // [END subcollection_input_data]
+    }
+
+    fun subcollectionInputExample() {
+        // [START subcollection_input]
+        val results = db.pipeline()
+            .collection("cities/NY/departments")
+            .sort(field("employees").ascending())
+            .execute()
+        // [END subcollection_input]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/input/collection_group
+    fun collectionGroupInputSyntaxExample() {
+        // [START collection_group_input_syntax]
+        val results = db.pipeline()
+            .collectionGroup("departments")
+            .execute()
+        // [END collection_group_input_syntax]
+        println(results)
+    }
+
+    fun collectionGroupInputExampleData() {
+        // [START collection_group_data]
+        db.collection("cities/SF/departments").document("building").set(mapOf("name" to "SF Building Deparment", "employees" to 750))
+        db.collection("cities/NY/departments").document("building").set(mapOf("name" to "NY Building Deparment", "employees" to 1000))
+        db.collection("cities/CHI/departments").document("building").set(mapOf("name" to "CHI Building Deparment", "employees" to 900))
+        db.collection("cities/NY/departments").document("finance").set(mapOf("name" to "NY Finance Deparment", "employees" to 1200))
+        // [END collection_group_data]
+    }
+
+    fun collectionGroupInputExample() {
+        // [START collection_group_input]
+        val results = db.pipeline()
+            .collectionGroup("departments")
+            .sort(field("employees").ascending())
+            .execute()
+        // [END collection_group_input]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/input/database
+    fun databaseInputSyntaxExample() {
+        // [START database_syntax]
+        val results = db.pipeline()
+            .database()
+            .execute()
+        // [END database_syntax]
+        println(results)
+    }
+
+    fun databaseInputSyntaxExampleData() {
+        // [START database_input_data]
+        db.collection("cities").document("SF").set(mapOf("name" to "San Francsico", "state" to "California", "population" to 800000))
+        db.collection("states").document("CA").set(mapOf("name" to "California", "population" to 39000000))
+        db.collection("countries").document("USA").set(mapOf("name" to "United States of America", "population" to 340000000))
+        // [END database_input_data]
+    }
+
+    fun databaseInputExample() {
+        // [START database_input]
+        val results = db.pipeline()
+            .database()
+            .sort(field("population").ascending())
+            .execute()
+        // [END database_input]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/input/documents
+    fun documentInputSyntaxExample() {
+        // [START document_input_syntax]
+        val results = db.pipeline()
+            .documents(
+                db.collection("cities").document("SF"),
+                db.collection("cities").document("NY")
+            )
+            .execute()
+        // [END document_input_syntax]
+        println(results)
+    }
+
+    fun documentInputExampleData() {
+        // [START document_input_data]
+        db.collection("cities").document("SF").set(mapOf("name" to "San Francsico", "state" to "California"))
+        db.collection("cities").document("NYC").set(mapOf("name" to "New York City", "state" to "New York"))
+        db.collection("cities").document("CHI").set(mapOf("name" to "Chicago", "state" to "Illinois"))
+        // [END document_input_data]
+    }
+
+    fun documentInputExample() {
+        // [START document_input]
+        val results = db.pipeline()
+            .documents(
+                db.collection("cities").document("SF"),
+                db.collection("cities").document("NYC")
+            )
+            .sort(field("name").ascending())
+            .execute()
+        // [END document_input]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/union
+    fun unionSyntaxExample() {
+        // [START union_syntax]
+        val results = db.pipeline()
+            .collection("cities/SF/restaurants")
+            .union(db.pipeline().collection("cities/NYC/restaurants"))
+            .execute()
+        // [END union_syntax]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/aggregate
+    fun aggregateSyntaxExample() {
+        // [START aggregate_syntax]
+        val cities = db.pipeline()
+            .collection("cities")
+            .aggregate(
+                AggregateFunction.countAll().alias("total"),
+                AggregateFunction.average("population").alias("averagePopulation")
+            ).execute()
+        // [END aggregate_syntax]
+        println(cities)
+    }
+
+    fun aggregateGroupSyntax() {
+        // [START aggregate_group_syntax]
+        val result = db.pipeline()
+            .collectionGroup("cities")
+            .aggregate(
+                AggregateStage
+                    .withAccumulators(
+                        AggregateFunction.countAll().alias("cities"),
+                        AggregateFunction.sum(field("population")).alias("totalPopulation")
+                    )
+                    .withGroups(field("location.state").alias("state"))
+            )
+            .execute()
+        // [END aggregate_group_syntax]
+        println(result)
+    }
+
+    fun aggregateExampleData() {
+        // [START aggregate_data]
+        db.collection("cities").document("SF").set(mapOf("name" to "San Francisco", "state" to "CA", "country" to "USA", "population" to 870000))
+        db.collection("cities").document("LA").set(mapOf("name" to "Los Angeles", "state" to "CA", "country" to "USA", "population" to 3970000))
+        db.collection("cities").document("NY").set(mapOf("name" to "New York", "state" to "NY", "country" to "USA", "population" to 8530000))
+        db.collection("cities").document("TOR").set(mapOf("name" to "Toronto", "state" to null, "country" to "Canada", "population" to 2930000))
+        db.collection("cities").document("MEX").set(mapOf("name" to "Mexico City", "state" to null, "country" to "Mexico", "population" to 9200000))
+        // [END aggregate_data]
+    }
+
+    fun aggregateWithoutGroupExample() {
+        // [START aggregate_without_group]
+        val cities = db.pipeline()
+            .collection("cities")
+            .aggregate(
+                AggregateFunction.countAll().alias("total"),
+                AggregateFunction.average("population").alias("averagePopulation")
+            ).execute()
+        // [END aggregate_without_group]
+        println(cities)
+    }
+
+    fun aggregateGroupExample() {
+        // [START aggregate_group_example]
+        val cities = db.pipeline()
+            .collection("cities")
+            .aggregate(
+                AggregateStage
+                    .withAccumulators(
+                        AggregateFunction.countAll().alias("numberOfCities"),
+                        AggregateFunction.maximum("population").alias("maxPopulation")
+                    )
+                    .withGroups(field("country"), field("state"))
+            )
+            .execute()
+        // [END aggregate_group_example]
+        println(cities)
+    }
+
+    fun aggregateGroupComplexExample() {
+        // [START aggregate_group_complex]
+        val cities = db.pipeline()
+            .collection("cities")
+            .aggregate(
+                AggregateStage
+                    .withAccumulators(
+                        AggregateFunction.sum("population").alias("totalPopulation")
+                    )
+                    .withGroups(field("state").equal(Expression.nullValue()).alias("stateIsNull"))
+            )
+            .execute()
+        // [END aggregate_group_complex]
+        println(cities)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/distinct
+    fun distinctSyntaxExample() {
+        // [START distinct_syntax]
+        var cities = db.pipeline()
+            .collection("cities")
+            .distinct("country")
+            .execute()
+
+        cities = db.pipeline()
+            .collection("cities")
+            .distinct(
+                field("state").toLower().alias("normalizedState"),
+                field("country")
+            )
+            .execute()
+        // [END distinct_syntax]
+        println(cities)
+    }
+
+    fun distinctExampleData() {
+        // [START distinct_data]
+        db.collection("cities").document("SF").set(mapOf("name" to "San Francisco", "state" to "CA", "country" to "USA"))
+        db.collection("cities").document("LA").set(mapOf("name" to "Los Angeles", "state" to "CA", "country" to "USA"))
+        db.collection("cities").document("NY").set(mapOf("name" to "New York", "state" to "NY", "country" to "USA"))
+        db.collection("cities").document("TOR").set(mapOf("name" to "Toronto", "state" to null, "country" to "Canada"))
+        db.collection("cities").document("MEX").set(mapOf("name" to "Mexico City", "state" to null, "country" to "Mexico"))
+        // [END distinct_data]
+    }
+
+    fun distinctExample() {
+        // [START distinct_example]
+        val cities = db.pipeline()
+            .collection("cities")
+            .distinct("country")
+            .execute()
+        // [END distinct_example]
+        println(cities)
+    }
+
+    fun distinctExpressionsExample() {
+        // [START distinct_expressions]
+        val cities = db.pipeline()
+            .collection("cities")
+            .distinct(
+                field("state").toLower().alias("normalizedState"),
+                field("country")
+            )
+            .execute()
+        // [END distinct_expressions]
+        println(cities)
+    }
+
 }

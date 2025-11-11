@@ -60,6 +60,7 @@ import com.google.firebase.firestore.PipelineSource;
 import com.google.firebase.firestore.pipeline.AggregateFunction;
 import com.google.firebase.firestore.pipeline.AggregateStage;
 import com.google.firebase.firestore.pipeline.Expression;
+import com.google.firebase.firestore.pipeline.FindNearestStage;
 import com.google.firebase.firestore.pipeline.SampleStage;
 import com.google.firebase.firestore.pipeline.UnnestOptions;
 
@@ -2954,4 +2955,1013 @@ public class DocSnippets {
         // [END vector_length]
         System.out.println(result);
     }
+
+    void stagesExpressionsExample() {
+        // [START stages_expressions_example]
+        Expression trailing30Days = constant(Timestamp.now().toDate().getTime())
+                .unixMillisToTimestamp()
+                .timestampSubtract("day", 30);
+        Task<Pipeline.Snapshot> snapshot = db.pipeline()
+                .collection("productViews")
+                .where(field("viewedAt").greaterThan(trailing30Days))
+                .aggregate(AggregateFunction.countDistinct(field("productId")).alias("uniqueProductViews"))
+                .execute();
+        // [END stages_expressions_example]
+        System.out.println(snapshot);
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/where
+    void createWhereData() {
+        // [START create_where_data]
+        db.collection("cities").document("SF").set(
+                new HashMap<String, Object>() {{
+                    put("name", "San Francisco");
+                    put("state", "CA");
+                    put("country", "USA");
+                    put("population", 870000);
+                }}
+        );
+        db.collection("cities").document("LA").set(
+                new HashMap<String, Object>() {{
+                    put("name", "Los Angeles");
+                    put("state", "CA");
+                    put("country", "USA");
+                    put("population", 3970000);
+                }}
+        );
+        db.collection("cities").document("NY").set(
+                new HashMap<String, Object>() {{
+                    put("name", "New York");
+                    put("state", "NY");
+                    put("country", "USA");
+                    put("population", 8530000);
+                }}
+        );
+        db.collection("cities").document("TOR").set(
+                new HashMap<String, Object>() {{
+                    put("name", "Toronto");
+                    put("state", null);
+                    put("country", "Canada");
+                    put("population", 2930000);
+                }}
+        );
+        db.collection("cities").document("MEX").set(
+                new HashMap<String, Object>() {{
+                    put("name", "Mexico City");
+                    put("state", null);
+                    put("country", "Mexico");
+                    put("population", 9200000);
+                }}
+        );
+        // [END create_where_data]
+    }
+
+    void whereEqualityExample() {
+        // [START where_equality_example]
+        Task<Pipeline.Snapshot> cities = db.pipeline()
+                .collection("cities")
+                .where(field("state").equal(constant("CA")))
+                .execute();
+        // [END where_equality_example]
+        System.out.println(cities);
+    }
+
+    void whereMultipleStagesExample() {
+        // [START where_multiple_stages]
+        Task<Pipeline.Snapshot> cities = db.pipeline()
+                .collection("cities")
+                .where(field("location.country").equal(constant("USA")))
+                .where(field("population").greaterThan(500000))
+                .execute();
+        // [END where_multiple_stages]
+        System.out.println(cities);
+    }
+
+    void whereComplexExample() {
+        // [START where_complex]
+        Task<Pipeline.Snapshot> cities = db.pipeline()
+                .collection("cities")
+                .where(
+                        Expression.or(
+                                field("name").like("San%"),
+                                Expression.and(
+                                        field("location.state").charLength().greaterThan(7),
+                                        field("location.country").equal(constant("USA"))
+                                )
+                        )
+                ).execute();
+        // [END where_complex]
+        System.out.println(cities);
+    }
+
+    void whereStageOrderExample() {
+        // [START where_stage_order]
+        Task<Pipeline.Snapshot> cities = db.pipeline()
+                .collection("cities")
+                .limit(10)
+                .where(field("location.country").equal(constant("USA")))
+                .execute();
+        // [END where_stage_order]
+        System.out.println(cities);
+    }
+
+    void whereHavingExample() {
+        // [START where_having_example]
+        Task<Pipeline.Snapshot> cities = db.pipeline()
+                .collection("cities")
+                .aggregate(AggregateStage
+                        .withAccumulators(
+                                AggregateFunction.sum(field("population")).alias("totalPopulation"))
+                        .withGroups(field("location.state")))
+                .where(field("totalPopulation").greaterThan(10000000))
+                .execute();
+        // [END where_having_example]
+        System.out.println(cities);
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/unnest
+    void unnestSyntaxExample() {
+        // [START unnest_syntax]
+        Task<Pipeline.Snapshot> userScore = db.pipeline()
+                .collection("users")
+                .unnest(field("scores").alias("userScore"), new UnnestOptions().withIndexField("attempt"))
+                .execute();
+        // [END unnest_syntax]
+        System.out.println(userScore);
+    }
+
+    void unnestAliasIndexDataExample() {
+        // [START unnest_alias_index_data]
+        db.collection("users").add(new HashMap<String, Object>() {{
+            put("name", "foo");
+            put("scores", Arrays.asList(5, 4));
+            put("userScore", 0);
+        }});
+        db.collection("users").add(new HashMap<String, Object>() {{
+            put("name", "bar");
+            put("scores", Arrays.asList(1, 3));
+            put("attempt", 5);
+        }});
+        // [END unnest_alias_index_data]
+    }
+
+    void unnestAliasIndexExample() {
+        // [START unnest_alias_index]
+        Task<Pipeline.Snapshot> userScore = db.pipeline()
+                .collection("users")
+                .unnest(field("scores").alias("userScore"), new UnnestOptions().withIndexField("attempt"))
+                .execute();
+        // [END unnest_alias_index]
+        System.out.println(userScore);
+    }
+
+    void unnestNonArrayDataExample() {
+        // [START unnest_nonarray_data]
+        db.collection("users").add(new HashMap<String, Object>() {{
+            put("name", "foo");
+            put("scores", 1);
+        }});
+        db.collection("users").add(new HashMap<String, Object>() {{
+            put("name", "bar");
+            put("scores", null);
+        }});
+        db.collection("users").add(new HashMap<String, Object>() {{
+            put("name", "qux");
+            put("scores", new HashMap<String, Object>() {{
+                put("backupScores", 1);
+            }});
+        }});
+        // [END unnest_nonarray_data]
+    }
+
+    void unnestNonArrayExample() {
+        // [START unnest_nonarray]
+        Task<Pipeline.Snapshot> userScore = db.pipeline()
+                .collection("users")
+                .unnest(field("scores").alias("userScore"), new UnnestOptions().withIndexField("attempt"))
+                .execute();
+        // [END unnest_nonarray]
+        System.out.println(userScore);
+    }
+
+    void unnestEmptyArrayDataExample() {
+        // [START unnest_empty_array_data]
+        db.collection("users").add(new HashMap<String, Object>() {{
+            put("name", "foo");
+            put("scores", Arrays.asList(5, 4));
+        }});
+        db.collection("users").add(new HashMap<String, Object>() {{
+            put("name", "bar");
+            put("scores", new ArrayList<>());
+        }});
+        // [END unnest_empty_array_data]
+    }
+
+    void unnestEmptyArrayExample() {
+        // [START unnest_empty_array]
+        Task<Pipeline.Snapshot> userScore = db.pipeline()
+                .collection("users")
+                .unnest(field("scores").alias("userScore"), new UnnestOptions().withIndexField("attempt"))
+                .execute();
+        // [END unnest_empty_array]
+        System.out.println(userScore);
+    }
+
+    void unnestPreserveEmptyArrayExample() {
+        // [START unnest_preserve_empty_array]
+        Task<Pipeline.Snapshot> userScore = db.pipeline()
+                .collection("users")
+                .unnest(
+                        Expression.conditional(
+                                field("scores").equal(Expression.array()),
+                                Expression.array(field("scores")),
+                                field("scores")
+                        ).alias("userScore"),
+                        new UnnestOptions().withIndexField("attempt"))
+                .execute();
+        // [END unnest_preserve_empty_array]
+        System.out.println(userScore);
+    }
+
+    void unnestNestedDataExample() {
+        // [START unnest_nested_data]
+        db.collection("users").add(new HashMap<String, Object>() {{
+            put("name", "foo");
+            put("record", Arrays.asList(
+                    new HashMap<String, Object>() {{
+                        put("scores", Arrays.asList(5, 4));
+                        put("avg", 4.5);
+                    }},
+                    new HashMap<String, Object>() {{
+                        put("scores", Arrays.asList(1, 3));
+                        put("old_avg", 2);
+                    }}
+            ));
+        }});
+        // [END unnest_nested_data]
+    }
+
+    void unnestNestedExample() {
+        // [START unnest_nested]
+        Task<Pipeline.Snapshot> userScore = db.pipeline()
+                .collection("users")
+                .unnest(field("record").alias("record"))
+                .unnest(field("record.scores").alias("userScore"), new UnnestOptions().withIndexField("attempt"))
+                .execute();
+        // [END unnest_nested]
+        System.out.println(userScore);
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/sample
+    void sampleSyntaxExample() {
+        // [START sample_syntax]
+        Task<Pipeline.Snapshot> sampled;
+        sampled = db.pipeline()
+                .database()
+                .sample(50)
+                .execute();
+
+        sampled = db.pipeline()
+                .database()
+                .sample(SampleStage.withPercentage(0.5))
+                .execute();
+        // [END sample_syntax]
+        System.out.println(sampled);
+    }
+
+    void sampleDocumentsDataExample() {
+        // [START sample_documents_data]
+        db.collection("cities").document("SF").set(new HashMap<String, Object>() {{
+            put("name", "San Francisco");
+            put("state", "California");
+        }});
+        db.collection("cities").document("NYC").set(new HashMap<String, Object>() {{
+            put("name", "New York City");
+            put("state", "New York");
+        }});
+        db.collection("cities").document("CHI").set(new HashMap<String, Object>() {{
+            put("name", "Chicago");
+            put("state", "Illinois");
+        }});
+        // [END sample_documents_data]
+    }
+
+    void sampleDocumentsExample() {
+        // [START sample_documents]
+        Task<Pipeline.Snapshot> sampled = db.pipeline()
+                .collection("cities")
+                .sample(1)
+                .execute();
+        // [END sample_documents]
+        System.out.println(sampled);
+    }
+
+    void sampleAllDocumentsExample() {
+        // [START sample_all_documents]
+        Task<Pipeline.Snapshot> sampled = db.pipeline()
+                .collection("cities")
+                .sample(5)
+                .execute();
+        // [END sample_all_documents]
+        System.out.println(sampled);
+    }
+
+    void samplePercentageDataExample() {
+        // [START sample_percentage_data]
+        db.collection("cities").document("SF").set(new HashMap<String, Object>() {{
+            put("name", "San Francsico");
+            put("state", "California");
+        }});
+        db.collection("cities").document("NYC").set(new HashMap<String, Object>() {{
+            put("name", "New York City");
+            put("state", "New York");
+        }});
+        db.collection("cities").document("CHI").set(new HashMap<String, Object>() {{
+            put("name", "Chicago");
+            put("state", "Illinois");
+        }});
+        db.collection("cities").document("ATL").set(new HashMap<String, Object>() {{
+            put("name", "Atlanta");
+            put("state", "Georgia");
+        }});
+        // [END sample_percentage_data]
+    }
+
+    void samplePercentageExample() {
+        // [START sample_percentage]
+        Task<Pipeline.Snapshot> sampled = db.pipeline()
+                .collection("cities")
+                .sample(SampleStage.withPercentage(0.5))
+                .execute();
+        // [END sample_percentage]
+        System.out.println(sampled);
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/sort
+    void sortSyntaxExample() {
+        // [START sort_syntax]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("cities")
+                .sort(field("population").ascending())
+                .execute();
+        // [END sort_syntax]
+        System.out.println(results);
+    }
+
+    void sortSyntaxExample2() {
+        // [START sort_syntax_2]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("cities")
+                .sort(field("name").charLength().ascending())
+                .execute();
+        // [END sort_syntax_2]
+        System.out.println(results);
+    }
+
+    void sortDocumentIDExample() {
+        // [START sort_document_id]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("cities")
+                .sort(field("country").ascending(), field("__name__").ascending())
+                .execute();
+        // [END sort_document_id]
+        System.out.println(results);
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/select
+    void selectSyntaxExample() {
+        // [START select_syntax]
+        Task<Pipeline.Snapshot> names = db.pipeline()
+                .collection("cities")
+                .select(
+                        field("name").stringConcat(", ", field("location.country")).alias("name"),
+                        field("population")
+                ).execute();
+        // [END select_syntax]
+        System.out.println(names);
+    }
+
+    void selectPositionDataExample() {
+        // [START select_position_data]
+        db.collection("cities").document("SF").set(new HashMap<String, Object>() {{
+            put("name", "San Francisco");
+            put("population", 800000);
+            put("location", new HashMap<String, Object>() {{
+                put("country", "USA");
+                put("state", "California");
+            }});
+        }});
+        db.collection("cities").document("TO").set(new HashMap<String, Object>() {{
+            put("name", "Toronto");
+            put("population", 3000000);
+            put("location", new HashMap<String, Object>() {{
+                put("country", "Canada");
+                put("province", "Ontario");
+            }});
+        }});
+        // [END select_position_data]
+    }
+
+    void selectPositionExample() {
+        // [START select_position]
+        Task<Pipeline.Snapshot> names = db.pipeline()
+                .collection("cities")
+                .where(field("location.country").equal(constant("Canada")))
+                .select(
+                        field("name").stringConcat(", ", field("location.country")).alias("name"),
+                        field("population"))
+                .execute();
+        // [END select_position]
+        System.out.println(names);
+    }
+
+    void selectBadPositionExample() {
+        // [START select_bad_position]
+        Task<Pipeline.Snapshot> names = db.pipeline()
+                .collection("cities")
+                .select(
+                        field("name").stringConcat(", ", field("location.country")).alias("name"),
+                        field("population"))
+                .where(field("location.country").equal(constant("Canada")))
+                .execute();
+        // [END select_bad_position]
+        System.out.println(names);
+    }
+
+    void selectNestedDataExample() {
+        // [START select_nested_data]
+        db.collection("cities").document("SF").set(new HashMap<String, Object>() {{
+            put("name", "San Francisco");
+            put("population", 800000);
+            put("location", new HashMap<String, Object>() {{
+                put("country", "USA");
+                put("state", "California");
+            }});
+            put("landmarks", Arrays.asList("Golden Gate Bridge", "Alcatraz"));
+        }});
+        db.collection("cities").document("TO").set(new HashMap<String, Object>() {{
+            put("name", "Toronto");
+            put("population", 3000000);
+            put("province", "ON");
+            put("location", new HashMap<String, Object>() {{
+                put("country", "Canada");
+                put("province", "Ontario");
+            }});
+            put("landmarks", Arrays.asList("CN Tower", "Casa Loma"));
+        }});
+        db.collection("cities").document("AT").set(new HashMap<String, Object>() {{
+            put("name", "Atlantis");
+            put("population", null);
+        }});
+        // [END select_nested_data]
+    }
+
+    void selectNestedExample() {
+        // [START select_nested]
+        Task<Pipeline.Snapshot> locations = db.pipeline()
+                .collection("cities")
+                .select(
+                        field("name").alias("city"),
+                        field("location.country").alias("country"),
+                        field("landmarks").arrayGet(0).alias("topLandmark")
+                ).execute();
+        // [END select_nested]
+        System.out.println(locations);
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/remove_fields
+    void removeFieldsSyntaxExample() {
+        // [START remove_fields_syntax]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("cities")
+                .removeFields("population", "location.state")
+                .execute();
+        // [END remove_fields_syntax]
+        System.out.println(results);
+    }
+
+    void removeFieldsNestedDataExample() {
+        // [START remove_fields_nested_data]
+        db.collection("cities").document("SF").set(new HashMap<String, Object>() {{
+            put("name", "San Francisco");
+            put("location", new HashMap<String, Object>() {{
+                put("country", "USA");
+                put("state", "California");
+            }});
+        }});
+        db.collection("cities").document("TO").set(new HashMap<String, Object>() {{
+            put("name", "Toronto");
+            put("location", new HashMap<String, Object>() {{
+                put("country", "Canada");
+                put("province", "Ontario");
+            }});
+        }});
+        // [END remove_fields_nested_data]
+    }
+
+    void removeFieldsNestedExample() {
+        // [START remove_fields_nested]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("cities")
+                .removeFields("location.state")
+                .execute();
+        // [END remove_fields_nested]
+        System.out.println(results);
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/limit
+    void limitSyntaxExample() {
+        // [START limit_syntax]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("cities")
+                .limit(10)
+                .execute();
+        // [END limit_syntax]
+        System.out.println(results);
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/find_nearest
+    void findNearestSyntaxExample() {
+        // [START find_nearest_syntax]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("cities")
+                .findNearest(
+                    "embedding",
+                    new double[] {1.5, 2.345},
+                    FindNearestStage.DistanceMeasure.EUCLIDEAN
+                )
+                .execute();
+        // [END find_nearest_syntax]
+        System.out.println(results);
+    }
+
+    void findNearestLimitExample() {
+        // [START find_nearest_limit]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("cities")
+                .findNearest(
+                    "embedding",
+                    new double[] {1.5, 2.345},
+                    FindNearestStage.DistanceMeasure.EUCLIDEAN
+                )
+                .execute();
+        // [END find_nearest_limit]
+        System.out.println(results);
+    }
+
+    void findNearestDistanceDataExample() {
+        // [START find_nearest_distance_data]
+        db.collection("cities").document("SF").set(new HashMap<String, Object>() {{
+            put("name", "San Francisco");
+            put("embedding", Arrays.asList(1.0, -1.0));
+        }});
+        db.collection("cities").document("TO").set(new HashMap<String, Object>() {{
+            put("name", "Toronto");
+            put("embedding", Arrays.asList(5.0, -10.0));
+        }});
+        db.collection("cities").document("AT").set(new HashMap<String, Object>() {{
+            put("name", "Atlantis");
+            put("embedding", Arrays.asList(2.0, -4.0));
+        }});
+        // [END find_nearest_distance_data]
+    }
+
+    void findNearestDistanceExample() {
+        // [START find_nearest_distance]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("cities")
+                .findNearest(
+                    "embedding",
+                    new double[] {1.5, 2.345},
+                    FindNearestStage.DistanceMeasure.EUCLIDEAN
+                )
+                .execute();
+        // [END find_nearest_distance]
+        System.out.println(results);
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/offset
+    void offsetSyntaxExample() {
+        // [START offset_syntax]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("cities")
+                .offset(10)
+                .execute();
+        // [END offset_syntax]
+        System.out.println(results);
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/add_fields
+    void addFieldsSyntaxExample() {
+        // [START add_fields_syntax]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("users")
+                .addFields(field("firstName").stringConcat(" ", field("lastName")).alias("fullName"))
+                .execute();
+        // [END add_fields_syntax]
+        System.out.println(results);
+    }
+
+    void addFieldsOverlapExample() {
+        // [START add_fields_overlap]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("users")
+                .addFields(field("age").abs().alias("age"))
+                .addFields(field("age").add(10).alias("age"))
+                .execute();
+        // [END add_fields_overlap]
+        System.out.println(results);
+    }
+
+    void addFieldsNestingExample() {
+        // [START add_fields_nesting]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("users")
+                .addFields(field("address.city").toLower().alias("address.city"))
+                .execute();
+        // [END add_fields_nesting]
+        System.out.println(results);
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/input/collection
+    void collectionInputSyntaxExample() {
+        // [START collection_input_syntax]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("cities/SF/departments")
+                .execute();
+        // [END collection_input_syntax]
+        System.out.println(results);
+    }
+
+    void collectionInputExampleData() {
+        // [START collection_input_data]
+        db.collection("cities").document("SF").set(new HashMap<String, Object>() {{
+            put("name", "San Francsico");
+            put("state", "California");
+        }});
+        db.collection("cities").document("NYC").set(new HashMap<String, Object>() {{
+            put("name", "New York City");
+            put("state", "New York");
+        }});
+        db.collection("cities").document("CHI").set(new HashMap<String, Object>() {{
+            put("name", "Chicago");
+            put("state", "Illinois");
+        }});
+        db.collection("states").document("CA").set(new HashMap<String, Object>() {{
+            put("name", "California");
+        }});
+        // [END collection_input_data]
+    }
+
+    void collectionInputExample() {
+        // [START collection_input]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("cities")
+                .sort(field("name").ascending())
+                .execute();
+        // [END collection_input]
+        System.out.println(results);
+    }
+
+    void subcollectionInputExampleData() {
+        // [START subcollection_input_data]
+        db.collection("cities/SF/departments").document("building")
+                .set(new HashMap<String, Object>() {{
+                    put("name", "SF Building Deparment");
+                    put("employees", 750);
+                }});
+        db.collection("cities/NY/departments").document("building")
+                .set(new HashMap<String, Object>() {{
+                    put("name", "NY Building Deparment");
+                    put("employees", 1000);
+                }});
+        db.collection("cities/CHI/departments").document("building")
+                .set(new HashMap<String, Object>() {{
+                    put("name", "CHI Building Deparment");
+                    put("employees", 900);
+                }});
+        db.collection("cities/NY/departments").document("finance")
+                .set(new HashMap<String, Object>() {{
+                    put("name", "NY Finance Deparment");
+                    put("employees", 1200);
+                }});
+        // [END subcollection_input_data]
+    }
+
+    void subcollectionInputExample() {
+        // [START subcollection_input]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("cities/NY/departments")
+                .sort(field("employees").ascending())
+                .execute();
+        // [END subcollection_input]
+        System.out.println(results);
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/input/collection_group
+    void collectionGroupInputSyntaxExample() {
+        // [START collection_group_input_syntax]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collectionGroup("departments")
+                .execute();
+        // [END collection_group_input_syntax]
+        System.out.println(results);
+    }
+
+    void collectionGroupInputExampleData() {
+        // [START collection_group_data]
+        db.collection("cities/SF/departments").document("building").set(new HashMap<String, Object>() {{
+            put("name", "SF Building Deparment");
+            put("employees", 750);
+        }});
+        db.collection("cities/NY/departments").document("building").set(new HashMap<String, Object>() {{
+            put("name", "NY Building Deparment");
+            put("employees", 1000);
+        }});
+        db.collection("cities/CHI/departments").document("building").set(new HashMap<String, Object>() {{
+            put("name", "CHI Building Deparment");
+            put("employees", 900);
+        }});
+        db.collection("cities/NY/departments").document("finance").set(new HashMap<String, Object>() {{
+            put("name", "NY Finance Deparment");
+            put("employees", 1200);
+        }});
+        // [END collection_group_data]
+    }
+
+    void collectionGroupInputExample() {
+        // [START collection_group_input]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collectionGroup("departments")
+                .sort(field("employees").ascending())
+                .execute();
+        // [END collection_group_input]
+        System.out.println(results);
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/input/database
+    void databaseInputSyntaxExample() {
+        // [START database_syntax]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .database()
+                .execute();
+        // [END database_syntax]
+        System.out.println(results);
+    }
+
+    void databaseInputSyntaxExampleData() {
+        // [START database_input_data]
+        db.collection("cities").document("SF").set(new HashMap<String, Object>() {{
+            put("name", "San Francsico");
+            put("state", "California");
+            put("population", 800000);
+        }});
+        db.collection("states").document("CA").set(new HashMap<String, Object>() {{
+            put("name", "California");
+            put("population", 39000000);
+        }});
+        db.collection("countries").document("USA").set(new HashMap<String, Object>() {{
+            put("name", "United States of America");
+            put("population", 340000000);
+        }});
+        // [END database_input_data]
+    }
+
+    void databaseInputExample() {
+        // [START database_input]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .database()
+                .sort(field("population").ascending())
+                .execute();
+        // [END database_input]
+        System.out.println(results);
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/input/documents
+    void documentInputSyntaxExample() {
+        // [START document_input_syntax]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .documents(
+                        db.collection("cities").document("SF"),
+                        db.collection("cities").document("NY"))
+                .execute();
+        // [END document_input_syntax]
+        System.out.println(results);
+    }
+
+    void documentInputExampleData() {
+        // [START document_input_data]
+        db.collection("cities").document("SF").set(new HashMap<String, Object>() {{
+            put("name", "San Francsico");
+            put("state", "California");
+        }});
+        db.collection("cities").document("NYC").set(new HashMap<String, Object>() {{
+            put("name", "New York City");
+            put("state", "New York");
+        }});
+        db.collection("cities").document("CHI").set(new HashMap<String, Object>() {{
+            put("name", "Chicago");
+            put("state", "Illinois");
+        }});
+        // [END document_input_data]
+    }
+
+    void documentInputExample() {
+        // [START document_input]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .documents(
+                        db.collection("cities").document("SF"),
+                        db.collection("cities").document("NYC"))
+                .sort(field("name").ascending())
+                .execute();
+        // [END document_input]
+        System.out.println(results);
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/union
+    void unionSyntaxExample() {
+        // [START union_syntax]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("cities/SF/restaurants")
+                .union(db.pipeline().collection("cities/NYC/restaurants"))
+                .execute();
+        // [END union_syntax]
+        System.out.println(results);
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/aggregate
+    void aggregateSyntaxExample() {
+        // [START aggregate_syntax]
+        Task<Pipeline.Snapshot> cities = db.pipeline()
+                .collection("cities")
+                .aggregate(
+                        AggregateFunction.countAll().alias("total"),
+                        AggregateFunction.average("population").alias("averagePopulation")
+                ).execute();
+        // [END aggregate_syntax]
+        System.out.println(cities);
+    }
+
+    void aggregateGroupSyntax() {
+        // [START aggregate_group_syntax]
+        Task<Pipeline.Snapshot> result = db.pipeline()
+                .collectionGroup("cities")
+                .aggregate(AggregateStage
+                        .withAccumulators(
+                                AggregateFunction.countAll().alias("cities"),
+                                AggregateFunction.sum(field("population")).alias("totalPopulation")
+                        )
+                        .withGroups(field("location.state").alias("state")))
+                .execute();
+        // [END aggregate_group_syntax]
+        System.out.println(result);
+    }
+
+    void aggregateExampleData() {
+        // [START aggregate_data]
+        db.collection("cities").document("SF").set(new HashMap<String, Object>() {{
+            put("name", "San Francisco");
+            put("state", "CA");
+            put("country", "USA");
+            put("population", 870000);
+        }});
+        db.collection("cities").document("LA").set(new HashMap<String, Object>() {{
+            put("name", "Los Angeles");
+            put("state", "CA");
+            put("country", "USA");
+            put("population", 3970000);
+        }});
+        db.collection("cities").document("NY").set(new HashMap<String, Object>() {{
+            put("name", "New York");
+            put("state", "NY");
+            put("country", "USA");
+            put("population", 8530000);
+        }});
+        db.collection("cities").document("TOR").set(new HashMap<String, Object>() {{
+            put("name", "Toronto");
+            put("state", null);
+            put("country", "Canada");
+            put("population", 2930000);
+        }});
+        db.collection("cities").document("MEX").set(new HashMap<String, Object>() {{
+            put("name", "Mexico City");
+            put("state", null);
+            put("country", "Mexico");
+            put("population", 9200000);
+        }});
+        // [END aggregate_data]
+    }
+
+    void aggregateWithoutGroupExample() {
+        // [START aggregate_without_group]
+        Task<Pipeline.Snapshot> cities = db.pipeline()
+                .collection("cities")
+                .aggregate(
+                        AggregateFunction.countAll().alias("total"),
+                        AggregateFunction.average("population").alias("averagePopulation")
+                ).execute();
+        // [END aggregate_without_group]
+        System.out.println(cities);
+    }
+
+    void aggregateGroupExample() {
+        // [START aggregate_group_example]
+        Task<Pipeline.Snapshot> cities = db.pipeline()
+                .collection("cities")
+                .aggregate(AggregateStage
+                        .withAccumulators(
+                                AggregateFunction.countAll().alias("numberOfCities"),
+                                AggregateFunction.maximum("population").alias("maxPopulation")
+                        )
+                        .withGroups(field("country"), field("state")))
+                .execute();
+        // [END aggregate_group_example]
+        System.out.println(cities);
+    }
+
+    void aggregateGroupComplexExample() {
+        // [START aggregate_group_complex]
+        Task<Pipeline.Snapshot> cities = db.pipeline()
+                .collection("cities")
+                .aggregate(AggregateStage
+                        .withAccumulators(
+                                AggregateFunction.sum("population").alias("totalPopulation")
+                        )
+                        .withGroups(field("state").equal(Expression.nullValue()).alias("stateIsNull")))
+                .execute();
+        // [END aggregate_group_complex]
+        System.out.println(cities);
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/distinct
+    void distinctSyntaxExample() {
+        // [START distinct_syntax]
+        Task<Pipeline.Snapshot> cities;
+        cities = db.pipeline()
+                .collection("cities")
+                .distinct("country")
+                .execute();
+
+        cities = db.pipeline()
+                .collection("cities")
+                .distinct(
+                        field("state").toLower().alias("normalizedState"),
+                        field("country"))
+                .execute();
+        // [END distinct_syntax]
+        System.out.println(cities);
+    }
+
+    void distinctExampleData() {
+        // [START distinct_data]
+        db.collection("cities").document("SF").set(new HashMap<String, Object>() {{
+            put("name", "San Francisco");
+            put("state", "CA");
+            put("country", "USA");
+        }});
+        db.collection("cities").document("LA").set(new HashMap<String, Object>() {{
+            put("name", "Los Angeles");
+            put("state", "CA");
+            put("country", "USA");
+        }});
+        db.collection("cities").document("NY").set(new HashMap<String, Object>() {{
+            put("name", "New York");
+            put("state", "NY");
+            put("country", "USA");
+        }});
+        db.collection("cities").document("TOR").set(new HashMap<String, Object>() {{
+            put("name", "Toronto");
+            put("state", null);
+            put("country", "Canada");
+        }});
+        db.collection("cities").document("MEX").set(new HashMap<String, Object>() {{
+            put("name", "Mexico City");
+            put("state", null);
+            put("country", "Mexico");
+        }});
+        // [END distinct_data]
+    }
+
+    void distinctExample() {
+        // [START distinct_example]
+        Task<Pipeline.Snapshot> cities = db.pipeline()
+                .collection("cities")
+                .distinct("country")
+                .execute();
+        // [END distinct_example]
+        System.out.println(cities);
+    }
+
+    void distinctExpressionsExample() {
+        // [START distinct_expressions]
+        Task<Pipeline.Snapshot> cities = db.pipeline()
+                .collection("cities")
+                .distinct(
+                        field("state").toLower().alias("normalizedState"),
+                        field("country"))
+                .execute();
+        // [END distinct_expressions]
+        System.out.println(cities);
+    }
+
 }

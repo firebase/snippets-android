@@ -2,7 +2,7 @@ plugins {
     id("com.android.application")
     id("kotlin-android")
     id("com.google.gms.google-services")
-    id("com.google.devtools.ksp") version "2.3.3"
+    id("com.google.devtools.ksp") version "2.3.4"
 }
 
 android {

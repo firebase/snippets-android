@@ -55,7 +55,7 @@ dependencies {
     // See: https://firebase.google.com/docs/cloud-messaging/manage-tokens
     implementation("com.google.firebase:firebase-firestore")
 
-    implementation("com.google.android.gms:play-services-auth:21.4.0")
+    implementation("com.google.android.gms:play-services-auth:21.5.0")
     implementation("androidx.work:work-runtime-ktx:2.11.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.10.0")
 }

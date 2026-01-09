@@ -28,6 +28,18 @@ import java.util.HashMap
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
+import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.GeoPoint
+import com.google.firebase.firestore.Pipeline
+import com.google.firebase.firestore.VectorValue
+import com.google.firebase.firestore.pipeline.AggregateFunction
+import com.google.firebase.firestore.pipeline.AggregateStage
+import com.google.firebase.firestore.pipeline.Expression
+import com.google.firebase.firestore.pipeline.Expression.Companion.field
+import com.google.firebase.firestore.pipeline.Expression.Companion.constant
+import com.google.firebase.firestore.pipeline.FindNearestStage
+import com.google.firebase.firestore.pipeline.SampleStage
+import com.google.firebase.firestore.pipeline.UnnestOptions
 
 /**
  * Kotlin version of doc snippets.
@@ -1317,4 +1329,2244 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         }
         // [END multi_aggregate_query]
     }
+
+    // https://cloud.google.com/firestore/docs/pipeline/overview#concepts
+    fun pipelineConcepts() {
+        // [START pipeline_concepts]
+        val pipeline = db.pipeline()
+            // Step 1: Start a query with collection scope
+            .collection("cities")
+            // Step 2: Filter the collection
+            .where(field("population").greaterThan(100000))
+            // Step 3: Sort the remaining documents
+            .sort(field("name").ascending())
+            // Step 4: Return the top 10. Note applying the limit earlier in the pipeline would have
+            // unintentional results.
+            .limit(10)
+        // [END pipeline_concepts]
+        println(pipeline)
+    }
+
+    fun basicPipelineRead() {
+        // [START basic_pipeline_read]
+        val readDataPipeline = db.pipeline()
+            .collection("users")
+
+        // Execute the pipeline and handle the result
+        readDataPipeline.execute()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    println("${document.getId()} => ${document.getData()}")
+                }
+            }
+            .addOnFailureListener { exception ->
+                println("Error getting documents: $exception")
+            }
+        // [END basic_pipeline_read]
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/overview#initialization
+    fun pipelineInitialization() {
+        // [START pipeline_initialization]
+        val firestore = Firebase.firestore("enterprise")
+        val pipeline = firestore.pipeline()
+        // [END pipeline_initialization]
+        println(pipeline)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/overview#field_vs_constant_references/
+    fun fieldVsConstants() {
+        // [START field_or_constant]
+        val pipeline = db.pipeline()
+            .collection("cities")
+            .where(field("name").equal(constant("Toronto")))
+        // [END field_or_constant]
+        println(pipeline)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/overview#input_stages
+    fun inputStages() {
+        // [START input_stages]
+        var results: Task<Pipeline.Snapshot>
+
+        // Return all restaurants in San Francisco
+        results = db.pipeline().collection("cities/sf/restaurants").execute()
+
+        // Return all restaurants
+        results = db.pipeline().collectionGroup("restaurants").execute()
+
+        // Return all documents across all collections in the database (the entire database)
+        results = db.pipeline().database().execute()
+
+        // Batch read of 3 documents
+        results = db.pipeline().documents(
+            db.collection("cities").document("SF"),
+            db.collection("cities").document("DC"),
+            db.collection("cities").document("NY")
+        ).execute()
+        // [END input_stages]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/overview#where
+    fun wherePipeline() {
+        // [START pipeline_where]
+        var results: Task<Pipeline.Snapshot>
+
+        results = db.pipeline().collection("books")
+            .where(field("rating").equal(5))
+            .where(field("published").lessThan(1900))
+            .execute()
+
+        results = db.pipeline().collection("books")
+            .where(Expression.and(field("rating").equal(5),
+              field("published").lessThan(1900)))
+            .execute()
+        // [END pipeline_where]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/overview#aggregate_distinct
+    fun aggregateGroups() {
+        // [START aggregate_groups]
+        val results = db.pipeline()
+            .collection("books")
+            .aggregate(
+                AggregateStage
+                    .withAccumulators(AggregateFunction.average("rating").alias("avg_rating"))
+                    .withGroups(field("genre"))
+            )
+            .execute()
+        // [END aggregate_groups]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/overview#aggregate_distinct
+    fun aggregateDistinct() {
+        // [START aggregate_distinct]
+        val results = db.pipeline()
+            .collection("books")
+            .distinct(
+                field("author").toUpper().alias("author"),
+                field("genre")
+            )
+            .execute()
+        // [END aggregate_distinct]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/overview#sort
+    fun sort() {
+        // [START sort]
+        val results = db.pipeline()
+            .collection("books")
+            .sort(
+                field("release_date").descending(),
+                field("author").ascending()
+            )
+            .execute()
+        // [END sort]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/overview#sort
+    fun sortComparison() {
+        // [START sort_comparison]
+        val query = db.collection("cities")
+            .orderBy("state")
+            .orderBy("population", Query.Direction.DESCENDING)
+
+        val pipeline = db.pipeline()
+            .collection("books")
+            .sort(
+                field("release_date").descending(),
+                field("author").ascending()
+            )
+        // [END sort_comparison]
+        println(query)
+        println(pipeline)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/overview#functions
+    fun functions() {
+        // [START functions_example]
+        var results: Task<Pipeline.Snapshot>
+
+        // Type 1: Scalar (for use in non-aggregation stages)
+        // Example: Return the min store price for each book.
+        results = db.pipeline().collection("books")
+            .select(
+                field("current").logicalMinimum("updated").alias("price_min")
+            )
+            .execute()
+
+        // Type 2: Aggregation (for use in aggregate stages)
+        // Example: Return the min price of all books.
+        results = db.pipeline().collection("books")
+            .aggregate(AggregateFunction.minimum("price").alias("min_price"))
+            .execute()
+        // [END functions_example]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/overview#creating_indexes
+    fun creatingIndexes() {
+        // [START query_example]
+        val results = db.pipeline()
+            .collection("books")
+            .where(field("published").lessThan(1900))
+            .where(field("genre").equal("Science Fiction"))
+            .where(field("rating").greaterThan(4.3))
+            .sort(field("published").descending())
+            .execute()
+        // [END query_example]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/overview#existing_sparse_indexes
+    fun sparseIndexes() {
+        // [START sparse_index_example]
+        val results = db.pipeline()
+            .collection("books")
+            .where(field("category").like("%fantasy%"))
+            .execute()
+        // [END sparse_index_example]
+        println(results)
+    }
+
+    fun sparseIndexes2() {
+        // [START sparse_index_example_2]
+        val results = db.pipeline()
+            .collection("books")
+            .sort(field("release_date").ascending())
+            .execute()
+        // [END sparse_index_example_2]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/overview#covered_queries_secondary_indexes
+    fun coveredQuery() {
+        // [START covered_query]
+        val results = db.pipeline()
+            .collection("books")
+            .where(field("category").like("%fantasy%"))
+            .where(field("title").exists())
+            .where(field("author").exists())
+            .select(field("title"), field("author"))
+            .execute()
+        // [END covered_query]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/overview#pagination
+    fun pagination() {
+        // [START pagination_not_supported_preview]
+        // Existing pagination via `startAt()`
+        val query = db.collection("cities").orderBy("population").startAt(1000000)
+
+        // Private preview workaround using pipelines
+        val pipeline = db.pipeline()
+            .collection("cities")
+            .where(field("population").greaterThanOrEqual(1000000))
+            .sort(field("population").descending())
+        // [END pagination_not_supported_preview]
+        println(query)
+        println(pipeline)
+    }
+
+    // http://cloud.google.com/firestore/docs/pipeline/stages/input/collection#example
+    fun collectionStage() {
+        // [START collection_example]
+        val results = db.pipeline()
+            .collection("users/bob/games")
+            .sort(field("name").ascending())
+            .execute()
+        // [END collection_example]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/input/collection_group
+    fun collectionGroupStage() {
+        // [START collection_group_example]
+        val results = db.pipeline()
+            .collectionGroup("games")
+            .sort(field("name").ascending())
+            .execute()
+        // [END collection_group_example]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/input/database
+    fun databaseStage() {
+        // [START database_example]
+        // Count all documents in the database
+        val results = db.pipeline()
+            .database()
+            .aggregate(AggregateFunction.countAll().alias("total"))
+            .execute()
+        // [END database_example]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/input/documents
+    fun documentsStage() {
+        // [START documents_example]
+        val results = db.pipeline()
+            .documents(
+                db.collection("cities").document("SF"),
+                db.collection("cities").document("DC"),
+                db.collection("cities").document("NY")
+            ).execute()
+        // [END documents_example]
+        println(results)
+    }
+
+    fun replaceWithStage() {
+        // [START initial_data]
+        db.collection("cities").document("SF").set(mapOf(
+            "name" to "San Francisco",
+            "population" to 800000,
+            "location" to mapOf(
+                "country" to "USA",
+                "state" to "California"
+            )
+        ))
+        db.collection("cities").document("TO").set(mapOf(
+            "name" to "Toronto",
+            "population" to 3000000,
+            "province" to "ON",
+            "location" to mapOf(
+                "country" to "Canada",
+                "province" to "Ontario"
+            )
+        ))
+        db.collection("cities").document("NY").set(mapOf(
+            "name" to "New York",
+            "location" to mapOf(
+                "country" to "USA",
+                "state" to "New York"
+            )
+        ))
+        db.collection("cities").document("AT").set(mapOf(
+            "name" to "Atlantis"
+        ))
+        // [END initial_data]
+
+        // [START full_replace]
+        val names = db.pipeline()
+            .collection("cities")
+            .replaceWith("location")
+            .execute()
+        // [END full_replace]
+
+        // [START map_merge_overwrite]
+        // unsupported in client SDKs for now
+        // [END map_merge_overwrite]
+        println(names)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/sample#examples
+    fun sampleStage() {
+        // [START sample_example]
+        var results: Task<Pipeline.Snapshot>
+
+        // Get a sample of 100 documents in a database
+        results = db.pipeline()
+            .database()
+            .sample(100)
+            .execute()
+
+        // Randomly shuffle a list of 3 documents
+        results = db.pipeline()
+            .documents(
+                db.collection("cities").document("SF"),
+                db.collection("cities").document("NY"),
+                db.collection("cities").document("DC")
+            )
+            .sample(3)
+            .execute()
+        // [END sample_example]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/sample#examples_2
+    fun samplePercent() {
+        // [START sample_percent]
+        // Get a sample of on average 50% of the documents in the database
+        val results = db.pipeline()
+            .database()
+            .sample(SampleStage.withPercentage(0.5))
+            .execute()
+        // [END sample_percent]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/union#examples
+    fun unionStage() {
+        // [START union_stage]
+        val results = db.pipeline()
+            .collection("cities/SF/restaurants")
+            .where(field("type").equal("Chinese"))
+            .union(db.pipeline()
+                .collection("cities/NY/restaurants")
+                .where(field("type").equal("Italian")))
+            .where(field("rating").greaterThanOrEqual(4.5))
+            .sort(field("__name__").descending())
+            .execute()
+        // [END union_stage]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/union#examples
+    fun unionStageStable() {
+        // [START union_stage_stable]
+        val results = db.pipeline()
+            .collection("cities/SF/restaurants")
+            .where(field("type").equal("Chinese"))
+            .union(db.pipeline()
+                .collection("cities/NY/restaurants")
+                .where(field("type").equal("Italian")))
+            .where(field("rating").greaterThanOrEqual(4.5))
+            .sort(field("__name__").descending())
+            .execute()
+        // [END union_stage_stable]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/unnest#examples
+    fun unnestStage() {
+        // [START unnest_stage]
+        val results = db.pipeline()
+            .database()
+            .unnest(field("arrayField").alias("unnestedArrayField"), UnnestOptions().withIndexField("index"))
+            .execute()
+        // [END unnest_stage]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/unnest#examples
+    fun unnestStageEmptyOrNonArray() {
+        // [START unnest_edge_cases]
+        // Input
+        // { identifier : 1, neighbors: [ "Alice", "Cathy" ] }
+        // { identifier : 2, neighbors: []                   }
+        // { identifier : 3, neighbors: "Bob"                }
+
+        val results = db.pipeline()
+            .database()
+            .unnest(field("neighbors").alias("unnestedNeighbors"), UnnestOptions().withIndexField("index"))
+            .execute()
+
+        // Output
+        // { identifier: 1, neighbors: [ "Alice", "Cathy" ], unnestedNeighbors: "Alice", index: 0 }
+        // { identifier: 1, neighbors: [ "Alice", "Cathy" ], unnestedNeighbors: "Cathy", index: 1 }
+        // { identifier: 3, neighbors: "Bob", index: null}
+        // [END unnest_edge_cases]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/aggregate_functions#count
+    fun countFunction() {
+        // [START count_function]
+        // Total number of books in the collection
+        val countAll = db.pipeline()
+            .collection("books")
+            .aggregate(AggregateFunction.countAll().alias("count"))
+            .execute()
+
+        // Number of books with nonnull `ratings` field
+        val countField = db.pipeline()
+            .collection("books")
+            .aggregate(AggregateFunction.count("ratings").alias("count"))
+            .execute()
+        // [END count_function]
+        println(countAll)
+        println(countField)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/aggregate_functions#count_if
+    fun countIfFunction() {
+        // [START count_if]
+        val result = db.pipeline()
+            .collection("books")
+            .aggregate(
+                AggregateFunction.countIf(field("rating").greaterThan(4)).alias("filteredCount")
+            )
+            .execute()
+        // [END count_if]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/aggregate_functions#count_distinct
+    fun countDistinctFunction() {
+        // [START count_distinct]
+        val result = db.pipeline()
+            .collection("books")
+            .aggregate(AggregateFunction.countDistinct("author").alias("unique_authors"))
+            .execute()
+        // [END count_distinct]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/aggregate_functions#sum
+    fun sumFunction() {
+        // [START sum_function]
+        val result = db.pipeline()
+            .collection("cities")
+            .aggregate(AggregateFunction.sum("population").alias("totalPopulation"))
+            .execute()
+        // [END sum_function]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/aggregate_functions#avg
+    fun avgFunction() {
+        // [START avg_function]
+        val result = db.pipeline()
+            .collection("cities")
+            .aggregate(AggregateFunction.average("population").alias("averagePopulation"))
+            .execute()
+        // [END avg_function]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/aggregate_functions#min
+    fun minFunction() {
+        // [START min_function]
+        val result = db.pipeline()
+            .collection("books")
+            .aggregate(AggregateFunction.minimum("price").alias("minimumPrice"))
+            .execute()
+        // [END min_function]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/aggregate_functions#max
+    fun maxFunction() {
+        // [START max_function]
+        val result = db.pipeline()
+            .collection("books")
+            .aggregate(AggregateFunction.maximum("price").alias("maximumPrice"))
+            .execute()
+        // [END max_function]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/arithmetic_functions#add
+    fun addFunction() {
+        // [START add_function]
+        val result = db.pipeline()
+            .collection("books")
+            .select(Expression.add(field("soldBooks"), field("unsoldBooks")).alias("totalBooks"))
+            .execute()
+        // [END add_function]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/arithmetic_functions#subtract
+    fun subtractFunction() {
+        // [START subtract_function]
+        val storeCredit = 7
+        val result = db.pipeline()
+            .collection("books")
+            .select(Expression.subtract(field("price"), storeCredit).alias("totalCost"))
+            .execute()
+        // [END subtract_function]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/arithmetic_functions#multiply
+    fun multiplyFunction() {
+        // [START multiply_function]
+        val result = db.pipeline()
+            .collection("books")
+            .select(Expression.multiply(field("price"), field("soldBooks")).alias("revenue"))
+            .execute()
+        // [END multiply_function]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/arithmetic_functions#divide
+    fun divideFunction() {
+        // [START divide_function]
+        val result = db.pipeline()
+            .collection("books")
+            .select(Expression.divide(field("ratings"), field("soldBooks")).alias("reviewRate"))
+            .execute()
+        // [END divide_function]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/arithmetic_functions#mod
+    fun modFunction() {
+        // [START mod_function]
+        val displayCapacity = 1000
+        val result = db.pipeline()
+            .collection("books")
+            .select(Expression.mod(field("unsoldBooks"), displayCapacity).alias("warehousedBooks"))
+            .execute()
+        // [END mod_function]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/arithmetic_functions#ceil
+    fun ceilFunction() {
+        // [START ceil_function]
+        val booksPerShelf = 100
+        val result = db.pipeline()
+            .collection("books")
+            .select(
+                Expression.divide(field("unsoldBooks"), booksPerShelf).ceil().alias("requiredShelves")
+            )
+            .execute()
+        // [END ceil_function]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/arithmetic_functions#floor
+    fun floorFunction() {
+        // [START floor_function]
+        val result = db.pipeline()
+            .collection("books")
+            .addFields(
+                Expression.divide(field("wordCount"), field("pages")).floor().alias("wordsPerPage")
+            )
+            .execute()
+        // [END floor_function]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/arithmetic_functions#round
+    fun roundFunction() {
+        // [START round_function]
+        val result = db.pipeline()
+            .collection("books")
+            .select(Expression.multiply(field("soldBooks"), field("price")).round().alias("partialRevenue"))
+            .aggregate(AggregateFunction.sum("partialRevenue").alias("totalRevenue"))
+            .execute()
+        // [END round_function]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/arithmetic_functions#pow
+    fun powFunction() {
+        // [START pow_function]
+        val googleplex = GeoPoint(37.4221, -122.0853)
+        val result = db.pipeline()
+            .collection("cities")
+            .addFields(
+                field("lat").subtract(googleplex.latitude)
+                    .multiply(111 /* km per degree */)
+                    .pow(2)
+                    .alias("latitudeDifference"),
+                field("lng").subtract(googleplex.longitude)
+                    .multiply(111 /* km per degree */)
+                    .pow(2)
+                    .alias("longitudeDifference")
+            )
+            .select(
+                field("latitudeDifference").add(field("longitudeDifference")).sqrt()
+                    // Inaccurate for large distances or close to poles
+                    .alias("approximateDistanceToGoogle")
+            )
+            .execute()
+        // [END pow_function]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/arithmetic_functions#sqrt
+    fun sqrtFunction() {
+        // [START sqrt_function]
+        val googleplex = GeoPoint(37.4221, -122.0853)
+        val result = db.pipeline()
+            .collection("cities")
+            .addFields(
+                field("lat").subtract(googleplex.latitude)
+                    .multiply(111 /* km per degree */)
+                    .pow(2)
+                    .alias("latitudeDifference"),
+                field("lng").subtract(googleplex.longitude)
+                    .multiply(111 /* km per degree */)
+                    .pow(2)
+                    .alias("longitudeDifference")
+            )
+            .select(
+                field("latitudeDifference").add(field("longitudeDifference")).sqrt()
+                    // Inaccurate for large distances or close to poles
+                    .alias("approximateDistanceToGoogle")
+            )
+            .execute()
+        // [END sqrt_function]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/arithmetic_functions#exp
+    fun expFunction() {
+        // [START exp_function]
+        val result = db.pipeline()
+            .collection("books")
+            .select(field("rating").exp().alias("expRating"))
+            .execute()
+        // [END exp_function]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/arithmetic_functions#ln
+    fun lnFunction() {
+        // [START ln_function]
+        val result = db.pipeline()
+            .collection("books")
+            .select(field("rating").ln().alias("lnRating"))
+            .execute()
+        // [END ln_function]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/arithmetic_functions#log
+    fun logFunction() {
+        // [START log_function]
+        // Not supported on Android
+        // [END log_function]
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/array_functions#array_concat
+    fun arrayConcat() {
+        // [START array_concat]
+        val result = db.pipeline()
+            .collection("books")
+            .select(field("genre").arrayConcat(field("subGenre")).alias("allGenres"))
+            .execute()
+        // [END array_concat]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/array_functions#array_contains
+    fun arrayContains() {
+        // [START array_contains]
+        val result = db.pipeline()
+            .collection("books")
+            .select(field("genre").arrayContains("mystery").alias("isMystery"))
+            .execute()
+        // [END array_contains]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/array_functions#array_contains_all
+    fun arrayContainsAll() {
+        // [START array_contains_all]
+        val result = db.pipeline()
+            .collection("books")
+            .select(
+                field("genre")
+                    .arrayContainsAll(listOf("fantasy", "adventure"))
+                    .alias("isFantasyAdventure")
+            )
+            .execute()
+        // [END array_contains_all]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/array_functions#array_contains_any
+    fun arrayContainsAny() {
+        // [START array_contains_any]
+        val result = db.pipeline()
+            .collection("books")
+            .select(
+                field("genre")
+                    .arrayContainsAny(listOf("fantasy", "nonfiction"))
+                    .alias("isMysteryOrFantasy")
+            )
+            .execute()
+        // [END array_contains_any]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/array_functions#array_length
+    fun arrayLength() {
+        // [START array_length]
+        val result = db.pipeline()
+            .collection("books")
+            .select(field("genre").arrayLength().alias("genreCount"))
+            .execute()
+        // [END array_length]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/array_functions#array_reverse
+    fun arrayReverse() {
+        // [START array_reverse]
+        val result = db.pipeline()
+            .collection("books")
+            .select(field("genre").arrayReverse().alias("reversedGenres"))
+            .execute()
+        // [END array_reverse]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/comparison_functions#eq
+    fun equalFunction() {
+        // [START equal_function]
+        val result = db.pipeline()
+            .collection("books")
+            .select(field("rating").equal(5).alias("hasPerfectRating"))
+            .execute()
+        // [END equal_function]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/comparison_functions#gt
+    fun greaterThanFunction() {
+        // [START greater_than]
+        val result = db.pipeline()
+            .collection("books")
+            .select(field("rating").greaterThan(4).alias("hasHighRating"))
+            .execute()
+        // [END greater_than]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/comparison_functions#gte
+    fun greaterThanOrEqualToFunction() {
+        // [START greater_or_equal]
+        val result = db.pipeline()
+            .collection("books")
+            .select(field("published").greaterThanOrEqual(1900).alias("publishedIn20thCentury"))
+            .execute()
+        // [END greater_or_equal]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/comparison_functions#lt
+    fun lessThanFunction() {
+        // [START less_than]
+        val result = db.pipeline()
+            .collection("books")
+            .select(field("published").lessThan(1923).alias("isPublicDomainProbably"))
+            .execute()
+        // [END less_than]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/comparison_functions#lte
+    fun lessThanOrEqualToFunction() {
+        // [START less_or_equal]
+        val result = db.pipeline()
+            .collection("books")
+            .select(field("rating").lessThanOrEqual(2).alias("hasBadRating"))
+            .execute()
+        // [END less_or_equal]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/comparison_functions#neq
+    fun notEqualFunction() {
+        // [START not_equal]
+        val result = db.pipeline()
+            .collection("books")
+            .select(field("title").notEqual("1984").alias("not1984"))
+            .execute()
+        // [END not_equal]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/debugging_functions#exists
+    fun existsFunction() {
+        // [START exists_function]
+        val result = db.pipeline()
+            .collection("books")
+            .select(field("rating").exists().alias("hasRating"))
+            .execute()
+        // [END exists_function]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/logical_functions#and
+    fun andFunction() {
+        // [START and_function]
+        val result = db.pipeline()
+            .collection("books")
+            .select(
+                Expression.and(field("rating").greaterThan(4),
+                  field("price").lessThan(10))
+                    .alias("under10Recommendation")
+            )
+            .execute()
+        // [END and_function]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/logical_functions#or
+    fun orFunction() {
+        // [START or_function]
+        val result = db.pipeline()
+            .collection("books")
+            .select(
+                Expression.or(field("genre").equal("Fantasy"),
+                  field("tags").arrayContains("adventure"))
+                    .alias("matchesSearchFilters")
+            )
+            .execute()
+        // [END or_function]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/logical_functions#xor
+    fun xorFunction() {
+        // [START xor_function]
+        val result = db.pipeline()
+            .collection("books")
+            .select(
+                Expression.xor(field("tags").arrayContains("magic"),
+                  field("tags").arrayContains("nonfiction"))
+                    .alias("matchesSearchFilters")
+            )
+            .execute()
+        // [END xor_function]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/logical_functions#not
+    fun notFunction() {
+        // [START not_function]
+        val result = db.pipeline()
+            .collection("books")
+            .select(
+                Expression.not(
+                    field("tags").arrayContains("nonfiction")
+                ).alias("isFiction")
+            )
+            .execute()
+        // [END not_function]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/logical_functions#cond
+    fun condFunction() {
+        // [START cond_function]
+        val result = db.pipeline()
+            .collection("books")
+            .select(
+                field("tags").arrayConcat(
+                    Expression.conditional(
+                        field("pages").greaterThan(100),
+                        constant("longRead"),
+                        constant("shortRead")
+                    )
+                ).alias("extendedTags")
+            )
+            .execute()
+        // [END cond_function]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/logical_functions#eq_any
+    fun equalAnyFunction() {
+        // [START eq_any]
+        val result = db.pipeline()
+            .collection("books")
+            .select(
+                field("genre").equalAny(listOf("Science Fiction", "Psychological Thriller"))
+                    .alias("matchesGenreFilters")
+            )
+            .execute()
+        // [END eq_any]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/logical_functions#not_eq_any
+    fun notEqualAnyFunction() {
+        // [START not_eq_any]
+        val result = db.pipeline()
+            .collection("books")
+            .select(
+                field("author").notEqualAny(listOf("George Orwell", "F. Scott Fitzgerald"))
+                    .alias("byExcludedAuthors")
+            )
+            .execute()
+        // [END not_eq_any]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/logical_functions#is_nan
+    fun isNaNFunction() {
+        // [START is_nan]
+        // removed
+        // [END is_nan]
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/logical_functions#is_not_nan
+    fun isNotNaNFunction() {
+        // [START is_not_nan]
+        // removed
+        // [END is_not_nan]
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/logical_functions#max
+    fun maxLogicalFunction() {
+        // [START max_logical_function]
+        val result = db.pipeline()
+            .collection("books")
+            .select(
+                field("rating").logicalMaximum(1).alias("flooredRating")
+            )
+            .execute()
+        // [END max_logical_function]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/logical_functions#min
+    fun minLogicalFunction() {
+        // [START min_logical_function]
+        val result = db.pipeline()
+            .collection("books")
+            .select(
+                field("rating").logicalMinimum(5).alias("cappedRating")
+            )
+            .execute()
+        // [END min_logical_function]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/map_functions#map_get
+    fun mapGetFunction() {
+        // [START map_get]
+        val result = db.pipeline()
+            .collection("books")
+            .select(
+                field("awards").mapGet("pulitzer").alias("hasPulitzerAward")
+            )
+            .execute()
+        // [END map_get]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/string_functions#byte_length
+    fun byteLengthFunction() {
+        // [START byte_length]
+        val result = db.pipeline()
+            .collection("books")
+            .select(
+                field("title").byteLength().alias("titleByteLength")
+            )
+            .execute()
+        // [END byte_length]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/string_functions#char_length
+    fun charLengthFunction() {
+        // [START char_length]
+        val result = db.pipeline()
+            .collection("books")
+            .select(
+                field("title").charLength().alias("titleCharLength")
+            )
+            .execute()
+        // [END char_length]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/string_functions#starts_with
+    fun startsWithFunction() {
+        // [START starts_with]
+        val result = db.pipeline()
+            .collection("books")
+            .select(
+                field("title").startsWith("The")
+                    .alias("needsSpecialAlphabeticalSort")
+            )
+            .execute()
+        // [END starts_with]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/string_functions#ends_with
+    fun endsWithFunction() {
+        // [START ends_with]
+        val result = db.pipeline()
+            .collection("inventory/devices/laptops")
+            .select(
+                field("name").endsWith("16 inch")
+                    .alias("16InLaptops")
+            )
+            .execute()
+        // [END ends_with]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/string_functions#like
+    fun likeFunction() {
+        // [START like]
+        val result = db.pipeline()
+            .collection("books")
+            .select(
+                field("genre").like("%Fiction")
+                    .alias("anyFiction")
+            )
+            .execute()
+        // [END like]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/string_functions#regex_contains
+    fun regexContainsFunction() {
+        // [START regex_contains]
+        val result = db.pipeline()
+            .collection("documents")
+            .select(
+                field("title").regexContains("Firestore (Enterprise|Standard)")
+                    .alias("isFirestoreRelated")
+            )
+            .execute()
+        // [END regex_contains]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/string_functions#regex_match
+    fun regexMatchFunction() {
+        // [START regex_match]
+        val result = db.pipeline()
+            .collection("documents")
+            .select(
+                field("title").regexMatch("Firestore (Enterprise|Standard)")
+                    .alias("isFirestoreExactly")
+            )
+            .execute()
+        // [END regex_match]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/string_functions#str_concat
+    fun strConcatFunction() {
+        // [START str_concat]
+        val result = db.pipeline()
+            .collection("books")
+            .select(
+                field("title").concat(" by ", field("author"))
+                    .alias("fullyQualifiedTitle")
+            )
+            .execute()
+        // [END str_concat]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/string_functions#str_contains
+    fun strContainsFunction() {
+        // [START string_contains]
+        val result = db.pipeline()
+            .collection("articles")
+            .select(
+                field("body").stringContains("Firestore")
+                    .alias("isFirestoreRelated")
+            )
+            .execute()
+        // [END string_contains]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/string_functions#to_upper
+    fun toUpperFunction() {
+        // [START to_upper]
+        val result = db.pipeline()
+            .collection("authors")
+            .select(
+                field("name").toUpper()
+                    .alias("uppercaseName")
+            )
+            .execute()
+        // [END to_upper]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/string_functions#to_lower
+    fun toLowerFunction() {
+        // [START to_lower]
+        val result = db.pipeline()
+            .collection("authors")
+            .select(
+                field("genre").toLower().equal("fantasy")
+                    .alias("isFantasy")
+            )
+            .execute()
+        // [END to_lower]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/string_functions#substr
+    fun substrFunction() {
+        // [START substr_function]
+        val result = db.pipeline()
+            .collection("books")
+            .where(field("title").startsWith("The "))
+            .select(
+                field("title")
+                  .substring(constant(4),
+                    field("title").charLength().subtract(4))
+                    .alias("titleWithoutLeadingThe")
+            )
+            .execute()
+        // [END substr_function]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/string_functions#str_reverse
+    fun strReverseFunction() {
+        // [START str_reverse]
+        val result = db.pipeline()
+            .collection("books")
+            .select(
+                field("name").reverse().alias("reversedName")
+            )
+            .execute()
+        // [END str_reverse]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/string_functions#str_trim
+    fun strTrimFunction() {
+        // [START trim_function]
+        val result = db.pipeline()
+            .collection("books")
+            .select(
+                field("name").trim().alias("whitespaceTrimmedName")
+            )
+            .execute()
+        // [END trim_function]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/string_functions#str_replace
+    fun strReplaceFunction() {
+        // not yet supported until GA
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/string_functions#str_split
+    fun strSplitFunction() {
+        // not yet supported until GA
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/timestamp_functions#unix_micros_to_timestamp
+    fun unixMicrosToTimestampFunction() {
+        // [START unix_micros_timestamp]
+        val result = db.pipeline()
+            .collection("documents")
+            .select(
+                field("createdAtMicros").unixMicrosToTimestamp().alias("createdAtString")
+            )
+            .execute()
+        // [END unix_micros_timestamp]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/timestamp_functions#unix_millis_to_timestamp
+    fun unixMillisToTimestampFunction() {
+        // [START unix_millis_timestamp]
+        val result = db.pipeline()
+            .collection("documents")
+            .select(
+                field("createdAtMillis").unixMillisToTimestamp().alias("createdAtString")
+            )
+            .execute()
+        // [END unix_millis_timestamp]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/timestamp_functions#unix_seconds_to_timestamp
+    fun unixSecondsToTimestampFunction() {
+        // [START unix_seconds_timestamp]
+        val result = db.pipeline()
+            .collection("documents")
+            .select(
+                field("createdAtSeconds").unixSecondsToTimestamp().alias("createdAtString")
+            )
+            .execute()
+        // [END unix_seconds_timestamp]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/timestamp_functions#timestamp_add
+    fun timestampAddFunction() {
+        // [START timestamp_add]
+        val result = db.pipeline()
+            .collection("documents")
+            .select(
+                field("createdAt")
+                  .timestampAdd("day", 3653)
+                  .alias("expiresAt")
+            )
+            .execute()
+        // [END timestamp_add]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/timestamp_functions#timestamp_sub
+    fun timestampSubFunction() {
+        // [START timestamp_sub]
+        val result = db.pipeline()
+            .collection("documents")
+            .select(
+                field("expiresAt")
+                  .timestampSubtract("day", 14)
+                  .alias("sendWarningTimestamp")
+            )
+            .execute()
+        // [END timestamp_sub]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/timestamp_functions#timestamp_to_unix_micros
+    fun timestampToUnixMicrosFunction() {
+        // [START timestamp_unix_micros]
+        val result = db.pipeline()
+            .collection("documents")
+            .select(
+                field("dateString").timestampToUnixMicros().alias("unixMicros")
+            )
+            .execute()
+        // [END timestamp_unix_micros]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/timestamp_functions#timestamp_to_unix_millis
+    fun timestampToUnixMillisFunction() {
+        // [START timestamp_unix_millis]
+        val result = db.pipeline()
+            .collection("documents")
+            .select(
+                field("dateString").timestampToUnixMillis().alias("unixMillis")
+            )
+            .execute()
+        // [END timestamp_unix_millis]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/timestamp_functions#timestamp_to_unix_seconds
+    fun timestampToUnixSecondsFunction() {
+        // [START timestamp_unix_seconds]
+        val result = db.pipeline()
+            .collection("documents")
+            .select(
+                field("dateString").timestampToUnixSeconds().alias("unixSeconds")
+            )
+            .execute()
+        // [END timestamp_unix_seconds]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/vector_functions#cosine_distance
+    fun cosineDistanceFunction() {
+        // [START cosine_distance]
+        val sampleVector = doubleArrayOf(0.0, 1.0, 2.0, 3.0, 4.0, 5.0)
+        val result = db.pipeline()
+            .collection("books")
+            .select(
+                field("embedding").cosineDistance(sampleVector).alias("cosineDistance")
+            )
+            .execute()
+        // [END cosine_distance]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/vector_functions#dot_product
+    fun dotProductFunction() {
+        // [START dot_product]
+        val sampleVector = doubleArrayOf(0.0, 1.0, 2.0, 3.0, 4.0, 5.0)
+        val result = db.pipeline()
+            .collection("books")
+            .select(
+                field("embedding").dotProduct(sampleVector).alias("dotProduct")
+            )
+            .execute()
+        // [END dot_product]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/vector_functions#euclidean_distance
+    fun euclideanDistanceFunction() {
+        // [START euclidean_distance]
+        val sampleVector = doubleArrayOf(0.0, 1.0, 2.0, 3.0, 4.0, 5.0)
+        val result = db.pipeline()
+            .collection("books")
+            .select(
+                field("embedding").euclideanDistance(sampleVector).alias("euclideanDistance")
+            )
+            .execute()
+        // [END euclidean_distance]
+        println(result)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/functions/vector_functions#vector_length
+    fun vectorLengthFunction() {
+        // [START vector_length]
+        val result = db.pipeline()
+            .collection("books")
+            .select(
+                field("embedding").vectorLength().alias("vectorLength")
+            )
+            .execute()
+        // [END vector_length]
+        println(result)
+    }
+
+    fun stagesExpressionsExample() {
+        // [START stages_expressions_example]
+        val trailing30Days = constant(Timestamp.now().toDate().time)
+            .unixMillisToTimestamp()
+            .timestampSubtract("day", 30)
+        val snapshot = db.pipeline()
+            .collection("productViews")
+            .where(field("viewedAt").greaterThan(trailing30Days))
+            .aggregate(AggregateFunction.countDistinct(field("productId")).alias("uniqueProductViews"))
+            .execute()
+        // [END stages_expressions_example]
+        println(snapshot)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/where
+    fun createWhereData() {
+        // [START create_where_data]
+        db.collection("cities").document("SF").set(
+            mapOf(
+                "name" to "San Francisco",
+                "state" to "CA",
+                "country" to "USA",
+                "population" to 870000
+            )
+        )
+        db.collection("cities").document("LA").set(
+            mapOf(
+                "name" to "Los Angeles",
+                "state" to "CA",
+                "country" to "USA",
+                "population" to 3970000
+            )
+        )
+        db.collection("cities").document("NY").set(
+            mapOf(
+                "name" to "New York",
+                "state" to "NY",
+                "country" to "USA",
+                "population" to 8530000
+            )
+        )
+        db.collection("cities").document("TOR").set(
+            mapOf(
+                "name" to "Toronto",
+                "state" to null,
+                "country" to "Canada",
+                "population" to 2930000
+            )
+        )
+        db.collection("cities").document("MEX").set(
+            mapOf(
+                "name" to "Mexico City",
+                "state" to null,
+                "country" to "Mexico",
+                "population" to 9200000
+            )
+        )
+        // [END create_where_data]
+    }
+
+    fun whereEqualityExample() {
+        // [START where_equality_example]
+        val cities = db.pipeline()
+            .collection("cities")
+            .where(field("state").equal(constant("CA")))
+            .execute()
+        // [END where_equality_example]
+        println(cities)
+    }
+
+    fun whereMultipleStagesExample() {
+        // [START where_multiple_stages]
+        val cities = db.pipeline()
+            .collection("cities")
+            .where(field("location.country").equal(constant("USA")))
+            .where(field("population").greaterThan(500000))
+            .execute()
+        // [END where_multiple_stages]
+        println(cities)
+    }
+
+    fun whereComplexExample() {
+        // [START where_complex]
+        val cities = db.pipeline()
+            .collection("cities")
+            .where(
+                Expression.or(
+                    field("name").like("San%"),
+                    Expression.and(
+                        field("location.state").charLength().greaterThan(7),
+                        field("location.country").equal(constant("USA"))
+                    )
+                )
+            ).execute()
+        // [END where_complex]
+        println(cities)
+    }
+
+    fun whereStageOrderExample() {
+        // [START where_stage_order]
+        val cities = db.pipeline()
+            .collection("cities")
+            .limit(10)
+            .where(field("location.country").equal(constant("USA")))
+            .execute()
+        // [END where_stage_order]
+        println(cities)
+    }
+
+    fun whereHavingExample() {
+        // [START where_having_example]
+        val cities = db.pipeline()
+            .collection("cities")
+            .aggregate(
+                AggregateStage
+                    .withAccumulators(
+                        AggregateFunction.sum(field("population")).alias("totalPopulation")
+                    )
+                    .withGroups(field("location.state"))
+            )
+            .where(field("totalPopulation").greaterThan(10000000))
+            .execute()
+        // [END where_having_example]
+        println(cities)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/unnest
+    fun unnestSyntaxExample() {
+        // [START unnest_syntax]
+        val userScore = db.pipeline()
+            .collection("users")
+            .unnest(field("scores").alias("userScore"), UnnestOptions().withIndexField("attempt"))
+            .execute()
+        // [END unnest_syntax]
+        println(userScore)
+    }
+
+    fun unnestAliasIndexDataExample() {
+        // [START unnest_alias_index_data]
+        db.collection("users").add(mapOf("name" to "foo", "scores" to listOf(5, 4), "userScore" to 0))
+        db.collection("users").add(mapOf("name" to "bar", "scores" to listOf(1, 3), "attempt" to 5))
+        // [END unnest_alias_index_data]
+    }
+
+    fun unnestAliasIndexExample() {
+        // [START unnest_alias_index]
+        val userScore = db.pipeline()
+            .collection("users")
+            .unnest(field("scores").alias("userScore"), UnnestOptions().withIndexField("attempt"))
+            .execute()
+        // [END unnest_alias_index]
+        println(userScore)
+    }
+
+    fun unnestNonArrayDataExample() {
+        // [START unnest_nonarray_data]
+        db.collection("users").add(mapOf("name" to "foo", "scores" to 1))
+        db.collection("users").add(mapOf("name" to "bar", "scores" to null))
+        db.collection("users").add(mapOf("name" to "qux", "scores" to mapOf("backupScores" to 1)))
+        // [END unnest_nonarray_data]
+    }
+
+    fun unnestNonArrayExample() {
+        // [START unnest_nonarray]
+        val userScore = db.pipeline()
+            .collection("users")
+            .unnest(field("scores").alias("userScore"), UnnestOptions().withIndexField("attempt"))
+            .execute()
+        // [END unnest_nonarray]
+        println(userScore)
+    }
+
+    fun unnestEmptyArrayDataExample() {
+        // [START unnest_empty_array_data]
+        db.collection("users").add(mapOf("name" to "foo", "scores" to listOf(5, 4)))
+        db.collection("users").add(mapOf("name" to "bar", "scores" to emptyList<Int>()))
+        // [END unnest_empty_array_data]
+    }
+
+    fun unnestEmptyArrayExample() {
+        // [START unnest_empty_array]
+        val userScore = db.pipeline()
+            .collection("users")
+            .unnest(field("scores").alias("userScore"), UnnestOptions().withIndexField("attempt"))
+            .execute()
+        // [END unnest_empty_array]
+        println(userScore)
+    }
+
+    fun unnestPreserveEmptyArrayExample() {
+        // [START unnest_preserve_empty_array]
+        val userScore = db.pipeline()
+            .collection("users")
+            .unnest(
+                Expression.conditional(
+                    field("scores").equal(Expression.array()),
+                    Expression.array(field("scores")),
+                    field("scores")
+                ).alias("userScore"),
+                UnnestOptions().withIndexField("attempt")
+            )
+            .execute()
+        // [END unnest_preserve_empty_array]
+        println(userScore)
+    }
+
+    fun unnestNestedDataExample() {
+        // [START unnest_nested_data]
+        db.collection("users").add(
+            mapOf(
+                "name" to "foo",
+                "record" to listOf(
+                    mapOf(
+                        "scores" to listOf(5, 4),
+                        "avg" to 4.5
+                    ),
+                    mapOf(
+                        "scores" to listOf(1, 3),
+                        "old_avg" to 2
+                    )
+                )
+            )
+        )
+        // [END unnest_nested_data]
+    }
+
+    fun unnestNestedExample() {
+        // [START unnest_nested]
+        val userScore = db.pipeline()
+            .collection("users")
+            .unnest(field("record").alias("record"))
+            .unnest(field("record.scores").alias("userScore"), UnnestOptions().withIndexField("attempt"))
+            .execute()
+        // [END unnest_nested]
+        println(userScore)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/sample
+    fun sampleSyntaxExample() {
+        // [START sample_syntax]
+        var sampled = db.pipeline()
+            .database()
+            .sample(50)
+            .execute()
+
+        sampled = db.pipeline()
+            .database()
+            .sample(SampleStage.withPercentage(0.5))
+            .execute()
+        // [END sample_syntax]
+        println(sampled)
+    }
+
+    fun sampleDocumentsDataExample() {
+        // [START sample_documents_data]
+        db.collection("cities").document("SF").set(mapOf("name" to "San Francisco", "state" to "California"))
+        db.collection("cities").document("NYC").set(mapOf("name" to "New York City", "state" to "New York"))
+        db.collection("cities").document("CHI").set(mapOf("name" to "Chicago", "state" to "Illinois"))
+        // [END sample_documents_data]
+    }
+
+    fun sampleDocumentsExample() {
+        // [START sample_documents]
+        val sampled = db.pipeline()
+            .collection("cities")
+            .sample(1)
+            .execute()
+        // [END sample_documents]
+        println(sampled)
+    }
+
+    fun sampleAllDocumentsExample() {
+        // [START sample_all_documents]
+        val sampled = db.pipeline()
+            .collection("cities")
+            .sample(5)
+            .execute()
+        // [END sample_all_documents]
+        println(sampled)
+    }
+
+    fun samplePercentageDataExample() {
+        // [START sample_percentage_data]
+        db.collection("cities").document("SF").set(mapOf("name" to "San Francsico", "state" to "California"))
+        db.collection("cities").document("NYC").set(mapOf("name" to "New York City", "state" to "New York"))
+        db.collection("cities").document("CHI").set(mapOf("name" to "Chicago", "state" to "Illinois"))
+        db.collection("cities").document("ATL").set(mapOf("name" to "Atlanta", "state" to "Georgia"))
+        // [END sample_percentage_data]
+    }
+
+    fun samplePercentageExample() {
+        // [START sample_percentage]
+        val sampled = db.pipeline()
+            .collection("cities")
+            .sample(SampleStage.withPercentage(0.5))
+            .execute()
+        // [END sample_percentage]
+        println(sampled)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/sort
+    fun sortSyntaxExample() {
+        // [START sort_syntax]
+        val results = db.pipeline()
+            .collection("cities")
+            .sort(field("population").ascending())
+            .execute()
+        // [END sort_syntax]
+        println(results)
+    }
+
+    fun sortSyntaxExample2() {
+        // [START sort_syntax_2]
+        val results = db.pipeline()
+            .collection("cities")
+            .sort(field("name").charLength().ascending())
+            .execute()
+        // [END sort_syntax_2]
+        println(results)
+    }
+
+    fun sortDocumentIDExample() {
+        // [START sort_document_id]
+        val results = db.pipeline()
+            .collection("cities")
+            .sort(field("country").ascending(), field("__name__").ascending())
+            .execute()
+        // [END sort_document_id]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/select
+    fun selectSyntaxExample() {
+        // [START select_syntax]
+        val names = db.pipeline()
+            .collection("cities")
+            .select(
+                field("name").stringConcat(", ", field("location.country")).alias("name"),
+                field("population")
+            ).execute()
+        // [END select_syntax]
+        println(names)
+    }
+
+    fun selectPositionDataExample() {
+        // [START select_position_data]
+        db.collection("cities").document("SF").set(
+            mapOf(
+                "name" to "San Francisco",
+                "population" to 800000,
+                "location" to mapOf("country" to "USA", "state" to "California")
+            )
+        )
+        db.collection("cities").document("TO").set(
+            mapOf(
+                "name" to "Toronto",
+                "population" to 3000000,
+                "location" to mapOf("country" to "Canada", "province" to "Ontario")
+            )
+        )
+        // [END select_position_data]
+    }
+
+    fun selectPositionExample() {
+        // [START select_position]
+        val names = db.pipeline()
+            .collection("cities")
+            .where(field("location.country").equal(constant("Canada")))
+            .select(
+                field("name").stringConcat(", ", field("location.country")).alias("name"),
+                field("population")
+            )
+            .execute()
+        // [END select_position]
+        println(names)
+    }
+
+    fun selectBadPositionExample() {
+        // [START select_bad_position]
+        val names = db.pipeline()
+            .collection("cities")
+            .select(
+                field("name").stringConcat(", ", field("location.country")).alias("name"),
+                field("population")
+            )
+            .where(field("location.country").equal(constant("Canada")))
+            .execute()
+        // [END select_bad_position]
+        println(names)
+    }
+
+    fun selectNestedDataExample() {
+        // [START select_nested_data]
+        db.collection("cities").document("SF").set(
+            mapOf(
+                "name" to "San Francisco",
+                "population" to 800000,
+                "location" to mapOf("country" to "USA", "state" to "California"),
+                "landmarks" to listOf("Golden Gate Bridge", "Alcatraz")
+            )
+        )
+        db.collection("cities").document("TO").set(
+            mapOf(
+                "name" to "Toronto",
+                "population" to 3000000,
+                "province" to "ON",
+                "location" to mapOf("country" to "Canada", "province" to "Ontario"),
+                "landmarks" to listOf("CN Tower", "Casa Loma")
+            )
+        )
+        db.collection("cities").document("AT").set(mapOf("name" to "Atlantis", "population" to null))
+        // [END select_nested_data]
+    }
+
+    fun selectNestedExample() {
+        // [START select_nested]
+        val locations = db.pipeline()
+            .collection("cities")
+            .select(
+                field("name").alias("city"),
+                field("location.country").alias("country"),
+                field("landmarks").arrayGet(0).alias("topLandmark")
+            ).execute()
+        // [END select_nested]
+        println(locations)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/remove_fields
+    fun removeFieldsSyntaxExample() {
+        // [START remove_fields_syntax]
+        val results = db.pipeline()
+            .collection("cities")
+            .removeFields("population", "location.state")
+            .execute()
+        // [END remove_fields_syntax]
+        println(results)
+    }
+
+    fun removeFieldsNestedDataExample() {
+        // [START remove_fields_nested_data]
+        db.collection("cities").document("SF").set(
+            mapOf(
+                "name" to "San Francisco",
+                "location" to mapOf("country" to "USA", "state" to "California")
+            )
+        )
+        db.collection("cities").document("TO").set(
+            mapOf(
+                "name" to "Toronto",
+                "location" to mapOf("country" to "Canada", "province" to "Ontario")
+            )
+        )
+        // [END remove_fields_nested_data]
+    }
+
+    fun removeFieldsNestedExample() {
+        // [START remove_fields_nested]
+        val results = db.pipeline()
+            .collection("cities")
+            .removeFields("location.state")
+            .execute()
+        // [END remove_fields_nested]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/limit
+    fun limitSyntaxExample() {
+        // [START limit_syntax]
+        val results = db.pipeline()
+            .collection("cities")
+            .limit(10)
+            .execute()
+        // [END limit_syntax]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/find_nearest
+    fun findNearestSyntaxExample() {
+        // [START find_nearest_syntax]
+        val results = db.pipeline()
+            .collection("cities")
+            .findNearest(
+                "embedding",
+                FieldValue.vector(doubleArrayOf(1.5, 2.345)),
+                FindNearestStage.DistanceMeasure.EUCLIDEAN
+            )
+            .execute()
+        // [END find_nearest_syntax]
+        println(results)
+    }
+
+    fun findNearestLimitExample() {
+        // [START find_nearest_limit]
+        val results = db.pipeline()
+            .collection("cities")
+            .findNearest(
+                "embedding",
+                FieldValue.vector(doubleArrayOf(1.5, 2.345)),
+                FindNearestStage.DistanceMeasure.EUCLIDEAN
+            )
+            .execute()
+        // [END find_nearest_limit]
+        println(results)
+    }
+
+    fun findNearestDistanceDataExample() {
+        // [START find_nearest_distance_data]
+        db.collection("cities").document("SF").set(mapOf("name" to "San Francisco", "embedding" to listOf(1.0, -1.0)))
+        db.collection("cities").document("TO").set(mapOf("name" to "Toronto", "embedding" to listOf(5.0, -10.0)))
+        db.collection("cities").document("AT").set(mapOf("name" to "Atlantis", "embedding" to listOf(2.0, -4.0)))
+        // [END find_nearest_distance_data]
+    }
+
+    fun findNearestDistanceExample() {
+        // [START find_nearest_distance]
+        val results = db.pipeline()
+            .collection("cities")
+            .findNearest(
+                "embedding",
+                FieldValue.vector(doubleArrayOf(1.3, 2.345)),
+                FindNearestStage.DistanceMeasure.EUCLIDEAN
+            )
+            .execute()
+        // [END find_nearest_distance]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/offset
+    fun offsetSyntaxExample() {
+        // [START offset_syntax]
+        val results = db.pipeline()
+            .collection("cities")
+            .offset(10)
+            .execute()
+        // [END offset_syntax]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/add_fields
+    fun addFieldsSyntaxExample() {
+        // [START add_fields_syntax]
+        val results = db.pipeline()
+            .collection("users")
+            .addFields(field("firstName").stringConcat(" ", field("lastName")).alias("fullName"))
+            .execute()
+        // [END add_fields_syntax]
+        println(results)
+    }
+
+    fun addFieldsOverlapExample() {
+        // [START add_fields_overlap]
+        val results = db.pipeline()
+            .collection("users")
+            .addFields(field("age").abs().alias("age"))
+            .addFields(field("age").add(10).alias("age"))
+            .execute()
+        // [END add_fields_overlap]
+        println(results)
+    }
+
+    fun addFieldsNestingExample() {
+        // [START add_fields_nesting]
+        val results = db.pipeline()
+            .collection("users")
+            .addFields(field("address.city").toLower().alias("address.city"))
+            .execute()
+        // [END add_fields_nesting]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/input/collection
+    fun collectionInputSyntaxExample() {
+        // [START collection_input_syntax]
+        val results = db.pipeline()
+            .collection("cities/SF/departments")
+            .execute()
+        // [END collection_input_syntax]
+        println(results)
+    }
+
+    fun collectionInputExampleData() {
+        // [START collection_input_data]
+        db.collection("cities").document("SF").set(mapOf("name" to "San Francsico", "state" to "California"))
+        db.collection("cities").document("NYC").set(mapOf("name" to "New York City", "state" to "New York"))
+        db.collection("cities").document("CHI").set(mapOf("name" to "Chicago", "state" to "Illinois"))
+        db.collection("states").document("CA").set(mapOf("name" to "California"))
+        // [END collection_input_data]
+    }
+
+    fun collectionInputExample() {
+        // [START collection_input]
+        val results = db.pipeline()
+            .collection("cities")
+            .sort(field("name").ascending())
+            .execute()
+        // [END collection_input]
+        println(results)
+    }
+
+    fun subcollectionInputExampleData() {
+        // [START subcollection_input_data]
+        db.collection("cities/SF/departments").document("building")
+            .set(mapOf("name" to "SF Building Deparment", "employees" to 750))
+        db.collection("cities/NY/departments").document("building")
+            .set(mapOf("name" to "NY Building Deparment", "employees" to 1000))
+        db.collection("cities/CHI/departments").document("building")
+            .set(mapOf("name" to "CHI Building Deparment", "employees" to 900))
+        db.collection("cities/NY/departments").document("finance")
+            .set(mapOf("name" to "NY Finance Deparment", "employees" to 1200))
+        // [END subcollection_input_data]
+    }
+
+    fun subcollectionInputExample() {
+        // [START subcollection_input]
+        val results = db.pipeline()
+            .collection("cities/NY/departments")
+            .sort(field("employees").ascending())
+            .execute()
+        // [END subcollection_input]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/input/collection_group
+    fun collectionGroupInputSyntaxExample() {
+        // [START collection_group_input_syntax]
+        val results = db.pipeline()
+            .collectionGroup("departments")
+            .execute()
+        // [END collection_group_input_syntax]
+        println(results)
+    }
+
+    fun collectionGroupInputExampleData() {
+        // [START collection_group_data]
+        db.collection("cities/SF/departments").document("building").set(mapOf("name" to "SF Building Deparment", "employees" to 750))
+        db.collection("cities/NY/departments").document("building").set(mapOf("name" to "NY Building Deparment", "employees" to 1000))
+        db.collection("cities/CHI/departments").document("building").set(mapOf("name" to "CHI Building Deparment", "employees" to 900))
+        db.collection("cities/NY/departments").document("finance").set(mapOf("name" to "NY Finance Deparment", "employees" to 1200))
+        // [END collection_group_data]
+    }
+
+    fun collectionGroupInputExample() {
+        // [START collection_group_input]
+        val results = db.pipeline()
+            .collectionGroup("departments")
+            .sort(field("employees").ascending())
+            .execute()
+        // [END collection_group_input]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/input/database
+    fun databaseInputSyntaxExample() {
+        // [START database_syntax]
+        val results = db.pipeline()
+            .database()
+            .execute()
+        // [END database_syntax]
+        println(results)
+    }
+
+    fun databaseInputSyntaxExampleData() {
+        // [START database_input_data]
+        db.collection("cities").document("SF").set(mapOf("name" to "San Francsico", "state" to "California", "population" to 800000))
+        db.collection("states").document("CA").set(mapOf("name" to "California", "population" to 39000000))
+        db.collection("countries").document("USA").set(mapOf("name" to "United States of America", "population" to 340000000))
+        // [END database_input_data]
+    }
+
+    fun databaseInputExample() {
+        // [START database_input]
+        val results = db.pipeline()
+            .database()
+            .sort(field("population").ascending())
+            .execute()
+        // [END database_input]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/input/documents
+    fun documentInputSyntaxExample() {
+        // [START document_input_syntax]
+        val results = db.pipeline()
+            .documents(
+                db.collection("cities").document("SF"),
+                db.collection("cities").document("NY")
+            )
+            .execute()
+        // [END document_input_syntax]
+        println(results)
+    }
+
+    fun documentInputExampleData() {
+        // [START document_input_data]
+        db.collection("cities").document("SF").set(mapOf("name" to "San Francsico", "state" to "California"))
+        db.collection("cities").document("NYC").set(mapOf("name" to "New York City", "state" to "New York"))
+        db.collection("cities").document("CHI").set(mapOf("name" to "Chicago", "state" to "Illinois"))
+        // [END document_input_data]
+    }
+
+    fun documentInputExample() {
+        // [START document_input]
+        val results = db.pipeline()
+            .documents(
+                db.collection("cities").document("SF"),
+                db.collection("cities").document("NYC")
+            )
+            .sort(field("name").ascending())
+            .execute()
+        // [END document_input]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/union
+    fun unionSyntaxExample() {
+        // [START union_syntax]
+        val results = db.pipeline()
+            .collection("cities/SF/restaurants")
+            .union(db.pipeline().collection("cities/NYC/restaurants"))
+            .execute()
+        // [END union_syntax]
+        println(results)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/aggregate
+    fun aggregateSyntaxExample() {
+        // [START aggregate_syntax]
+        val cities = db.pipeline()
+            .collection("cities")
+            .aggregate(
+                AggregateFunction.countAll().alias("total"),
+                AggregateFunction.average("population").alias("averagePopulation")
+            ).execute()
+        // [END aggregate_syntax]
+        println(cities)
+    }
+
+    fun aggregateGroupSyntax() {
+        // [START aggregate_group_syntax]
+        val result = db.pipeline()
+            .collectionGroup("cities")
+            .aggregate(
+                AggregateStage
+                    .withAccumulators(
+                        AggregateFunction.countAll().alias("cities"),
+                        AggregateFunction.sum(field("population")).alias("totalPopulation")
+                    )
+                    .withGroups(field("location.state").alias("state"))
+            )
+            .execute()
+        // [END aggregate_group_syntax]
+        println(result)
+    }
+
+    fun aggregateExampleData() {
+        // [START aggregate_data]
+        db.collection("cities").document("SF").set(mapOf("name" to "San Francisco", "state" to "CA", "country" to "USA", "population" to 870000))
+        db.collection("cities").document("LA").set(mapOf("name" to "Los Angeles", "state" to "CA", "country" to "USA", "population" to 3970000))
+        db.collection("cities").document("NY").set(mapOf("name" to "New York", "state" to "NY", "country" to "USA", "population" to 8530000))
+        db.collection("cities").document("TOR").set(mapOf("name" to "Toronto", "state" to null, "country" to "Canada", "population" to 2930000))
+        db.collection("cities").document("MEX").set(mapOf("name" to "Mexico City", "state" to null, "country" to "Mexico", "population" to 9200000))
+        // [END aggregate_data]
+    }
+
+    fun aggregateWithoutGroupExample() {
+        // [START aggregate_without_group]
+        val cities = db.pipeline()
+            .collection("cities")
+            .aggregate(
+                AggregateFunction.countAll().alias("total"),
+                AggregateFunction.average("population").alias("averagePopulation")
+            ).execute()
+        // [END aggregate_without_group]
+        println(cities)
+    }
+
+    fun aggregateGroupExample() {
+        // [START aggregate_group_example]
+        val cities = db.pipeline()
+            .collection("cities")
+            .aggregate(
+                AggregateStage
+                    .withAccumulators(
+                        AggregateFunction.countAll().alias("numberOfCities"),
+                        AggregateFunction.maximum("population").alias("maxPopulation")
+                    )
+                    .withGroups(field("country"), field("state"))
+            )
+            .execute()
+        // [END aggregate_group_example]
+        println(cities)
+    }
+
+    fun aggregateGroupComplexExample() {
+        // [START aggregate_group_complex]
+        val cities = db.pipeline()
+            .collection("cities")
+            .aggregate(
+                AggregateStage
+                    .withAccumulators(
+                        AggregateFunction.sum("population").alias("totalPopulation")
+                    )
+                    .withGroups(field("state").equal(Expression.nullValue()).alias("stateIsNull"))
+            )
+            .execute()
+        // [END aggregate_group_complex]
+        println(cities)
+    }
+
+    // https://cloud.google.com/firestore/docs/pipeline/stages/transformation/distinct
+    fun distinctSyntaxExample() {
+        // [START distinct_syntax]
+        var cities = db.pipeline()
+            .collection("cities")
+            .distinct("country")
+            .execute()
+
+        cities = db.pipeline()
+            .collection("cities")
+            .distinct(
+                field("state").toLower().alias("normalizedState"),
+                field("country")
+            )
+            .execute()
+        // [END distinct_syntax]
+        println(cities)
+    }
+
+    fun distinctExampleData() {
+        // [START distinct_data]
+        db.collection("cities").document("SF").set(mapOf("name" to "San Francisco", "state" to "CA", "country" to "USA"))
+        db.collection("cities").document("LA").set(mapOf("name" to "Los Angeles", "state" to "CA", "country" to "USA"))
+        db.collection("cities").document("NY").set(mapOf("name" to "New York", "state" to "NY", "country" to "USA"))
+        db.collection("cities").document("TOR").set(mapOf("name" to "Toronto", "state" to null, "country" to "Canada"))
+        db.collection("cities").document("MEX").set(mapOf("name" to "Mexico City", "state" to null, "country" to "Mexico"))
+        // [END distinct_data]
+    }
+
+    fun distinctExample() {
+        // [START distinct_example]
+        val cities = db.pipeline()
+            .collection("cities")
+            .distinct("country")
+            .execute()
+        // [END distinct_example]
+        println(cities)
+    }
+
+    fun distinctExpressionsExample() {
+        // [START distinct_expressions]
+        val cities = db.pipeline()
+            .collection("cities")
+            .distinct(
+                field("state").toLower().alias("normalizedState"),
+                field("country")
+            )
+            .execute()
+        // [END distinct_expressions]
+        println(cities)
+    }
+
 }

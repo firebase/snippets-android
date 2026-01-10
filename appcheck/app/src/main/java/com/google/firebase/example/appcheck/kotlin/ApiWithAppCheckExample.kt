@@ -39,4 +39,11 @@ class Misc {
         }
         // [END appcheck_get_limited_use_token]
     }
+}const appCheckClaims = await getAppCheck().verifyToken(appCheckToken, { consume: true });
+
+if (appCheckClaims.alreadyConsumed) {
+    res.status(401);
+    return next('Unauthorized');
 }
+
+// If verifyToken() succeeds and alreadyConsumed is not set, okay to continue.

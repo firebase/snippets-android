@@ -1329,6 +1329,29 @@ public class DocSnippets {
         // [END update_with_server_timestamp]
     }
 
+    public void typeAndGenericFunctions() {
+        // [START type_function]
+        Expression typeOfField = field("rating").type();
+        // [END type_function]
+
+        // [START concat_function]
+        Expression displayString = constant("Author ID: ").concat(field("authorId"));
+        // [END concat_function]
+
+        // [START length_function]
+        Expression tagsCount = field("tags").length();
+        // [END length_function]
+
+        // [START reverse_function]
+        Expression reversedTags = field("tags").reverse();
+        // [END reverse_function]
+
+        System.out.println(typeOfField);
+        System.out.println(displayString);
+        System.out.println(tagsCount);
+        System.out.println(reversedTags);
+    }
+
     public void updateDeleteField() {
         // [START update_delete_field]
         DocumentReference docRef = db.collection("cities").document("BJ");

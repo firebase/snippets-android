@@ -3,6 +3,8 @@
 package com.google.example.firestore.kotlin
 
 import android.util.Log
+import com.google.android.gms.tasks.Task
+import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.AggregateField
 import com.google.firebase.firestore.AggregateSource
@@ -11,7 +13,9 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.MetadataChanges
+import com.google.firebase.firestore.Pipeline
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ServerTimestamp
 import com.google.firebase.firestore.SetOptions
@@ -20,26 +24,22 @@ import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.firestoreSettings
 import com.google.firebase.firestore.memoryCacheSettings
 import com.google.firebase.firestore.persistentCacheSettings
-import com.google.firebase.firestore.toObject
-import com.google.firebase.Firebase
-import java.util.ArrayList
-import java.util.Date
-import java.util.HashMap
-import java.util.concurrent.LinkedBlockingQueue
-import java.util.concurrent.ThreadPoolExecutor
-import java.util.concurrent.TimeUnit
-import com.google.android.gms.tasks.Task
-import com.google.firebase.firestore.GeoPoint
-import com.google.firebase.firestore.Pipeline
-import com.google.firebase.firestore.VectorValue
 import com.google.firebase.firestore.pipeline.AggregateFunction
 import com.google.firebase.firestore.pipeline.AggregateStage
 import com.google.firebase.firestore.pipeline.Expression
-import com.google.firebase.firestore.pipeline.Expression.Companion.field
 import com.google.firebase.firestore.pipeline.Expression.Companion.constant
+import com.google.firebase.firestore.pipeline.Expression.Companion.field
+import com.google.firebase.firestore.pipeline.Expression.concat
+import com.google.firebase.firestore.pipeline.Expression.length
+import com.google.firebase.firestore.pipeline.Expression.type
 import com.google.firebase.firestore.pipeline.FindNearestStage
 import com.google.firebase.firestore.pipeline.SampleStage
 import com.google.firebase.firestore.pipeline.UnnestOptions
+import com.google.firebase.firestore.toObject
+import java.util.Date
+import java.util.concurrent.LinkedBlockingQueue
+import java.util.concurrent.ThreadPoolExecutor
+import java.util.concurrent.TimeUnit
 
 /**
  * Kotlin version of doc snippets.
@@ -1328,6 +1328,32 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             }
         }
         // [END multi_aggregate_query]
+    }
+
+    fun typeAndGenericFunctions() {
+        // [START type_function]
+        val typeOfField = field("rating").type()
+
+        // [END type_function]
+
+        // [START concat_function]
+        val displayString = constant("Author ID: ").concat(field("authorId"))
+
+        // [END concat_function]
+
+        // [START length_function]
+        val tagsCount = field("tags").length()
+
+        // [END length_function]
+
+        // [START reverse_function]
+        val reversedTags = field("tags").reverse()
+        // [END reverse_function]
+
+        println(typeOfField)
+        println(displayString)
+        println(tagsCount)
+        println(reversedTags)
     }
 
     // https://cloud.google.com/firestore/docs/pipeline/overview#concepts

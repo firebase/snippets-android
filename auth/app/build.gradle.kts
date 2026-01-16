@@ -2,7 +2,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     id("com.android.application")
-    id("kotlin-android")
 }
 
 android {
@@ -49,7 +48,7 @@ dependencies {
     // Add the dependency for the Firebase Authentication library
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation("com.google.firebase:firebase-auth")
-    
+
     // [START gradle_firebase_ui_auth]
     implementation("com.firebaseui:firebase-ui-auth:9.1.1")
 

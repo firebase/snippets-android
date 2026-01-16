@@ -41,7 +41,6 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.7.1")
     implementation("com.google.firebase:firebase-ads:23.6.0")
     implementation("androidx.constraintlayout:constraintlayout:2.2.1")
-    implementation("androidx.multidex:multidex:2.0.1")
 
     // [START gradle_play_config]
     implementation("com.google.android.gms:play-services-ads:24.9.0")

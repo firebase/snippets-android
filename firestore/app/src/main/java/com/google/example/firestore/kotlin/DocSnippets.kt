@@ -1985,11 +1985,11 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .collection("cities")
             .addFields(
                 field("lat").subtract(googleplex.latitude)
-                    .multiply(111 /* km per degree */)
+                    .multiply(111) // km per degree
                     .pow(2)
                     .alias("latitudeDifference"),
                 field("lng").subtract(googleplex.longitude)
-                    .multiply(111 /* km per degree */)
+                    .multiply(111) // km per degree
                     .pow(2)
                     .alias("longitudeDifference")
             )
@@ -2011,11 +2011,11 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .collection("cities")
             .addFields(
                 field("lat").subtract(googleplex.latitude)
-                    .multiply(111 /* km per degree */)
+                    .multiply(111) // km per degree
                     .pow(2)
                     .alias("latitudeDifference"),
                 field("lng").subtract(googleplex.longitude)
-                    .multiply(111 /* km per degree */)
+                    .multiply(111) // km per degree
                     .pow(2)
                     .alias("longitudeDifference")
             )

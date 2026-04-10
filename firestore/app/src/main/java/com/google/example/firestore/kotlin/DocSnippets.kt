@@ -27,11 +27,14 @@ import com.google.firebase.firestore.persistentCacheSettings
 import com.google.firebase.firestore.pipeline.AggregateFunction
 import com.google.firebase.firestore.pipeline.AggregateStage
 import com.google.firebase.firestore.pipeline.Expression
+import com.google.firebase.firestore.pipeline.AggregateFunction.Companion.average
+import com.google.firebase.firestore.pipeline.AggregateFunction.Companion.countAll
 import com.google.firebase.firestore.pipeline.Expression.Companion.constant
 import com.google.firebase.firestore.pipeline.Expression.Companion.field
-import com.google.firebase.firestore.pipeline.Expression.concat
-import com.google.firebase.firestore.pipeline.Expression.length
-import com.google.firebase.firestore.pipeline.Expression.type
+import com.google.firebase.firestore.pipeline.Expression.Companion.concat
+import com.google.firebase.firestore.pipeline.Expression.Companion.length
+import com.google.firebase.firestore.pipeline.Expression.Companion.type
+import com.google.firebase.firestore.pipeline.Expression.Companion.variable
 import com.google.firebase.firestore.pipeline.FindNearestStage
 import com.google.firebase.firestore.pipeline.SampleStage
 import com.google.firebase.firestore.pipeline.UnnestOptions
@@ -3217,7 +3220,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .collection("cities")
             .findNearest(
                 "embedding",
-                FieldValue.vector(doubleArrayOf(1.5, 2.345)),
+                doubleArrayOf(1.5, 2.345),
                 FindNearestStage.DistanceMeasure.EUCLIDEAN
             )
             .execute()
@@ -3231,7 +3234,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .collection("cities")
             .findNearest(
                 "embedding",
-                FieldValue.vector(doubleArrayOf(1.5, 2.345)),
+                doubleArrayOf(1.5, 2.345),
                 FindNearestStage.DistanceMeasure.EUCLIDEAN
             )
             .execute()
@@ -3253,7 +3256,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .collection("cities")
             .findNearest(
                 "embedding",
-                FieldValue.vector(doubleArrayOf(1.3, 2.345)),
+                doubleArrayOf(1.3, 2.345),
                 FindNearestStage.DistanceMeasure.EUCLIDEAN
             )
             .execute()
@@ -3593,6 +3596,64 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .execute()
         // [END distinct_expressions]
         println(cities)
+    }
+
+    // https://firebase.google.com/docs/firestore/pipelines/perform-joins-with-sub-pipelines
+    fun defineStage() {
+        // [START define_example]
+        val result = db.pipeline().collection("authors")
+            .define(
+                field("id").alias("currentAuthorId")
+            )
+            // ...
+            // [END define_example]
+            .addFields(
+                db.pipeline().collection("books")
+                    .where(field("author_id").equal(variable("currentAuthorId")))
+                    .aggregate(
+                        field("rating").average().alias("avgRating")
+                    )
+                    .toScalarExpression()
+                    .alias("averageBookRating")
+            )
+            .execute()
+    }
+
+    // https://firebase.google.com/docs/firestore/pipelines/perform-joins-with-sub-pipelines
+    fun toArrayExpressionStage() {
+        // [START to_array_expression]
+        val projectsPipeline = db.pipeline().collection("projects")
+            .define(
+                field("id").alias("parentId")
+            )
+            .addFields(
+                db.pipeline().collection("tasks")
+                    .where(field("project_id").equal(variable("parentId")))
+                    .select(field("title"))
+                    .toArrayExpression()
+                    .alias("taskTitles")
+            )
+        // [END to_array_expression]
+    }
+
+    // https://firebase.google.com/docs/firestore/pipelines/perform-joins-with-sub-pipelines
+    fun toScalarExpressionStage() {
+        // [START to_scalar_expression]
+        val result = db.pipeline().collection("authors")
+            .define(
+                field("id").alias("currentAuthorId")
+            )
+            .addFields(
+                db.pipeline().collection("books")
+                    .where(field("author_id").equal(variable("currentAuthorId")))
+                    .aggregate(
+                        field("rating").average().alias("avgRating")
+                    )
+                    .toScalarExpression()
+                    .alias("averageBookRating")
+            )
+            .execute()
+        // [END to_scalar_expression]
     }
 
 }

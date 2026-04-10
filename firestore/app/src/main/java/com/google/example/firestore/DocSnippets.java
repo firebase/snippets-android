@@ -66,6 +66,9 @@ import com.google.firebase.firestore.pipeline.UnnestOptions;
 
 import static com.google.firebase.firestore.pipeline.Expression.field;
 import static com.google.firebase.firestore.pipeline.Expression.constant;
+import static com.google.firebase.firestore.pipeline.Expression.variable;
+import static com.google.firebase.firestore.pipeline.AggregateFunction.average;
+import static com.google.firebase.firestore.pipeline.AggregateFunction.countAll;
 
 /**
  * Snippets for inclusion in documentation.
@@ -3985,6 +3988,64 @@ public class DocSnippets {
                 .execute();
         // [END distinct_expressions]
         System.out.println(cities);
+    }
+
+    // https://firebase.google.com/docs/firestore/pipelines/perform-joins-with-sub-pipelines
+    void defineStage() {
+        // [START define_example]
+        Task<Pipeline.Snapshot> result = db.pipeline().collection("authors")
+                .define(
+                        field("id").alias("currentAuthorId")
+                )
+                // ...
+                // [END define_example]
+                .addFields(
+                        db.pipeline().collection("books")
+                                .where(field("author_id").equal(variable("currentAuthorId")))
+                                .aggregate(
+                                        field("rating").average().alias("avgRating")
+                                )
+                                .toScalarExpression()
+                                .alias("averageBookRating")
+                )
+                .execute();
+    }
+
+    // https://firebase.google.com/docs/firestore/pipelines/perform-joins-with-sub-pipelines
+    void toArrayExpressionStage() {
+        // [START to_array_expression]
+        Pipeline projectsPipeline = db.pipeline().collection("projects")
+                .define(
+                        field("id").alias("parentId")
+                )
+                .addFields(
+                        db.pipeline().collection("tasks")
+                                .where(field("project_id").equal(variable("parentId")))
+                                .select(field("title"))
+                                .toArrayExpression()
+                                .alias("taskTitles")
+                );
+        // [END to_array_expression]
+    }
+
+    // https://firebase.google.com/docs/firestore/pipelines/perform-joins-with-sub-pipelines
+    void toScalarExpressionStage() {
+        // [START to_scalar_expression]
+        Task<Pipeline.Snapshot> result = db.pipeline().collection("authors")
+                .define(
+                        field("id").alias("currentAuthorId")
+                )
+                .addFields(
+                        db.pipeline().collection("books")
+                                .where(field("author_id").equal(variable("currentAuthorId")))
+                                .aggregate(
+                                        field("rating").average().alias("avgRating")
+                                )
+                                .toScalarExpression()
+                                .alias("averageBookRating")
+                )
+                .execute();
+        // [END to_scalar_expression]
     }
 
 }

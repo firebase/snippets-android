@@ -32,11 +32,14 @@ import com.google.firebase.firestore.pipeline.AggregateFunction.Companion.countA
 import com.google.firebase.firestore.pipeline.Expression.Companion.constant
 import com.google.firebase.firestore.pipeline.Expression.Companion.field
 import com.google.firebase.firestore.pipeline.Expression.Companion.concat
+import com.google.firebase.firestore.pipeline.Expression.Companion.documentMatches
 import com.google.firebase.firestore.pipeline.Expression.Companion.length
+import com.google.firebase.firestore.pipeline.Expression.Companion.score
 import com.google.firebase.firestore.pipeline.Expression.Companion.type
 import com.google.firebase.firestore.pipeline.Expression.Companion.variable
 import com.google.firebase.firestore.pipeline.FindNearestStage
 import com.google.firebase.firestore.pipeline.SampleStage
+import com.google.firebase.firestore.pipeline.SearchStage
 import com.google.firebase.firestore.pipeline.UnnestOptions
 import com.google.firebase.firestore.toObject
 import java.util.Date
@@ -3654,6 +3657,44 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             )
             .execute()
         // [END to_scalar_expression]
+    }
+
+    fun searchBasicQuery() {
+        // [START search_basic_query]
+        val pipeline = db.pipeline().collection("restaurants")
+            .search(SearchStage.withQuery(documentMatches("waffles")))
+        // [END search_basic_query]
+    }
+
+    fun searchExactMatch() {
+        // [START search_exact_match]
+        val pipeline = db.pipeline().collection("restaurants")
+            .search(SearchStage.withQuery(documentMatches("\"belgian waffles\"")))
+        // [END search_exact_match]
+    }
+
+    fun searchTwoTerms() {
+        // [START search_two_terms]
+        val pipeline = db.pipeline().collection("restaurants")
+            .search(SearchStage.withQuery(documentMatches("waffles eggs")))
+        // [END search_two_terms]
+    }
+
+    fun searchExcludeTerm() {
+        // [START search_exclude_term]
+        val pipeline = db.pipeline().collection("restaurants")
+            .search(SearchStage.withQuery(documentMatches("coffee -waffles")))
+        // [END search_exclude_term]
+    }
+
+    fun searchAddScore() {
+        // [START search_add_score]
+        val pipeline = db.pipeline().collection("restaurants")
+            .search(
+                SearchStage.withQuery(documentMatches("menu:waffles"))
+                    .withAddFields(score().alias("score"))
+            )
+        // [END search_add_score]
     }
 
 }

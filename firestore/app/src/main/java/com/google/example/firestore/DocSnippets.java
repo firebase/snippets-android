@@ -62,11 +62,14 @@ import com.google.firebase.firestore.pipeline.AggregateStage;
 import com.google.firebase.firestore.pipeline.Expression;
 import com.google.firebase.firestore.pipeline.FindNearestStage;
 import com.google.firebase.firestore.pipeline.SampleStage;
+import com.google.firebase.firestore.pipeline.SearchStage;
 import com.google.firebase.firestore.pipeline.UnnestOptions;
 
 import static com.google.firebase.firestore.pipeline.Expression.field;
 import static com.google.firebase.firestore.pipeline.Expression.constant;
 import static com.google.firebase.firestore.pipeline.Expression.variable;
+import static com.google.firebase.firestore.pipeline.Expression.documentMatches;
+import static com.google.firebase.firestore.pipeline.Expression.score;
 import static com.google.firebase.firestore.pipeline.AggregateFunction.average;
 import static com.google.firebase.firestore.pipeline.AggregateFunction.countAll;
 
@@ -4046,6 +4049,43 @@ public class DocSnippets {
                 )
                 .execute();
         // [END to_scalar_expression]
+    }
+
+    void searchBasicQuery() {
+        // [START search_basic_query]
+        Pipeline pipeline = db.pipeline().collection("restaurants")
+                .search(SearchStage.withQuery(documentMatches("waffles")));
+        // [END search_basic_query]
+    }
+
+    void searchExactMatch() {
+        // [START search_exact_match]
+        Pipeline pipeline = db.pipeline().collection("restaurants")
+                .search(SearchStage.withQuery(documentMatches("\"belgian waffles\"")));
+        // [END search_exact_match]
+    }
+
+    void searchTwoTerms() {
+        // [START search_two_terms]
+        Pipeline pipeline = db.pipeline().collection("restaurants")
+                .search(SearchStage.withQuery(documentMatches("waffles eggs")));
+        // [END search_two_terms]
+    }
+
+    void searchExcludeTerm() {
+        // [START search_exclude_term]
+        Pipeline pipeline = db.pipeline().collection("restaurants")
+                .search(SearchStage.withQuery(documentMatches("coffee -waffles")));
+        // [END search_exclude_term]
+    }
+
+    void searchAddScore() {
+        // [START search_add_score]
+        Pipeline pipeline = db.pipeline().collection("restaurants")
+                .search(
+                        SearchStage.withQuery(documentMatches("menu:waffles"))
+                                .withAddFields(score().alias("score")));
+        // [END search_add_score]
     }
 
 }

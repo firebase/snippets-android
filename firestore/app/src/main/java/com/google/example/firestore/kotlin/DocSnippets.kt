@@ -25,13 +25,13 @@ import com.google.firebase.firestore.firestoreSettings
 import com.google.firebase.firestore.memoryCacheSettings
 import com.google.firebase.firestore.persistentCacheSettings
 import com.google.firebase.firestore.pipeline.AggregateFunction
-import com.google.firebase.firestore.pipeline.AggregateStage
-import com.google.firebase.firestore.pipeline.Expression
 import com.google.firebase.firestore.pipeline.AggregateFunction.Companion.average
 import com.google.firebase.firestore.pipeline.AggregateFunction.Companion.countAll
+import com.google.firebase.firestore.pipeline.AggregateStage
+import com.google.firebase.firestore.pipeline.Expression
+import com.google.firebase.firestore.pipeline.Expression.Companion.concat
 import com.google.firebase.firestore.pipeline.Expression.Companion.constant
 import com.google.firebase.firestore.pipeline.Expression.Companion.field
-import com.google.firebase.firestore.pipeline.Expression.Companion.concat
 import com.google.firebase.firestore.pipeline.Expression.Companion.length
 import com.google.firebase.firestore.pipeline.Expression.Companion.type
 import com.google.firebase.firestore.pipeline.Expression.Companion.variable
@@ -138,10 +138,12 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
     private fun setupCacheSize() {
         // [START fs_setup_cache]
         val settings = firestoreSettings {
-            setLocalCacheSettings(persistentCacheSettings {
-                // Set size to 100 MB
-                setSizeBytes(1024 * 1024 * 100)
-            })
+            setLocalCacheSettings(
+                persistentCacheSettings {
+                    // Set size to 100 MB
+                    setSizeBytes(1024 * 1024 * 100)
+                },
+            )
         }
         db.firestoreSettings = settings
         // [END fs_setup_cache]
@@ -1161,13 +1163,15 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
     fun orQuery() {
         val collection = db.collection("cities")
         // [START or_queries]
-        val query = collection.where(Filter.and(
-            Filter.equalTo("state", "CA"),
-            Filter.or(
-                Filter.equalTo("capital", true),
-                Filter.greaterThanOrEqualTo("population", 1000000)
-            )
-        ))
+        val query = collection.where(
+            Filter.and(
+                Filter.equalTo("state", "CA"),
+                Filter.or(
+                    Filter.equalTo("capital", true),
+                    Filter.greaterThanOrEqualTo("population", 1000000),
+                ),
+            ),
+        )
         // [END or_queries]
     }
 
@@ -1179,71 +1183,83 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         // [END one_disjunction]
 
         // [START two_disjunctions]
-        collection.where(Filter.or(
-            Filter.equalTo("a", 1),
-            Filter.equalTo("b", 2)
-        ))
+        collection.where(
+            Filter.or(
+                Filter.equalTo("a", 1),
+                Filter.equalTo("b", 2),
+            ),
+        )
         // [END two_disjunctions]
 
         // [START four_disjunctions]
-        collection.where(Filter.or(
-            Filter.and(
-                Filter.equalTo("a", 1),
-                Filter.equalTo("c", 3)
+        collection.where(
+            Filter.or(
+                Filter.and(
+                    Filter.equalTo("a", 1),
+                    Filter.equalTo("c", 3),
+                ),
+                Filter.and(
+                    Filter.equalTo("a", 1),
+                    Filter.equalTo("d", 4),
+                ),
+                Filter.and(
+                    Filter.equalTo("b", 2),
+                    Filter.equalTo("c", 3),
+                ),
+                Filter.and(
+                    Filter.equalTo("b", 2),
+                    Filter.equalTo("d", 4),
+                ),
             ),
-            Filter.and(
-                Filter.equalTo("a", 1),
-                Filter.equalTo("d", 4)
-            ),
-            Filter.and(
-                Filter.equalTo("b", 2),
-                Filter.equalTo("c", 3)
-            ),
-            Filter.and(
-                Filter.equalTo("b", 2),
-                Filter.equalTo("d", 4)
-            )
-        ))
+        )
         // [END four_disjunctions]
 
         // [START four_disjunctions_compact]
-        collection.where(Filter.and(
-            Filter.or(
-                Filter.equalTo("a", 1),
-                Filter.equalTo("b", 2)
+        collection.where(
+            Filter.and(
+                Filter.or(
+                    Filter.equalTo("a", 1),
+                    Filter.equalTo("b", 2),
+                ),
+                Filter.or(
+                    Filter.equalTo("c", 3),
+                    Filter.equalTo("d", 4),
+                ),
             ),
-            Filter.or(
-                Filter.equalTo("c", 3),
-                Filter.equalTo("d", 4)
-            )
-        ))
+        )
         // [END four_disjunctions_compact]
 
         // [START 20_disjunctions]
-        collection.where(Filter.or(
-            Filter.inArray("a", listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)),
-            Filter.inArray("b", listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)),
-        ))
+        collection.where(
+            Filter.or(
+                Filter.inArray("a", listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)),
+                Filter.inArray("b", listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)),
+            ),
+        )
         // [END 20_disjunctions]
 
         // [START 10_disjunctions]
-        collection.where(Filter.and(
-            Filter.inArray("a", listOf(1, 2, 3, 4, 5)),
-            Filter.or(
-                Filter.equalTo("b", 2),
-                Filter.equalTo("c", 3)
-            )
-        ))
+        collection.where(
+            Filter.and(
+                Filter.inArray("a", listOf(1, 2, 3, 4, 5)),
+                Filter.or(
+                    Filter.equalTo("b", 2),
+                    Filter.equalTo("c", 3),
+                ),
+            ),
+        )
         // [END 10_disjunctions]
     }
 
     fun illegalDisjunctions() {
         val collection = db.collection("cities")
         // [START 50_disjunctions]
-        collection.where(Filter.and(
-            Filter.inArray("a", listOf(1, 2, 3, 4, 5)),
-            Filter.inArray("b", listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)),
-        ));
+        collection.where(
+            Filter.and(
+                Filter.inArray("a", listOf(1, 2, 3, 4, 5)),
+                Filter.inArray("b", listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)),
+            ),
+        )
         // [END 50_disjunctions]
     }
 
@@ -1317,7 +1333,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         val aggregateQuery = query.aggregate(
             AggregateField.count(),
             AggregateField.sum("population"),
-            AggregateField.average("population")
+            AggregateField.average("population"),
         )
         aggregateQuery.get(AggregateSource.SERVER).addOnCompleteListener { task ->
             if (task.isSuccessful) {
@@ -1431,7 +1447,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         results = db.pipeline().documents(
             db.collection("cities").document("SF"),
             db.collection("cities").document("DC"),
-            db.collection("cities").document("NY")
+            db.collection("cities").document("NY"),
         ).execute()
         // [END input_stages]
         println(results)
@@ -1448,8 +1464,12 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .execute()
 
         results = db.pipeline().collection("books")
-            .where(Expression.and(field("rating").equal(5),
-              field("published").lessThan(1900)))
+            .where(
+                Expression.and(
+                    field("rating").equal(5),
+                    field("published").lessThan(1900),
+                ),
+            )
             .execute()
         // [END pipeline_where]
         println(results)
@@ -1463,7 +1483,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .aggregate(
                 AggregateStage
                     .withAccumulators(AggregateFunction.average("rating").alias("avg_rating"))
-                    .withGroups(field("genre"))
+                    .withGroups(field("genre")),
             )
             .execute()
         // [END aggregate_groups]
@@ -1477,7 +1497,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .collection("books")
             .distinct(
                 field("author").toUpper().alias("author"),
-                field("genre")
+                field("genre"),
             )
             .execute()
         // [END aggregate_distinct]
@@ -1491,7 +1511,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .collection("books")
             .sort(
                 field("release_date").descending(),
-                field("author").ascending()
+                field("author").ascending(),
             )
             .execute()
         // [END sort]
@@ -1509,7 +1529,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .collection("books")
             .sort(
                 field("release_date").descending(),
-                field("author").ascending()
+                field("author").ascending(),
             )
         // [END sort_comparison]
         println(query)
@@ -1525,7 +1545,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         // Example: Return the min store price for each book.
         results = db.pipeline().collection("books")
             .select(
-                field("current").logicalMinimum("updated").alias("price_min")
+                field("current").logicalMinimum("updated").alias("price_min"),
             )
             .execute()
 
@@ -1644,7 +1664,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .documents(
                 db.collection("cities").document("SF"),
                 db.collection("cities").document("DC"),
-                db.collection("cities").document("NY")
+                db.collection("cities").document("NY"),
             ).execute()
         // [END documents_example]
         println(results)
@@ -1652,33 +1672,41 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
 
     fun replaceWithStage() {
         // [START initial_data]
-        db.collection("cities").document("SF").set(mapOf(
-            "name" to "San Francisco",
-            "population" to 800000,
-            "location" to mapOf(
-                "country" to "USA",
-                "state" to "California"
-            )
-        ))
-        db.collection("cities").document("TO").set(mapOf(
-            "name" to "Toronto",
-            "population" to 3000000,
-            "province" to "ON",
-            "location" to mapOf(
-                "country" to "Canada",
-                "province" to "Ontario"
-            )
-        ))
-        db.collection("cities").document("NY").set(mapOf(
-            "name" to "New York",
-            "location" to mapOf(
-                "country" to "USA",
-                "state" to "New York"
-            )
-        ))
-        db.collection("cities").document("AT").set(mapOf(
-            "name" to "Atlantis"
-        ))
+        db.collection("cities").document("SF").set(
+            mapOf(
+                "name" to "San Francisco",
+                "population" to 800000,
+                "location" to mapOf(
+                    "country" to "USA",
+                    "state" to "California",
+                ),
+            ),
+        )
+        db.collection("cities").document("TO").set(
+            mapOf(
+                "name" to "Toronto",
+                "population" to 3000000,
+                "province" to "ON",
+                "location" to mapOf(
+                    "country" to "Canada",
+                    "province" to "Ontario",
+                ),
+            ),
+        )
+        db.collection("cities").document("NY").set(
+            mapOf(
+                "name" to "New York",
+                "location" to mapOf(
+                    "country" to "USA",
+                    "state" to "New York",
+                ),
+            ),
+        )
+        db.collection("cities").document("AT").set(
+            mapOf(
+                "name" to "Atlantis",
+            ),
+        )
         // [END initial_data]
 
         // [START full_replace]
@@ -1710,7 +1738,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .documents(
                 db.collection("cities").document("SF"),
                 db.collection("cities").document("NY"),
-                db.collection("cities").document("DC")
+                db.collection("cities").document("DC"),
             )
             .sample(3)
             .execute()
@@ -1736,9 +1764,11 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         val results = db.pipeline()
             .collection("cities/SF/restaurants")
             .where(field("type").equal("Chinese"))
-            .union(db.pipeline()
-                .collection("cities/NY/restaurants")
-                .where(field("type").equal("Italian")))
+            .union(
+                db.pipeline()
+                    .collection("cities/NY/restaurants")
+                    .where(field("type").equal("Italian")),
+            )
             .where(field("rating").greaterThanOrEqual(4.5))
             .sort(field("__name__").descending())
             .execute()
@@ -1752,9 +1782,11 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         val results = db.pipeline()
             .collection("cities/SF/restaurants")
             .where(field("type").equal("Chinese"))
-            .union(db.pipeline()
-                .collection("cities/NY/restaurants")
-                .where(field("type").equal("Italian")))
+            .union(
+                db.pipeline()
+                    .collection("cities/NY/restaurants")
+                    .where(field("type").equal("Italian")),
+            )
             .where(field("rating").greaterThanOrEqual(4.5))
             .sort(field("__name__").descending())
             .execute()
@@ -1819,7 +1851,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         val result = db.pipeline()
             .collection("books")
             .aggregate(
-                AggregateFunction.countIf(field("rating").greaterThan(4)).alias("filteredCount")
+                AggregateFunction.countIf(field("rating").greaterThan(4)).alias("filteredCount"),
             )
             .execute()
         // [END count_if]
@@ -1945,7 +1977,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         val result = db.pipeline()
             .collection("books")
             .select(
-                Expression.divide(field("unsoldBooks"), booksPerShelf).ceil().alias("requiredShelves")
+                Expression.divide(field("unsoldBooks"), booksPerShelf).ceil().alias("requiredShelves"),
             )
             .execute()
         // [END ceil_function]
@@ -1958,7 +1990,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         val result = db.pipeline()
             .collection("books")
             .addFields(
-                Expression.divide(field("wordCount"), field("pages")).floor().alias("wordsPerPage")
+                Expression.divide(field("wordCount"), field("pages")).floor().alias("wordsPerPage"),
             )
             .execute()
         // [END floor_function]
@@ -1985,18 +2017,18 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .collection("cities")
             .addFields(
                 field("lat").subtract(googleplex.latitude)
-                    .multiply(111 /* km per degree */)
+                    .multiply(111) // km per degree
                     .pow(2)
                     .alias("latitudeDifference"),
                 field("lng").subtract(googleplex.longitude)
-                    .multiply(111 /* km per degree */)
+                    .multiply(111) // km per degree
                     .pow(2)
-                    .alias("longitudeDifference")
+                    .alias("longitudeDifference"),
             )
             .select(
                 field("latitudeDifference").add(field("longitudeDifference")).sqrt()
                     // Inaccurate for large distances or close to poles
-                    .alias("approximateDistanceToGoogle")
+                    .alias("approximateDistanceToGoogle"),
             )
             .execute()
         // [END pow_function]
@@ -2011,18 +2043,18 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .collection("cities")
             .addFields(
                 field("lat").subtract(googleplex.latitude)
-                    .multiply(111 /* km per degree */)
+                    .multiply(111) // km per degree
                     .pow(2)
                     .alias("latitudeDifference"),
                 field("lng").subtract(googleplex.longitude)
-                    .multiply(111 /* km per degree */)
+                    .multiply(111) // km per degree
                     .pow(2)
-                    .alias("longitudeDifference")
+                    .alias("longitudeDifference"),
             )
             .select(
                 field("latitudeDifference").add(field("longitudeDifference")).sqrt()
                     // Inaccurate for large distances or close to poles
-                    .alias("approximateDistanceToGoogle")
+                    .alias("approximateDistanceToGoogle"),
             )
             .execute()
         // [END sqrt_function]
@@ -2088,7 +2120,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .select(
                 field("genre")
                     .arrayContainsAll(listOf("fantasy", "adventure"))
-                    .alias("isFantasyAdventure")
+                    .alias("isFantasyAdventure"),
             )
             .execute()
         // [END array_contains_all]
@@ -2103,7 +2135,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .select(
                 field("genre")
                     .arrayContainsAny(listOf("fantasy", "nonfiction"))
-                    .alias("isMysteryOrFantasy")
+                    .alias("isMysteryOrFantasy"),
             )
             .execute()
         // [END array_contains_any]
@@ -2215,9 +2247,11 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         val result = db.pipeline()
             .collection("books")
             .select(
-                Expression.and(field("rating").greaterThan(4),
-                  field("price").lessThan(10))
-                    .alias("under10Recommendation")
+                Expression.and(
+                    field("rating").greaterThan(4),
+                    field("price").lessThan(10),
+                )
+                    .alias("under10Recommendation"),
             )
             .execute()
         // [END and_function]
@@ -2230,9 +2264,11 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         val result = db.pipeline()
             .collection("books")
             .select(
-                Expression.or(field("genre").equal("Fantasy"),
-                  field("tags").arrayContains("adventure"))
-                    .alias("matchesSearchFilters")
+                Expression.or(
+                    field("genre").equal("Fantasy"),
+                    field("tags").arrayContains("adventure"),
+                )
+                    .alias("matchesSearchFilters"),
             )
             .execute()
         // [END or_function]
@@ -2245,9 +2281,11 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         val result = db.pipeline()
             .collection("books")
             .select(
-                Expression.xor(field("tags").arrayContains("magic"),
-                  field("tags").arrayContains("nonfiction"))
-                    .alias("matchesSearchFilters")
+                Expression.xor(
+                    field("tags").arrayContains("magic"),
+                    field("tags").arrayContains("nonfiction"),
+                )
+                    .alias("matchesSearchFilters"),
             )
             .execute()
         // [END xor_function]
@@ -2261,8 +2299,8 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .collection("books")
             .select(
                 Expression.not(
-                    field("tags").arrayContains("nonfiction")
-                ).alias("isFiction")
+                    field("tags").arrayContains("nonfiction"),
+                ).alias("isFiction"),
             )
             .execute()
         // [END not_function]
@@ -2279,9 +2317,9 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
                     Expression.conditional(
                         field("pages").greaterThan(100),
                         constant("longRead"),
-                        constant("shortRead")
-                    )
-                ).alias("extendedTags")
+                        constant("shortRead"),
+                    ),
+                ).alias("extendedTags"),
             )
             .execute()
         // [END cond_function]
@@ -2295,7 +2333,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .collection("books")
             .select(
                 field("genre").equalAny(listOf("Science Fiction", "Psychological Thriller"))
-                    .alias("matchesGenreFilters")
+                    .alias("matchesGenreFilters"),
             )
             .execute()
         // [END eq_any]
@@ -2309,7 +2347,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .collection("books")
             .select(
                 field("author").notEqualAny(listOf("George Orwell", "F. Scott Fitzgerald"))
-                    .alias("byExcludedAuthors")
+                    .alias("byExcludedAuthors"),
             )
             .execute()
         // [END not_eq_any]
@@ -2336,7 +2374,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         val result = db.pipeline()
             .collection("books")
             .select(
-                field("rating").logicalMaximum(1).alias("flooredRating")
+                field("rating").logicalMaximum(1).alias("flooredRating"),
             )
             .execute()
         // [END max_logical_function]
@@ -2349,7 +2387,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         val result = db.pipeline()
             .collection("books")
             .select(
-                field("rating").logicalMinimum(5).alias("cappedRating")
+                field("rating").logicalMinimum(5).alias("cappedRating"),
             )
             .execute()
         // [END min_logical_function]
@@ -2362,7 +2400,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         val result = db.pipeline()
             .collection("books")
             .select(
-                field("awards").mapGet("pulitzer").alias("hasPulitzerAward")
+                field("awards").mapGet("pulitzer").alias("hasPulitzerAward"),
             )
             .execute()
         // [END map_get]
@@ -2375,7 +2413,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         val result = db.pipeline()
             .collection("books")
             .select(
-                field("title").byteLength().alias("titleByteLength")
+                field("title").byteLength().alias("titleByteLength"),
             )
             .execute()
         // [END byte_length]
@@ -2388,7 +2426,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         val result = db.pipeline()
             .collection("books")
             .select(
-                field("title").charLength().alias("titleCharLength")
+                field("title").charLength().alias("titleCharLength"),
             )
             .execute()
         // [END char_length]
@@ -2402,7 +2440,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .collection("books")
             .select(
                 field("title").startsWith("The")
-                    .alias("needsSpecialAlphabeticalSort")
+                    .alias("needsSpecialAlphabeticalSort"),
             )
             .execute()
         // [END starts_with]
@@ -2416,7 +2454,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .collection("inventory/devices/laptops")
             .select(
                 field("name").endsWith("16 inch")
-                    .alias("16InLaptops")
+                    .alias("16InLaptops"),
             )
             .execute()
         // [END ends_with]
@@ -2430,7 +2468,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .collection("books")
             .select(
                 field("genre").like("%Fiction")
-                    .alias("anyFiction")
+                    .alias("anyFiction"),
             )
             .execute()
         // [END like]
@@ -2444,7 +2482,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .collection("documents")
             .select(
                 field("title").regexContains("Firestore (Enterprise|Standard)")
-                    .alias("isFirestoreRelated")
+                    .alias("isFirestoreRelated"),
             )
             .execute()
         // [END regex_contains]
@@ -2458,7 +2496,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .collection("documents")
             .select(
                 field("title").regexMatch("Firestore (Enterprise|Standard)")
-                    .alias("isFirestoreExactly")
+                    .alias("isFirestoreExactly"),
             )
             .execute()
         // [END regex_match]
@@ -2472,7 +2510,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .collection("books")
             .select(
                 field("title").concat(" by ", field("author"))
-                    .alias("fullyQualifiedTitle")
+                    .alias("fullyQualifiedTitle"),
             )
             .execute()
         // [END str_concat]
@@ -2486,7 +2524,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .collection("articles")
             .select(
                 field("body").stringContains("Firestore")
-                    .alias("isFirestoreRelated")
+                    .alias("isFirestoreRelated"),
             )
             .execute()
         // [END string_contains]
@@ -2500,7 +2538,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .collection("authors")
             .select(
                 field("name").toUpper()
-                    .alias("uppercaseName")
+                    .alias("uppercaseName"),
             )
             .execute()
         // [END to_upper]
@@ -2514,7 +2552,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .collection("authors")
             .select(
                 field("genre").toLower().equal("fantasy")
-                    .alias("isFantasy")
+                    .alias("isFantasy"),
             )
             .execute()
         // [END to_lower]
@@ -2529,9 +2567,11 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .where(field("title").startsWith("The "))
             .select(
                 field("title")
-                  .substring(constant(4),
-                    field("title").charLength().subtract(4))
-                    .alias("titleWithoutLeadingThe")
+                    .substring(
+                        constant(4),
+                        field("title").charLength().subtract(4),
+                    )
+                    .alias("titleWithoutLeadingThe"),
             )
             .execute()
         // [END substr_function]
@@ -2544,7 +2584,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         val result = db.pipeline()
             .collection("books")
             .select(
-                field("name").reverse().alias("reversedName")
+                field("name").reverse().alias("reversedName"),
             )
             .execute()
         // [END str_reverse]
@@ -2557,7 +2597,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         val result = db.pipeline()
             .collection("books")
             .select(
-                field("name").trim().alias("whitespaceTrimmedName")
+                field("name").trim().alias("whitespaceTrimmedName"),
             )
             .execute()
         // [END trim_function]
@@ -2580,7 +2620,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         val result = db.pipeline()
             .collection("documents")
             .select(
-                field("createdAtMicros").unixMicrosToTimestamp().alias("createdAtString")
+                field("createdAtMicros").unixMicrosToTimestamp().alias("createdAtString"),
             )
             .execute()
         // [END unix_micros_timestamp]
@@ -2593,7 +2633,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         val result = db.pipeline()
             .collection("documents")
             .select(
-                field("createdAtMillis").unixMillisToTimestamp().alias("createdAtString")
+                field("createdAtMillis").unixMillisToTimestamp().alias("createdAtString"),
             )
             .execute()
         // [END unix_millis_timestamp]
@@ -2606,7 +2646,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         val result = db.pipeline()
             .collection("documents")
             .select(
-                field("createdAtSeconds").unixSecondsToTimestamp().alias("createdAtString")
+                field("createdAtSeconds").unixSecondsToTimestamp().alias("createdAtString"),
             )
             .execute()
         // [END unix_seconds_timestamp]
@@ -2620,8 +2660,8 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .collection("documents")
             .select(
                 field("createdAt")
-                  .timestampAdd("day", 3653)
-                  .alias("expiresAt")
+                    .timestampAdd("day", 3653)
+                    .alias("expiresAt"),
             )
             .execute()
         // [END timestamp_add]
@@ -2635,8 +2675,8 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .collection("documents")
             .select(
                 field("expiresAt")
-                  .timestampSubtract("day", 14)
-                  .alias("sendWarningTimestamp")
+                    .timestampSubtract("day", 14)
+                    .alias("sendWarningTimestamp"),
             )
             .execute()
         // [END timestamp_sub]
@@ -2649,7 +2689,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         val result = db.pipeline()
             .collection("documents")
             .select(
-                field("dateString").timestampToUnixMicros().alias("unixMicros")
+                field("dateString").timestampToUnixMicros().alias("unixMicros"),
             )
             .execute()
         // [END timestamp_unix_micros]
@@ -2662,7 +2702,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         val result = db.pipeline()
             .collection("documents")
             .select(
-                field("dateString").timestampToUnixMillis().alias("unixMillis")
+                field("dateString").timestampToUnixMillis().alias("unixMillis"),
             )
             .execute()
         // [END timestamp_unix_millis]
@@ -2675,7 +2715,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         val result = db.pipeline()
             .collection("documents")
             .select(
-                field("dateString").timestampToUnixSeconds().alias("unixSeconds")
+                field("dateString").timestampToUnixSeconds().alias("unixSeconds"),
             )
             .execute()
         // [END timestamp_unix_seconds]
@@ -2689,7 +2729,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         val result = db.pipeline()
             .collection("books")
             .select(
-                field("embedding").cosineDistance(sampleVector).alias("cosineDistance")
+                field("embedding").cosineDistance(sampleVector).alias("cosineDistance"),
             )
             .execute()
         // [END cosine_distance]
@@ -2703,7 +2743,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         val result = db.pipeline()
             .collection("books")
             .select(
-                field("embedding").dotProduct(sampleVector).alias("dotProduct")
+                field("embedding").dotProduct(sampleVector).alias("dotProduct"),
             )
             .execute()
         // [END dot_product]
@@ -2717,7 +2757,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         val result = db.pipeline()
             .collection("books")
             .select(
-                field("embedding").euclideanDistance(sampleVector).alias("euclideanDistance")
+                field("embedding").euclideanDistance(sampleVector).alias("euclideanDistance"),
             )
             .execute()
         // [END euclidean_distance]
@@ -2730,7 +2770,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         val result = db.pipeline()
             .collection("books")
             .select(
-                field("embedding").vectorLength().alias("vectorLength")
+                field("embedding").vectorLength().alias("vectorLength"),
             )
             .execute()
         // [END vector_length]
@@ -2759,40 +2799,40 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
                 "name" to "San Francisco",
                 "state" to "CA",
                 "country" to "USA",
-                "population" to 870000
-            )
+                "population" to 870000,
+            ),
         )
         db.collection("cities").document("LA").set(
             mapOf(
                 "name" to "Los Angeles",
                 "state" to "CA",
                 "country" to "USA",
-                "population" to 3970000
-            )
+                "population" to 3970000,
+            ),
         )
         db.collection("cities").document("NY").set(
             mapOf(
                 "name" to "New York",
                 "state" to "NY",
                 "country" to "USA",
-                "population" to 8530000
-            )
+                "population" to 8530000,
+            ),
         )
         db.collection("cities").document("TOR").set(
             mapOf(
                 "name" to "Toronto",
                 "state" to null,
                 "country" to "Canada",
-                "population" to 2930000
-            )
+                "population" to 2930000,
+            ),
         )
         db.collection("cities").document("MEX").set(
             mapOf(
                 "name" to "Mexico City",
                 "state" to null,
                 "country" to "Mexico",
-                "population" to 9200000
-            )
+                "population" to 9200000,
+            ),
         )
         // [END create_where_data]
     }
@@ -2827,9 +2867,9 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
                     field("name").like("San%"),
                     Expression.and(
                         field("location.state").charLength().greaterThan(7),
-                        field("location.country").equal(constant("USA"))
-                    )
-                )
+                        field("location.country").equal(constant("USA")),
+                    ),
+                ),
             ).execute()
         // [END where_complex]
         println(cities)
@@ -2853,9 +2893,9 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .aggregate(
                 AggregateStage
                     .withAccumulators(
-                        AggregateFunction.sum(field("population")).alias("totalPopulation")
+                        AggregateFunction.sum(field("population")).alias("totalPopulation"),
                     )
-                    .withGroups(field("location.state"))
+                    .withGroups(field("location.state")),
             )
             .where(field("totalPopulation").greaterThan(10000000))
             .execute()
@@ -2934,9 +2974,9 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
                 Expression.conditional(
                     field("scores").equal(Expression.array()),
                     Expression.array(field("scores")),
-                    field("scores")
+                    field("scores"),
                 ).alias("userScore"),
-                UnnestOptions().withIndexField("attempt")
+                UnnestOptions().withIndexField("attempt"),
             )
             .execute()
         // [END unnest_preserve_empty_array]
@@ -2951,14 +2991,14 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
                 "record" to listOf(
                     mapOf(
                         "scores" to listOf(5, 4),
-                        "avg" to 4.5
+                        "avg" to 4.5,
                     ),
                     mapOf(
                         "scores" to listOf(1, 3),
-                        "old_avg" to 2
-                    )
-                )
-            )
+                        "old_avg" to 2,
+                    ),
+                ),
+            ),
         )
         // [END unnest_nested_data]
     }
@@ -3075,7 +3115,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .collection("cities")
             .select(
                 field("name").stringConcat(", ", field("location.country")).alias("name"),
-                field("population")
+                field("population"),
             ).execute()
         // [END select_syntax]
         println(names)
@@ -3087,15 +3127,15 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             mapOf(
                 "name" to "San Francisco",
                 "population" to 800000,
-                "location" to mapOf("country" to "USA", "state" to "California")
-            )
+                "location" to mapOf("country" to "USA", "state" to "California"),
+            ),
         )
         db.collection("cities").document("TO").set(
             mapOf(
                 "name" to "Toronto",
                 "population" to 3000000,
-                "location" to mapOf("country" to "Canada", "province" to "Ontario")
-            )
+                "location" to mapOf("country" to "Canada", "province" to "Ontario"),
+            ),
         )
         // [END select_position_data]
     }
@@ -3107,7 +3147,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .where(field("location.country").equal(constant("Canada")))
             .select(
                 field("name").stringConcat(", ", field("location.country")).alias("name"),
-                field("population")
+                field("population"),
             )
             .execute()
         // [END select_position]
@@ -3120,7 +3160,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .collection("cities")
             .select(
                 field("name").stringConcat(", ", field("location.country")).alias("name"),
-                field("population")
+                field("population"),
             )
             .where(field("location.country").equal(constant("Canada")))
             .execute()
@@ -3135,8 +3175,8 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
                 "name" to "San Francisco",
                 "population" to 800000,
                 "location" to mapOf("country" to "USA", "state" to "California"),
-                "landmarks" to listOf("Golden Gate Bridge", "Alcatraz")
-            )
+                "landmarks" to listOf("Golden Gate Bridge", "Alcatraz"),
+            ),
         )
         db.collection("cities").document("TO").set(
             mapOf(
@@ -3144,8 +3184,8 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
                 "population" to 3000000,
                 "province" to "ON",
                 "location" to mapOf("country" to "Canada", "province" to "Ontario"),
-                "landmarks" to listOf("CN Tower", "Casa Loma")
-            )
+                "landmarks" to listOf("CN Tower", "Casa Loma"),
+            ),
         )
         db.collection("cities").document("AT").set(mapOf("name" to "Atlantis", "population" to null))
         // [END select_nested_data]
@@ -3158,7 +3198,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .select(
                 field("name").alias("city"),
                 field("location.country").alias("country"),
-                field("landmarks").arrayGet(0).alias("topLandmark")
+                field("landmarks").arrayGet(0).alias("topLandmark"),
             ).execute()
         // [END select_nested]
         println(locations)
@@ -3180,14 +3220,14 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         db.collection("cities").document("SF").set(
             mapOf(
                 "name" to "San Francisco",
-                "location" to mapOf("country" to "USA", "state" to "California")
-            )
+                "location" to mapOf("country" to "USA", "state" to "California"),
+            ),
         )
         db.collection("cities").document("TO").set(
             mapOf(
                 "name" to "Toronto",
-                "location" to mapOf("country" to "Canada", "province" to "Ontario")
-            )
+                "location" to mapOf("country" to "Canada", "province" to "Ontario"),
+            ),
         )
         // [END remove_fields_nested_data]
     }
@@ -3221,7 +3261,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .findNearest(
                 "embedding",
                 doubleArrayOf(1.5, 2.345),
-                FindNearestStage.DistanceMeasure.EUCLIDEAN
+                FindNearestStage.DistanceMeasure.EUCLIDEAN,
             )
             .execute()
         // [END find_nearest_syntax]
@@ -3235,7 +3275,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .findNearest(
                 "embedding",
                 doubleArrayOf(1.5, 2.345),
-                FindNearestStage.DistanceMeasure.EUCLIDEAN
+                FindNearestStage.DistanceMeasure.EUCLIDEAN,
             )
             .execute()
         // [END find_nearest_limit]
@@ -3257,7 +3297,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .findNearest(
                 "embedding",
                 doubleArrayOf(1.3, 2.345),
-                FindNearestStage.DistanceMeasure.EUCLIDEAN
+                FindNearestStage.DistanceMeasure.EUCLIDEAN,
             )
             .execute()
         // [END find_nearest_distance]
@@ -3371,10 +3411,18 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
 
     fun collectionGroupInputExampleData() {
         // [START collection_group_data]
-        db.collection("cities/SF/departments").document("building").set(mapOf("name" to "SF Building Deparment", "employees" to 750))
-        db.collection("cities/NY/departments").document("building").set(mapOf("name" to "NY Building Deparment", "employees" to 1000))
-        db.collection("cities/CHI/departments").document("building").set(mapOf("name" to "CHI Building Deparment", "employees" to 900))
-        db.collection("cities/NY/departments").document("finance").set(mapOf("name" to "NY Finance Deparment", "employees" to 1200))
+        db.collection("cities/SF/departments").document("building").set(
+            mapOf("name" to "SF Building Deparment", "employees" to 750),
+        )
+        db.collection("cities/NY/departments").document("building").set(
+            mapOf("name" to "NY Building Deparment", "employees" to 1000),
+        )
+        db.collection("cities/CHI/departments").document("building").set(
+            mapOf("name" to "CHI Building Deparment", "employees" to 900),
+        )
+        db.collection("cities/NY/departments").document("finance").set(
+            mapOf("name" to "NY Finance Deparment", "employees" to 1200),
+        )
         // [END collection_group_data]
     }
 
@@ -3400,9 +3448,13 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
 
     fun databaseInputSyntaxExampleData() {
         // [START database_input_data]
-        db.collection("cities").document("SF").set(mapOf("name" to "San Francsico", "state" to "California", "population" to 800000))
+        db.collection("cities").document("SF").set(
+            mapOf("name" to "San Francsico", "state" to "California", "population" to 800000),
+        )
         db.collection("states").document("CA").set(mapOf("name" to "California", "population" to 39000000))
-        db.collection("countries").document("USA").set(mapOf("name" to "United States of America", "population" to 340000000))
+        db.collection("countries").document("USA").set(
+            mapOf("name" to "United States of America", "population" to 340000000),
+        )
         // [END database_input_data]
     }
 
@@ -3422,7 +3474,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         val results = db.pipeline()
             .documents(
                 db.collection("cities").document("SF"),
-                db.collection("cities").document("NY")
+                db.collection("cities").document("NY"),
             )
             .execute()
         // [END document_input_syntax]
@@ -3442,7 +3494,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         val results = db.pipeline()
             .documents(
                 db.collection("cities").document("SF"),
-                db.collection("cities").document("NYC")
+                db.collection("cities").document("NYC"),
             )
             .sort(field("name").ascending())
             .execute()
@@ -3468,7 +3520,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .collection("cities")
             .aggregate(
                 AggregateFunction.countAll().alias("total"),
-                AggregateFunction.average("population").alias("averagePopulation")
+                AggregateFunction.average("population").alias("averagePopulation"),
             ).execute()
         // [END aggregate_syntax]
         println(cities)
@@ -3482,9 +3534,9 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
                 AggregateStage
                     .withAccumulators(
                         AggregateFunction.countAll().alias("cities"),
-                        AggregateFunction.sum(field("population")).alias("totalPopulation")
+                        AggregateFunction.sum(field("population")).alias("totalPopulation"),
                     )
-                    .withGroups(field("location.state").alias("state"))
+                    .withGroups(field("location.state").alias("state")),
             )
             .execute()
         // [END aggregate_group_syntax]
@@ -3493,11 +3545,21 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
 
     fun aggregateExampleData() {
         // [START aggregate_data]
-        db.collection("cities").document("SF").set(mapOf("name" to "San Francisco", "state" to "CA", "country" to "USA", "population" to 870000))
-        db.collection("cities").document("LA").set(mapOf("name" to "Los Angeles", "state" to "CA", "country" to "USA", "population" to 3970000))
-        db.collection("cities").document("NY").set(mapOf("name" to "New York", "state" to "NY", "country" to "USA", "population" to 8530000))
-        db.collection("cities").document("TOR").set(mapOf("name" to "Toronto", "state" to null, "country" to "Canada", "population" to 2930000))
-        db.collection("cities").document("MEX").set(mapOf("name" to "Mexico City", "state" to null, "country" to "Mexico", "population" to 9200000))
+        db.collection("cities").document("SF").set(
+            mapOf("name" to "San Francisco", "state" to "CA", "country" to "USA", "population" to 870000),
+        )
+        db.collection("cities").document("LA").set(
+            mapOf("name" to "Los Angeles", "state" to "CA", "country" to "USA", "population" to 3970000),
+        )
+        db.collection("cities").document("NY").set(
+            mapOf("name" to "New York", "state" to "NY", "country" to "USA", "population" to 8530000),
+        )
+        db.collection("cities").document("TOR").set(
+            mapOf("name" to "Toronto", "state" to null, "country" to "Canada", "population" to 2930000),
+        )
+        db.collection("cities").document("MEX").set(
+            mapOf("name" to "Mexico City", "state" to null, "country" to "Mexico", "population" to 9200000),
+        )
         // [END aggregate_data]
     }
 
@@ -3507,7 +3569,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .collection("cities")
             .aggregate(
                 AggregateFunction.countAll().alias("total"),
-                AggregateFunction.average("population").alias("averagePopulation")
+                AggregateFunction.average("population").alias("averagePopulation"),
             ).execute()
         // [END aggregate_without_group]
         println(cities)
@@ -3521,9 +3583,9 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
                 AggregateStage
                     .withAccumulators(
                         AggregateFunction.countAll().alias("numberOfCities"),
-                        AggregateFunction.maximum("population").alias("maxPopulation")
+                        AggregateFunction.maximum("population").alias("maxPopulation"),
                     )
-                    .withGroups(field("country"), field("state"))
+                    .withGroups(field("country"), field("state")),
             )
             .execute()
         // [END aggregate_group_example]
@@ -3537,9 +3599,9 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .aggregate(
                 AggregateStage
                     .withAccumulators(
-                        AggregateFunction.sum("population").alias("totalPopulation")
+                        AggregateFunction.sum("population").alias("totalPopulation"),
                     )
-                    .withGroups(field("state").equal(Expression.nullValue()).alias("stateIsNull"))
+                    .withGroups(field("state").equal(Expression.nullValue()).alias("stateIsNull")),
             )
             .execute()
         // [END aggregate_group_complex]
@@ -3558,7 +3620,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .collection("cities")
             .distinct(
                 field("state").toLower().alias("normalizedState"),
-                field("country")
+                field("country"),
             )
             .execute()
         // [END distinct_syntax]
@@ -3567,11 +3629,15 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
 
     fun distinctExampleData() {
         // [START distinct_data]
-        db.collection("cities").document("SF").set(mapOf("name" to "San Francisco", "state" to "CA", "country" to "USA"))
+        db.collection("cities").document("SF").set(
+            mapOf("name" to "San Francisco", "state" to "CA", "country" to "USA"),
+        )
         db.collection("cities").document("LA").set(mapOf("name" to "Los Angeles", "state" to "CA", "country" to "USA"))
         db.collection("cities").document("NY").set(mapOf("name" to "New York", "state" to "NY", "country" to "USA"))
         db.collection("cities").document("TOR").set(mapOf("name" to "Toronto", "state" to null, "country" to "Canada"))
-        db.collection("cities").document("MEX").set(mapOf("name" to "Mexico City", "state" to null, "country" to "Mexico"))
+        db.collection("cities").document("MEX").set(
+            mapOf("name" to "Mexico City", "state" to null, "country" to "Mexico"),
+        )
         // [END distinct_data]
     }
 
@@ -3591,7 +3657,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .collection("cities")
             .distinct(
                 field("state").toLower().alias("normalizedState"),
-                field("country")
+                field("country"),
             )
             .execute()
         // [END distinct_expressions]
@@ -3603,7 +3669,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         // [START define_example]
         val result = db.pipeline().collection("authors")
             .define(
-                field("id").alias("currentAuthorId")
+                field("id").alias("currentAuthorId"),
             )
             // ...
             // [END define_example]
@@ -3611,10 +3677,10 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
                 db.pipeline().collection("books")
                     .where(field("author_id").equal(variable("currentAuthorId")))
                     .aggregate(
-                        field("rating").average().alias("avgRating")
+                        field("rating").average().alias("avgRating"),
                     )
                     .toScalarExpression()
-                    .alias("averageBookRating")
+                    .alias("averageBookRating"),
             )
             .execute()
     }
@@ -3624,14 +3690,14 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         // [START to_array_expression]
         val projectsPipeline = db.pipeline().collection("projects")
             .define(
-                field("id").alias("parentId")
+                field("id").alias("parentId"),
             )
             .addFields(
                 db.pipeline().collection("tasks")
                     .where(field("project_id").equal(variable("parentId")))
                     .select(field("title"))
                     .toArrayExpression()
-                    .alias("taskTitles")
+                    .alias("taskTitles"),
             )
         // [END to_array_expression]
     }
@@ -3641,19 +3707,18 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         // [START to_scalar_expression]
         val result = db.pipeline().collection("authors")
             .define(
-                field("id").alias("currentAuthorId")
+                field("id").alias("currentAuthorId"),
             )
             .addFields(
                 db.pipeline().collection("books")
                     .where(field("author_id").equal(variable("currentAuthorId")))
                     .aggregate(
-                        field("rating").average().alias("avgRating")
+                        field("rating").average().alias("avgRating"),
                     )
                     .toScalarExpression()
-                    .alias("averageBookRating")
+                    .alias("averageBookRating"),
             )
             .execute()
         // [END to_scalar_expression]
     }
-
 }

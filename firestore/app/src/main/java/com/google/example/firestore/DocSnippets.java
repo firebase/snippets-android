@@ -3993,6 +3993,16 @@ public class DocSnippets {
         System.out.println(cities);
     }
 
+    public void defineStageData() {
+        // [START define_stage_data]
+        Map<String, Object> author = new HashMap<>();
+        author.put("id", "author_123");
+        author.put("name", "Jane Austen");
+
+        db.collection("Authors").document("author_123").set(author);
+        // [END define_stage_data]
+    }
+
     // https://firebase.google.com/docs/firestore/pipelines/perform-joins-with-sub-pipelines
     void defineStage() {
         // [START define_example]
@@ -4014,6 +4024,25 @@ public class DocSnippets {
                 .execute();
     }
 
+    public void toArrayExpressionData() {
+        // [START to_array_expression_data]
+        Map<String, Object> project = new HashMap<>();
+        project.put("id", "project_1");
+        project.put("name", "Alpha Build");
+        db.collection("Projects").document("project_1").set(project);
+
+        Map<String, Object> task1 = new HashMap<>();
+        task1.put("project_id", "project_1");
+        task1.put("title", "System Architecture");
+        db.collection("Tasks").add(task1);
+
+        Map<String, Object> task2 = new HashMap<>();
+        task2.put("project_id", "project_1");
+        task2.put("title", "Database Schema Design");
+        db.collection("Tasks").add(task2);
+        // [END to_array_expression_data]
+    }
+
     // https://firebase.google.com/docs/firestore/pipelines/perform-joins-with-sub-pipelines
     void toArrayExpressionStage() {
         // [START to_array_expression]
@@ -4029,6 +4058,27 @@ public class DocSnippets {
                                 .alias("taskTitles")
                 );
         // [END to_array_expression]
+    }
+
+    public void toScalarExpressionData() {
+        // [START to_scalar_expression_data]
+        Map<String, Object> author = new HashMap<>();
+        author.put("id", "author_202");
+        author.put("name", "Charles Dickens");
+        db.collection("Authors").document("author_202").set(author);
+
+        Map<String, Object> book1 = new HashMap<>();
+        book1.put("author_id", "author_202");
+        book1.put("title", "Great Expectations");
+        book1.put("rating", 4.8);
+        db.collection("Books").add(book1);
+
+        Map<String, Object> book2 = new HashMap<>();
+        book2.put("author_id", "author_202");
+        book2.put("title", "Oliver Twist");
+        book2.put("rating", 4.5);
+        db.collection("Books").add(book2);
+        // [END to_scalar_expression_data]
     }
 
     // https://firebase.google.com/docs/firestore/pipelines/perform-joins-with-sub-pipelines
@@ -4051,11 +4101,31 @@ public class DocSnippets {
         // [END to_scalar_expression]
     }
 
+    public void searchBasicQueryData() {
+        // [START search_basic_query_data]
+        Map<String, Object> restaurant = new HashMap<>();
+        restaurant.put("name", "Waffle Place");
+        restaurant.put("description", "A cozy place for fresh waffles.");
+
+        db.collection("Restaurants").add(restaurant);
+        // [END search_basic_query_data]
+    }
+
     void searchBasicQuery() {
         // [START search_basic_query]
         Pipeline pipeline = db.pipeline().collection("restaurants")
                 .search(SearchStage.withQuery(documentMatches("waffles")));
         // [END search_basic_query]
+    }
+
+    public void searchExactMatchData() {
+        // [START search_exact_match_data]
+        Map<String, Object> restaurant = new HashMap<>();
+        restaurant.put("name", "Waffle Place");
+        restaurant.put("description", "A cozy place for fresh waffles.");
+
+        db.collection("Restaurants").add(restaurant);
+        // [END search_exact_match_data]
     }
 
     void searchExactMatch() {
@@ -4065,6 +4135,16 @@ public class DocSnippets {
         // [END search_exact_match]
     }
 
+    public void searchTwoTermsData() {
+        // [START search_two_terms_data]
+        Map<String, Object> restaurant = new HashMap<>();
+        restaurant.put("name", "Morning Diner");
+        restaurant.put("description", "Start your day with waffles and eggs.");
+
+        db.collection("Restaurants").add(restaurant);
+        // [END search_two_terms_data]
+    }
+
     void searchTwoTerms() {
         // [START search_two_terms]
         Pipeline pipeline = db.pipeline().collection("restaurants")
@@ -4072,11 +4152,31 @@ public class DocSnippets {
         // [END search_two_terms]
     }
 
+    public void searchExcludeTermData() {
+        // [START search_exclude_term_data]
+        Map<String, Object> restaurant = new HashMap<>();
+        restaurant.put("name", "City Coffee");
+        restaurant.put("description", "Premium coffee and pastries.");
+
+        db.collection("Restaurants").add(restaurant);
+        // [END search_exclude_term_data]
+    }
+
     void searchExcludeTerm() {
         // [START search_exclude_term]
         Pipeline pipeline = db.pipeline().collection("restaurants")
                 .search(SearchStage.withQuery(documentMatches("coffee -waffles")));
         // [END search_exclude_term]
+    }
+
+    public void searchScoreData() {
+        // [START search_score_data]
+        Map<String, Object> restaurant = new HashMap<>();
+        restaurant.put("name", "The Waffle Hub");
+        restaurant.put("description", "Everything waffles!");
+
+        db.collection("Restaurants").add(restaurant);
+        // [END search_score_data]
     }
 
     void searchAddScore() {

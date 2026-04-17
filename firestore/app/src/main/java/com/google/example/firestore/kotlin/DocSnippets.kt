@@ -3601,6 +3601,17 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         println(cities)
     }
 
+    fun defineStageData() {
+        // [START define_stage_data]
+        val author = hashMapOf(
+            "id" to "author_123",
+            "name" to "Jane Austen",
+        )
+
+        db.collection("Authors").document("author_123").set(author)
+        // [END define_stage_data]
+    }
+
     // https://firebase.google.com/docs/firestore/pipelines/perform-joins-with-sub-pipelines
     fun defineStage() {
         // [START define_example]
@@ -3622,6 +3633,28 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .execute()
     }
 
+    fun toArrayExpressionData() {
+        // [START to_array_expression_data]
+        val project = hashMapOf(
+            "id" to "project_1",
+            "name" to "Alpha Build",
+        )
+        db.collection("Projects").document("project_1").set(project)
+
+        val task1 = hashMapOf(
+            "project_id" to "project_1",
+            "title" to "System Architecture",
+        )
+        db.collection("Tasks").add(task1)
+
+        val task2 = hashMapOf(
+            "project_id" to "project_1",
+            "title" to "Database Schema Design",
+        )
+        db.collection("Tasks").add(task2)
+        // [END to_array_expression_data]
+    }
+
     // https://firebase.google.com/docs/firestore/pipelines/perform-joins-with-sub-pipelines
     fun toArrayExpressionStage() {
         // [START to_array_expression]
@@ -3637,6 +3670,30 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
                     .alias("taskTitles")
             )
         // [END to_array_expression]
+    }
+
+    fun toScalarExpressionData() {
+        // [START to_scalar_expression_data]
+        val author = hashMapOf(
+            "id" to "author_202",
+            "name" to "Charles Dickens",
+        )
+        db.collection("Authors").document("author_202").set(author)
+
+        val book1 = hashMapOf(
+            "author_id" to "author_202",
+            "title" to "Great Expectations",
+            "rating" to 4.8,
+        )
+        db.collection("Books").add(book1)
+
+        val book2 = hashMapOf(
+            "author_id" to "author_202",
+            "title" to "Oliver Twist",
+            "rating" to 4.5,
+        )
+        db.collection("Books").add(book2)
+        // [END to_scalar_expression_data]
     }
 
     // https://firebase.google.com/docs/firestore/pipelines/perform-joins-with-sub-pipelines
@@ -3659,11 +3716,33 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         // [END to_scalar_expression]
     }
 
+    fun searchBasicQueryData() {
+        // [START search_basic_query_data]
+        val restaurant = hashMapOf(
+            "name" to "Waffle Place",
+            "description" to "A cozy place for fresh waffles.",
+        )
+
+        db.collection("Restaurants").add(restaurant)
+        // [END search_basic_query_data]
+    }
+
     fun searchBasicQuery() {
         // [START search_basic_query]
         val pipeline = db.pipeline().collection("restaurants")
             .search(SearchStage.withQuery(documentMatches("waffles")))
         // [END search_basic_query]
+    }
+
+    fun searchExactMatchData() {
+        // [START search_exact_match_data]
+        val restaurant = hashMapOf(
+            "name" to "Waffle Place",
+            "description" to "A cozy place for fresh waffles.",
+        )
+
+        db.collection("Restaurants").add(restaurant)
+        // [END search_exact_match_data]
     }
 
     fun searchExactMatch() {
@@ -3673,6 +3752,17 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         // [END search_exact_match]
     }
 
+    fun searchTwoTermsData() {
+        // [START search_two_terms_data]
+        val restaurant = hashMapOf(
+            "name" to "Morning Diner",
+            "description" to "Start your day with waffles and eggs.",
+        )
+
+        db.collection("Restaurants").add(restaurant)
+        // [END search_two_terms_data]
+    }
+
     fun searchTwoTerms() {
         // [START search_two_terms]
         val pipeline = db.pipeline().collection("restaurants")
@@ -3680,11 +3770,33 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         // [END search_two_terms]
     }
 
+    fun searchExcludeTermData() {
+        // [START search_exclude_term_data]
+        val restaurant = hashMapOf(
+            "name" to "City Coffee",
+            "description" to "Premium coffee and pastries.",
+        )
+
+        db.collection("Restaurants").add(restaurant)
+        // [END search_exclude_term_data]
+    }
+
     fun searchExcludeTerm() {
         // [START search_exclude_term]
         val pipeline = db.pipeline().collection("restaurants")
             .search(SearchStage.withQuery(documentMatches("coffee -waffles")))
         // [END search_exclude_term]
+    }
+
+    fun searchScoreData() {
+        // [START search_score_data]
+        val restaurant = hashMapOf(
+            "name" to "The Waffle Hub",
+            "description" to "Everything waffles!",
+        )
+
+        db.collection("Restaurants").add(restaurant)
+        // [END search_score_data]
     }
 
     fun searchAddScore() {

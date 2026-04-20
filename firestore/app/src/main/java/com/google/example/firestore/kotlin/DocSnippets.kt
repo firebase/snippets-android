@@ -3809,4 +3809,21 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         // [END search_add_score]
     }
 
+    fun searchScoreSort() {
+        // [START search_score_sort]
+        val pipeline = db.pipeline().collection("restaurants")
+            .search(
+                SearchStage.withQuery(documentMatches("waffles"))
+                    .withSort(score().descending())
+            )
+        // [END search_score_sort]
+    }
+
+    fun searchPhraseMatch() {
+        // [START search_phrase_match]
+        val pipeline = db.pipeline().collection("restaurants")
+            .search(SearchStage.withQuery(documentMatches("\"belgian waffles\"")))
+        // [END search_phrase_match]
+    }
+
 }

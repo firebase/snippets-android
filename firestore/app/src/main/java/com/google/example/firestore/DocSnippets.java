@@ -4188,4 +4188,20 @@ public class DocSnippets {
         // [END search_add_score]
     }
 
+    void searchScoreSort() {
+        // [START search_score_sort]
+        Pipeline pipeline = db.pipeline().collection("restaurants")
+                .search(
+                        SearchStage.withQuery(documentMatches("waffles"))
+                                .withSort(score().descending()));
+        // [END search_score_sort]
+    }
+
+    void searchPhraseMatch() {
+        // [START search_phrase_match]
+        Pipeline pipeline = db.pipeline().collection("restaurants")
+                .search(SearchStage.withQuery(documentMatches("\"belgian waffles\"")));
+        // [END search_phrase_match]
+    }
+
 }

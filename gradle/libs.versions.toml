@@ -1,5 +1,5 @@
 [versions]
-agp = "9.2.0"
+agp = "9.2.1"
 firebaseAi = "17.11.0"
 guava = "32.0.1-android"
 kotlin = "2.3.21"

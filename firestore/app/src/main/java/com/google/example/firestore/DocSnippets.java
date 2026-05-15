@@ -4122,7 +4122,7 @@ public class DocSnippets {
         // [START search_exact_match_data]
         Map<String, Object> restaurant = new HashMap<>();
         restaurant.put("name", "Waffle Place");
-        restaurant.put("description", "A cozy place for fresh waffles.");
+        restaurant.put("description", "A cozy place for fresh belgian waffles.");
 
         db.collection("Restaurants").add(restaurant);
         // [END search_exact_match_data]

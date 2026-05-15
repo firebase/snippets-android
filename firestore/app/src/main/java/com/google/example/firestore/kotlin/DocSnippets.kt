@@ -3738,7 +3738,7 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         // [START search_exact_match_data]
         val restaurant = hashMapOf(
             "name" to "Waffle Place",
-            "description" to "A cozy place for fresh waffles.",
+            "description" to "A cozy place for fresh belgian waffles.",
         )
 
         db.collection("Restaurants").add(restaurant)

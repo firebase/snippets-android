@@ -48,5 +48,5 @@ dependencies {
     implementation("com.google.firebase:firebase-functions:21.0.0")
 
     // For streaming callable Cloud Functions
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive:1.10.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive:1.11.0")
 }

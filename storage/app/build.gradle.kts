@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     id("com.android.application")
     id("com.google.gms.google-services")
-    id("com.google.devtools.ksp") version "2.3.7"
+    id("com.google.devtools.ksp") version "2.3.8"
 }
 
 android {

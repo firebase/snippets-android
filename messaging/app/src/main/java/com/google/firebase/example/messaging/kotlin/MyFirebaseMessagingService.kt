@@ -133,7 +133,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             return Result.success()
         }
     }
-    
+
+    private fun registerFid() {
     // [START register_fid]
     // Trigger manual registration if auto-initialization is turned off.
     // Consider calling this every time the app starts to guarantee sync status.
@@ -145,6 +146,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         // Success! The Firebase Installation ID can be used to target messages to this app
         // instance and will be delivered asynchronously to your onRegistered() callback.
       }
+    }
     // [END register_fid]
 
     // [START on_fid_registered]

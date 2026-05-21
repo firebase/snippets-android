@@ -137,7 +137,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
 
-    private void register() {
+    private void registerFid() {
         // [START register_fid]
         // Trigger manual registration if auto-initialization is turned off.
         // Consider calling this every time the app starts to guarantee sync status.

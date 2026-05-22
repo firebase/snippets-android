@@ -137,28 +137,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
 
-    private void registerFid() {
-        // [START register_fid]
-        // Trigger manual registration if auto-initialization is turned off.
-        // Consider calling this every time the app starts to guarantee sync status.
-        FirebaseMessaging.getInstance().register()
-            .addOnCompleteListener(task -> {
-                if (!task.isSuccessful()) {
-                    // Registration failed. Consider retrying the registration with exponential backoff.
-                    Log.w(TAG, "Failed to register with Firebase Cloud Messaging", task.getException());
-                }
-                // Success! The Firebase Installation ID can be used to target messages to this app
-                // instance and will be delivered asynchronously to your onRegistered() callback.
-            });
-        // [END register_fid]
-    }
-
     // [START on_fid_registered]
     /**
      * There are three scenarios when `onRegistered` is called:
      * 1) Every time a manual `register()` call finishes successfully
      * 2) Whenever the FID is changed and the app is re-registered with FCM via the new FID
-     * 3) Automatically on app startup or routine sync when auto-initialization is enabled.
+     * 3) Automatically on the first app startup or routine sync when auto-initialization is enabled.
      * Under #2, there are three scenarios when the existing FID is changed:
      * A) App is restored to a new device
      * B) User uninstalls/reinstalls the app

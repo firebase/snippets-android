@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace = "devrel.firebase.google.com.firebaseoptions"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "devrel.firebase.google.com.firebaseoptions"
         minSdk = 23
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -39,7 +39,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.7.1")
 
     // Import the BoM for the Firebase platform
-    implementation(platform("com.google.firebase:firebase-bom:34.14.0"))
+    implementation(platform("com.google.firebase:firebase-bom:34.14.1"))
     implementation("com.google.firebase:firebase-database")
     implementation("com.google.firebase:firebase-common")
 }

@@ -3,17 +3,17 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     id("com.android.application")
     id("com.google.gms.google-services")
-    id("com.google.devtools.ksp") version "2.3.8"
+    id("com.google.devtools.ksp") version "2.3.9"
 }
 
 android {
     namespace = "com.google.firebase.referencecode.storage"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.google.firebase.referencecode.storage"
         minSdk = 23
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 1
         versionName = "1.0"
     }
@@ -44,7 +44,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.7.1")
 
     // Import the BoM for the Firebase platform
-    implementation(platform("com.google.firebase:firebase-bom:34.13.0"))
+    implementation(platform("com.google.firebase:firebase-bom:34.14.1"))
 
     // Add the dependency for the Cloud Storage library
     // When using the BoM, you don't specify versions in Firebase library dependencies

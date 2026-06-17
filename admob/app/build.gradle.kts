@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace = "com.google.firebase.example.admob"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.google.firebase.example.admob"
         minSdk = 23
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -39,15 +39,14 @@ dependencies {
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.browser:browser:1.5.0")
     implementation("androidx.appcompat:appcompat:1.7.1")
-    implementation("com.google.firebase:firebase-ads:23.6.0")
     implementation("androidx.constraintlayout:constraintlayout:2.2.1")
 
     // [START gradle_play_config]
-    implementation("com.google.android.gms:play-services-ads:25.2.0")
+    implementation("com.google.android.gms:play-services-ads:25.3.0")
     // [END gradle_play_config]
 
     // Import the Firebase BoM (see: https://firebase.google.com/docs/android/learn-more#bom)
-    implementation(platform("com.google.firebase:firebase-bom:34.13.0"))
+    implementation(platform("com.google.firebase:firebase-bom:34.14.1"))
 
     // For an optimal experience using AdMob, add the Firebase SDK
     // for Google Analytics. This is recommended, but not required.

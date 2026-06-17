@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace = "com.google.firebase.example.messaging"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.google.firebase.example.messaging"
         minSdk = 23
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -40,7 +40,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.7.1")
 
     // Import the Firebase BoM (see: https://firebase.google.com/docs/android/learn-more#bom)
-    implementation(platform("com.google.firebase:firebase-bom:34.13.0"))
+    implementation(platform("com.google.firebase:firebase-bom:34.14.1"))
 
     // Import Firebase Cloud Messaging library
     implementation("com.google.firebase:firebase-messaging")
@@ -54,7 +54,7 @@ dependencies {
     // See: https://firebase.google.com/docs/cloud-messaging/manage-tokens
     implementation("com.google.firebase:firebase-firestore")
 
-    implementation("com.google.android.gms:play-services-auth:21.5.1")
+    implementation("com.google.android.gms:play-services-auth:21.6.0")
     implementation("androidx.work:work-runtime-ktx:2.11.2")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.10.0")
 }

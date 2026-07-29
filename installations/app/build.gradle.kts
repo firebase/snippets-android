@@ -40,5 +40,5 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.7.1")
     implementation("androidx.constraintlayout:constraintlayout:2.2.1")
 
-    implementation("com.google.firebase:firebase-installations:19.1.1")
+    implementation("com.google.firebase:firebase-installations:19.1.2")
 }

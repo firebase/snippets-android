@@ -33,9 +33,7 @@ fun isBlockListed(candidate: ModuleComponentIdentifier): Boolean {
             "com.applovin:applovin-sdk",
             "com.ironsource.sdk:mediationsdk",
             "com.google.guava",
-            "com.github.bumptech.glide",
-            // TODO(thatfiredev): remove functions once https://github.com/firebase/firebase-android-sdk/issues/6522 is fixed
-            "com.google.firebase:firebase-functions"
+            "com.github.bumptech.glide"
     ).any { keyword ->
         keyword in candidate.toString().lowercase()
     }

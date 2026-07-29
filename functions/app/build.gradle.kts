@@ -43,9 +43,7 @@ dependencies {
 
     // Add the dependency for the Cloud Functions library
     // When using the BoM, you don't specify versions in Firebase library dependencies
-    // TODO(thatfiredev): remove the pinned dependency version when
-    //   https://github.com/firebase/firebase-android-sdk/issues/6522 is fixed
-    implementation("com.google.firebase:firebase-functions:21.0.0")
+    implementation("com.google.firebase:firebase-functions")
 
     // For streaming callable Cloud Functions
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive:1.11.0")

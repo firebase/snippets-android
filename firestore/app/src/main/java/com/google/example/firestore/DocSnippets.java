@@ -4358,7 +4358,7 @@ public class DocSnippets {
 
     void pipelineJoinLookup() {
         // [START pipeline_join_lookup]
-        Pipeline pipeline = db.pipeline()
+        Task<Pipeline.Snapshot> results = db.pipeline()
                 .collectionGroup("reviews")
                 .define(field("restaurant").alias("restaurant_name"))
                 .addFields(
@@ -4368,13 +4368,14 @@ public class DocSnippets {
                                 .select("name", "type")
                                 .toScalarExpression()
                                 .alias("restaurant")
-                );
+                )
+                .execute();
         // [END pipeline_join_lookup]
     }
 
     void pipelineJoinArray() {
         // [START pipeline_join_array]
-        Pipeline pipeline = db.pipeline()
+        Task<Pipeline.Snapshot> results = db.pipeline()
                 .collectionGroup("restaurants")
                 .where(field("type").equal("pizza"))
                 .define(field("__name__").alias("restaurant_name"))
@@ -4386,13 +4387,14 @@ public class DocSnippets {
                                 .select("rating", "reviewer_id")
                                 .toArrayExpression()
                                 .alias("reviews")
-                );
+                )
+                .execute();
         // [END pipeline_join_array]
     }
 
     void pipelineJoinAggregate() {
         // [START pipeline_join_aggregate]
-        Pipeline pipeline = db.pipeline()
+        Task<Pipeline.Snapshot> results = db.pipeline()
                 .collectionGroup("restaurants")
                 .where(field("type").equal("pizza"))
                 .define(field("__name__").alias("restaurant_name"))
@@ -4404,13 +4406,14 @@ public class DocSnippets {
                                 .aggregate(average("rating").alias("avg_rating"))
                                 .toScalarExpression()
                                 .alias("avg_rating")
-                );
+                )
+                .execute();
         // [END pipeline_join_aggregate]
     }
 
     void pipelineJoinLimit() {
         // [START pipeline_join_limit]
-        Pipeline pipeline = db.pipeline()
+        Task<Pipeline.Snapshot> results = db.pipeline()
                 .collectionGroup("restaurants")
                 .define(field("__name__").alias("restaurant_name"))
                 .select(
@@ -4423,26 +4426,28 @@ public class DocSnippets {
                                 .select("rating", "reviewer_id")
                                 .toArrayExpression()
                                 .alias("top_reviews")
-                );
+                )
+                .execute();
         // [END pipeline_join_limit]
     }
 
     void pipelineJoinSubcollection() {
         // [START pipeline_join_subcollection]
-        Pipeline pipeline = db.pipeline()
+        Task<Pipeline.Snapshot> results = db.pipeline()
                 .collection("cities")
                 .addFields(
                         PipelineSource.subcollection("restaurants")
                                 .toArrayExpression()
                                 .length()
                                 .alias("restaurant_count")
-                );
+                )
+                .execute();
         // [END pipeline_join_subcollection]
     }
 
     void pipelineJoinMultiField() {
         // [START pipeline_join_multi_field]
-        Pipeline pipeline = db.pipeline()
+        Task<Pipeline.Snapshot> results = db.pipeline()
                 .collectionGroup("restaurants")
                 .define(
                         field("owner_id").alias("owner_id"),
@@ -4456,13 +4461,14 @@ public class DocSnippets {
                                 .aggregate(countAll().alias("c"))
                                 .toScalarExpression()
                                 .greaterThan(0)
-                );
+                )
+                .execute();
         // [END pipeline_join_multi_field]
     }
 
     void pipelineJoinAnti() {
         // [START pipeline_join_anti]
-        Pipeline pipeline = db.pipeline()
+        Task<Pipeline.Snapshot> results = db.pipeline()
                 .collectionGroup("restaurants")
                 .define(field("__name__").alias("restaurant_name"))
                 .where(
@@ -4472,13 +4478,14 @@ public class DocSnippets {
                                 .aggregate(countAll().alias("review_count"))
                                 .toScalarExpression()
                                 .equal(0)
-                );
+                )
+                .execute();
         // [END pipeline_join_anti]
     }
 
     void pipelineJoinUnnest() {
         // [START pipeline_join_unnest]
-        Pipeline pipeline = db.pipeline()
+        Task<Pipeline.Snapshot> results = db.pipeline()
                 .collectionGroup("restaurants")
                 .where(field("type").equal("pizza"))
                 .define(field("__name__").alias("restaurant_name"))
@@ -4489,13 +4496,14 @@ public class DocSnippets {
                                 .select("rating", "reviewer_id")
                                 .toArrayExpression()
                                 .alias("review")
-                );
+                )
+                .execute();
         // [END pipeline_join_unnest]
     }
 
     void pipelineJoinUncorrelated() {
         // [START pipeline_join_uncorrelated]
-        Pipeline pipeline = db.pipeline()
+        Task<Pipeline.Snapshot> results = db.pipeline()
                 .collection("reviews")
                 // Average review rating is 4.3
                 .where(
@@ -4506,19 +4514,21 @@ public class DocSnippets {
                                         .toScalarExpression()
                         )
                 )
-                .select("rating", "reviewer_id");
+                .select("rating", "reviewer_id")
+                .execute();
         // [END pipeline_join_uncorrelated]
     }
 
     void pipelineForceTableScan() {
         // [START pipeline_force_table_scan]
         // Force Planner to only do a Full-Table Scan
-        Pipeline pipeline = db.pipeline()
+        Task<Pipeline.Snapshot> results = db.pipeline()
                 .collectionGroup(
                         "customers",
                         new CollectionGroupOptions().withHints(new CollectionHints().withForceIndex("primary"))
                 )
-                .limit(2);
+                .limit(2)
+                .execute();
         // [END pipeline_force_table_scan]
     }
 

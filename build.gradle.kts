@@ -8,7 +8,7 @@ plugins {
     id("com.google.firebase.crashlytics") version "3.0.7" apply false
     id("com.google.firebase.firebase-perf") version "2.0.2" apply false
     id("androidx.navigation.safeargs") version "2.9.8" apply false
-    id("io.github.ben-manes.versions") version "0.56.0" apply true
+    id("io.github.ben-manes.versions") version "0.57.0" apply true
     alias(libs.plugins.composeCompiler) apply false
 }
 
@@ -62,7 +62,7 @@ tasks.withType<DependencyUpdatesTask> {
 val ktlint by configurations.creating
 
 dependencies {
-    ktlint("com.pinterest:ktlint:0.49.0") {
+    ktlint("com.pinterest:ktlint:0.50.0") {
         attributes {
             attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling.EXTERNAL))
         }

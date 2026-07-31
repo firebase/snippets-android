@@ -63,7 +63,6 @@ import com.google.firebase.firestore.pipeline.Expression;
 import com.google.firebase.firestore.pipeline.FindNearestStage;
 import com.google.firebase.firestore.pipeline.SampleStage;
 import com.google.firebase.firestore.pipeline.SearchStage;
-import com.google.firebase.firestore.PipelineSource;
 import com.google.firebase.firestore.pipeline.CollectionGroupOptions;
 import com.google.firebase.firestore.pipeline.CollectionHints;
 import com.google.firebase.firestore.pipeline.UnnestOptions;

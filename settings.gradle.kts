@@ -23,5 +23,4 @@ include(":auth:app",
         ":test-lab:app",
         ":analytics:app",
         ":installations:app",
-        ":firebase-ai:app"
 )

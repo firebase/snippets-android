@@ -37,7 +37,7 @@ android {
 
 dependencies {
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
-    implementation("androidx.appcompat:appcompat:1.7.1")
+    implementation("androidx.appcompat:appcompat:1.8.0")
     implementation("com.google.firebase:firebase-analytics:23.2.0")
     // Ironsource and AppLovin libraries used for ad_impression snippets
     implementation("com.applovin:applovin-sdk:11.5.1")

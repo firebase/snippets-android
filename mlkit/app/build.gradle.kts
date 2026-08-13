@@ -48,7 +48,7 @@ android {
 
 dependencies {
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
-    implementation("androidx.appcompat:appcompat:1.7.1")
+    implementation("androidx.appcompat:appcompat:1.8.0")
     implementation("androidx.exifinterface:exifinterface:1.3.5")
     implementation("com.google.firebase:firebase-ml-common:22.1.2")
     implementation("com.google.firebase:firebase-ml-model-interpreter:22.0.4")

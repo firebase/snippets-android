@@ -1,6 +1,5 @@
 [versions]
 agp = "9.2.1"
-firebaseAi = "17.15.0"
 guava = "32.0.1-android"
 kotlin = "2.4.10"
 coreKtx = "1.19.0"
@@ -12,7 +11,6 @@ lifecycleRuntimeKtx = "2.11.0"
 activityCompose = "1.13.0"
 composeBom = "2026.08.00"
 reactiveStreams = "1.0.4"
-vertexAI = "16.5.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -31,8 +29,6 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 
-# Firebase AI Logic
-firebase-ai = { module = "com.google.firebase:firebase-ai", version.ref = "firebaseAi" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 reactive-streams = { module = "org.reactivestreams:reactive-streams", version.ref = "reactiveStreams" }
 

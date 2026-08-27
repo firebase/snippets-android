@@ -43,19 +43,9 @@ fun notFromFirebase(candidate: ModuleComponentIdentifier): Boolean {
     return candidate.group != "com.google.firebase"
 }
 
-// TODO(b/522845800): remove this once the bug with AGP 9.3.x and lint has been fixed
-fun isBuggyAGP(candidate: ModuleComponentIdentifier): Boolean {
-  // Skip versions <= 9.3.1
-  val candidateName = candidate.toString().lowercase()
-  return (candidateName.contains("com.android.application") ||
-          candidateName.contains("com.android.library")) &&
-          candidate.version.replace(".", "").toInt() <= 931
-}
-
 tasks.withType<DependencyUpdatesTask> {
     rejectVersionIf {
-        (isNonStable(candidate) && notFromFirebase(candidate)) || isBlockListed(candidate) ||
-                isBuggyAGP(candidate)
+        (isNonStable(candidate) && notFromFirebase(candidate)) || isBlockListed(candidate)
     }
 }
 

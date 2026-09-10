@@ -2,12 +2,12 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 plugins {
-    id("com.android.application") version "9.2.1" apply false
-    id("com.android.library") version "9.2.1" apply false
+    id("com.android.application") version "9.4.0" apply false
+    id("com.android.library") version "9.4.0" apply false
     id("com.google.gms.google-services") version "4.5.0" apply false
-    id("com.google.firebase.crashlytics") version "3.0.7" apply false
+    id("com.google.firebase.crashlytics") version "3.0.8" apply false
     id("com.google.firebase.firebase-perf") version "2.0.2" apply false
-    id("androidx.navigation.safeargs") version "2.9.8" apply false
+    id("androidx.navigation.safeargs") version "2.10.1" apply false
     id("io.github.ben-manes.versions") version "0.61.0" apply true
     alias(libs.plugins.composeCompiler) apply false
 }

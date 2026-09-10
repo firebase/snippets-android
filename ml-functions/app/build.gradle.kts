@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "devrel.firebase.google.com.mlfunctions"
-        minSdk = 16
+        minSdk = 24
         targetSdk = 37
         versionCode = 1
         versionName = "1.0"
@@ -46,7 +46,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.8.0")
 
     // Import the Firebase BoM (see: https://firebase.google.com/docs/android/learn-more#bom)
-    implementation(platform("com.google.firebase:firebase-bom:34.17.0"))
+    implementation(platform("com.google.firebase:firebase-bom:34.19.0"))
 
     // Cloud Functions for Firebase
     implementation("com.google.firebase:firebase-functions")

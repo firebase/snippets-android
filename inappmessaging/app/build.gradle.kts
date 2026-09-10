@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.google.firebase.example.inappmessaging"
-        minSdk = 23
+        minSdk = 24
         targetSdk = 37
         versionCode = 1
         versionName = "1.0"
@@ -46,7 +46,7 @@ dependencies {
     implementation("androidx.browser:browser:1.5.0")
 
     // Import the BoM for the Firebase platform
-    implementation(platform("com.google.firebase:firebase-bom:34.17.0"))
+    implementation(platform("com.google.firebase:firebase-bom:34.19.0"))
 
     // Add the dependencies for the In-App Messaging and Analytics libraries
     // When using the BoM, you don't specify versions in Firebase library dependencies

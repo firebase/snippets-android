@@ -42,7 +42,7 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.2.2")
 
     // [START gradle_play_config]
-    implementation("com.google.android.gms:play-services-ads:25.4.0")
+    implementation("com.google.android.gms:play-services-ads:25.5.0")
     // [END gradle_play_config]
 
     // Import the Firebase BoM (see: https://firebase.google.com/docs/android/learn-more#bom)

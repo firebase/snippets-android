@@ -36,7 +36,7 @@ android {
 
 dependencies {
     implementation(fileTree("libs").include("*.jar"))
-    implementation("androidx.core:core-ktx:1.19.0")
+    implementation("androidx.core:core-ktx:1.19.1")
     implementation("androidx.appcompat:appcompat:1.8.0")
     implementation("androidx.constraintlayout:constraintlayout:2.2.2")
 

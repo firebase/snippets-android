@@ -55,6 +55,6 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore")
 
     implementation("com.google.android.gms:play-services-auth:22.0.0")
-    implementation("androidx.work:work-runtime-ktx:2.11.2")
+    implementation("androidx.work:work-runtime-ktx:2.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.11.0")
 }

@@ -136,4 +136,24 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             return Result.success();
         }
     }
+
+    // [START on_fid_registered]
+    /**
+     * There are three scenarios when `onRegistered` is called:
+     * 1) Every time a manual `register()` call finishes successfully
+     * 2) Whenever the FID is changed and the app is re-registered with FCM via the new FID
+     * 3) Automatically on the first app startup or routine sync when auto-initialization is enabled.
+     * Under #2, there are three scenarios when the existing FID is changed:
+     * A) App is restored to a new device
+     * B) User uninstalls/reinstalls the app
+     * C) User clears app data
+     */
+    @Override
+    public void onRegistered(@NonNull String installationId) {
+        Log.d(TAG, "Registered installation ID: " + installationId);
+
+        // Send the Firebase Installation ID to your app server.
+        sendRegistrationToServer(installationId);
+    }
+    // [END on_fid_registered]
 }

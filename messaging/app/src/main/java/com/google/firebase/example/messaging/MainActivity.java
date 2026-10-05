@@ -141,4 +141,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     // [END ask_post_notifications]
+
+    private void registerFid() {
+        // [START register_fid]
+        // Trigger manual registration if auto-initialization is turned off.
+        // Consider calling this every time the app starts to guarantee sync status.
+        FirebaseMessaging.getInstance().register()
+            .addOnCompleteListener(this, task -> {
+                if (!task.isSuccessful()) {
+                    // Registration failed. Consider retrying the registration with exponential backoff.
+                    Log.w(TAG, "Failed to register with Firebase Cloud Messaging", task.getException());
+                }
+                // Success! The Firebase Installation ID can be used to target messages to this app
+                // instance and will be delivered asynchronously to your onRegistered() callback.
+            });
+        // [END register_fid]
+    }
 }

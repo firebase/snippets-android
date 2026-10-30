@@ -29,11 +29,16 @@ import com.google.firebase.firestore.pipeline.AggregateStage
 import com.google.firebase.firestore.pipeline.Expression
 import com.google.firebase.firestore.pipeline.AggregateFunction.Companion.average
 import com.google.firebase.firestore.pipeline.AggregateFunction.Companion.countAll
+import com.google.firebase.firestore.pipeline.AggregateFunction.Companion.maximum
+import com.google.firebase.firestore.pipeline.Expression.Companion.array
 import com.google.firebase.firestore.pipeline.Expression.Companion.constant
 import com.google.firebase.firestore.pipeline.Expression.Companion.field
 import com.google.firebase.firestore.pipeline.Expression.Companion.concat
 import com.google.firebase.firestore.pipeline.Expression.Companion.documentMatches
 import com.google.firebase.firestore.pipeline.Expression.Companion.length
+import com.google.firebase.firestore.pipeline.Expression.Companion.map
+import com.google.firebase.firestore.pipeline.Expression.Companion.multiply
+import com.google.firebase.firestore.pipeline.Expression.Companion.rawFunction
 import com.google.firebase.firestore.pipeline.Expression.Companion.score
 import com.google.firebase.firestore.pipeline.Expression.Companion.type
 import com.google.firebase.firestore.pipeline.Expression.Companion.variable
@@ -41,6 +46,9 @@ import com.google.firebase.firestore.pipeline.FindNearestStage
 import com.google.firebase.firestore.pipeline.SampleStage
 import com.google.firebase.firestore.pipeline.SearchStage
 import com.google.firebase.firestore.pipeline.UnnestOptions
+import com.google.firebase.firestore.PipelineSource
+import com.google.firebase.firestore.pipeline.CollectionGroupOptions
+import com.google.firebase.firestore.pipeline.CollectionHints
 import com.google.firebase.firestore.toObject
 import java.util.Date
 import java.util.concurrent.LinkedBlockingQueue
@@ -3824,6 +3832,617 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
         val pipeline = db.pipeline().collection("restaurants")
             .search(SearchStage.withQuery(documentMatches("\"belgian waffles\"")))
         // [END search_phrase_match]
+    }
+
+    fun pipelineJoinTestData() {
+        // [START pipeline_join_test_data]
+        // Load set of cities.
+        val cities = db.collection("cities")
+
+        cities.document("SF").set(
+            mapOf(
+                "name" to "San Francisco",
+                "state" to "CA",
+                "country" to "USA",
+            ),
+        )
+        cities.document("LA").set(
+            mapOf(
+                "name" to "Los Angeles",
+                "state" to "CA",
+                "country" to "USA",
+            ),
+        )
+        cities.document("DC").set(
+            mapOf(
+                "name" to "Washington, D.C.",
+                "state" to null,
+                "country" to "USA",
+            ),
+        )
+        cities.document("TOK").set(
+            mapOf(
+                "name" to "Tokyo",
+                "state" to null,
+                "country" to "Japan",
+            ),
+        )
+
+        // Load restaurants in various cities.
+        val sfRestaurants = db.collection("cities").document("SF").collection("restaurants")
+        val laRestaurants = db.collection("cities").document("LA").collection("restaurants")
+        val dcRestaurants = db.collection("cities").document("DC").collection("restaurants")
+
+        val rest1 = sfRestaurants.document("rest1")
+        rest1.set(
+            mapOf(
+                "name" to "Golden Gate Pizza",
+                "type" to "pizza",
+                "owner_id" to "Mario Rossi",
+            ),
+        )
+        val rest2 = sfRestaurants.document("rest2")
+        rest2.set(
+            mapOf(
+                "name" to "Bay Area Burger",
+                "type" to "burger",
+                "owner_id" to "Sarah Jenkins",
+            ),
+        )
+        val rest3 = sfRestaurants.document("rest3")
+        rest3.set(
+            mapOf(
+                "name" to "Sunset Taco",
+                "type" to "mexican",
+                "owner_id" to "Edward",
+            ),
+        )
+
+        val rest4 = laRestaurants.document("rest4")
+        rest4.set(
+            mapOf(
+                "name" to "Hollywood Sushi",
+                "type" to "sushi",
+                "owner_id" to "Ken Kenji",
+            ),
+        )
+        val rest5 = laRestaurants.document("rest5")
+        rest5.set(
+            mapOf(
+                "name" to "Venice Pizza",
+                "type" to "pizza",
+                "owner_id" to "Luigi Romano",
+            ),
+        )
+
+        val rest6 = dcRestaurants.document("rest6")
+        rest6.set(
+            mapOf(
+                "name" to "Capitol Tacos",
+                "type" to "mexican",
+                "owner_id" to "Maria Garcia",
+            ),
+        )
+        val rest7 = dcRestaurants.document("rest7")
+        rest7.set(
+            mapOf(
+                "name" to "Georgetown Coffee",
+                "type" to "cafe",
+                "owner_id" to "David Kim",
+            ),
+        )
+
+        // Load collection of reviews.
+        val reviews = db.collection("reviews")
+
+        reviews.add(mapOf("restaurant" to rest1, "rating" to 5, "reviewer_id" to "Alice"))
+        reviews.add(mapOf("restaurant" to rest1, "rating" to 4, "reviewer_id" to "Bob"))
+        reviews.add(mapOf("restaurant" to rest2, "rating" to 4, "reviewer_id" to "Charlie"))
+        reviews.add(mapOf("restaurant" to rest3, "rating" to 5, "reviewer_id" to "Diana"))
+        reviews.add(mapOf("restaurant" to rest3, "rating" to 4, "reviewer_id" to "Edward"))
+        reviews.add(mapOf("restaurant" to rest3, "rating" to 4, "reviewer_id" to "Fiona"))
+        // rest4 has 0 reviews
+        reviews.add(mapOf("restaurant" to rest5, "rating" to 3, "reviewer_id" to "George"))
+        reviews.add(mapOf("restaurant" to rest6, "rating" to 5, "reviewer_id" to "Hannah"))
+        reviews.add(mapOf("restaurant" to rest6, "rating" to 4, "reviewer_id" to "Ian"))
+        reviews.add(mapOf("restaurant" to rest7, "rating" to 5, "reviewer_id" to "Julia"))
+        // [END pipeline_join_test_data]
+    }
+
+    fun pipelineJoinLookup() {
+        // [START pipeline_join_lookup]
+        val results = db.pipeline()
+            .collectionGroup("reviews")
+            .define(field("restaurant").alias("restaurant_name"))
+            .addFields(
+                db.pipeline()
+                    .collectionGroup("restaurants")
+                    .where(field("__name__").equal(variable("restaurant_name")))
+                    .select("name", "type")
+                    .toScalarExpression()
+                    .alias("restaurant"),
+            )
+            .execute()
+        // [END pipeline_join_lookup]
+    }
+
+    fun pipelineJoinArray() {
+        // [START pipeline_join_array]
+        val results = db.pipeline()
+            .collectionGroup("restaurants")
+            .where(field("type").equal("pizza"))
+            .define(field("__name__").alias("restaurant_name"))
+            .select(
+                field("name"),
+                db.pipeline()
+                    .collectionGroup("reviews")
+                    .where(field("restaurant").equal(variable("restaurant_name")))
+                    .select("rating", "reviewer_id")
+                    .toArrayExpression()
+                    .alias("reviews"),
+            )
+            .execute()
+        // [END pipeline_join_array]
+    }
+
+    fun pipelineJoinAggregate() {
+        // [START pipeline_join_aggregate]
+        val results = db.pipeline()
+            .collectionGroup("restaurants")
+            .where(field("type").equal("pizza"))
+            .define(field("__name__").alias("restaurant_name"))
+            .select(
+                field("name"),
+                db.pipeline()
+                    .collectionGroup("reviews")
+                    .where(field("restaurant").equal(variable("restaurant_name")))
+                    .aggregate(average("rating").alias("avg_rating"))
+                    .toScalarExpression()
+                    .alias("avg_rating"),
+            )
+            .execute()
+        // [END pipeline_join_aggregate]
+    }
+
+    fun pipelineJoinLimit() {
+        // [START pipeline_join_limit]
+        val results = db.pipeline()
+            .collectionGroup("restaurants")
+            .define(field("__name__").alias("restaurant_name"))
+            .select(
+                field("name"),
+                db.pipeline()
+                    .collectionGroup("reviews")
+                    .where(field("restaurant").equal(variable("restaurant_name")))
+                    .sort(field("rating").descending())
+                    .limit(2)
+                    .select("rating", "reviewer_id")
+                    .toArrayExpression()
+                    .alias("top_reviews"),
+            )
+            .execute()
+        // [END pipeline_join_limit]
+    }
+
+    fun pipelineJoinSubcollection() {
+        // [START pipeline_join_subcollection]
+        val results = db.pipeline()
+            .collection("cities")
+            .addFields(
+                PipelineSource.subcollection("restaurants")
+                    .toArrayExpression()
+                    .length()
+                    .alias("restaurant_count"),
+            )
+            .execute()
+        // [END pipeline_join_subcollection]
+    }
+
+    fun pipelineJoinMultiField() {
+        // [START pipeline_join_multi_field]
+        val results = db.pipeline()
+            .collectionGroup("restaurants")
+            .define(
+                field("owner_id").alias("owner_id"),
+                field("__name__").alias("__name__"),
+            )
+            .where(
+                db.pipeline()
+                    .collectionGroup("reviews")
+                    .where(field("restaurant").equal(variable("__name__")))
+                    .where(field("reviewer_id").equal(variable("owner_id")))
+                    .aggregate(countAll().alias("c"))
+                    .toScalarExpression()
+                    .greaterThan(0),
+            )
+            .execute()
+        // [END pipeline_join_multi_field]
+    }
+
+    fun pipelineJoinAnti() {
+        // [START pipeline_join_anti]
+        val results = db.pipeline()
+            .collectionGroup("restaurants")
+            .define(field("__name__").alias("restaurant_name"))
+            .where(
+                db.pipeline()
+                    .collectionGroup("reviews")
+                    .where(field("restaurant").equal(variable("restaurant_name")))
+                    .aggregate(countAll().alias("review_count"))
+                    .toScalarExpression()
+                    .equal(0),
+            )
+            .execute()
+        // [END pipeline_join_anti]
+    }
+
+    fun pipelineJoinUnnest() {
+        // [START pipeline_join_unnest]
+        val results = db.pipeline()
+            .collectionGroup("restaurants")
+            .where(field("type").equal("pizza"))
+            .define(field("__name__").alias("restaurant_name"))
+            .unnest(
+                db.pipeline()
+                    .collectionGroup("reviews")
+                    .where(field("restaurant").equal(variable("restaurant_name")))
+                    .select("rating", "reviewer_id")
+                    .toArrayExpression()
+                    .alias("review"),
+            )
+            .execute()
+        // [END pipeline_join_unnest]
+    }
+
+    fun pipelineJoinUncorrelated() {
+        // [START pipeline_join_uncorrelated]
+        val results = db.pipeline()
+            .collection("reviews")
+            // Average review rating is 4.3
+            .where(
+                field("rating").greaterThan(
+                    db.pipeline()
+                        .collection("reviews")
+                        .aggregate(average("rating").alias("avg"))
+                        .toScalarExpression(),
+                ),
+            )
+            .select("rating", "reviewer_id")
+            .execute()
+        // [END pipeline_join_uncorrelated]
+    }
+
+    fun pipelineForceTableScan() {
+        // [START pipeline_force_table_scan]
+        // Force Planner to only do a Full-Table Scan
+        val results = db.pipeline()
+            .collectionGroup(
+                "customers",
+                CollectionGroupOptions().withHints(CollectionHints().withForceIndex("primary")),
+            )
+            .limit(2)
+            .execute()
+        // [END pipeline_force_table_scan]
+    }
+
+    fun literalsExample() {
+        // [START literals_example]
+        val results = db.pipeline()
+            .literals(
+                mapOf("name" to "joe", "age" to 10),
+                mapOf("name" to "bob", "age" to 30),
+                mapOf("name" to "alice", "age" to 40),
+            )
+            .where(field("age").lessThan(35))
+            .execute()
+        // [END literals_example]
+    }
+
+    fun literalsExpressions() {
+        // [START literals_expressions]
+        val results = db.pipeline()
+            .literals(
+                mapOf(
+                    "item" to "Book",
+                    "price" to 25,
+                    "quantity" to 2,
+                    "details" to map(mapOf("category" to constant("Reading"))),
+                ),
+                mapOf(
+                    "item" to "Pen",
+                    "price" to 5,
+                    "quantity" to 10,
+                    "tags" to array("office", "writing"),
+                ),
+            )
+            .select(
+                field("item"),
+                multiply(field("price"), field("quantity")).alias("total"),
+            )
+            .execute()
+        // [END literals_expressions]
+    }
+
+    fun updateDml() {
+        // [START update_dml]
+        val results = db.pipeline()
+            .collection("books")
+            .where(field("price").lessThan(50))
+            .update(field("price").multiply(0.5).alias("price"))
+            .execute()
+        // [END update_dml]
+    }
+
+    fun deleteDml() {
+        // [START delete_dml]
+        val results = db.pipeline()
+            .collection("books")
+            .where(field("status").equal("discontinued"))
+            .delete()
+            .execute()
+        // [END delete_dml]
+    }
+
+    fun deleteFullCollection() {
+        // [START delete_full_collection]
+        val results = db.pipeline()
+            .collection("logs")
+            .delete()
+            .execute()
+        // [END delete_full_collection]
+    }
+
+    fun dmlTransaction() {
+        // [START dml_transaction]
+        db.runTransaction {
+            db.pipeline()
+                .collection("inventory")
+                .where(field("stock").lessThan(0))
+                .update(constant(0).alias("stock"))
+                .execute()
+            null
+        }
+        // [END dml_transaction]
+    }
+
+    fun dmlAtomicOption() {
+        // [START dml_atomic_option]
+        val results = db.pipeline()
+            .collection("users")
+            .where(field("status").equal("pending"))
+            .update(constant("active").alias("status"))
+            .execute(Pipeline.ExecuteOptions().withAtomic(true))
+        // [END dml_atomic_option]
+    }
+
+    fun insertStaticDocuments() {
+        // [START insert_static_documents]
+        val results = db.pipeline()
+            .literals(
+                mapOf("name" to "San Francisco", "state" to "CA", "country" to "USA"),
+                mapOf("name" to "Los Angeles", "state" to "CA", "country" to "USA"),
+            )
+            .insert("cities")
+            .execute()
+        // [END insert_static_documents]
+    }
+
+    fun insertEvaluatedDocId() {
+        // [START insert_evaluated_doc_id]
+        val results = db.pipeline()
+            .literals(
+                mapOf("name" to "San Francisco", "state" to "CA", "country" to "USA"),
+                mapOf("name" to "Los Angeles", "state" to "CA", "country" to "USA"),
+            )
+            .insert(
+                "cities",
+                concat(field("country").toUpper(), "-", field("state"), "-", field("name")),
+            )
+            .execute()
+        // [END insert_evaluated_doc_id]
+    }
+
+    fun insertDocumentReferences() {
+        // [START insert_document_references]
+        val results = db.pipeline()
+            .literals(
+                mapOf(
+                    "__name__" to db.collection("cities").document("SF"),
+                    "name" to "San Francisco",
+                ),
+            )
+            .insert()
+            .execute()
+        // [END insert_document_references]
+    }
+
+    fun insertAutoGeneratedIds() {
+        // [START insert_auto_generated_ids]
+        val results = db.pipeline()
+            .literals(
+                mapOf("name" to "San Francisco"),
+                mapOf("name" to "Los Angeles"),
+            )
+            .insert("cities", rawFunction("auto_id"))
+            .execute()
+        // [END insert_auto_generated_ids]
+    }
+
+    fun insertSubcollection() {
+        // [START insert_subcollection]
+        val results = db.pipeline()
+            .literals(
+                mapOf("title" to "Buy groceries"),
+                mapOf("title" to "Clean house"),
+            )
+            .insert(db.collection("users/user_a/tasks"))
+            .execute()
+        // [END insert_subcollection]
+    }
+
+    fun insertDifferentCollection() {
+        // [START insert_different_collection]
+        val results = db.pipeline()
+            .collection("users")
+            .insert("users_backup", field("__name__").documentId())
+            .execute()
+        // [END insert_different_collection]
+    }
+
+    fun insertAdvancedQueries() {
+        // [START insert_advanced_queries]
+        val results = db.pipeline()
+            .collection("products")
+            .search(SearchStage.withQuery("shoes"))
+            .sort(field("price").ascending())
+            .limit(5)
+            .insert("featured_shoes", field("__name__").documentId())
+            .execute()
+        // [END insert_advanced_queries]
+    }
+
+    fun updateAggregationSubquery() {
+        // [START update_aggregation_subquery]
+        val results = db.pipeline()
+            .collection("players")
+            .where(
+                field("score").equal(
+                    db.pipeline()
+                        .collection("players")
+                        .aggregate(maximum("score").alias("max_score"))
+                        .toScalarExpression(),
+                ),
+            )
+            .update(constant(true).alias("is_top_scorer"))
+            .execute()
+        // [END update_aggregation_subquery]
+    }
+
+    fun upsertMigrateUsers() {
+        // [START upsert_migrate_users]
+        val results = db.pipeline()
+            .collection("legacy_users")
+            .upsert("users", field("__name__").documentId())
+            .execute()
+        // [END upsert_migrate_users]
+    }
+
+    fun upsertInPlace() {
+        // [START upsert_in_place]
+        val results = db.pipeline()
+            .collection("cities")
+            .where(field("name").equal("San Francisco"))
+            .upsert(constant(880000).alias("population"))
+            .execute()
+        // [END upsert_in_place]
+    }
+
+    fun upsertDifferentCollectionExplicitId() {
+        // [START upsert_different_collection_explicit_id]
+        val results = db.pipeline()
+            .collection("source_coll")
+            .addFields(constant(31).alias("age"))
+            .upsert("target_coll", constant("new_doc_id"))
+            .execute()
+        // [END upsert_different_collection_explicit_id]
+    }
+
+    fun upsertDifferentCollectionExistingId() {
+        // [START upsert_different_collection_existing_id]
+        val results = db.pipeline()
+            .collection("source_coll")
+            .addFields(constant(31).alias("age"))
+            .upsert("target_coll", field("__name__").documentId())
+            .execute()
+        // [END upsert_different_collection_existing_id]
+    }
+
+    fun upsertDocumentReferences() {
+        // [START upsert_document_references]
+        val results = db.pipeline()
+            .literals(
+                mapOf(
+                    "__name__" to db.collection("cities").document("SF"),
+                    "name" to "San Francisco",
+                ),
+            )
+            .upsert()
+            .execute()
+        // [END upsert_document_references]
+    }
+
+    fun upsertAutoGeneratedIds() {
+        // [START upsert_auto_generated_ids]
+        val results = db.pipeline()
+            .literals(
+                mapOf("name" to "San Francisco"),
+            )
+            .upsert("cities", rawFunction("auto_id"))
+            .execute()
+        // [END upsert_auto_generated_ids]
+    }
+
+    fun upsertSubcollection() {
+        // [START upsert_subcollection]
+        val results = db.pipeline()
+            .literals(
+                mapOf("title" to "Buy groceries", "priority" to "high"),
+            )
+            .upsert(
+                db.collection("users/user_a/tasks"),
+                concat(constant("task_"), field("priority")),
+            )
+            .execute()
+        // [END upsert_subcollection]
+    }
+
+    fun upsertAdvancedQueries() {
+        // [START upsert_advanced_queries]
+        val results = db.pipeline()
+            .collection("products")
+            .search(SearchStage.withQuery("shoes"))
+            .sort(field("price").ascending())
+            .limit(5)
+            .upsert("featured_shoes", field("__name__").documentId())
+            .execute()
+        // [END upsert_advanced_queries]
+    }
+
+    fun upsertAggregationSubquery() {
+        // [START upsert_aggregation_subquery]
+        val results = db.pipeline()
+            .collection("players")
+            .where(
+                field("score").equal(
+                    db.pipeline()
+                        .collection("players")
+                        .aggregate(maximum("score").alias("max_score"))
+                        .toScalarExpression(),
+                ),
+            )
+            .addFields(constant(true).alias("is_top_scorer"))
+            .upsert("leaderboard", field("__name__").documentId())
+            .execute()
+        // [END upsert_aggregation_subquery]
+    }
+
+    fun rulesPipelinesFilterBefore() {
+        // [START rules_pipelines_filter_before]
+        val results = db.pipeline()
+            .collection("SecretDocuments")
+            .where(field("userId").equal("abc"))
+            .execute()
+        // [END rules_pipelines_filter_before]
+    }
+
+    fun rulesPipelinesFilterAfter() {
+        // [START rules_pipelines_filter_after]
+        val results = db.pipeline()
+            .collection("SecretDocuments")
+            .limit(5)
+            .where(field("userId").equal("abc"))
+            .execute()
+        // [END rules_pipelines_filter_after]
     }
 
 }

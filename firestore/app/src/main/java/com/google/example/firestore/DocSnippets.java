@@ -63,15 +63,23 @@ import com.google.firebase.firestore.pipeline.Expression;
 import com.google.firebase.firestore.pipeline.FindNearestStage;
 import com.google.firebase.firestore.pipeline.SampleStage;
 import com.google.firebase.firestore.pipeline.SearchStage;
+import com.google.firebase.firestore.pipeline.CollectionGroupOptions;
+import com.google.firebase.firestore.pipeline.CollectionHints;
 import com.google.firebase.firestore.pipeline.UnnestOptions;
 
+import static com.google.firebase.firestore.pipeline.Expression.array;
+import static com.google.firebase.firestore.pipeline.Expression.concat;
 import static com.google.firebase.firestore.pipeline.Expression.field;
 import static com.google.firebase.firestore.pipeline.Expression.constant;
+import static com.google.firebase.firestore.pipeline.Expression.map;
+import static com.google.firebase.firestore.pipeline.Expression.multiply;
+import static com.google.firebase.firestore.pipeline.Expression.rawFunction;
 import static com.google.firebase.firestore.pipeline.Expression.variable;
 import static com.google.firebase.firestore.pipeline.Expression.documentMatches;
 import static com.google.firebase.firestore.pipeline.Expression.score;
 import static com.google.firebase.firestore.pipeline.AggregateFunction.average;
 import static com.google.firebase.firestore.pipeline.AggregateFunction.countAll;
+import static com.google.firebase.firestore.pipeline.AggregateFunction.maximum;
 
 /**
  * Snippets for inclusion in documentation.
@@ -4202,6 +4210,692 @@ public class DocSnippets {
         Pipeline pipeline = db.pipeline().collection("restaurants")
                 .search(SearchStage.withQuery(documentMatches("\"belgian waffles\"")));
         // [END search_phrase_match]
+    }
+
+    void pipelineJoinTestData() {
+        // [START pipeline_join_test_data]
+        // Load set of cities.
+        CollectionReference cities = db.collection("cities");
+
+        Map<String, Object> sfData = new HashMap<>();
+        sfData.put("name", "San Francisco");
+        sfData.put("state", "CA");
+        sfData.put("country", "USA");
+        cities.document("SF").set(sfData);
+
+        Map<String, Object> laData = new HashMap<>();
+        laData.put("name", "Los Angeles");
+        laData.put("state", "CA");
+        laData.put("country", "USA");
+        cities.document("LA").set(laData);
+
+        Map<String, Object> dcData = new HashMap<>();
+        dcData.put("name", "Washington, D.C.");
+        dcData.put("state", null);
+        dcData.put("country", "USA");
+        cities.document("DC").set(dcData);
+
+        Map<String, Object> tokData = new HashMap<>();
+        tokData.put("name", "Tokyo");
+        tokData.put("state", null);
+        tokData.put("country", "Japan");
+        cities.document("TOK").set(tokData);
+
+        // Load restaurants in various cities.
+        CollectionReference sfRestaurants = db.collection("cities").document("SF").collection("restaurants");
+        CollectionReference laRestaurants = db.collection("cities").document("LA").collection("restaurants");
+        CollectionReference dcRestaurants = db.collection("cities").document("DC").collection("restaurants");
+
+        DocumentReference rest1 = sfRestaurants.document("rest1");
+        Map<String, Object> rest1Data = new HashMap<>();
+        rest1Data.put("name", "Golden Gate Pizza");
+        rest1Data.put("type", "pizza");
+        rest1Data.put("owner_id", "Mario Rossi");
+        rest1.set(rest1Data);
+
+        DocumentReference rest2 = sfRestaurants.document("rest2");
+        Map<String, Object> rest2Data = new HashMap<>();
+        rest2Data.put("name", "Bay Area Burger");
+        rest2Data.put("type", "burger");
+        rest2Data.put("owner_id", "Sarah Jenkins");
+        rest2.set(rest2Data);
+
+        DocumentReference rest3 = sfRestaurants.document("rest3");
+        Map<String, Object> rest3Data = new HashMap<>();
+        rest3Data.put("name", "Sunset Taco");
+        rest3Data.put("type", "mexican");
+        rest3Data.put("owner_id", "Edward");
+        rest3.set(rest3Data);
+
+        DocumentReference rest4 = laRestaurants.document("rest4");
+        Map<String, Object> rest4Data = new HashMap<>();
+        rest4Data.put("name", "Hollywood Sushi");
+        rest4Data.put("type", "sushi");
+        rest4Data.put("owner_id", "Ken Kenji");
+        rest4.set(rest4Data);
+
+        DocumentReference rest5 = laRestaurants.document("rest5");
+        Map<String, Object> rest5Data = new HashMap<>();
+        rest5Data.put("name", "Venice Pizza");
+        rest5Data.put("type", "pizza");
+        rest5Data.put("owner_id", "Luigi Romano");
+        rest5.set(rest5Data);
+
+        DocumentReference rest6 = dcRestaurants.document("rest6");
+        Map<String, Object> rest6Data = new HashMap<>();
+        rest6Data.put("name", "Capitol Tacos");
+        rest6Data.put("type", "mexican");
+        rest6Data.put("owner_id", "Maria Garcia");
+        rest6.set(rest6Data);
+
+        DocumentReference rest7 = dcRestaurants.document("rest7");
+        Map<String, Object> rest7Data = new HashMap<>();
+        rest7Data.put("name", "Georgetown Coffee");
+        rest7Data.put("type", "cafe");
+        rest7Data.put("owner_id", "David Kim");
+        rest7.set(rest7Data);
+
+        // Load collection of reviews.
+        CollectionReference reviews = db.collection("reviews");
+
+        Map<String, Object> rev1 = new HashMap<>();
+        rev1.put("restaurant", rest1);
+        rev1.put("rating", 5);
+        rev1.put("reviewer_id", "Alice");
+        reviews.add(rev1);
+
+        Map<String, Object> rev2 = new HashMap<>();
+        rev2.put("restaurant", rest1);
+        rev2.put("rating", 4);
+        rev2.put("reviewer_id", "Bob");
+        reviews.add(rev2);
+
+        Map<String, Object> rev3 = new HashMap<>();
+        rev3.put("restaurant", rest2);
+        rev3.put("rating", 4);
+        rev3.put("reviewer_id", "Charlie");
+        reviews.add(rev3);
+
+        Map<String, Object> rev4 = new HashMap<>();
+        rev4.put("restaurant", rest3);
+        rev4.put("rating", 5);
+        rev4.put("reviewer_id", "Diana");
+        reviews.add(rev4);
+
+        Map<String, Object> rev5 = new HashMap<>();
+        rev5.put("restaurant", rest3);
+        rev5.put("rating", 4);
+        rev5.put("reviewer_id", "Edward");
+        reviews.add(rev5);
+
+        Map<String, Object> rev6 = new HashMap<>();
+        rev6.put("restaurant", rest3);
+        rev6.put("rating", 4);
+        rev6.put("reviewer_id", "Fiona");
+        reviews.add(rev6);
+
+        // rest4 has 0 reviews
+
+        Map<String, Object> rev7 = new HashMap<>();
+        rev7.put("restaurant", rest5);
+        rev7.put("rating", 3);
+        rev7.put("reviewer_id", "George");
+        reviews.add(rev7);
+
+        Map<String, Object> rev8 = new HashMap<>();
+        rev8.put("restaurant", rest6);
+        rev8.put("rating", 5);
+        rev8.put("reviewer_id", "Hannah");
+        reviews.add(rev8);
+
+        Map<String, Object> rev9 = new HashMap<>();
+        rev9.put("restaurant", rest6);
+        rev9.put("rating", 4);
+        rev9.put("reviewer_id", "Ian");
+        reviews.add(rev9);
+
+        Map<String, Object> rev10 = new HashMap<>();
+        rev10.put("restaurant", rest7);
+        rev10.put("rating", 5);
+        rev10.put("reviewer_id", "Julia");
+        reviews.add(rev10);
+        // [END pipeline_join_test_data]
+    }
+
+    void pipelineJoinLookup() {
+        // [START pipeline_join_lookup]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collectionGroup("reviews")
+                .define(field("restaurant").alias("restaurant_name"))
+                .addFields(
+                        db.pipeline()
+                                .collectionGroup("restaurants")
+                                .where(field("__name__").equal(variable("restaurant_name")))
+                                .select("name", "type")
+                                .toScalarExpression()
+                                .alias("restaurant")
+                )
+                .execute();
+        // [END pipeline_join_lookup]
+    }
+
+    void pipelineJoinArray() {
+        // [START pipeline_join_array]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collectionGroup("restaurants")
+                .where(field("type").equal("pizza"))
+                .define(field("__name__").alias("restaurant_name"))
+                .select(
+                        field("name"),
+                        db.pipeline()
+                                .collectionGroup("reviews")
+                                .where(field("restaurant").equal(variable("restaurant_name")))
+                                .select("rating", "reviewer_id")
+                                .toArrayExpression()
+                                .alias("reviews")
+                )
+                .execute();
+        // [END pipeline_join_array]
+    }
+
+    void pipelineJoinAggregate() {
+        // [START pipeline_join_aggregate]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collectionGroup("restaurants")
+                .where(field("type").equal("pizza"))
+                .define(field("__name__").alias("restaurant_name"))
+                .select(
+                        field("name"),
+                        db.pipeline()
+                                .collectionGroup("reviews")
+                                .where(field("restaurant").equal(variable("restaurant_name")))
+                                .aggregate(average("rating").alias("avg_rating"))
+                                .toScalarExpression()
+                                .alias("avg_rating")
+                )
+                .execute();
+        // [END pipeline_join_aggregate]
+    }
+
+    void pipelineJoinLimit() {
+        // [START pipeline_join_limit]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collectionGroup("restaurants")
+                .define(field("__name__").alias("restaurant_name"))
+                .select(
+                        field("name"),
+                        db.pipeline()
+                                .collectionGroup("reviews")
+                                .where(field("restaurant").equal(variable("restaurant_name")))
+                                .sort(field("rating").descending())
+                                .limit(2)
+                                .select("rating", "reviewer_id")
+                                .toArrayExpression()
+                                .alias("top_reviews")
+                )
+                .execute();
+        // [END pipeline_join_limit]
+    }
+
+    void pipelineJoinSubcollection() {
+        // [START pipeline_join_subcollection]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("cities")
+                .addFields(
+                        PipelineSource.subcollection("restaurants")
+                                .toArrayExpression()
+                                .length()
+                                .alias("restaurant_count")
+                )
+                .execute();
+        // [END pipeline_join_subcollection]
+    }
+
+    void pipelineJoinMultiField() {
+        // [START pipeline_join_multi_field]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collectionGroup("restaurants")
+                .define(
+                        field("owner_id").alias("owner_id"),
+                        field("__name__").alias("__name__")
+                )
+                .where(
+                        db.pipeline()
+                                .collectionGroup("reviews")
+                                .where(field("restaurant").equal(variable("__name__")))
+                                .where(field("reviewer_id").equal(variable("owner_id")))
+                                .aggregate(countAll().alias("c"))
+                                .toScalarExpression()
+                                .greaterThan(0)
+                )
+                .execute();
+        // [END pipeline_join_multi_field]
+    }
+
+    void pipelineJoinAnti() {
+        // [START pipeline_join_anti]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collectionGroup("restaurants")
+                .define(field("__name__").alias("restaurant_name"))
+                .where(
+                        db.pipeline()
+                                .collectionGroup("reviews")
+                                .where(field("restaurant").equal(variable("restaurant_name")))
+                                .aggregate(countAll().alias("review_count"))
+                                .toScalarExpression()
+                                .equal(0)
+                )
+                .execute();
+        // [END pipeline_join_anti]
+    }
+
+    void pipelineJoinUnnest() {
+        // [START pipeline_join_unnest]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collectionGroup("restaurants")
+                .where(field("type").equal("pizza"))
+                .define(field("__name__").alias("restaurant_name"))
+                .unnest(
+                        db.pipeline()
+                                .collectionGroup("reviews")
+                                .where(field("restaurant").equal(variable("restaurant_name")))
+                                .select("rating", "reviewer_id")
+                                .toArrayExpression()
+                                .alias("review")
+                )
+                .execute();
+        // [END pipeline_join_unnest]
+    }
+
+    void pipelineJoinUncorrelated() {
+        // [START pipeline_join_uncorrelated]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("reviews")
+                // Average review rating is 4.3
+                .where(
+                        field("rating").greaterThan(
+                                db.pipeline()
+                                        .collection("reviews")
+                                        .aggregate(average("rating").alias("avg"))
+                                        .toScalarExpression()
+                        )
+                )
+                .select("rating", "reviewer_id")
+                .execute();
+        // [END pipeline_join_uncorrelated]
+    }
+
+    void pipelineForceTableScan() {
+        // [START pipeline_force_table_scan]
+        // Force Planner to only do a Full-Table Scan
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collectionGroup(
+                        "customers",
+                        new CollectionGroupOptions().withHints(new CollectionHints().withForceIndex("primary"))
+                )
+                .limit(2)
+                .execute();
+        // [END pipeline_force_table_scan]
+    }
+
+    @SuppressWarnings("unchecked")
+    void literalsExample() {
+        // [START literals_example]
+        Map<String, Object> doc1 = new HashMap<>();
+        doc1.put("name", "joe");
+        doc1.put("age", 10);
+
+        Map<String, Object> doc2 = new HashMap<>();
+        doc2.put("name", "bob");
+        doc2.put("age", 30);
+
+        Map<String, Object> doc3 = new HashMap<>();
+        doc3.put("name", "alice");
+        doc3.put("age", 40);
+
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .literals(doc1, doc2, doc3)
+                .where(field("age").lessThan(35))
+                .execute();
+        // [END literals_example]
+    }
+
+    @SuppressWarnings("unchecked")
+    void literalsExpressions() {
+        // [START literals_expressions]
+        Map<String, Object> item1 = new HashMap<>();
+        item1.put("item", "Book");
+        item1.put("price", 25);
+        item1.put("quantity", 2);
+        Map<String, Object> detailsMap = new HashMap<>();
+        detailsMap.put("category", constant("Reading"));
+        item1.put("details", map(detailsMap));
+
+        Map<String, Object> item2 = new HashMap<>();
+        item2.put("item", "Pen");
+        item2.put("price", 5);
+        item2.put("quantity", 10);
+        item2.put("tags", array("office", "writing"));
+
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .literals(item1, item2)
+                .select(
+                        field("item"),
+                        multiply(field("price"), field("quantity")).alias("total")
+                )
+                .execute();
+        // [END literals_expressions]
+    }
+
+    void updateDml() {
+        // [START update_dml]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("books")
+                .where(field("price").lessThan(50))
+                .update(field("price").multiply(0.5).alias("price"))
+                .execute();
+        // [END update_dml]
+    }
+
+    void deleteDml() {
+        // [START delete_dml]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("books")
+                .where(field("status").equal("discontinued"))
+                .delete()
+                .execute();
+        // [END delete_dml]
+    }
+
+    void deleteFullCollection() {
+        // [START delete_full_collection]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("logs")
+                .delete()
+                .execute();
+        // [END delete_full_collection]
+    }
+
+    void dmlTransaction() {
+        // [START dml_transaction]
+        db.runTransaction(transaction -> {
+            db.pipeline()
+                    .collection("inventory")
+                    .where(field("stock").lessThan(0))
+                    .update(constant(0).alias("stock"))
+                    .execute();
+            return null;
+        });
+        // [END dml_transaction]
+    }
+
+    void dmlAtomicOption() {
+        // [START dml_atomic_option]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("users")
+                .where(field("status").equal("pending"))
+                .update(constant("active").alias("status"))
+                .execute(new Pipeline.ExecuteOptions().withAtomic(true));
+        // [END dml_atomic_option]
+    }
+
+    @SuppressWarnings("unchecked")
+    void insertStaticDocuments() {
+        // [START insert_static_documents]
+        Map<String, Object> doc1 = new HashMap<>();
+        doc1.put("name", "San Francisco");
+        doc1.put("state", "CA");
+        doc1.put("country", "USA");
+
+        Map<String, Object> doc2 = new HashMap<>();
+        doc2.put("name", "Los Angeles");
+        doc2.put("state", "CA");
+        doc2.put("country", "USA");
+
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .literals(doc1, doc2)
+                .insert("cities")
+                .execute();
+        // [END insert_static_documents]
+    }
+
+    @SuppressWarnings("unchecked")
+    void insertEvaluatedDocId() {
+        // [START insert_evaluated_doc_id]
+        Map<String, Object> doc1 = new HashMap<>();
+        doc1.put("name", "San Francisco");
+        doc1.put("state", "CA");
+        doc1.put("country", "USA");
+
+        Map<String, Object> doc2 = new HashMap<>();
+        doc2.put("name", "Los Angeles");
+        doc2.put("state", "CA");
+        doc2.put("country", "USA");
+
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .literals(doc1, doc2)
+                .insert(
+                        "cities",
+                        concat(field("country").toUpper(), "-", field("state"), "-", field("name"))
+                )
+                .execute();
+        // [END insert_evaluated_doc_id]
+    }
+
+    @SuppressWarnings("unchecked")
+    void insertDocumentReferences() {
+        // [START insert_document_references]
+        Map<String, Object> doc1 = new HashMap<>();
+        doc1.put("__name__", db.collection("cities").document("SF"));
+        doc1.put("name", "San Francisco");
+
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .literals(doc1)
+                .insert()
+                .execute();
+        // [END insert_document_references]
+    }
+
+    @SuppressWarnings("unchecked")
+    void insertAutoGeneratedIds() {
+        // [START insert_auto_generated_ids]
+        Map<String, Object> doc1 = new HashMap<>();
+        doc1.put("name", "San Francisco");
+
+        Map<String, Object> doc2 = new HashMap<>();
+        doc2.put("name", "Los Angeles");
+
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .literals(doc1, doc2)
+                .insert("cities", rawFunction("auto_id"))
+                .execute();
+        // [END insert_auto_generated_ids]
+    }
+
+    @SuppressWarnings("unchecked")
+    void insertSubcollection() {
+        // [START insert_subcollection]
+        Map<String, Object> doc1 = new HashMap<>();
+        doc1.put("title", "Buy groceries");
+
+        Map<String, Object> doc2 = new HashMap<>();
+        doc2.put("title", "Clean house");
+
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .literals(doc1, doc2)
+                .insert(db.collection("users/user_a/tasks"))
+                .execute();
+        // [END insert_subcollection]
+    }
+
+    void insertDifferentCollection() {
+        // [START insert_different_collection]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("users")
+                .insert("users_backup", field("__name__").documentId())
+                .execute();
+        // [END insert_different_collection]
+    }
+
+    void insertAdvancedQueries() {
+        // [START insert_advanced_queries]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("products")
+                .search(SearchStage.withQuery("shoes"))
+                .sort(field("price").ascending())
+                .limit(5)
+                .insert("featured_shoes", field("__name__").documentId())
+                .execute();
+        // [END insert_advanced_queries]
+    }
+
+    void updateAggregationSubquery() {
+        // [START update_aggregation_subquery]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("players")
+                .where(
+                        field("score").equal(
+                                db.pipeline()
+                                        .collection("players")
+                                        .aggregate(maximum("score").alias("max_score"))
+                                        .toScalarExpression()
+                        )
+                )
+                .update(constant(true).alias("is_top_scorer"))
+                .execute();
+        // [END update_aggregation_subquery]
+    }
+
+    void upsertMigrateUsers() {
+        // [START upsert_migrate_users]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("legacy_users")
+                .upsert("users", field("__name__").documentId())
+                .execute();
+        // [END upsert_migrate_users]
+    }
+
+    void upsertInPlace() {
+        // [START upsert_in_place]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("cities")
+                .where(field("name").equal("San Francisco"))
+                .upsert(constant(880000).alias("population"))
+                .execute();
+        // [END upsert_in_place]
+    }
+
+    void upsertDifferentCollectionExplicitId() {
+        // [START upsert_different_collection_explicit_id]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("source_coll")
+                .addFields(constant(31).alias("age"))
+                .upsert("target_coll", constant("new_doc_id"))
+                .execute();
+        // [END upsert_different_collection_explicit_id]
+    }
+
+    void upsertDifferentCollectionExistingId() {
+        // [START upsert_different_collection_existing_id]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("source_coll")
+                .addFields(constant(31).alias("age"))
+                .upsert("target_coll", field("__name__").documentId())
+                .execute();
+        // [END upsert_different_collection_existing_id]
+    }
+
+    @SuppressWarnings("unchecked")
+    void upsertDocumentReferences() {
+        // [START upsert_document_references]
+        Map<String, Object> doc1 = new HashMap<>();
+        doc1.put("__name__", db.collection("cities").document("SF"));
+        doc1.put("name", "San Francisco");
+
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .literals(doc1)
+                .upsert()
+                .execute();
+        // [END upsert_document_references]
+    }
+
+    @SuppressWarnings("unchecked")
+    void upsertAutoGeneratedIds() {
+        // [START upsert_auto_generated_ids]
+        Map<String, Object> doc1 = new HashMap<>();
+        doc1.put("name", "San Francisco");
+
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .literals(doc1)
+                .upsert("cities", rawFunction("auto_id"))
+                .execute();
+        // [END upsert_auto_generated_ids]
+    }
+
+    @SuppressWarnings("unchecked")
+    void upsertSubcollection() {
+        // [START upsert_subcollection]
+        Map<String, Object> doc1 = new HashMap<>();
+        doc1.put("title", "Buy groceries");
+        doc1.put("priority", "high");
+
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .literals(doc1)
+                .upsert(
+                        db.collection("users/user_a/tasks"),
+                        concat(constant("task_"), field("priority"))
+                )
+                .execute();
+        // [END upsert_subcollection]
+    }
+
+    void upsertAdvancedQueries() {
+        // [START upsert_advanced_queries]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("products")
+                .search(SearchStage.withQuery("shoes"))
+                .sort(field("price").ascending())
+                .limit(5)
+                .upsert("featured_shoes", field("__name__").documentId())
+                .execute();
+        // [END upsert_advanced_queries]
+    }
+
+    void upsertAggregationSubquery() {
+        // [START upsert_aggregation_subquery]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("players")
+                .where(
+                        field("score").equal(
+                                db.pipeline()
+                                        .collection("players")
+                                        .aggregate(maximum("score").alias("max_score"))
+                                        .toScalarExpression()
+                        )
+                )
+                .addFields(constant(true).alias("is_top_scorer"))
+                .upsert("leaderboard", field("__name__").documentId())
+                .execute();
+        // [END upsert_aggregation_subquery]
+    }
+
+    void rulesPipelinesFilterBefore() {
+        // [START rules_pipelines_filter_before]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("SecretDocuments")
+                .where(field("userId").equal("abc"))
+                .execute();
+        // [END rules_pipelines_filter_before]
+    }
+
+    void rulesPipelinesFilterAfter() {
+        // [START rules_pipelines_filter_after]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("SecretDocuments")
+                .limit(5)
+                .where(field("userId").equal("abc"))
+                .execute();
+        // [END rules_pipelines_filter_after]
     }
 
 }

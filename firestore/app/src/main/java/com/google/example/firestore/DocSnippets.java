@@ -67,13 +67,19 @@ import com.google.firebase.firestore.pipeline.CollectionGroupOptions;
 import com.google.firebase.firestore.pipeline.CollectionHints;
 import com.google.firebase.firestore.pipeline.UnnestOptions;
 
+import static com.google.firebase.firestore.pipeline.Expression.array;
+import static com.google.firebase.firestore.pipeline.Expression.concat;
 import static com.google.firebase.firestore.pipeline.Expression.field;
 import static com.google.firebase.firestore.pipeline.Expression.constant;
+import static com.google.firebase.firestore.pipeline.Expression.map;
+import static com.google.firebase.firestore.pipeline.Expression.multiply;
+import static com.google.firebase.firestore.pipeline.Expression.rawFunction;
 import static com.google.firebase.firestore.pipeline.Expression.variable;
 import static com.google.firebase.firestore.pipeline.Expression.documentMatches;
 import static com.google.firebase.firestore.pipeline.Expression.score;
 import static com.google.firebase.firestore.pipeline.AggregateFunction.average;
 import static com.google.firebase.firestore.pipeline.AggregateFunction.countAll;
+import static com.google.firebase.firestore.pipeline.AggregateFunction.maximum;
 
 /**
  * Snippets for inclusion in documentation.
@@ -4530,6 +4536,366 @@ public class DocSnippets {
                 .limit(2)
                 .execute();
         // [END pipeline_force_table_scan]
+    }
+
+    @SuppressWarnings("unchecked")
+    void literalsExample() {
+        // [START literals_example]
+        Map<String, Object> doc1 = new HashMap<>();
+        doc1.put("name", "joe");
+        doc1.put("age", 10);
+
+        Map<String, Object> doc2 = new HashMap<>();
+        doc2.put("name", "bob");
+        doc2.put("age", 30);
+
+        Map<String, Object> doc3 = new HashMap<>();
+        doc3.put("name", "alice");
+        doc3.put("age", 40);
+
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .literals(doc1, doc2, doc3)
+                .where(field("age").lessThan(35))
+                .execute();
+        // [END literals_example]
+    }
+
+    @SuppressWarnings("unchecked")
+    void literalsExpressions() {
+        // [START literals_expressions]
+        Map<String, Object> item1 = new HashMap<>();
+        item1.put("item", "Book");
+        item1.put("price", 25);
+        item1.put("quantity", 2);
+        Map<String, Object> detailsMap = new HashMap<>();
+        detailsMap.put("category", constant("Reading"));
+        item1.put("details", map(detailsMap));
+
+        Map<String, Object> item2 = new HashMap<>();
+        item2.put("item", "Pen");
+        item2.put("price", 5);
+        item2.put("quantity", 10);
+        item2.put("tags", array("office", "writing"));
+
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .literals(item1, item2)
+                .select(
+                        field("item"),
+                        multiply(field("price"), field("quantity")).alias("total")
+                )
+                .execute();
+        // [END literals_expressions]
+    }
+
+    void updateDml() {
+        // [START update_dml]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("books")
+                .where(field("price").lessThan(50))
+                .update(field("price").multiply(0.5).alias("price"))
+                .execute();
+        // [END update_dml]
+    }
+
+    void deleteDml() {
+        // [START delete_dml]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("books")
+                .where(field("status").equal("discontinued"))
+                .delete()
+                .execute();
+        // [END delete_dml]
+    }
+
+    void deleteFullCollection() {
+        // [START delete_full_collection]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("logs")
+                .delete()
+                .execute();
+        // [END delete_full_collection]
+    }
+
+    void dmlTransaction() {
+        // [START dml_transaction]
+        db.runTransaction(transaction -> {
+            db.pipeline()
+                    .collection("inventory")
+                    .where(field("stock").lessThan(0))
+                    .update(constant(0).alias("stock"))
+                    .execute();
+            return null;
+        });
+        // [END dml_transaction]
+    }
+
+    void dmlAtomicOption() {
+        // [START dml_atomic_option]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("users")
+                .where(field("status").equal("pending"))
+                .update(constant("active").alias("status"))
+                .execute(new Pipeline.ExecuteOptions().withAtomic(true));
+        // [END dml_atomic_option]
+    }
+
+    @SuppressWarnings("unchecked")
+    void insertStaticDocuments() {
+        // [START insert_static_documents]
+        Map<String, Object> doc1 = new HashMap<>();
+        doc1.put("name", "San Francisco");
+        doc1.put("state", "CA");
+        doc1.put("country", "USA");
+
+        Map<String, Object> doc2 = new HashMap<>();
+        doc2.put("name", "Los Angeles");
+        doc2.put("state", "CA");
+        doc2.put("country", "USA");
+
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .literals(doc1, doc2)
+                .insert("cities")
+                .execute();
+        // [END insert_static_documents]
+    }
+
+    @SuppressWarnings("unchecked")
+    void insertEvaluatedDocId() {
+        // [START insert_evaluated_doc_id]
+        Map<String, Object> doc1 = new HashMap<>();
+        doc1.put("name", "San Francisco");
+        doc1.put("state", "CA");
+        doc1.put("country", "USA");
+
+        Map<String, Object> doc2 = new HashMap<>();
+        doc2.put("name", "Los Angeles");
+        doc2.put("state", "CA");
+        doc2.put("country", "USA");
+
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .literals(doc1, doc2)
+                .insert(
+                        "cities",
+                        concat(field("country").toUpper(), "-", field("state"), "-", field("name"))
+                )
+                .execute();
+        // [END insert_evaluated_doc_id]
+    }
+
+    @SuppressWarnings("unchecked")
+    void insertDocumentReferences() {
+        // [START insert_document_references]
+        Map<String, Object> doc1 = new HashMap<>();
+        doc1.put("__name__", db.collection("cities").document("SF"));
+        doc1.put("name", "San Francisco");
+
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .literals(doc1)
+                .insert()
+                .execute();
+        // [END insert_document_references]
+    }
+
+    @SuppressWarnings("unchecked")
+    void insertAutoGeneratedIds() {
+        // [START insert_auto_generated_ids]
+        Map<String, Object> doc1 = new HashMap<>();
+        doc1.put("name", "San Francisco");
+
+        Map<String, Object> doc2 = new HashMap<>();
+        doc2.put("name", "Los Angeles");
+
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .literals(doc1, doc2)
+                .insert("cities", rawFunction("auto_id"))
+                .execute();
+        // [END insert_auto_generated_ids]
+    }
+
+    @SuppressWarnings("unchecked")
+    void insertSubcollection() {
+        // [START insert_subcollection]
+        Map<String, Object> doc1 = new HashMap<>();
+        doc1.put("title", "Buy groceries");
+
+        Map<String, Object> doc2 = new HashMap<>();
+        doc2.put("title", "Clean house");
+
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .literals(doc1, doc2)
+                .insert(db.collection("users/user_a/tasks"))
+                .execute();
+        // [END insert_subcollection]
+    }
+
+    void insertDifferentCollection() {
+        // [START insert_different_collection]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("users")
+                .insert("users_backup", field("__name__").documentId())
+                .execute();
+        // [END insert_different_collection]
+    }
+
+    void insertAdvancedQueries() {
+        // [START insert_advanced_queries]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("products")
+                .search(SearchStage.withQuery("shoes"))
+                .sort(field("price").ascending())
+                .limit(5)
+                .insert("featured_shoes", field("__name__").documentId())
+                .execute();
+        // [END insert_advanced_queries]
+    }
+
+    void updateAggregationSubquery() {
+        // [START update_aggregation_subquery]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("players")
+                .where(
+                        field("score").equal(
+                                db.pipeline()
+                                        .collection("players")
+                                        .aggregate(maximum("score").alias("max_score"))
+                                        .toScalarExpression()
+                        )
+                )
+                .update(constant(true).alias("is_top_scorer"))
+                .execute();
+        // [END update_aggregation_subquery]
+    }
+
+    void upsertMigrateUsers() {
+        // [START upsert_migrate_users]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("legacy_users")
+                .upsert("users", field("__name__").documentId())
+                .execute();
+        // [END upsert_migrate_users]
+    }
+
+    void upsertInPlace() {
+        // [START upsert_in_place]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("cities")
+                .where(field("name").equal("San Francisco"))
+                .upsert(constant(880000).alias("population"))
+                .execute();
+        // [END upsert_in_place]
+    }
+
+    void upsertDifferentCollectionExplicitId() {
+        // [START upsert_different_collection_explicit_id]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("source_coll")
+                .addFields(constant(31).alias("age"))
+                .upsert("target_coll", constant("new_doc_id"))
+                .execute();
+        // [END upsert_different_collection_explicit_id]
+    }
+
+    void upsertDifferentCollectionExistingId() {
+        // [START upsert_different_collection_existing_id]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("source_coll")
+                .addFields(constant(31).alias("age"))
+                .upsert("target_coll", field("__name__").documentId())
+                .execute();
+        // [END upsert_different_collection_existing_id]
+    }
+
+    @SuppressWarnings("unchecked")
+    void upsertDocumentReferences() {
+        // [START upsert_document_references]
+        Map<String, Object> doc1 = new HashMap<>();
+        doc1.put("__name__", db.collection("cities").document("SF"));
+        doc1.put("name", "San Francisco");
+
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .literals(doc1)
+                .upsert()
+                .execute();
+        // [END upsert_document_references]
+    }
+
+    @SuppressWarnings("unchecked")
+    void upsertAutoGeneratedIds() {
+        // [START upsert_auto_generated_ids]
+        Map<String, Object> doc1 = new HashMap<>();
+        doc1.put("name", "San Francisco");
+
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .literals(doc1)
+                .upsert("cities", rawFunction("auto_id"))
+                .execute();
+        // [END upsert_auto_generated_ids]
+    }
+
+    @SuppressWarnings("unchecked")
+    void upsertSubcollection() {
+        // [START upsert_subcollection]
+        Map<String, Object> doc1 = new HashMap<>();
+        doc1.put("title", "Buy groceries");
+        doc1.put("priority", "high");
+
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .literals(doc1)
+                .upsert(
+                        db.collection("users/user_a/tasks"),
+                        concat(constant("task_"), field("priority"))
+                )
+                .execute();
+        // [END upsert_subcollection]
+    }
+
+    void upsertAdvancedQueries() {
+        // [START upsert_advanced_queries]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("products")
+                .search(SearchStage.withQuery("shoes"))
+                .sort(field("price").ascending())
+                .limit(5)
+                .upsert("featured_shoes", field("__name__").documentId())
+                .execute();
+        // [END upsert_advanced_queries]
+    }
+
+    void upsertAggregationSubquery() {
+        // [START upsert_aggregation_subquery]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("players")
+                .where(
+                        field("score").equal(
+                                db.pipeline()
+                                        .collection("players")
+                                        .aggregate(maximum("score").alias("max_score"))
+                                        .toScalarExpression()
+                        )
+                )
+                .addFields(constant(true).alias("is_top_scorer"))
+                .upsert("leaderboard", field("__name__").documentId())
+                .execute();
+        // [END upsert_aggregation_subquery]
+    }
+
+    void rulesPipelinesFilterBefore() {
+        // [START rules_pipelines_filter_before]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("SecretDocuments")
+                .where(field("userId").equal("abc"))
+                .execute();
+        // [END rules_pipelines_filter_before]
+    }
+
+    void rulesPipelinesFilterAfter() {
+        // [START rules_pipelines_filter_after]
+        Task<Pipeline.Snapshot> results = db.pipeline()
+                .collection("SecretDocuments")
+                .limit(5)
+                .where(field("userId").equal("abc"))
+                .execute();
+        // [END rules_pipelines_filter_after]
     }
 
 }

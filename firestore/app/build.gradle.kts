@@ -49,7 +49,7 @@ dependencies {
     // Declare the dependency for the Cloud Firestore library
     // When using the BoM, you don't specify versions in Firebase library dependencies
     // implementation("com.google.firebase:firebase-firestore")
-    implementation("com.google.firebase:firebase-firestore:26.2.0")
+    implementation("com.google.firebase:firebase-firestore:27.1.0")
 
     // Firebase / Play Services
     implementation("com.google.firebase:firebase-auth")

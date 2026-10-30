@@ -29,11 +29,16 @@ import com.google.firebase.firestore.pipeline.AggregateStage
 import com.google.firebase.firestore.pipeline.Expression
 import com.google.firebase.firestore.pipeline.AggregateFunction.Companion.average
 import com.google.firebase.firestore.pipeline.AggregateFunction.Companion.countAll
+import com.google.firebase.firestore.pipeline.AggregateFunction.Companion.maximum
+import com.google.firebase.firestore.pipeline.Expression.Companion.array
 import com.google.firebase.firestore.pipeline.Expression.Companion.constant
 import com.google.firebase.firestore.pipeline.Expression.Companion.field
 import com.google.firebase.firestore.pipeline.Expression.Companion.concat
 import com.google.firebase.firestore.pipeline.Expression.Companion.documentMatches
 import com.google.firebase.firestore.pipeline.Expression.Companion.length
+import com.google.firebase.firestore.pipeline.Expression.Companion.map
+import com.google.firebase.firestore.pipeline.Expression.Companion.multiply
+import com.google.firebase.firestore.pipeline.Expression.Companion.rawFunction
 import com.google.firebase.firestore.pipeline.Expression.Companion.score
 import com.google.firebase.firestore.pipeline.Expression.Companion.type
 import com.google.firebase.firestore.pipeline.Expression.Companion.variable
@@ -4118,6 +4123,326 @@ abstract class DocSnippets(val db: FirebaseFirestore) {
             .limit(2)
             .execute()
         // [END pipeline_force_table_scan]
+    }
+
+    fun literalsExample() {
+        // [START literals_example]
+        val results = db.pipeline()
+            .literals(
+                mapOf("name" to "joe", "age" to 10),
+                mapOf("name" to "bob", "age" to 30),
+                mapOf("name" to "alice", "age" to 40),
+            )
+            .where(field("age").lessThan(35))
+            .execute()
+        // [END literals_example]
+    }
+
+    fun literalsExpressions() {
+        // [START literals_expressions]
+        val results = db.pipeline()
+            .literals(
+                mapOf(
+                    "item" to "Book",
+                    "price" to 25,
+                    "quantity" to 2,
+                    "details" to map(mapOf("category" to constant("Reading"))),
+                ),
+                mapOf(
+                    "item" to "Pen",
+                    "price" to 5,
+                    "quantity" to 10,
+                    "tags" to array("office", "writing"),
+                ),
+            )
+            .select(
+                field("item"),
+                multiply(field("price"), field("quantity")).alias("total"),
+            )
+            .execute()
+        // [END literals_expressions]
+    }
+
+    fun updateDml() {
+        // [START update_dml]
+        val results = db.pipeline()
+            .collection("books")
+            .where(field("price").lessThan(50))
+            .update(field("price").multiply(0.5).alias("price"))
+            .execute()
+        // [END update_dml]
+    }
+
+    fun deleteDml() {
+        // [START delete_dml]
+        val results = db.pipeline()
+            .collection("books")
+            .where(field("status").equal("discontinued"))
+            .delete()
+            .execute()
+        // [END delete_dml]
+    }
+
+    fun deleteFullCollection() {
+        // [START delete_full_collection]
+        val results = db.pipeline()
+            .collection("logs")
+            .delete()
+            .execute()
+        // [END delete_full_collection]
+    }
+
+    fun dmlTransaction() {
+        // [START dml_transaction]
+        db.runTransaction {
+            db.pipeline()
+                .collection("inventory")
+                .where(field("stock").lessThan(0))
+                .update(constant(0).alias("stock"))
+                .execute()
+            null
+        }
+        // [END dml_transaction]
+    }
+
+    fun dmlAtomicOption() {
+        // [START dml_atomic_option]
+        val results = db.pipeline()
+            .collection("users")
+            .where(field("status").equal("pending"))
+            .update(constant("active").alias("status"))
+            .execute(Pipeline.ExecuteOptions().withAtomic(true))
+        // [END dml_atomic_option]
+    }
+
+    fun insertStaticDocuments() {
+        // [START insert_static_documents]
+        val results = db.pipeline()
+            .literals(
+                mapOf("name" to "San Francisco", "state" to "CA", "country" to "USA"),
+                mapOf("name" to "Los Angeles", "state" to "CA", "country" to "USA"),
+            )
+            .insert("cities")
+            .execute()
+        // [END insert_static_documents]
+    }
+
+    fun insertEvaluatedDocId() {
+        // [START insert_evaluated_doc_id]
+        val results = db.pipeline()
+            .literals(
+                mapOf("name" to "San Francisco", "state" to "CA", "country" to "USA"),
+                mapOf("name" to "Los Angeles", "state" to "CA", "country" to "USA"),
+            )
+            .insert(
+                "cities",
+                concat(field("country").toUpper(), "-", field("state"), "-", field("name")),
+            )
+            .execute()
+        // [END insert_evaluated_doc_id]
+    }
+
+    fun insertDocumentReferences() {
+        // [START insert_document_references]
+        val results = db.pipeline()
+            .literals(
+                mapOf(
+                    "__name__" to db.collection("cities").document("SF"),
+                    "name" to "San Francisco",
+                ),
+            )
+            .insert()
+            .execute()
+        // [END insert_document_references]
+    }
+
+    fun insertAutoGeneratedIds() {
+        // [START insert_auto_generated_ids]
+        val results = db.pipeline()
+            .literals(
+                mapOf("name" to "San Francisco"),
+                mapOf("name" to "Los Angeles"),
+            )
+            .insert("cities", rawFunction("auto_id"))
+            .execute()
+        // [END insert_auto_generated_ids]
+    }
+
+    fun insertSubcollection() {
+        // [START insert_subcollection]
+        val results = db.pipeline()
+            .literals(
+                mapOf("title" to "Buy groceries"),
+                mapOf("title" to "Clean house"),
+            )
+            .insert(db.collection("users/user_a/tasks"))
+            .execute()
+        // [END insert_subcollection]
+    }
+
+    fun insertDifferentCollection() {
+        // [START insert_different_collection]
+        val results = db.pipeline()
+            .collection("users")
+            .insert("users_backup", field("__name__").documentId())
+            .execute()
+        // [END insert_different_collection]
+    }
+
+    fun insertAdvancedQueries() {
+        // [START insert_advanced_queries]
+        val results = db.pipeline()
+            .collection("products")
+            .search(SearchStage.withQuery("shoes"))
+            .sort(field("price").ascending())
+            .limit(5)
+            .insert("featured_shoes", field("__name__").documentId())
+            .execute()
+        // [END insert_advanced_queries]
+    }
+
+    fun updateAggregationSubquery() {
+        // [START update_aggregation_subquery]
+        val results = db.pipeline()
+            .collection("players")
+            .where(
+                field("score").equal(
+                    db.pipeline()
+                        .collection("players")
+                        .aggregate(maximum("score").alias("max_score"))
+                        .toScalarExpression(),
+                ),
+            )
+            .update(constant(true).alias("is_top_scorer"))
+            .execute()
+        // [END update_aggregation_subquery]
+    }
+
+    fun upsertMigrateUsers() {
+        // [START upsert_migrate_users]
+        val results = db.pipeline()
+            .collection("legacy_users")
+            .upsert("users", field("__name__").documentId())
+            .execute()
+        // [END upsert_migrate_users]
+    }
+
+    fun upsertInPlace() {
+        // [START upsert_in_place]
+        val results = db.pipeline()
+            .collection("cities")
+            .where(field("name").equal("San Francisco"))
+            .upsert(constant(880000).alias("population"))
+            .execute()
+        // [END upsert_in_place]
+    }
+
+    fun upsertDifferentCollectionExplicitId() {
+        // [START upsert_different_collection_explicit_id]
+        val results = db.pipeline()
+            .collection("source_coll")
+            .addFields(constant(31).alias("age"))
+            .upsert("target_coll", constant("new_doc_id"))
+            .execute()
+        // [END upsert_different_collection_explicit_id]
+    }
+
+    fun upsertDifferentCollectionExistingId() {
+        // [START upsert_different_collection_existing_id]
+        val results = db.pipeline()
+            .collection("source_coll")
+            .addFields(constant(31).alias("age"))
+            .upsert("target_coll", field("__name__").documentId())
+            .execute()
+        // [END upsert_different_collection_existing_id]
+    }
+
+    fun upsertDocumentReferences() {
+        // [START upsert_document_references]
+        val results = db.pipeline()
+            .literals(
+                mapOf(
+                    "__name__" to db.collection("cities").document("SF"),
+                    "name" to "San Francisco",
+                ),
+            )
+            .upsert()
+            .execute()
+        // [END upsert_document_references]
+    }
+
+    fun upsertAutoGeneratedIds() {
+        // [START upsert_auto_generated_ids]
+        val results = db.pipeline()
+            .literals(
+                mapOf("name" to "San Francisco"),
+            )
+            .upsert("cities", rawFunction("auto_id"))
+            .execute()
+        // [END upsert_auto_generated_ids]
+    }
+
+    fun upsertSubcollection() {
+        // [START upsert_subcollection]
+        val results = db.pipeline()
+            .literals(
+                mapOf("title" to "Buy groceries", "priority" to "high"),
+            )
+            .upsert(
+                db.collection("users/user_a/tasks"),
+                concat(constant("task_"), field("priority")),
+            )
+            .execute()
+        // [END upsert_subcollection]
+    }
+
+    fun upsertAdvancedQueries() {
+        // [START upsert_advanced_queries]
+        val results = db.pipeline()
+            .collection("products")
+            .search(SearchStage.withQuery("shoes"))
+            .sort(field("price").ascending())
+            .limit(5)
+            .upsert("featured_shoes", field("__name__").documentId())
+            .execute()
+        // [END upsert_advanced_queries]
+    }
+
+    fun upsertAggregationSubquery() {
+        // [START upsert_aggregation_subquery]
+        val results = db.pipeline()
+            .collection("players")
+            .where(
+                field("score").equal(
+                    db.pipeline()
+                        .collection("players")
+                        .aggregate(maximum("score").alias("max_score"))
+                        .toScalarExpression(),
+                ),
+            )
+            .addFields(constant(true).alias("is_top_scorer"))
+            .upsert("leaderboard", field("__name__").documentId())
+            .execute()
+        // [END upsert_aggregation_subquery]
+    }
+
+    fun rulesPipelinesFilterBefore() {
+        // [START rules_pipelines_filter_before]
+        val results = db.pipeline()
+            .collection("SecretDocuments")
+            .where(field("userId").equal("abc"))
+            .execute()
+        // [END rules_pipelines_filter_before]
+    }
+
+    fun rulesPipelinesFilterAfter() {
+        // [START rules_pipelines_filter_after]
+        val results = db.pipeline()
+            .collection("SecretDocuments")
+            .limit(5)
+            .where(field("userId").equal("abc"))
+            .execute()
+        // [END rules_pipelines_filter_after]
     }
 
 }

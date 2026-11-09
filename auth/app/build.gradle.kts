@@ -50,7 +50,7 @@ dependencies {
     implementation("com.google.firebase:firebase-auth")
 
     // [START gradle_firebase_ui_auth]
-    implementation("com.firebaseui:firebase-ui-auth:10.0.0")
+    implementation("com.firebaseui:firebase-ui-auth:9.1.1")
 
     // Google Identity Services SDK (only required for Auth with Google)
     implementation("androidx.credentials:credentials:1.6.0")

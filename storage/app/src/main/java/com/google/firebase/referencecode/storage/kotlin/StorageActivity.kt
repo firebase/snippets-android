@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.firebase.Firebase
 import com.google.firebase.initialize
@@ -14,6 +15,7 @@ import com.google.firebase.referencecode.storage.R
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageException
 import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.UploadTask
 import com.google.firebase.storage.component1
 import com.google.firebase.storage.component2
 import com.google.firebase.storage.component3
@@ -22,6 +24,9 @@ import com.google.firebase.storage.storageMetadata
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 abstract class StorageActivity : AppCompatActivity() {
 
@@ -146,19 +151,24 @@ abstract class StorageActivity : AppCompatActivity() {
         imageView.isDrawingCacheEnabled = true
         imageView.buildDrawingCache()
         val bitmap = (imageView.drawable as BitmapDrawable).bitmap
-        val baos = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-        val data = baos.toByteArray()
+        lifecycleScope.launch {
+            val data = withContext(Dispatchers.Default) {
+                val baos = ByteArrayOutputStream()
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                baos.toByteArray()
+            }
 
-        var uploadTask = mountainsRef.putBytes(data)
-        uploadTask.addOnFailureListener {
-            // Handle unsuccessful uploads
-        }.addOnSuccessListener { taskSnapshot ->
-            // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
-            // ...
+            val uploadTask = mountainsRef.putBytes(data)
+            uploadTask.addOnFailureListener {
+                // Handle unsuccessful uploads
+            }.addOnSuccessListener { taskSnapshot ->
+                // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
+                // ...
+            }
         }
         // [END upload_memory]
 
+        var uploadTask: UploadTask
         // [START upload_stream]
         val stream = FileInputStream(File("path/to/images/rivers.jpg"))
 

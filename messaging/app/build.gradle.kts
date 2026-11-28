@@ -7,7 +7,11 @@ plugins {
 
 android {
     namespace = "com.google.firebase.example.messaging"
-    compileSdk = 37
+    compileSdk {
+        version = release(37) {
+            minorApiLevel = 1
+        }
+    }
 
     defaultConfig {
         applicationId = "com.google.firebase.example.messaging"
@@ -40,7 +44,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.8.0")
 
     // Import the Firebase BoM (see: https://firebase.google.com/docs/android/learn-more#bom)
-    implementation(platform("com.google.firebase:firebase-bom:35.1.0"))
+    implementation(platform("com.google.firebase:firebase-bom:35.2.0"))
 
     // Import Firebase Cloud Messaging library
     implementation("com.google.firebase:firebase-messaging")
@@ -56,5 +60,5 @@ dependencies {
 
     implementation("com.google.android.gms:play-services-auth:22.0.0")
     implementation("androidx.work:work-runtime-ktx:2.12.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.11.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.11.1")
 }

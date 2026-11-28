@@ -7,7 +7,11 @@ plugins {
 
 android {
     namespace = "com.google.firebase.referencecode.database"
-    compileSdk = 37
+    compileSdk {
+        version = release(37) {
+            minorApiLevel = 1
+        }
+    }
 
     defaultConfig {
         applicationId = "com.google.firebase.referencecode.database"
@@ -46,7 +50,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.8.0")
 
     // Import the BoM for the Firebase platform
-    implementation(platform("com.google.firebase:firebase-bom:35.1.0"))
+    implementation(platform("com.google.firebase:firebase-bom:35.2.0"))
 
     // Add the dependency for the Realtime Database library
     // When using the BoM, you don't specify versions in Firebase library dependencies

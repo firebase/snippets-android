@@ -7,7 +7,11 @@ plugins {
 
 android {
     namespace = "devrel.firebase.google.com.functions"
-    compileSdk = 37
+    compileSdk {
+        version = release(37) {
+            minorApiLevel = 1
+        }
+    }
 
     defaultConfig {
         applicationId = "devrel.firebase.google.com.functions"
@@ -39,7 +43,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.8.0")
 
     // Import the BoM for the Firebase platform
-    implementation(platform("com.google.firebase:firebase-bom:35.1.0"))
+    implementation(platform("com.google.firebase:firebase-bom:35.2.0"))
 
     // Add the dependency for the Cloud Functions library
     // When using the BoM, you don't specify versions in Firebase library dependencies
